@@ -1,0 +1,487 @@
+{%- style -%}
+  /* ── Hero ── */
+  .theteam-hero {
+    background: #fef6f8;
+    height: 380px;
+    padding: 40px 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-bottom: 1px solid rgba(46,42,39,0.1);
+  }
+  .theteam-hero__eyebrow {
+    font-family: var(--font-body-family);
+    font-size: 0.7rem;
+    font-weight: 400;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: #c45e82;
+    margin: 0 0 20px;
+  }
+  .theteam-hero__heading {
+    font-family: var(--font-heading-family);
+    font-size: clamp(2.4rem, 5vw, 3.8rem);
+    font-weight: 700;
+    color: #2e1a28;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    margin: 0 0 20px;
+  }
+  .theteam-hero__intro {
+    font-family: var(--font-body-family);
+    font-size: 1.05rem;
+    color: #6B6460;
+    line-height: 1.8;
+    max-width: 520px;
+    margin: 0 auto;
+  }
+
+  /* ── Founders ── */
+  .theteam-founders {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: #2e1a28;
+    align-items: center;
+  }
+  .theteam-founders__media {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 56px 48px;
+    background: #2e1a28;
+  }
+  .theteam-founders__frame {
+    width: 300px;
+    aspect-ratio: 3 / 4;
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+    border: 2px solid rgba(196,94,130,0.55);
+    box-shadow:
+      0 0 0 6px rgba(196,94,130,0.08),
+      0 8px 32px rgba(0,0,0,0.45),
+      0 24px 64px rgba(0,0,0,0.3);
+  }
+  .theteam-founders__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+  }
+  .theteam-founders__placeholder {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(160deg, #2d5040 0%, #2e1a28 100%);
+  }
+  .theteam-founders__content {
+    padding: 72px 64px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .theteam-founders__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--font-body-family);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #c45e82;
+    margin-bottom: 28px;
+  }
+  .theteam-founders__badge::before {
+    content: '';
+    display: block;
+    width: 28px;
+    height: 1px;
+    background: #c45e82;
+    flex-shrink: 0;
+  }
+  .theteam-founders__names {
+    font-family: var(--font-heading-family);
+    font-size: clamp(2rem, 3.2vw, 2.8rem);
+    font-weight: 700;
+    color: #fef6f8;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    margin: 0 0 12px;
+  }
+  .theteam-founders__role {
+    font-family: var(--font-body-family);
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(242,237,229,0.45);
+    margin: 0 0 32px;
+  }
+  .theteam-founders__bio {
+    font-family: var(--font-body-family);
+    font-size: 1rem;
+    color: rgba(242,237,229,0.78);
+    line-height: 1.85;
+    margin: 0;
+    max-width: 420px;
+  }
+
+  /* ── Members ── */
+  .theteam-member {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    border-top: 1px solid rgba(46,42,39,0.08);
+    align-items: center;
+  }
+  .theteam-member--alt {
+    grid-template-columns: 1fr auto;
+  }
+  .theteam-member__media {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 40px;
+    background: #f0dde5;
+  }
+  .theteam-member--alt .theteam-member__media {
+    order: 2;
+    background: #DDD5CC;
+  }
+  .theteam-member--alt .theteam-member__content { order: 1; }
+  /* Frame — fixed same size as founders */
+  .theteam-member__frame {
+    width: 300px;
+    aspect-ratio: 3 / 4;
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+    border: 2px solid rgba(196,94,130,0.5);
+    box-shadow:
+      0 0 0 5px rgba(196,94,130,0.07),
+      0 6px 24px rgba(0,0,0,0.18),
+      0 18px 48px rgba(0,0,0,0.12);
+  }
+  .theteam-member__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    transition: transform 0.6s ease;
+  }
+  .theteam-member:hover .theteam-member__img { transform: scale(1.03); }
+  .theteam-member__placeholder {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #D5C9BC 0%, #C4B8AB 100%);
+  }
+  .theteam-member__content {
+    padding: 64px 60px;
+    background: #fef6f8;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .theteam-member--alt .theteam-member__content {
+    background: #f9edf2;
+  }
+  .theteam-member__label {
+    font-family: var(--font-body-family);
+    font-size: 0.65rem;
+    font-weight: 400;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: #c45e82;
+    margin: 0 0 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .theteam-member__label::before {
+    content: '';
+    width: 24px;
+    height: 1px;
+    background: #c45e82;
+    flex-shrink: 0;
+  }
+  .theteam-member__name {
+    font-family: var(--font-heading-family);
+    font-size: clamp(1.8rem, 2.6vw, 2.4rem);
+    font-weight: 700;
+    color: #2e1a28;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    margin: 0 0 8px;
+  }
+  .theteam-member__role {
+    font-family: var(--font-body-family);
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #8a8480;
+    margin: 0 0 28px;
+  }
+  .theteam-member__divider {
+    width: 36px;
+    height: 1px;
+    background: #c45e82;
+    margin: 0 0 28px;
+  }
+  .theteam-member__bio {
+    font-family: var(--font-body-family);
+    font-size: 1rem;
+    color: #4a4642;
+    line-height: 1.85;
+    margin: 0 0 28px;
+    max-width: 420px;
+  }
+  .theteam-member__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .theteam-member__tag {
+    font-family: var(--font-body-family);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    color: #4a4642;
+    background: rgba(46,42,39,0.07);
+    padding: 6px 14px;
+    border-radius: 2px;
+  }
+
+  /* ── CTA ── */
+  .theteam-cta {
+    background: #2e1a28;
+    padding: 88px 40px;
+    text-align: center;
+  }
+  .theteam-cta__eyebrow {
+    font-family: var(--font-body-family);
+    font-size: 0.7rem;
+    font-weight: 400;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: #c45e82;
+    margin: 0 0 18px;
+  }
+  .theteam-cta__heading {
+    font-family: var(--font-heading-family);
+    font-size: clamp(1.8rem, 3vw, 2.6rem);
+    font-weight: 700;
+    color: #fef6f8;
+    line-height: 1.2;
+    margin: 0 0 14px;
+  }
+  .theteam-cta__text {
+    font-family: var(--font-body-family);
+    font-size: 1rem;
+    color: rgba(242,237,229,0.65);
+    line-height: 1.75;
+    max-width: 460px;
+    margin: 0 auto 36px;
+  }
+  .theteam-cta__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-body-family);
+    font-size: 0.875rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: #2e1a28;
+    background: #c45e82;
+    padding: 16px 36px;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.2s;
+  }
+  .theteam-cta__btn:hover { background: #a96924; transform: translateY(-1px); }
+
+  /* ── Responsive ──
+     The frame (300×400px) never changes size.
+     On tablet/mobile we just stack: photo on top, text below.
+  ── */
+  @media (max-width: 900px) {
+    .theteam-founders,
+    .theteam-member,
+    .theteam-member--alt {
+      grid-template-columns: 1fr;
+    }
+
+    /* Photo always on top, text always below */
+    .theteam-founders__media,
+    .theteam-member__media,
+    .theteam-member--alt .theteam-member__media   { order: 1; }
+    .theteam-founders__content,
+    .theteam-member__content,
+    .theteam-member--alt .theteam-member__content { order: 2; }
+
+    /* Tighter padding around the frame so it doesn't feel lost */
+    .theteam-founders__media,
+    .theteam-member__media,
+    .theteam-member--alt .theteam-member__media {
+      padding: 40px 24px;
+    }
+
+    .theteam-founders__content { padding: 44px 36px; }
+    .theteam-member__content,
+    .theteam-member--alt .theteam-member__content {
+      padding: 44px 36px;
+      background: #fef6f8;
+    }
+  }
+
+  @media (max-width: 580px) {
+    .theteam-hero { height: 280px; padding: 32px 20px; }
+    .theteam-founders__media,
+    .theteam-member__media,
+    .theteam-member--alt .theteam-member__media { padding: 32px 24px; }
+    .theteam-founders__content { padding: 36px 24px; }
+    .theteam-member__content,
+    .theteam-member--alt .theteam-member__content { padding: 36px 24px; }
+    .theteam-cta { padding: 64px 24px; }
+  }
+{%- endstyle -%}
+
+<div class="theteam-hero">
+  <p class="theteam-hero__eyebrow">{{ section.settings.eyebrow | default: 'The Studio at SA Art Fair' }}</p>
+  <h1 class="theteam-hero__heading">{{ section.settings.heading | default: 'Meet the Team' }}</h1>
+  {%- if section.settings.intro != blank -%}
+    <p class="theteam-hero__intro">{{ section.settings.intro }}</p>
+  {%- endif -%}
+</div>
+
+{%- assign member_idx = 0 -%}
+{%- for block in section.blocks -%}
+
+  {%- if block.type == 'founders' -%}
+    <div class="theteam-founders" {{ block.shopify_attributes }}>
+      <div class="theteam-founders__media">
+        <div class="theteam-founders__frame">
+          {%- if block.settings.image_src != blank -%}
+            <img src="{{ block.settings.image_src | escape }}" class="theteam-founders__img" loading="lazy" alt="{{ block.settings.names | escape }}">
+          {%- elsif block.settings.image != blank -%}
+            {%- assign f_alt = block.settings.image.alt | default: block.settings.names -%}
+            {{ block.settings.image | image_url: width: 900 | image_tag: class: 'theteam-founders__img', loading: 'lazy', alt: f_alt }}
+          {%- else -%}
+            <div class="theteam-founders__placeholder"></div>
+          {%- endif -%}
+        </div>
+      </div>
+      <div class="theteam-founders__content">
+        <span class="theteam-founders__badge">{{ block.settings.badge | default: 'Founders' }}</span>
+        <h2 class="theteam-founders__names">{{ block.settings.names | default: 'Georgina & Bianca' }}</h2>
+        <p class="theteam-founders__role">{{ block.settings.role | default: 'Co-Founders & Creatives' }}</p>
+        <p class="theteam-founders__bio">{{ block.settings.bio }}</p>
+      </div>
+    </div>
+
+  {%- elsif block.type == 'member' -%}
+    {%- assign member_idx = member_idx | plus: 1 -%}
+    {%- assign is_alt = member_idx | modulo: 2 -%}
+    {%- assign member_num = member_idx | prepend: '0' | slice: -2, 2 -%}
+    <div class="theteam-member{% if is_alt == 0 %} theteam-member--alt{% endif %}" {{ block.shopify_attributes }}>
+      <div class="theteam-member__media">
+        <div class="theteam-member__frame">
+          {%- assign col_img = blank -%}
+          {%- if block.settings.collection_handle != blank -%}
+            {%- assign col_img = collections[block.settings.collection_handle].image -%}
+          {%- endif -%}
+          {%- assign member_photo = col_img | default: block.settings.image -%}
+          {%- if block.settings.image_src != blank -%}
+            <img src="{{ block.settings.image_src | escape }}" class="theteam-member__img" loading="lazy" alt="{{ block.settings.name | escape }}">
+          {%- elsif member_photo != blank -%}
+            {%- assign m_alt = member_photo.alt | default: block.settings.name -%}
+            {{ member_photo | image_url: width: 900 | image_tag: class: 'theteam-member__img', loading: 'lazy', alt: m_alt }}
+          {%- else -%}
+            <div class="theteam-member__placeholder"></div>
+          {%- endif -%}
+        </div>
+      </div>
+      <div class="theteam-member__content">
+        <p class="theteam-member__label">{{ member_num }} · {{ block.settings.role | default: 'Artist & Teacher' }}</p>
+        <h2 class="theteam-member__name">{{ block.settings.name }}</h2>
+        <p class="theteam-member__role">{{ block.settings.role | default: 'Artist & Teacher' }}</p>
+        <div class="theteam-member__divider"></div>
+        <p class="theteam-member__bio">{{ block.settings.bio }}</p>
+        {%- if block.settings.tags != blank -%}
+          <div class="theteam-member__tags">
+            {%- assign tag_list = block.settings.tags | split: '·' -%}
+            {%- for tag in tag_list -%}
+              <span class="theteam-member__tag">{{ tag | strip }}</span>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+
+  {%- endif -%}
+{%- endfor -%}
+
+{%- if section.settings.cta_heading != blank -%}
+  <div class="theteam-cta">
+    {%- if section.settings.cta_eyebrow != blank -%}
+      <p class="theteam-cta__eyebrow">{{ section.settings.cta_eyebrow }}</p>
+    {%- endif -%}
+    <h2 class="theteam-cta__heading">{{ section.settings.cta_heading }}</h2>
+    {%- if section.settings.cta_text != blank -%}
+      <p class="theteam-cta__text">{{ section.settings.cta_text }}</p>
+    {%- endif -%}
+    {%- if section.settings.cta_btn_label != blank -%}
+      <a href="{{ section.settings.cta_btn_url | default: '/collections/workshops' }}" class="theteam-cta__btn">
+        {{ section.settings.cta_btn_label }} &rarr;
+      </a>
+    {%- endif -%}
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "The Team",
+  "settings": [
+    { "type": "header", "content": "Page header" },
+    { "type": "text",     "id": "eyebrow",      "label": "Eyebrow",     "default": "The Studio at SA Art Fair" },
+    { "type": "text",     "id": "heading",      "label": "Heading",     "default": "Meet the Team" },
+    { "type": "textarea", "id": "intro",        "label": "Intro text",  "default": "The artists, teachers, and creatives who make it all happen in Hout Bay." },
+    { "type": "header", "content": "Call to action" },
+    { "type": "text",     "id": "cta_eyebrow",   "label": "Eyebrow",    "default": "Join Us" },
+    { "type": "text",     "id": "cta_heading",   "label": "Heading",    "default": "Learn from the artists who inspire you." },
+    { "type": "textarea", "id": "cta_text",      "label": "Body text",  "default": "Book a place in one of our hands-on workshops and classes, held in our Hout Bay studio." },
+    { "type": "text",     "id": "cta_btn_label", "label": "Button text","default": "View workshops & classes" },
+    { "type": "url",      "id": "cta_btn_url",   "label": "Button link" }
+  ],
+  "blocks": [
+    {
+      "type": "founders",
+      "name": "Founders",
+      "limit": 1,
+      "settings": [
+        { "type": "text",         "id": "image_src", "label": "Photo URL", "info": "Set automatically when uploaded via the booking admin app" },
+        { "type": "image_picker", "id": "image",  "label": "Photo (manual)", "info": "Used if Photo URL above is blank" },
+        { "type": "text",         "id": "badge",  "label": "Badge text",  "default": "Founders" },
+        { "type": "text",         "id": "names",  "label": "Names",       "default": "Georgina & Bianca" },
+        { "type": "text",         "id": "role",   "label": "Role",        "default": "Co-Founders & Creatives" },
+        { "type": "textarea",     "id": "bio",    "label": "Bio",         "default": "Met 13 years ago through mutual connections, Georgina and Bianca combined their creative expertise — Bianca's branding and social media skills with Georgina's ceramic work — to establish the SA Art Fair in Hout Bay and, subsequently, The Studio." }
+      ]
+    },
+    {
+      "type": "member",
+      "name": "Team member",
+      "settings": [
+        { "type": "text",         "id": "image_src", "label": "Photo URL", "info": "Set automatically when uploaded via the booking admin app" },
+        { "type": "text",         "id": "collection_handle", "label": "Collection handle", "info": "e.g. susan-orpen-1 — auto-loads photo from this collection" },
+        { "type": "image_picker", "id": "image", "label": "Photo (manual)", "info": "Used if Photo URL and collection handle are both blank" },
+        { "type": "text",         "id": "name",  "label": "Name" },
+        { "type": "text",         "id": "role",  "label": "Role",    "default": "Artist & Teacher" },
+        { "type": "textarea",     "id": "bio",   "label": "Bio" },
+        { "type": "text",         "id": "tags",  "label": "Mediums", "info": "Separate with · e.g. Watercolour · Acrylic · Mixed Media" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "The Team" }]
+}
+{% endschema %}

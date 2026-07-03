@@ -1,0 +1,227 @@
+/* ── SA Art Fair — global select / dropdown styling ──
+   Applies the same bordered-box look as the nav active state
+   to every <select> element across the site.
+*/
+
+/* All select wrappers */
+.select {
+  border: 1px solid rgba(46,26,40,0.22);
+  border-radius: 2px;
+  transition: border-color 0.18s;
+}
+.select:hover { border-color: #c45e82; }
+
+/* The <select> itself */
+.select__select {
+  color: #2e1a28;
+  font-weight: 500;
+  background: transparent;
+  border: none !important;
+  box-shadow: none !important;
+  filter: none !important;
+  padding-left: 1.2rem;
+}
+.select__select:focus { box-shadow: none !important; outline: none; }
+
+/* Caret icon inside select wrapper */
+.select .svg-wrapper svg { opacity: 0.5; }
+.select:hover .svg-wrapper svg { opacity: 1; }
+
+/* ── Header: reduce height ── */
+.header {
+  padding-top: 14px !important;
+  padding-bottom: 14px !important;
+}
+
+@media screen and (max-width: 749px) {
+  .header {
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+  }
+}
+
+/* ── Booking: per-product cart timer banners ── */
+#sa-bk-banner-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column-reverse;
+}
+.sa-bk-banner {
+  background: #2e1a28;
+  color: #fef6f8;
+  padding: 0;
+  box-shadow: 0 -4px 24px rgba(0,0,0,0.25);
+  border-top: 1px solid rgba(255,255,255,0.07);
+  transform: translateY(100%);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.sa-bk-banner.bk-banner-in { transform: translateY(0); }
+.bk-banner-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+  flex-wrap: wrap;
+}
+.bk-banner-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+.bk-banner-timer {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #c45e82;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.bk-banner-text {
+  font-size: 0.82rem;
+  line-height: 1.4;
+  color: rgba(254,246,248,0.85);
+  min-width: 0;
+}
+.bk-banner-text strong { color: #fef6f8; }
+.bk-banner-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.bk-banner-checkout {
+  display: inline-flex;
+  align-items: center;
+  padding: 9px 20px;
+  background: #c45e82;
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  border-radius: 3px;
+  white-space: nowrap;
+  transition: background 0.18s;
+}
+.bk-banner-checkout:hover { background: #ad4e70; color: #fff; }
+.bk-banner-dismiss {
+  background: none;
+  border: none;
+  color: rgba(254,246,248,0.45);
+  cursor: pointer;
+  font-size: 1.2rem;
+  line-height: 1;
+  padding: 4px;
+  transition: color 0.15s;
+}
+.bk-banner-dismiss:hover { color: rgba(254,246,248,0.8); }
+
+/* ── Booking expired toast ── */
+#sa-bk-expired {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  z-index: 9999;
+  background: #2e1a28;
+  color: #fef6f8;
+  padding: 14px 22px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.25);
+  transition: transform 0.35s cubic-bezier(0.4,0,0.2,1), opacity 0.35s;
+  opacity: 0;
+  white-space: nowrap;
+}
+#sa-bk-expired.bk-show { transform: translateX(-50%) translateY(0); opacity: 1; }
+#sa-bk-expired a { color: #c45e82; text-decoration: underline; }
+
+@media (max-width: 599px) {
+  .bk-banner-inner { padding: 10px 14px; }
+  .bk-banner-text { font-size: 0.74rem; }
+  #sa-bk-expired { white-space: normal; max-width: calc(100vw - 32px); text-align: center; }
+}
+
+/* ── Cart footer: button layout + PayPal theming ── */
+
+/* Both buttons: same base sizing on mobile */
+.cart__ctas .button--secondary {
+  display: block;
+  width: 100%;
+  max-width: 36rem;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  box-sizing: border-box;
+  white-space: nowrap;
+}
+
+/* Desktop: equal-width, equal-height side-by-side */
+@media screen and (min-width: 750px) {
+  .cart__ctas {
+    display: flex !important;
+    gap: 12px !important;
+    align-items: stretch;
+    max-width: 36rem;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .cart__ctas > * {
+    margin-top: 0 !important;
+  }
+  .cart__ctas .button--secondary,
+  .cart__ctas .cart__checkout-button {
+    flex: 1 1 0 !important;
+    width: 0 !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    white-space: nowrap;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+/* "Continue shopping" — on-brand outline style */
+.cart__ctas .button--secondary {
+  border: 1.5px solid rgba(46,26,40,0.3) !important;
+  background: transparent !important;
+  color: #2e1a28 !important;
+  transition: border-color 0.18s, background 0.18s;
+}
+.cart__ctas .button--secondary:hover,
+.cart__ctas .button--secondary:focus-visible {
+  border-color: #2e1a28 !important;
+  background: rgba(46,26,40,0.06) !important;
+  color: #2e1a28 !important;
+}
+
+/* PayPal button: match theme dark color (filter applies through iframe) */
+.cart__dynamic-checkout-buttons {
+  border-radius: 3px;
+  overflow: hidden;
+  filter: grayscale(1) brightness(0.3);
+  transition: filter 0.18s;
+}
+.cart__dynamic-checkout-buttons:hover {
+  filter: grayscale(1) brightness(0.42);
+}
+
+/* ── Hero banner: CTA buttons always visible in viewport ── */
+/* JS sets --hero-fit-height via custom.js; CSS-only fallback uses 200px offset */
+.banner--large:not(.banner--adapt) {
+  min-height: var(--hero-fit-height, min(72rem, calc(100vh - 200px))) !important;
+}
+.banner--large:not(.banner--mobile-bottom):not(.banner--adapt) .banner__content {
+  min-height: var(--hero-fit-height, min(39rem, calc(100vh - 200px))) !important;
+  padding-bottom: 2.5rem !important;
+}

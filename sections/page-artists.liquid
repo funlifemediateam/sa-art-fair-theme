@@ -1,0 +1,533 @@
+{%- style -%}
+  .artists-page { background: #2e1a28; }
+
+  /* ── Hero ── */
+  .artists-hero {
+    height: 380px;
+    padding: 40px 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: #2e1a28;
+  }
+  .artists-hero__eyebrow {
+    font-family: var(--font-body-family);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #c45e82;
+    margin: 0 0 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+  }
+  .artists-hero__eyebrow::before,
+  .artists-hero__eyebrow::after {
+    content: '';
+    display: block;
+    width: 32px;
+    height: 1px;
+    background: rgba(196,94,130,0.55);
+    flex-shrink: 0;
+  }
+  .artists-hero__heading {
+    font-family: var(--font-heading-family);
+    font-size: clamp(2.6rem, 5vw, 4rem);
+    font-weight: 700;
+    color: #fef6f8;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin: 0 0 22px;
+  }
+  .artists-hero__intro {
+    font-family: var(--font-body-family);
+    font-size: 1rem;
+    color: rgba(254,246,248,0.55);
+    line-height: 1.85;
+    max-width: 460px;
+    margin: 0 auto;
+  }
+
+  /* ── Shared card styles ── */
+  .artist-card {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    background: #3d1f35;
+    border: 1px solid rgba(196,94,130,0.18);
+    overflow: hidden;
+    transition: border-color 0.3s ease, box-shadow 0.35s ease;
+  }
+  .artist-card:hover {
+    border-color: rgba(196,94,130,0.65);
+    box-shadow: 0 0 0 1px rgba(196,94,130,0.15), 0 16px 48px rgba(0,0,0,0.45);
+  }
+  .artist-card_artist_photo {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .artist-card__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    transition: transform 0.65s ease;
+    display: block;
+  }
+  .artist-card:hover .artist-card__img { transform: scale(1.04); }
+  .artist-card__placeholder {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(160deg, #4a2840 0%, #2b1828 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .artist-card__initial {
+    font-family: var(--font-heading-family);
+    font-size: 5rem;
+    font-weight: 700;
+    color: rgba(196,94,130,0.22);
+    letter-spacing: -0.03em;
+    line-height: 1;
+    user-select: none;
+  }
+  .artist-card__info {
+    padding: 28px 26px 32px;
+    text-align: center;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .artist-card__name {
+    font-family: var(--font-heading-family);
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #fef6f8;
+    margin: 0 0 8px;
+    line-height: 1.2;
+  }
+  .artist-card__role {
+    font-family: var(--font-body-family);
+    font-size: 0.63rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #c45e82;
+    margin: 0 0 18px;
+  }
+  .artist-card__divider {
+    width: 24px;
+    height: 1px;
+    background: rgba(196,94,130,0.3);
+    margin: 0 0 16px;
+  }
+  .artist-card__bio {
+    font-family: var(--font-body-family);
+    font-size: 0.875rem;
+    color: rgba(254,246,248,0.52);
+    line-height: 1.8;
+    margin: 0 0 22px;
+    flex: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .artist-card__link {
+    font-family: var(--font-body-family);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: #c45e82;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(196,94,130,0.3);
+    padding-bottom: 2px;
+    transition: border-color 0.2s, opacity 0.2s;
+    margin-top: auto;
+  }
+  .artist-card:hover .artist-card__link {
+    border-bottom-color: #c45e82;
+    opacity: 0.85;
+  }
+
+  /* ── Grid layout ── */
+  .artists-grid-section {
+    padding: 0 0 100px;
+    background: #2e1a28;
+  }
+  .artists-grid-container {
+    max-width: 1240px;
+    margin-inline: auto;
+    padding-inline: 40px;
+  }
+  .artists-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  /* ── Carousel layout ── */
+  .artists-carousel-section {
+    padding: 0 0 100px;
+    background: #2e1a28;
+    overflow: hidden;
+  }
+  .artists-carousel-viewport {
+    overflow: hidden;
+    width: 100%;
+    cursor: grab;
+    overscroll-behavior-x: none;
+    touch-action: pan-y;
+  }
+  .artists-carousel-viewport:active { cursor: grabbing; }
+  .artists-carousel-track {
+    display: flex;
+    gap: 20px;
+    padding: 0 40px;
+    width: max-content;
+    will-change: transform;
+  }
+  .artists-carousel-track .artist-card {
+    width: 300px;
+    flex-shrink: 0;
+  }
+
+  /* ── Responsive: grid ── */
+  @media (max-width: 900px) {
+    .artists-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    .artists-grid-container { padding-inline: 28px; }
+  }
+  @media (max-width: 600px) {
+    .artists-hero { height: 280px; padding: 32px 20px; }
+    .artists-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+    .artists-grid-container { padding-inline: 16px; }
+    .artists-grid-section { padding-bottom: 64px; }
+    .artist-card__info { padding: 18px 14px 22px; }
+    .artist-card__name { font-size: 1.05rem; }
+    .artist-card__bio { font-size: 0.8rem; -webkit-line-clamp: 2; }
+    .artist-card__initial { font-size: 3.5rem; }
+  }
+
+  /* ── Responsive: carousel ── */
+  @media (max-width: 600px) {
+    .artists-carousel-track { gap: 14px; padding: 0 16px; }
+    .artists-carousel-track .artist-card { width: 220px; }
+    .artists-carousel-section { padding-bottom: 64px; }
+  }
+
+  /* Reduced motion: freeze carousel */
+  @media (prefers-reduced-motion: reduce) {
+    .artists-carousel-track { transform: none !important; }
+  }
+{%- endstyle -%}
+
+<div class="artists-page">
+  <div class="artists-hero">
+    <p class="artists-hero__eyebrow">{{ section.settings.eyebrow | default: 'SA Art Fair' }}</p>
+    <h1 class="artists-hero__heading">{{ section.settings.heading | default: 'Our Artists' }}</h1>
+    {%- if section.settings.intro != blank -%}
+      <p class="artists-hero__intro">{{ section.settings.intro }}</p>
+    {%- endif -%}
+  </div>
+
+  {%- if section.settings.layout == 'carousel' -%}
+
+    <div class="artists-carousel-section">
+      <div class="artists-carousel-viewport" id="carousel-vp-{{ section.id }}">
+        <div class="artists-carousel-track" id="carousel-track-{{ section.id }}">
+
+          {%- comment -%}Real cards (with editor attributes){%- endcomment -%}
+          {%- for block in section.blocks -%}
+            {%- assign dest = block.settings.collection_handle | prepend: '/collections/' -%}
+            {%- if block.settings.link != blank -%}{%- assign dest = block.settings.link -%}{%- endif -%}
+            {%- assign col_img = collections[block.settings.collection_handle].image -%}
+            {%- assign artist_photo = col_img | default: block.settings.image -%}
+            <a href="{{ dest }}" class="artist-card" {{ block.shopify_attributes }}>
+              <div class="artist-card_artist_photo">
+                {%- if artist_photo != blank -%}
+                  {{ artist_photo | image_url: width: 800 | image_tag:
+                      class: 'artist-card__img', loading: 'lazy', alt: block.settings.name | escape }}
+                {%- else -%}
+                  <div class="artist-card__placeholder">
+                    <span class="artist-card__initial">{{ block.settings.name | slice: 0 }}</span>
+                  </div>
+                {%- endif -%}
+              </div>
+              <div class="artist-card__info">
+                <h2 class="artist-card__name">{{ block.settings.name }}</h2>
+                {%- if block.settings.role != blank -%}
+                  <p class="artist-card__role">{{ block.settings.role }}</p>
+                {%- endif -%}
+                <div class="artist-card__divider"></div>
+                {%- if block.settings.bio != blank -%}
+                  <p class="artist-card__bio">{{ block.settings.bio }}</p>
+                {%- endif -%}
+                <span class="artist-card__link">View works &rarr;</span>
+              </div>
+            </a>
+          {%- endfor -%}
+
+          {%- comment -%}Duplicate cards for seamless loop (aria-hidden, no editor attrs){%- endcomment -%}
+          {%- for block in section.blocks -%}
+            {%- assign dest = block.settings.collection_handle | prepend: '/collections/' -%}
+            {%- if block.settings.link != blank -%}{%- assign dest = block.settings.link -%}{%- endif -%}
+            {%- assign col_img = collections[block.settings.collection_handle].image -%}
+            {%- assign artist_photo = col_img | default: block.settings.image -%}
+            <a href="{{ dest }}" class="artist-card" aria-hidden="true" tabindex="-1">
+              <div class="artist-card_artist_photo">
+                {%- if artist_photo != blank -%}
+                  {{ artist_photo | image_url: width: 800 | image_tag:
+                      class: 'artist-card__img', loading: 'lazy', alt: '' }}
+                {%- else -%}
+                  <div class="artist-card__placeholder">
+                    <span class="artist-card__initial">{{ block.settings.name | slice: 0 }}</span>
+                  </div>
+                {%- endif -%}
+              </div>
+              <div class="artist-card__info">
+                <h2 class="artist-card__name">{{ block.settings.name }}</h2>
+                {%- if block.settings.role != blank -%}
+                  <p class="artist-card__role">{{ block.settings.role }}</p>
+                {%- endif -%}
+                <div class="artist-card__divider"></div>
+                {%- if block.settings.bio != blank -%}
+                  <p class="artist-card__bio">{{ block.settings.bio }}</p>
+                {%- endif -%}
+                <span class="artist-card__link">View works &rarr;</span>
+              </div>
+            </a>
+          {%- endfor -%}
+
+        </div>
+      </div>
+    </div>
+
+  {%- else -%}
+
+    <div class="artists-grid-section">
+      <div class="artists-grid-container">
+        {%- if section.blocks.size > 0 -%}
+          <div class="artists-grid">
+            {%- for block in section.blocks -%}
+              {%- assign dest = block.settings.collection_handle | prepend: '/collections/' -%}
+              {%- if block.settings.link != blank -%}{%- assign dest = block.settings.link -%}{%- endif -%}
+              {%- assign col_img = collections[block.settings.collection_handle].image -%}
+              {%- assign artist_photo = col_img | default: block.settings.image -%}
+              <a href="{{ dest }}" class="artist-card" {{ block.shopify_attributes }}>
+                <div class="artist-card_artist_photo">
+                  {%- if artist_photo != blank -%}
+                    {{ artist_photo | image_url: width: 800 | image_tag:
+                        class: 'artist-card__img', loading: 'lazy', alt: block.settings.name | escape }}
+                  {%- else -%}
+                    <div class="artist-card__placeholder">
+                      <span class="artist-card__initial">{{ block.settings.name | slice: 0 }}</span>
+                    </div>
+                  {%- endif -%}
+                </div>
+                <div class="artist-card__info">
+                  <h2 class="artist-card__name">{{ block.settings.name }}</h2>
+                  {%- if block.settings.role != blank -%}
+                    <p class="artist-card__role">{{ block.settings.role }}</p>
+                  {%- endif -%}
+                  <div class="artist-card__divider"></div>
+                  {%- if block.settings.bio != blank -%}
+                    <p class="artist-card__bio">{{ block.settings.bio }}</p>
+                  {%- endif -%}
+                  <span class="artist-card__link">View works &rarr;</span>
+                </div>
+              </a>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+
+  {%- endif -%}
+</div>
+
+{%- if section.settings.layout == 'carousel' -%}
+<script>
+(function () {
+  var vp    = document.getElementById('carousel-vp-{{ section.id }}');
+  var track = document.getElementById('carousel-track-{{ section.id }}');
+  if (!vp || !track) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  var SPEED      = {{ section.settings.carousel_speed | default: 55 | times: 0.01 | round: 2 }};
+  var SPEED_SLOW = SPEED * 0.15;
+  var pos        = 0;
+  var speed      = SPEED;
+  var targetSpd  = SPEED;
+  var isDragging = false;
+
+  /* drag */
+  var dragStartX   = 0;
+  var dragStartPos = 0;
+  var hasDragged   = false;
+  var lastDragX    = 0;
+  var dragVel      = 0;
+
+  /* touch */
+  var touchStartX  = 0;
+  var touchStartY  = 0;
+  var touchIsHoriz = null;
+
+  function half() {
+    return track.scrollWidth / 2;
+  }
+  function wrap(p) {
+    var h = half();
+    p = p % h;
+    if (p > 0) p -= h;
+    return p;
+  }
+
+  /* ── rAF loop ── */
+  function tick() {
+    if (!isDragging) {
+      speed += (targetSpd - speed) * 0.045;
+      pos    = wrap(pos - speed);
+      track.style.transform = 'translateX(' + pos + 'px)';
+    }
+    requestAnimationFrame(tick);
+  }
+
+  /* ── hover: slow down only, no direction tracking ── */
+  vp.addEventListener('mouseenter', function () { if (!isDragging) targetSpd = SPEED_SLOW; });
+  vp.addEventListener('mouseleave', function () { if (!isDragging) targetSpd = SPEED; });
+
+  /* ── trackpad / mouse wheel — captured so browser back gesture can't fire ── */
+  vp.addEventListener('wheel', function (e) {
+    var isHoriz = Math.abs(e.deltaX) > Math.abs(e.deltaY);
+    if (!isHoriz) return;
+    e.preventDefault();
+    pos = wrap(pos - e.deltaX);
+    track.style.transform = 'translateX(' + pos + 'px)';
+  }, { passive: false });
+
+  /* ── drag ── */
+  function startDrag(clientX) {
+    isDragging   = true;
+    hasDragged   = false;
+    dragStartX   = clientX;
+    dragStartPos = pos;
+    lastDragX    = clientX;
+    dragVel      = 0;
+    speed        = 0;
+    targetSpd    = 0;
+  }
+  function moveDrag(clientX) {
+    if (!isDragging) return;
+    dragVel   = clientX - lastDragX;
+    lastDragX = clientX;
+    var delta = clientX - dragStartX;
+    if (Math.abs(delta) > 4) {
+      hasDragged = true;
+      vp.style.cursor = 'grabbing';
+    }
+    if (hasDragged) {
+      pos = wrap(dragStartPos + delta);
+      track.style.transform = 'translateX(' + pos + 'px)';
+    }
+  }
+  function endDrag() {
+    if (!isDragging) return;
+    isDragging = false;
+    speed      = -dragVel * 0.6;
+    targetSpd  = SPEED;
+    vp.style.cursor = 'grab';
+  }
+
+  /* block card click after real drag */
+  vp.addEventListener('click', function (e) {
+    if (hasDragged) e.preventDefault();
+  }, true);
+
+  /* mouse */
+  vp.addEventListener('mousedown', function (e) {
+    e.preventDefault();
+    vp.style.cursor = 'grabbing';
+    startDrag(e.clientX);
+  });
+  document.addEventListener('mousemove', function (e) { moveDrag(e.clientX); });
+  document.addEventListener('mouseup', endDrag);
+
+  /* touch — detect horizontal vs vertical before intercepting */
+  vp.addEventListener('touchstart', function (e) {
+    touchStartX  = e.touches[0].clientX;
+    touchStartY  = e.touches[0].clientY;
+    touchIsHoriz = null;
+    startDrag(touchStartX);
+  }, { passive: true });
+
+  vp.addEventListener('touchmove', function (e) {
+    var dx = Math.abs(e.touches[0].clientX - touchStartX);
+    var dy = Math.abs(e.touches[0].clientY - touchStartY);
+    if (touchIsHoriz === null) touchIsHoriz = dx > dy;
+    if (!touchIsHoriz) { endDrag(); return; }
+    e.preventDefault();
+    moveDrag(e.touches[0].clientX);
+  }, { passive: false });
+
+  vp.addEventListener('touchend', endDrag, { passive: true });
+
+  requestAnimationFrame(tick);
+})();
+</script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Artists listing",
+  "settings": [
+    { "type": "text",     "id": "eyebrow",  "label": "Eyebrow",   "default": "SA Art Fair" },
+    { "type": "text",     "id": "heading",  "label": "Heading",   "default": "Our Artists" },
+    { "type": "textarea", "id": "intro",    "label": "Intro text" },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "options": [
+        { "value": "grid",     "label": "Grid" },
+        { "value": "carousel", "label": "Carousel" }
+      ],
+      "default": "grid"
+    },
+    {
+      "type": "range",
+      "id": "carousel_speed",
+      "label": "Carousel speed",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "default": 55,
+      "info": "Only applies in Carousel layout"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "artist",
+      "name": "Artist",
+      "settings": [
+        { "type": "image_picker", "id": "image",             "label": "Photo (override)", "info": "Leave blank — photo is pulled automatically from the collection image" },
+        { "type": "text",         "id": "name",              "label": "Name" },
+        { "type": "text",         "id": "role",              "label": "Medium / Specialty" },
+        { "type": "textarea",     "id": "bio",               "label": "Short bio" },
+        { "type": "text",         "id": "collection_handle", "label": "Collection handle", "info": "e.g. susan-orpen" },
+        { "type": "url",          "id": "link",              "label": "Override link",     "info": "Optional — overrides the collection handle link" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "Artists listing" }]
+}
+{% endschema %}

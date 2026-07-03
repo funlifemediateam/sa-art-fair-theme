@@ -1,0 +1,570 @@
+{%- liquid
+  assign src = product
+  assign _h = section.settings.class_handle
+  if _h == 'ya-programme'
+    assign _h = 'young-artist-programme-for-tweens-teens-with-janice-grant'
+  elsif _h == 'sewing-jacqui'
+    assign _h = 'beginners-sewing-workshop-jacqui-sundelson-from-fabric-to-finished-garment'
+  endif
+  if _h != blank
+    assign src = all_products[_h]
+  endif
+
+  assign instructor = section.settings.instructor_name
+  if instructor == blank
+    assign instructor = src.metafields.booking.instructor_name
+  endif
+
+  assign bio = section.settings.instructor_bio
+  if bio == blank
+    assign bio = src.metafields.booking.instructor_bio
+  endif
+
+  assign skill = section.settings.skill_level
+  if skill == blank
+    assign skill = src.metafields.booking.skill_level
+  endif
+
+  assign outcomes = section.settings.learning_outcomes
+  if outcomes == blank
+    assign outcomes = src.metafields.booking.learning_outcomes
+  endif
+
+  assign materials = section.settings.materials
+  if materials == blank
+    assign materials = src.metafields.booking.materials
+  endif
+
+  assign class_time = section.settings.class_duration
+  if class_time == blank
+    assign class_time = src.metafields.booking.class_time
+  endif
+
+  assign capacity = section.settings.max_capacity
+  if capacity == blank
+    assign capacity = src.metafields.booking.capacity
+  endif
+
+  assign age_range = section.settings.age_range
+  assign age_min = ''
+  assign age_max = ''
+  if age_range == blank
+    assign age_min = src.metafields.booking.age_min
+    assign age_max = src.metafields.booking.age_max
+  endif
+
+  assign mf_is_one_off    = src.metafields.booking.is_one_off
+  assign mf_is_term       = src.metafields.booking.is_term
+  assign mf_start_date    = src.metafields.booking.start_date
+  assign mf_end_date      = src.metafields.booking.end_date
+  assign mf_term_name     = src.metafields.booking.term_name
+  assign mf_session_dates = src.metafields.booking.session_dates
+  assign _days = ''
+  if src.metafields.booking.day_sun == 'true'
+    assign _days = 'Sunday'
+  endif
+  if src.metafields.booking.day_mon == 'true'
+    if _days != blank
+      assign _days = _days | append: ', Monday'
+    else
+      assign _days = 'Monday'
+    endif
+  endif
+  if src.metafields.booking.day_tue == 'true'
+    if _days != blank
+      assign _days = _days | append: ', Tuesday'
+    else
+      assign _days = 'Tuesday'
+    endif
+  endif
+  if src.metafields.booking.day_wed == 'true'
+    if _days != blank
+      assign _days = _days | append: ', Wednesday'
+    else
+      assign _days = 'Wednesday'
+    endif
+  endif
+  if src.metafields.booking.day_thu == 'true'
+    if _days != blank
+      assign _days = _days | append: ', Thursday'
+    else
+      assign _days = 'Thursday'
+    endif
+  endif
+  if src.metafields.booking.day_fri == 'true'
+    if _days != blank
+      assign _days = _days | append: ', Friday'
+    else
+      assign _days = 'Friday'
+    endif
+  endif
+  if src.metafields.booking.day_sat == 'true'
+    if _days != blank
+      assign _days = _days | append: ', Saturday'
+    else
+      assign _days = 'Saturday'
+    endif
+  endif
+
+  for _v in src.variants
+    assign _vtl = _v.title | downcase
+    if _vtl contains 'single' or _v.title == 'Default Title'
+      assign _price_single = _v.price
+    endif
+    if _vtl contains 'term' or _vtl contains 'full'
+      assign _price_term = _v.price
+    endif
+    if _vtl contains 'trial'
+      assign _price_trial = _v.price
+    endif
+  endfor
+
+  assign _session_count = 0
+  if mf_session_dates != blank
+    assign _sd_count_arr = mf_session_dates | split: ','
+    assign _session_count = _sd_count_arr | size
+  endif
+  assign _savings = 0
+  if _session_count > 0 and _price_single != blank and _price_term != blank
+    assign _individual_total = _price_single | times: _session_count
+    assign _savings = _individual_total | minus: _price_term
+  endif
+
+  assign has_schedule = false
+  if mf_is_one_off == 'true' or mf_is_term == 'true' or _days != blank or mf_session_dates != blank or mf_start_date != blank
+    assign has_schedule = true
+  endif
+
+  assign has_pricing = false
+  if _price_single != blank or _price_term != blank or _price_trial != blank
+    assign has_pricing = true
+  endif
+
+  assign has_chips = false
+  if class_time != blank or capacity != blank or age_range != blank or age_min != blank or age_max != blank or skill != blank
+    assign has_chips = true
+  endif
+
+  assign has_content = false
+  if has_chips or has_schedule or has_pricing or instructor != blank or bio != blank or outcomes != blank or materials != blank
+    assign has_content = true
+  endif
+-%}
+
+{%- if has_content -%}
+<div class="cls-details-wrap color-{{ section.settings.color_scheme }}">
+  <div class="cls-details section-{{ section.id }}-padding">
+
+    {%- comment -%} 1. Quick-scan chips {%- endcomment -%}
+    {%- if has_chips -%}
+    <div class="cls-chips">
+      {%- if class_time != blank -%}
+        <span class="cls-chip">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          {{ class_time }}
+        </span>
+      {%- endif -%}
+      {%- if age_range != blank or age_min != blank or age_max != blank -%}
+        <span class="cls-chip">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          {%- if age_range != blank -%}
+            Ages {{ age_range }}
+          {%- elsif age_min != blank and age_max != blank -%}
+            Ages {{ age_min }}–{{ age_max }}
+          {%- elsif age_min != blank -%}
+            Ages {{ age_min }}+
+          {%- else -%}
+            Under {{ age_max }}
+          {%- endif -%}
+        </span>
+      {%- endif -%}
+      {%- if capacity != blank -%}
+        <span class="cls-chip">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          Max {{ capacity }}
+        </span>
+      {%- endif -%}
+      {%- if skill != blank -%}
+        <span class="cls-chip cls-chip--accent">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          {{ skill }}
+        </span>
+      {%- endif -%}
+    </div>
+    {%- endif -%}
+
+    {%- comment -%} 2. Schedule + Pricing {%- endcomment -%}
+    {%- if has_schedule or has_pricing -%}
+    <div class="cls-two-col">
+
+      {%- if has_schedule -%}
+      <div class="cls-block">
+        {%- if mf_is_one_off == 'true' -%}
+          <h2 class="cls-section-title">Workshop date</h2>
+        {%- elsif mf_is_term == 'true' -%}
+          <h2 class="cls-section-title">Term schedule</h2>
+        {%- else -%}
+          <h2 class="cls-section-title">Schedule</h2>
+        {%- endif -%}
+
+        {%- if mf_term_name != blank -%}
+          <p class="cls-sched-eyebrow">{{ mf_term_name }}</p>
+        {%- endif -%}
+
+        {%- if mf_is_one_off == 'true' -%}
+          {%- if mf_start_date != blank -%}
+            <p class="cls-sched-highlight">{{ mf_start_date | date: "%A, %-d %B %Y" }}</p>
+          {%- endif -%}
+        {%- else -%}
+          {%- if _days != blank -%}
+            <p class="cls-sched-highlight">Every {{ _days }}</p>
+          {%- endif -%}
+          {%- if mf_start_date != blank or mf_end_date != blank -%}
+            <p class="cls-sched-range">
+              {%- if mf_start_date != blank -%}{{ mf_start_date | date: "%-d %B %Y" }}{%- endif -%}
+              {%- if mf_start_date != blank and mf_end_date != blank -%}&thinsp;–&thinsp;{%- endif -%}
+              {%- if mf_end_date != blank -%}{{ mf_end_date | date: "%-d %B %Y" }}{%- endif -%}
+            </p>
+          {%- endif -%}
+        {%- endif -%}
+
+        {%- if mf_session_dates != blank -%}
+          {%- assign _sd_arr = mf_session_dates | split: ',' -%}
+          {%- if _sd_arr.size > 0 -%}
+            <p class="cls-sched-dates-label">{{ _sd_arr.size }} session{%- if _sd_arr.size != 1 -%}s{%- endif -%}</p>
+            <ul class="cls-sched-dates-list">
+              {%- for _sd in _sd_arr -%}
+                {%- assign _sd_clean = _sd | strip -%}
+                {%- if _sd_clean != blank -%}
+                  <li>{{ _sd_clean | date: "%A, %-d %B %Y" }}</li>
+                {%- endif -%}
+              {%- endfor -%}
+            </ul>
+          {%- endif -%}
+        {%- endif -%}
+      </div>
+      {%- endif -%}
+
+      {%- if has_pricing -%}
+      <div class="cls-block">
+        <h2 class="cls-section-title">Pricing</h2>
+        <div class="cls-pricing">
+          {%- if _price_single != blank -%}
+            <div class="cls-price-row">
+              <span class="cls-price-label">
+                {%- if _price_term != blank -%}Single session{%- else -%}Per session{%- endif -%}
+              </span>
+              <span class="cls-price-amount">{{ _price_single | money_without_trailing_zeros }}</span>
+            </div>
+          {%- endif -%}
+          {%- if _price_term != blank -%}
+            <div class="cls-price-row cls-price-row--featured">
+              <div class="cls-price-label-group">
+                <span class="cls-price-label">Full term</span>
+                {%- if _savings > 0 -%}
+                  <span class="cls-price-save">Save {{ _savings | money_without_trailing_zeros }} vs. {{ _session_count }} individual sessions</span>
+                {%- elsif _session_count > 0 and _price_single != blank -%}
+                  <span class="cls-price-sessions">{{ _session_count }} sessions &middot; {{ _price_single | money_without_trailing_zeros }}/session individually</span>
+                {%- elsif _session_count > 0 -%}
+                  <span class="cls-price-sessions">{{ _session_count }} sessions included</span>
+                {%- elsif _price_single != blank -%}
+                  <span class="cls-price-sessions">vs {{ _price_single | money_without_trailing_zeros }} per session individually</span>
+                {%- endif -%}
+              </div>
+              <span class="cls-price-amount">{{ _price_term | money_without_trailing_zeros }}</span>
+            </div>
+          {%- endif -%}
+          {%- if _price_trial != blank -%}
+            <div class="cls-price-row cls-price-row--trial">
+              <span class="cls-price-label">Trial class</span>
+              <span class="cls-price-amount">{{ _price_trial | money_without_trailing_zeros }}</span>
+            </div>
+          {%- endif -%}
+        </div>
+      </div>
+      {%- endif -%}
+
+    </div>
+    {%- endif -%}
+
+    {%- comment -%} 3. Instructor + What to bring {%- endcomment -%}
+    {%- if instructor != blank or bio != blank or materials != blank -%}
+    <div class="cls-two-col">
+
+      {%- if instructor != blank or bio != blank -%}
+      <div class="cls-block">
+        <h2 class="cls-section-title">About the instructor</h2>
+        {%- if instructor != blank -%}
+          <p class="cls-instructor-name">{{ instructor }}</p>
+        {%- endif -%}
+        {%- if bio != blank -%}
+          <p class="cls-instructor-bio">{{ bio }}</p>
+        {%- endif -%}
+      </div>
+      {%- endif -%}
+
+      {%- if materials != blank -%}
+      <div class="cls-block">
+        <h2 class="cls-section-title">What to bring</h2>
+        <ul class="cls-list">
+          {%- assign mat_lines = materials | split: "
+" -%}
+          {%- for line in mat_lines -%}
+            {%- assign lc = line | strip -%}
+            {%- if lc != blank -%}<li>{{ lc }}</li>{%- endif -%}
+          {%- endfor -%}
+        </ul>
+      </div>
+      {%- endif -%}
+
+    </div>
+    {%- endif -%}
+
+    {%- comment -%} 4. What you'll learn (full width) {%- endcomment -%}
+    {%- if outcomes != blank -%}
+    <div class="cls-block cls-block--wide">
+      <h2 class="cls-section-title">What you'll learn</h2>
+      <div class="cls-outcomes-paras">
+        {%- assign out_lines = outcomes | split: "
+" -%}
+        {%- for line in out_lines -%}
+          {%- assign lc = line | strip | remove_first: "• " | remove_first: "- " | strip -%}
+          {%- if lc != blank -%}<p>{{ lc }}</p>{%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+    {%- endif -%}
+
+  </div>
+</div>
+{%- endif -%}
+
+{%- style -%}
+  .cls-details-wrap {
+    border-top: 1px solid rgba(46,26,40,0.1);
+    background: #faf7f5;
+  }
+  .cls-details {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+  @media screen and (min-width: 750px) {
+    .cls-details { padding-left: 5rem; padding-right: 5rem; }
+  }
+
+  /* Chips */
+  .cls-chips { display: flex; flex-wrap: wrap; gap: 10px; }
+  .cls-chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 7px 14px; background: #fff;
+    border: 1px solid rgba(46,26,40,0.14); border-radius: 100px;
+    font-size: 0.82rem; color: #2e1a28; font-weight: 500; letter-spacing: 0.01em;
+  }
+  .cls-chip svg { flex-shrink: 0; opacity: 0.55; }
+  .cls-chip--accent {
+    background: rgba(201,135,58,0.1); border-color: rgba(201,135,58,0.3); color: #7a4e10;
+  }
+  .cls-chip--accent svg { opacity: 0.7; }
+
+  /* Layout */
+  .cls-two-col { display: grid; grid-template-columns: 1fr; gap: 32px; }
+  @media screen and (min-width: 750px) {
+    .cls-two-col { grid-template-columns: 1fr 1fr; gap: 48px; }
+  }
+  .cls-block { display: flex; flex-direction: column; gap: 12px; }
+  .cls-block--wide { width: 100%; }
+
+  /* Section title */
+  .cls-section-title {
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; color: #c9873a; margin: 0;
+    padding-bottom: 10px; border-bottom: 2px solid #c9873a; display: inline-block;
+  }
+
+  /* Schedule */
+  .cls-sched-eyebrow {
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; color: rgba(46,26,40,0.45); margin: 0;
+  }
+  .cls-sched-highlight {
+    font-size: 1rem; font-weight: 700; color: #2e1a28; margin: 0; line-height: 1.3;
+  }
+  .cls-sched-range {
+    font-size: 0.88rem; color: rgba(26,26,26,0.65); margin: 0; letter-spacing: 0.01em;
+  }
+  .cls-sched-dates-label {
+    font-size: 0.75rem; font-weight: 700; color: rgba(46,26,40,0.45);
+    text-transform: uppercase; letter-spacing: 0.07em; margin: 0;
+  }
+  .cls-sched-dates-list {
+    list-style: none; padding: 0; margin: 0;
+    display: flex; flex-direction: column; gap: 0;
+    max-height: 190px; overflow-y: auto;
+    scrollbar-width: thin; scrollbar-color: rgba(0,0,0,0.12) transparent;
+  }
+  .cls-sched-dates-list li {
+    font-size: 0.85rem; color: #1a1a1a;
+    padding: 6px 0; border-bottom: 1px solid rgba(46,26,40,0.07);
+  }
+  .cls-sched-dates-list li:last-child { border-bottom: none; }
+
+  /* Pricing */
+  .cls-pricing {
+    display: flex; flex-direction: column; gap: 0;
+    border: 1px solid rgba(46,26,40,0.12); border-radius: 8px; overflow: hidden;
+  }
+  .cls-price-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 16px; background: #fff;
+    border-bottom: 1px solid rgba(46,26,40,0.08);
+  }
+  .cls-price-row:last-child { border-bottom: none; }
+  .cls-price-row--featured { background: rgba(201,135,58,0.06); }
+  .cls-price-row--trial { background: rgba(46,26,40,0.03); }
+  .cls-price-label {
+    font-size: 0.88rem; color: rgba(26,26,26,0.7); font-weight: 500;
+  }
+  .cls-price-row--featured .cls-price-label { color: #2e1a28; font-weight: 600; }
+  .cls-price-label-group { display: flex; flex-direction: column; gap: 2px; }
+  .cls-price-save { font-size: 0.78rem; font-weight: 600; color: #2a7a3b; letter-spacing: 0.01em; }
+  .cls-price-sessions { font-size: 0.78rem; font-weight: 500; color: rgba(46,26,40,0.68); letter-spacing: 0.01em; }
+  .cls-price-amount {
+    font-size: 1.05rem; font-weight: 700; color: #2e1a28; letter-spacing: -0.01em;
+  }
+  .cls-price-row--trial .cls-price-amount { font-size: 0.95rem; color: rgba(26,26,26,0.65); font-weight: 600; }
+
+  /* Instructor */
+  .cls-instructor-name { font-size: 1.1rem; font-weight: 700; color: #2e1a28; margin: 0; }
+  .cls-instructor-bio { font-size: 0.9rem; color: rgba(26,26,26,0.75); line-height: 1.7; margin: 0; }
+
+  /* What to bring */
+  .cls-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
+  .cls-list li {
+    display: flex; align-items: flex-start; gap: 10px;
+    font-size: 0.88rem; color: #1a1a1a; line-height: 1.5;
+  }
+  .cls-list li::before {
+    content: ''; display: block; flex-shrink: 0;
+    width: 6px; height: 6px; border-radius: 50%;
+    background: #c9873a; margin-top: 6px;
+  }
+
+  /* What you'll learn */
+  .cls-outcomes-paras { display: flex; flex-direction: column; gap: 10px; }
+  .cls-outcomes-paras p { font-size: 0.88rem; color: rgba(26,26,26,0.82); line-height: 1.65; margin: 0; }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Class Details",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Class \/ Workshop"
+    },
+    {
+      "type": "paragraph",
+      "content": "Select a class to automatically pull its schedule, pricing, instructor, and content from the SA Booking Admin app. Leave on Auto when used on a class product page."
+    },
+    {
+      "type": "select",
+      "id": "class_handle",
+      "label": "Class \/ Workshop",
+      "options": [
+        { "value": "", "label": "— Auto (current product page) —" },
+        { "value": "ya-programme", "label": "Young Artist Programme | Tweens & Teens" },
+        { "value": "young-artists-with-janice-grant", "label": "Young Artists with Janice Grant" },
+        { "value": "permission-to-play-classes-with-zara-farinha", "label": "Permission to Play with Zara Farinha" },
+        { "value": "watercolour-with-kerri-sassen", "label": "Watercolour with Kerri Sassen" },
+        { "value": "beginners-sewing-workshop-16-aug-9am-5pm", "label": "Beginners Sewing — 16 Aug" },
+        { "value": "sewing-jacqui", "label": "Beginners Sewing | Jacqui Sundelson" }
+      ],
+      "default": ""
+    },
+    {
+      "type": "header",
+      "content": "Override fields (optional)"
+    },
+    {
+      "type": "paragraph",
+      "content": "Leave blank to use data from the selected class above."
+    },
+    {
+      "type": "text",
+      "id": "instructor_name",
+      "label": "Instructor name"
+    },
+    {
+      "type": "textarea",
+      "id": "instructor_bio",
+      "label": "Instructor bio"
+    },
+    {
+      "type": "text",
+      "id": "skill_level",
+      "label": "Skill level"
+    },
+    {
+      "type": "text",
+      "id": "class_duration",
+      "label": "Class duration"
+    },
+    {
+      "type": "text",
+      "id": "age_range",
+      "label": "Age range"
+    },
+    {
+      "type": "text",
+      "id": "max_capacity",
+      "label": "Max capacity"
+    },
+    {
+      "type": "textarea",
+      "id": "learning_outcomes",
+      "label": "What you'll learn (one per line)"
+    },
+    {
+      "type": "textarea",
+      "id": "materials",
+      "label": "What to bring (one item per line)"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 16,
+      "max": 80,
+      "step": 8,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 16,
+      "max": 80,
+      "step": 8,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 48
+    }
+  ],
+  "presets": [{ "name": "Class Details" }]
+}
+{% endschema %}

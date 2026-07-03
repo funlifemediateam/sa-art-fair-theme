@@ -1,0 +1,14 @@
+{
+  "sections": {
+    "main": {
+      "type": "collection-artist",
+      "settings": {
+        "artist_name": "Liesel van der Berg",
+        "artist_role": "Ceramics · Sculpture · Mixed Media",
+        "artist_bio": "Liesel works between clay and canvas, creating hand-built ceramic pieces and mixed media works that explore texture, form, and the quiet beauty of imperfection. Her studio workshops are as meditative as they are creative.",
+        "artist_tags": "Ceramics · Sculpture · Mixed Media"
+      }
+    }
+  },
+  "order": ["main"]
+}

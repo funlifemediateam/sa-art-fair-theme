@@ -1,0 +1,14 @@
+{
+  "sections": {
+    "main": {
+      "type": "collection-artist",
+      "settings": {
+        "artist_name": "Natasha Hendricks",
+        "artist_role": "Printmaking · Photography · Collage",
+        "artist_bio": "Natasha layers photographic imagery with hand-pulled prints and torn paper to create works that feel both contemporary and deeply archival. Her practice draws on Cape Town's urban landscape, memory, and the overlooked moments between.",
+        "artist_tags": "Printmaking · Photography · Collage"
+      }
+    }
+  },
+  "order": ["main"]
+}

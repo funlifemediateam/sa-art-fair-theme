@@ -1,0 +1,166 @@
+{%- style -%}
+  .two-paths {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .two-paths__panel {
+    padding: 80px 60px 88px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  /* Light panel */
+  .two-paths__panel--light {
+    background: #fef6f8;
+  }
+  .two-paths__panel--light .two-paths__eyebrow {
+    color: #c45e82;
+  }
+  .two-paths__panel--light .two-paths__eyebrow::before {
+    background: #c45e82;
+  }
+  .two-paths__panel--light .two-paths__heading {
+    color: #2e1a28;
+  }
+  .two-paths__panel--light .two-paths__desc {
+    color: rgba(46,26,40,0.62);
+  }
+  .two-paths__panel--light .two-paths__btn {
+    color: #fef6f8;
+    background: #2e1a28;
+    border-color: #2e1a28;
+  }
+  .two-paths__panel--light .two-paths__btn:hover {
+    background: #c45e82;
+    border-color: #c45e82;
+  }
+
+  /* Dark panel */
+  .two-paths__panel--dark {
+    background: #3d1f35;
+  }
+  .two-paths__panel--dark .two-paths__eyebrow {
+    color: #c45e82;
+  }
+  .two-paths__panel--dark .two-paths__eyebrow::before {
+    background: #c45e82;
+  }
+  .two-paths__panel--dark .two-paths__heading {
+    color: #fef6f8;
+  }
+  .two-paths__panel--dark .two-paths__desc {
+    color: rgba(254,246,248,0.6);
+  }
+  .two-paths__panel--dark .two-paths__btn {
+    color: #fef6f8;
+    background: #c45e82;
+    border-color: #c45e82;
+  }
+  .two-paths__panel--dark .two-paths__btn:hover {
+    background: #fef6f8;
+    border-color: #fef6f8;
+    color: #2e1a28;
+  }
+
+  /* shared */
+  .two-paths__eyebrow {
+    font-family: var(--font-body-family);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    margin: 0 0 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .two-paths__eyebrow::before {
+    content: '';
+    display: block;
+    width: 24px;
+    height: 1px;
+    flex-shrink: 0;
+  }
+  .two-paths__heading {
+    font-family: var(--font-heading-family);
+    font-size: clamp(1.8rem, 2.5vw, 2.4rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    margin: 0 0 18px;
+  }
+  .two-paths__desc {
+    font-family: var(--font-body-family);
+    font-size: 1rem;
+    line-height: 1.75;
+    margin: 0 0 36px;
+    max-width: 360px;
+    flex: 1;
+  }
+  .two-paths__btn {
+    display: inline-block;
+    font-family: var(--font-body-family);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 14px 32px;
+    text-decoration: none;
+    border: 1px solid;
+    transition: background 0.25s, border-color 0.25s, color 0.25s;
+  }
+
+  @media (max-width: 768px) {
+    .two-paths { grid-template-columns: 1fr; }
+    .two-paths__panel { padding: 56px 24px 64px; }
+  }
+{%- endstyle -%}
+
+<div class="two-paths">
+  <div class="two-paths__panel two-paths__panel--light">
+    {%- if section.settings.workshops_eyebrow != blank -%}
+      <p class="two-paths__eyebrow">{{ section.settings.workshops_eyebrow }}</p>
+    {%- endif -%}
+    <h2 class="two-paths__heading">{{ section.settings.workshops_heading }}</h2>
+    <p class="two-paths__desc">{{ section.settings.workshops_desc }}</p>
+    {%- if section.settings.workshops_btn != blank -%}
+      <a href="{{ section.settings.workshops_url | default: '/collections/workshops' }}" class="two-paths__btn">
+        {{ section.settings.workshops_btn }}
+      </a>
+    {%- endif -%}
+  </div>
+
+  <div class="two-paths__panel two-paths__panel--dark">
+    {%- if section.settings.gallery_eyebrow != blank -%}
+      <p class="two-paths__eyebrow">{{ section.settings.gallery_eyebrow }}</p>
+    {%- endif -%}
+    <h2 class="two-paths__heading">{{ section.settings.gallery_heading }}</h2>
+    <p class="two-paths__desc">{{ section.settings.gallery_desc }}</p>
+    {%- if section.settings.gallery_btn != blank -%}
+      <a href="{{ section.settings.gallery_url | default: '/collections/all' }}" class="two-paths__btn">
+        {{ section.settings.gallery_btn }}
+      </a>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Two paths",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    { "type": "text",    "id": "workshops_eyebrow", "label": "Workshops eyebrow",     "default": "Hout Bay Studio" },
+    { "type": "text",    "id": "workshops_heading", "label": "Workshops heading",     "default": "Workshops & Classes" },
+    { "type": "textarea","id": "workshops_desc",    "label": "Workshops description", "default": "Hands-on creative sessions for all levels." },
+    { "type": "text",    "id": "workshops_btn",     "label": "Workshops button label","default": "View Schedule" },
+    { "type": "url",     "id": "workshops_url",     "label": "Workshops link" },
+    { "type": "text",    "id": "gallery_eyebrow",   "label": "Gallery eyebrow",       "default": "Original Artworks" },
+    { "type": "text",    "id": "gallery_heading",   "label": "Gallery heading",       "default": "The Gallery" },
+    { "type": "textarea","id": "gallery_desc",      "label": "Gallery description",   "default": "Discover and collect original works from our resident artists." },
+    { "type": "text",    "id": "gallery_btn",       "label": "Gallery button label",  "default": "Browse Art" },
+    { "type": "url",     "id": "gallery_url",       "label": "Gallery link" }
+  ]
+}
+{% endschema %}

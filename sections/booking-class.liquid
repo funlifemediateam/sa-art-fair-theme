@@ -1,0 +1,336 @@
+<link rel="stylesheet" href="{{ 'booking-app.css' | asset_url }}">
+
+{%- assign cls_p = section.settings.class_product -%}
+{%- if cls_p == blank and product != blank -%}
+  {%- assign cls_p = product -%}
+{%- endif -%}
+
+{%- comment -%} Admin bar — only in theme editor {%- endcomment -%}
+{%- if request.design_mode -%}
+<div class="sa-admin-bar" id="sa-bar-{{ section.id }}">
+  <div class="sa-admin-bar-left">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+    <span class="sa-admin-bar-label">SA Booking Widget</span>
+    <span class="sa-admin-bar-sep">·</span>
+    <span class="sa-admin-bar-class-name">
+      {%- if cls_p != blank -%}{{ cls_p.title }}{%- else -%}No class selected{%- endif -%}
+    </span>
+    <span class="sa-admin-bar-status" id="sa-status-{{ section.id }}"></span>
+  </div>
+  <div class="sa-admin-bar-right">
+    <button class="sa-admin-bar-btn sa-activate-btn" id="sa-activate-{{ section.id }}" style="display:none"
+      onclick="saActivate_{{ section.id | replace: '-', '_' }}()">
+      Activate class
+    </button>
+    <div class="sa-admin-bar-switcher" id="sa-switcher-{{ section.id }}">
+      <button class="sa-admin-bar-btn sa-switch-btn" onclick="saToggleSwitcher_{{ section.id | replace: '-', '_' }}()">
+        Switch class <span style="font-size:0.7rem">▾</span>
+      </button>
+      <div class="sa-switcher-dropdown" id="sa-dropdown-{{ section.id }}" hidden>
+        <p style="font-size:0.72rem;color:rgba(255,255,255,0.5);margin:0 0 6px;padding:0 4px">Loading classes…</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  var NETLIFY = 'https://sa-art-fair-booking-admin.netlify.app';
+  var THEME   = '151028203598';
+  var STORE   = 'b77sng-1n.myshopify.com';
+  var CLS_ID  = {{ cls_p.id | default: 'null' }};
+  var SEC_ID  = {{ section.id | json }};
+
+  function saActivate_{{ section.id | replace: '-', '_' }}() {
+    var btn = document.getElementById('sa-activate-{{ section.id }}');
+    btn.disabled = true; btn.textContent = 'Activating…';
+    fetch(NETLIFY + '/api/classes/' + CLS_ID + '/metafields', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ _status: 'active' })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function() { window.location.reload(); })
+    .catch(function() {
+      btn.disabled = false; btn.textContent = 'Activate class';
+      alert('Could not activate — please try again.');
+    });
+  }
+
+  function saToggleSwitcher_{{ section.id | replace: '-', '_' }}() {
+    var dd = document.getElementById('sa-dropdown-{{ section.id }}');
+    dd.hidden = !dd.hidden;
+  }
+
+  /* Load class status + switcher list */
+  fetch(NETLIFY + '/api/classes')
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      var classes  = data.classes || [];
+      var statusEl = document.getElementById('sa-status-{{ section.id }}');
+      var activateBtn = document.getElementById('sa-activate-{{ section.id }}');
+      var dropdownEl  = document.getElementById('sa-dropdown-{{ section.id }}');
+
+      /* Status badge for current class */
+      if (CLS_ID) {
+        var match = classes.find(function(c) { return String(c.id) === String(CLS_ID); });
+        if (match) {
+          if (match.status === 'draft') {
+            statusEl.innerHTML = '<span class="sa-badge sa-badge--draft">Draft</span>';
+            activateBtn.style.display = '';
+          } else {
+            statusEl.innerHTML = '<span class="sa-badge sa-badge--active">Active</span>';
+          }
+        }
+      }
+
+      /* Switcher dropdown */
+      if (!classes.length) {
+        dropdownEl.innerHTML = '<p style="font-size:0.72rem;color:rgba(255,255,255,0.5);margin:0;padding:0 4px">No classes found in SA Booking Admin.</p>';
+        return;
+      }
+      var html = '';
+      ['active','draft'].forEach(function(status) {
+        var group = classes.filter(function(c) { return c.status === status; });
+        if (!group.length) return;
+        html += '<p class="sa-switcher-group">' + (status === 'active' ? 'Active' : 'Drafts') + '</p>';
+        group.forEach(function(c) {
+          var url = 'https://' + STORE + '/admin/themes/' + THEME + '/editor?previewPath=/products/' + c.handle;
+          var isCurrent = String(c.id) === String(CLS_ID);
+          html += '<a class="sa-switcher-item' + (isCurrent ? ' is-current' : '') + '" href="' + url + '" target="_top">'
+            + '<span>' + c.title + '</span>'
+            + (c.status === 'draft' ? '<span class="sa-badge sa-badge--draft" style="font-size:0.6rem">Draft</span>' : '')
+            + (isCurrent ? '<span style="font-size:0.7rem;opacity:0.6">current</span>' : '')
+            + '</a>';
+        });
+      });
+      dropdownEl.innerHTML = html;
+    })
+    .catch(function() {
+      var statusEl = document.getElementById('sa-status-{{ section.id }}');
+      statusEl.innerHTML = '<span style="font-size:0.72rem;color:rgba(255,255,255,0.4)">couldn\'t load status</span>';
+    });
+
+  /* Close switcher on outside click */
+  document.addEventListener('click', function(e) {
+    var switcher = document.getElementById('sa-switcher-{{ section.id }}');
+    if (switcher && !switcher.contains(e.target)) {
+      var dd = document.getElementById('sa-dropdown-{{ section.id }}');
+      if (dd) dd.hidden = true;
+    }
+  });
+})();
+</script>
+{%- endif -%}
+
+{%- if cls_p == blank -%}
+
+  {%- if request.design_mode -%}
+    <div style="padding:40px;text-align:center;background:#fef6f8;border:2px dashed #c45e82;border-radius:12px;font-family:sans-serif;margin-top:8px">
+      <p style="font-weight:700;margin:0 0 6px;color:#2e1a28;">No class selected</p>
+      <p style="color:rgba(0,0,0,0.5);font-size:0.88rem;margin:0;">Use <strong>Switch class</strong> in the bar above, or pick a class in the Settings panel on the right. On a class product page this fills in automatically.</p>
+    </div>
+  {%- endif -%}
+
+{%- else -%}
+
+  {%- assign mf = cls_p.metafields.booking -%}
+
+  {%- assign cls_sched = 'recurring' -%}
+  {%- if mf.is_term.value == true -%}{%- assign cls_sched = 'term' -%}
+  {%- elsif mf.is_one_off.value == true -%}{%- assign cls_sched = 'one-off' -%}
+  {%- endif -%}
+
+  {%- assign cls_days = '' -%}
+  {%- if mf.day_sun.value == true -%}{%- assign cls_days = cls_days | append: '0,' -%}{%- endif -%}
+  {%- if mf.day_mon.value == true -%}{%- assign cls_days = cls_days | append: '1,' -%}{%- endif -%}
+  {%- if mf.day_tue.value == true -%}{%- assign cls_days = cls_days | append: '2,' -%}{%- endif -%}
+  {%- if mf.day_wed.value == true -%}{%- assign cls_days = cls_days | append: '3,' -%}{%- endif -%}
+  {%- if mf.day_thu.value == true -%}{%- assign cls_days = cls_days | append: '4,' -%}{%- endif -%}
+  {%- if mf.day_fri.value == true -%}{%- assign cls_days = cls_days | append: '5,' -%}{%- endif -%}
+  {%- if mf.day_sat.value == true -%}{%- assign cls_days = cls_days | append: '6,' -%}{%- endif -%}
+  {%- assign cls_days_arr = cls_days | split: ',' | compact -%}
+
+  {%- assign cls_allow_single = mf.allow_single.value | default: false -%}
+  {%- assign cls_allow_term   = mf.allow_term.value   | default: false -%}
+  {%- assign cls_allow_trial  = mf.allow_trial.value  | default: false -%}
+  {%- unless cls_allow_single or cls_allow_term or cls_allow_trial -%}
+    {%- assign cls_allow_single = true -%}
+  {%- endunless -%}
+
+  {%- assign cls_heading = section.settings.heading -%}
+  {%- if cls_heading == blank -%}{%- assign cls_heading = cls_p.title -%}{%- endif -%}
+
+  <div class="bk-app page-width">
+
+    <div class="bk-app-hd">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="bk-app-hd-eyebrow">{{ section.settings.eyebrow }}</p>
+      {%- endif -%}
+      <h2>{{ cls_heading }}</h2>
+      {%- if section.settings.subheading != blank -%}
+        <p>{{ section.settings.subheading }}</p>
+      {%- elsif mf.class_time.value != blank -%}
+        <p>{{ mf.class_time.value }}</p>
+      {%- endif -%}
+    </div>
+
+    <div class="bk-app-body">
+
+      <div class="bk-app-cal-wrap">
+        <div class="bk-app-cal">
+          <div class="bk-app-cal-nav">
+            <button class="bk-app-cal-nav-btn bk-app-cal-prev" type="button" aria-label="Previous month">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+            <span class="bk-app-cal-month"></span>
+            <button class="bk-app-cal-nav-btn bk-app-cal-next" type="button" aria-label="Next month">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 6 15 12 9 18"/></svg>
+            </button>
+          </div>
+          <div class="bk-app-cal-dow">
+            <span>Su</span><span>Mo</span><span>Tu</span><span>We</span>
+            <span>Th</span><span>Fr</span><span>Sa</span>
+          </div>
+          <div class="bk-app-cal-grid"></div>
+          <div class="bk-app-cal-legend">
+            <span class="bk-app-cal-legend-dot"></span>
+            <span>Sessions available</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="bk-app-panel">
+        <div class="bk-app-panel-empty">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+          <p>Select a date to see<br>available sessions</p>
+        </div>
+        <div class="bk-app-panel-sessions" hidden></div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+  (function() {
+    window.SA_BOOKING = {
+      holdMin: {{ section.settings.hold_minutes | default: 15 }},
+      classes: [{
+        id:           {{ cls_p.id | json }},
+        title:        {{ cls_p.title | json }},
+        image:        {{ cls_p.featured_image | image_url: width: 200 | json }},
+        classTime:    {{ mf.class_time.value | json }},
+        startTime:    {{ mf.start_time.value | json }},
+        endTime:      {{ mf.end_time.value | json }},
+        scheduleType: {{ cls_sched | json }},
+        startDate:    {{ mf.start_date.value | json }},
+        endDate:      {{ mf.end_date.value | json }},
+        sessionDates: {{ mf.session_dates.value | default: '' | split: ',' | json }},
+        termName:     {{ mf.term_name.value | json }},
+        allowSingle:  {{ cls_allow_single | json }},
+        allowTerm:    {{ cls_allow_term   | json }},
+        allowTrial:   {{ cls_allow_trial  | json }},
+        availDays:    [{{ cls_days_arr | join: ',' }}],
+        variants: [
+          {%- for v in cls_p.variants -%}
+            { id: {{ v.id }}, title: {{ v.title | json }}, price: {{ v.price }}, available: {{ v.available | json }} }{% unless forloop.last %},{% endunless %}
+          {%- endfor -%}
+        ]
+      }]
+    };
+  })();
+  </script>
+  <script src="{{ 'booking-app.js' | asset_url }}" defer></script>
+
+{%- endif -%}
+
+<style>
+  .sa-admin-bar {
+    position: relative;
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+    background: #2e1a28; color: #fff;
+    padding: 10px 16px; margin-bottom: 4px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 0.8rem; border-radius: 8px;
+    z-index: 100;
+  }
+  .sa-admin-bar-left  { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .sa-admin-bar-right { display: flex; align-items: center; gap: 8px; }
+  .sa-admin-bar-label { font-weight: 700; opacity: 0.7; font-size: 0.72rem; letter-spacing: 0.04em; text-transform: uppercase; }
+  .sa-admin-bar-sep   { opacity: 0.3; }
+  .sa-admin-bar-class-name { font-weight: 600; }
+  .sa-admin-bar-status { display: flex; align-items: center; }
+  .sa-badge { padding: 2px 7px; border-radius: 4px; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
+  .sa-badge--draft  { background: rgba(255,255,255,0.15); color: #fff; }
+  .sa-badge--active { background: rgba(80,200,120,0.25); color: #7de8a0; }
+  .sa-admin-bar-btn {
+    padding: 5px 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.25);
+    background: rgba(255,255,255,0.1); color: #fff; font-size: 0.76rem; font-weight: 600;
+    cursor: pointer; transition: background 0.15s;
+  }
+  .sa-admin-bar-btn:hover { background: rgba(255,255,255,0.2); }
+  .sa-activate-btn { background: rgba(196,94,130,0.4); border-color: rgba(196,94,130,0.6); }
+  .sa-activate-btn:hover { background: rgba(196,94,130,0.6); }
+  .sa-admin-bar-switcher { position: relative; }
+  .sa-switcher-dropdown {
+    position: absolute; top: calc(100% + 6px); right: 0;
+    background: #2e1a28; border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 8px; padding: 8px; min-width: 240px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4); z-index: 200;
+  }
+  .sa-switcher-group { font-size: 0.66rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin: 6px 0 4px; padding: 0 4px; }
+  .sa-switcher-item {
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    padding: 7px 8px; border-radius: 6px; text-decoration: none; color: #fff;
+    font-size: 0.78rem; transition: background 0.12s;
+  }
+  .sa-switcher-item:hover { background: rgba(255,255,255,0.1); }
+  .sa-switcher-item.is-current { background: rgba(196,94,130,0.25); }
+</style>
+
+{% schema %}
+{
+  "name": "SA Booking Widget",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "product",
+      "id": "class_product",
+      "label": "Class",
+      "info": "Select a class from SA Booking Admin. Use 'Switch class' in the editor bar above to browse your classes. Leave blank on a class product page — it fills in automatically."
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text",
+      "default": "Book Your Spot"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "info": "Leave blank to use the class title."
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "info": "Leave blank to use the class time."
+    },
+    {
+      "type": "range",
+      "id": "hold_minutes",
+      "min": 5,
+      "max": 30,
+      "step": 5,
+      "label": "Cart hold time (minutes)",
+      "default": 15
+    }
+  ],
+  "presets": [{ "name": "SA Booking Widget" }]
+}
+{% endschema %}

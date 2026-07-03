@@ -1,0 +1,259 @@
+{%- assign gal_handle = section.settings.collection_handle | default: 'all' -%}
+{%- assign gal_col = collections[gal_handle] -%}
+
+{% style %}
+  .hgp-section {
+    background: #fef6f8;
+    padding: 88px 0 96px;
+  }
+  .hgp-container {
+    max-width: 1280px;
+    margin-inline: auto;
+    padding-inline: 40px;
+  }
+  .hgp-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 44px;
+    gap: 20px;
+  }
+  .hgp-eyebrow {
+    font-family: var(--font-body-family);
+    font-size: 0.68rem;
+    font-weight: 400;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: #c45e82;
+    margin: 0 0 10px;
+  }
+  .hgp-heading {
+    font-family: var(--font-heading-family);
+    font-size: clamp(1.9rem, 3vw, 2.6rem);
+    font-weight: 700;
+    color: #2e1a28;
+    line-height: 1.1;
+    margin: 0;
+    letter-spacing: -0.015em;
+  }
+  .hgp-view-all {
+    font-family: var(--font-body-family);
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #c45e82;
+    text-decoration: none;
+    white-space: nowrap;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: opacity 0.2s;
+  }
+  .hgp-view-all:hover { opacity: 0.65; }
+
+  .hgp-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+
+  .hgp-item {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+  }
+
+  .hgp-item__img-wrap {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    border-radius: 6px;
+    background: #f0d8e4;
+    margin-bottom: 14px;
+  }
+
+  .hgp-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.55s ease;
+  }
+  .hgp-item:hover .hgp-image { transform: scale(1.04); }
+
+  .hgp-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(145deg, #f0d8e4 0%, #e8c8d6 100%);
+  }
+
+  /* SOLD badge — centered on the image */
+  .hgp-sold-badge {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(20, 16, 14, 0.78);
+    color: #fef6f8;
+    font-family: var(--font-body-family);
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    padding: 7px 15px;
+    border-radius: 2px;
+    pointer-events: none;
+    backdrop-filter: blur(2px);
+  }
+
+  .hgp-item--sold .hgp-image {
+    filter: grayscale(0.2) brightness(0.92);
+  }
+
+  /* Info below the image */
+  .hgp-item__info {
+    padding: 0 2px;
+  }
+  .hgp-item__title {
+    font-family: var(--font-heading-family);
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #2e1a28;
+    line-height: 1.25;
+    margin: 0 0 5px;
+    transition: color 0.2s;
+  }
+  .hgp-item:hover .hgp-item__title { color: #c45e82; }
+
+  .hgp-item__meta {
+    font-family: var(--font-body-family);
+    font-size: 0.78rem;
+    color: #9e6880;
+    line-height: 1.5;
+    margin: 0 0 9px;
+  }
+  .hgp-item__meta-dot {
+    display: inline-block;
+    width: 2px;
+    height: 2px;
+    border-radius: 50%;
+    background: #9e6880;
+    vertical-align: middle;
+    margin: 0 5px 2px;
+  }
+
+  .hgp-item__price {
+    font-family: var(--font-body-family);
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #2e1a28;
+    margin: 0;
+  }
+  .hgp-item__price--sold {
+    color: #9e6880;
+    font-weight: 400;
+  }
+
+  .hgp-empty {
+    font-family: var(--font-body-family);
+    font-size: 1rem;
+    color: #6B6460;
+    font-style: italic;
+    padding: 20px 0;
+  }
+
+  @media (max-width: 1100px) {
+    .hgp-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (max-width: 768px) {
+    .hgp-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .hgp-container { padding-inline: 24px; }
+    .hgp-section { padding: 64px 0 72px; }
+    .hgp-header { margin-bottom: 32px; }
+  }
+  @media (max-width: 480px) {
+    .hgp-header { flex-direction: column; align-items: flex-start; }
+    .hgp-section { padding: 56px 0; }
+  }
+{% endstyle %}
+
+<section class="hgp-section">
+  <div class="hgp-container">
+    <div class="hgp-header">
+      <div>
+        <p class="hgp-eyebrow">{{ section.settings.eyebrow | default: 'FROM THE GALLERY' }}</p>
+        <h2 class="hgp-heading">{{ section.settings.heading | default: 'New &amp; notable' }}</h2>
+      </div>
+      <a href="{{ routes.collections_url }}/{{ gal_handle }}" class="hgp-view-all">
+        {{ section.settings.view_all | default: 'All artworks' }} &rarr;
+      </a>
+    </div>
+
+    {%- if gal_col != empty and gal_col.products_count > 0 -%}
+      <div class="hgp-grid">
+        {%- assign hgp_limit = section.settings.product_limit | default: 4 -%}
+        {%- for product in gal_col.products limit: hgp_limit -%}
+          {%- assign is_sold = false -%}
+          {%- unless product.available -%}
+            {%- assign is_sold = true -%}
+          {%- endunless -%}
+
+          <a href="{{ product.url }}" class="hgp-item{% if is_sold %} hgp-item--sold{% endif %}">
+            <div class="hgp-item__img-wrap">
+              {%- if product.featured_image -%}
+                {%- assign hgp_alt = product.featured_image.alt | default: product.title -%}
+                {{ product.featured_image | image_url: width: 700 | image_tag: class: 'hgp-image', loading: 'lazy', alt: hgp_alt }}
+              {%- else -%}
+                <div class="hgp-placeholder"></div>
+              {%- endif -%}
+              {%- if is_sold -%}
+                <span class="hgp-sold-badge">Sold</span>
+              {%- endif -%}
+            </div>
+
+            <div class="hgp-item__info">
+              <h3 class="hgp-item__title">{{ product.title }}</h3>
+
+              {%- if product.vendor != blank or product.type != blank -%}
+                <p class="hgp-item__meta">
+                  {%- if product.vendor != blank -%}{{ product.vendor }}{%- endif -%}
+                  {%- if product.vendor != blank and product.type != blank -%}
+                    <span class="hgp-item__meta-dot"></span>
+                  {%- endif -%}
+                  {%- if product.type != blank -%}{{ product.type }}{%- endif -%}
+                </p>
+              {%- endif -%}
+
+              {%- if is_sold -%}
+                <p class="hgp-item__price hgp-item__price--sold">
+                  {{ product.price | money_without_trailing_zeros }} (SOLD)
+                </p>
+              {%- elsif product.price > 0 -%}
+                <p class="hgp-item__price">
+                  {%- if product.price_varies -%}From {%- endif -%}
+                  {{ product.price_min | money_without_trailing_zeros }}
+                </p>
+              {%- endif -%}
+            </div>
+          </a>
+        {%- endfor -%}
+      </div>
+    {%- else -%}
+      <p class="hgp-empty">Gallery coming soon — artworks will appear here once added.</p>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Gallery Preview",
+  "settings": [
+    { "type": "text",  "id": "eyebrow",           "label": "Eyebrow",            "default": "FROM THE GALLERY" },
+    { "type": "text",  "id": "heading",            "label": "Heading",            "default": "New & notable" },
+    { "type": "text",  "id": "collection_handle",  "label": "Collection handle",  "default": "all", "info": "Enter the URL handle of your art/gallery collection" },
+    { "type": "range", "id": "product_limit",      "label": "Number of artworks", "min": 2, "max": 8, "step": 1, "default": 4 },
+    { "type": "text",  "id": "view_all",           "label": "View all link text", "default": "All artworks" }
+  ],
+  "presets": [{ "name": "Gallery Preview" }]
+}
+{% endschema %}

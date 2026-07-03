@@ -1,0 +1,170 @@
+<link rel="stylesheet" href="{{ 'booking-app.css' | asset_url }}">
+
+{%- if section.settings.collection != blank -%}
+  {%- assign bk_collection = section.settings.collection -%}
+{%- else -%}
+  {%- assign bk_collection = collections['classes-workshops'] -%}
+{%- endif -%}
+
+<div class="bk-app page-width">
+
+  <div class="bk-app-hd">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="bk-app-hd-eyebrow">{{ section.settings.eyebrow }}</p>
+    {%- endif -%}
+    {%- if section.settings.heading != blank -%}
+      <h2>{{ section.settings.heading }}</h2>
+    {%- endif -%}
+    {%- if section.settings.subheading != blank -%}
+      <p>{{ section.settings.subheading }}</p>
+    {%- endif -%}
+  </div>
+
+  <div class="bk-app-body">
+
+    <div class="bk-app-cal-wrap">
+      <div class="bk-app-cal">
+        <div class="bk-app-cal-nav">
+          <button class="bk-app-cal-nav-btn bk-app-cal-prev" type="button" aria-label="Previous month">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <span class="bk-app-cal-month"></span>
+          <button class="bk-app-cal-nav-btn bk-app-cal-next" type="button" aria-label="Next month">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 6 15 12 9 18"/></svg>
+          </button>
+        </div>
+        <div class="bk-app-cal-dow">
+          <span>Su</span><span>Mo</span><span>Tu</span><span>We</span>
+          <span>Th</span><span>Fr</span><span>Sa</span>
+        </div>
+        <div class="bk-app-cal-grid"></div>
+        <div class="bk-app-cal-legend">
+          <span class="bk-app-cal-legend-dot"></span>
+          <span>Sessions available</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="bk-app-panel">
+      <div class="bk-app-panel-empty">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+          <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
+          <line x1="3" y1="10" x2="21" y2="10"/>
+        </svg>
+        <p>Select a date to see<br>available sessions</p>
+      </div>
+      <div class="bk-app-panel-sessions" hidden></div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+(function() {
+  var classes = [];
+
+  {%- for p in bk_collection.products -%}
+    {%- assign mf = p.metafields.booking -%}
+
+    {%- comment -%} Schedule type {%- endcomment -%}
+    {%- assign cls_sched = 'recurring' -%}
+    {%- if mf.is_term.value == true -%}{%- assign cls_sched = 'term' -%}
+    {%- elsif mf.is_one_off.value == true -%}{%- assign cls_sched = 'one-off' -%}
+    {%- endif -%}
+
+    {%- comment -%} Available days {%- endcomment -%}
+    {%- assign cls_days = '' -%}
+    {%- if mf.day_sun.value == true -%}{%- assign cls_days = cls_days | append: '0,' -%}{%- endif -%}
+    {%- if mf.day_mon.value == true -%}{%- assign cls_days = cls_days | append: '1,' -%}{%- endif -%}
+    {%- if mf.day_tue.value == true -%}{%- assign cls_days = cls_days | append: '2,' -%}{%- endif -%}
+    {%- if mf.day_wed.value == true -%}{%- assign cls_days = cls_days | append: '3,' -%}{%- endif -%}
+    {%- if mf.day_thu.value == true -%}{%- assign cls_days = cls_days | append: '4,' -%}{%- endif -%}
+    {%- if mf.day_fri.value == true -%}{%- assign cls_days = cls_days | append: '5,' -%}{%- endif -%}
+    {%- if mf.day_sat.value == true -%}{%- assign cls_days = cls_days | append: '6,' -%}{%- endif -%}
+    {%- assign cls_days_arr = cls_days | split: ',' | compact -%}
+
+    {%- comment -%} Booking options — default single if nothing is toggled {%- endcomment -%}
+    {%- assign cls_allow_single = mf.allow_single.value | default: false -%}
+    {%- assign cls_allow_term   = mf.allow_term.value   | default: false -%}
+    {%- assign cls_allow_trial  = mf.allow_trial.value  | default: false -%}
+    {%- unless cls_allow_single or cls_allow_term or cls_allow_trial -%}
+      {%- assign cls_allow_single = true -%}
+    {%- endunless -%}
+
+    classes.push({
+      id:           {{ p.id | json }},
+      title:        {{ p.title | json }},
+      image:        {{ p.featured_image | image_url: width: 200 | json }},
+      classTime:    {{ mf.class_time.value | json }},
+      scheduleType: {{ cls_sched | json }},
+      startDate:    {{ mf.start_date.value | json }},
+      endDate:      {{ mf.end_date.value | json }},
+      termName:     {{ mf.term_name.value | json }},
+      sessionDates: {{ mf.session_dates.value | json }},
+      ageMin:       {{ mf.age_min.value | json }},
+      ageMax:       {{ mf.age_max.value | json }},
+      capacity:     {{ mf.capacity.value | json }},
+      allowSingle:  {{ cls_allow_single | json }},
+      allowTerm:    {{ cls_allow_term   | json }},
+      allowTrial:   {{ cls_allow_trial  | json }},
+      availDays:    [{{ cls_days_arr | join: ',' }}],
+      variants: [
+        {%- for v in p.variants -%}
+          { id: {{ v.id }}, title: {{ v.title | json }}, price: {{ v.price }}, available: {{ v.available | json }}, qty: {{ v.inventory_quantity }} }{% unless forloop.last %},{% endunless %}
+        {%- endfor -%}
+      ]
+    });
+  {%- endfor -%}
+
+  window.SA_BOOKING = {
+    holdMin: {{ section.settings.hold_minutes | default: 15 }},
+    classes: classes
+  };
+})();
+</script>
+
+<script src="{{ 'booking-app.js' | asset_url }}" defer="defer"></script>
+
+{% schema %}
+{
+  "name": "Booking App",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Classes collection",
+      "info": "Defaults to 'Classes & Workshops'. Override here to use a different collection."
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text",
+      "default": "Book a Class"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Section heading",
+      "default": "Choose Your Session"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Section subheading"
+    },
+    {
+      "type": "range",
+      "id": "hold_minutes",
+      "min": 5,
+      "max": 30,
+      "step": 5,
+      "label": "Cart hold time (minutes)",
+      "default": 15
+    }
+  ],
+  "presets": [{ "name": "Booking App" }]
+}
+{% endschema %}

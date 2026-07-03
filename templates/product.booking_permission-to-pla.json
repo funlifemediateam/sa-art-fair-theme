@@ -1,0 +1,107 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "sa_booking_admin_booking_widget_LkJXmc": {
+          "type": "shopify://apps/sa-booking-admin/blocks/booking-widget/019effec-1823-75cb-82db-853f80a4249c",
+          "settings": {
+            "class_product": "permission-to-play-classes-with-zara-farinha",
+            "eyebrow": "Book Your Spot",
+            "hold_minutes": 15
+          }
+        },
+        "title": {
+          "type": "title",
+          "settings": {}
+        },
+        "price": {
+          "type": "price",
+          "settings": {}
+        },
+        "description": {
+          "type": "description",
+          "settings": {}
+        },
+        "share": {
+          "type": "share",
+          "settings": {
+            "share_label": "Share"
+          }
+        }
+      },
+      "block_order": [
+        "sa_booking_admin_booking_widget_LkJXmc",
+        "title",
+        "price",
+        "description",
+        "share"
+      ],
+      "settings": {
+        "enable_sticky_info": false,
+        "color_scheme": "scheme-1",
+        "media_size": "large",
+        "constrain_to_viewport": true,
+        "media_fit": "contain",
+        "gallery_layout": "stacked",
+        "mobile_thumbnails": "hide",
+        "media_position": "left",
+        "image_zoom": "lightbox",
+        "hide_variants": true,
+        "enable_video_looping": false,
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    },
+    "booking": {
+      "type": "product-booking",
+      "disabled": true,
+      "settings": {
+        "eyebrow": "Reserve A Seat",
+        "heading": "Choose a date",
+        "event_schedule": "",
+        "cta_text": "Book",
+        "hold_minutes": 15
+      }
+    },
+    "disclosures": {
+      "type": "disclosures",
+      "disabled": true,
+      "settings": {
+        "heading": "Disclosures",
+        "heading_size": "h2",
+        "open_by_default": false,
+        "color_scheme": "",
+        "padding_top": 36,
+        "padding_bottom": 0
+      }
+    },
+    "booking_class_JDCPej": {
+      "type": "booking-class",
+      "disabled": true,
+      "name": "SA Booking Widget",
+      "settings": {
+        "class_product": "young-artist-programme-for-tweens-teens-with-janice-grant",
+        "eyebrow": "Book Your Spot",
+        "heading": "",
+        "subheading": "",
+        "hold_minutes": 15
+      }
+    }
+  },
+  "order": [
+    "main",
+    "booking",
+    "disclosures",
+    "booking_class_JDCPej"
+  ]
+}

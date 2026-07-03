@@ -1,0 +1,79 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "name": "t:sections.header.name",
+  "type": "header",
+  "sections": {
+    "announcement-bar": {
+      "type": "announcement-bar",
+      "blocks": {
+        "pill-artworks": {
+          "type": "announcement",
+          "settings": {
+            "text": "Original artworks",
+            "link": "shopify://collections/all"
+          }
+        },
+        "pill-workshops": {
+          "type": "announcement",
+          "settings": {
+            "text": "Studio workshops",
+            "link": "shopify://collections/workshops"
+          }
+        },
+        "pill-location": {
+          "type": "announcement",
+          "settings": {
+            "text": "Hout Bay, Cape Town",
+            "link": "https://www.google.com/maps/search/SA+Art+Fair+Hout+Bay+Cape+Town+South+Africa"
+          }
+        }
+      },
+      "block_order": [
+        "pill-artworks",
+        "pill-workshops",
+        "pill-location"
+      ],
+      "settings": {
+        "pill_mode": true,
+        "auto_rotate": false,
+        "change_slides_speed": 5,
+        "color_scheme": "scheme-4",
+        "show_line_separator": true,
+        "show_social": false,
+        "enable_country_selector": false,
+        "enable_language_selector": false
+      }
+    },
+    "header": {
+      "type": "header",
+      "settings": {
+        "logo_position": "middle-left",
+        "mobile_logo_position": "center",
+        "menu": "main-menu",
+        "menu_type_desktop": "dropdown",
+        "sticky_header_type": "always",
+        "show_line_separator": true,
+        "color_scheme": "scheme-1",
+        "menu_color_scheme": "scheme-1",
+        "enable_country_selector": true,
+        "enable_language_selector": true,
+        "enable_customer_avatar": true,
+        "margin_bottom": 0,
+        "padding_top": 20,
+        "padding_bottom": 20
+      }
+    }
+  },
+  "order": [
+    "announcement-bar",
+    "header"
+  ]
+}

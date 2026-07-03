@@ -1,0 +1,14 @@
+{
+  "sections": {
+    "main": {
+      "type": "collection-artist",
+      "settings": {
+        "artist_name": "Amara Dube",
+        "artist_role": "Oil · Figurative · Portrait",
+        "artist_bio": "Amara's portrait work is intense, intimate, and impossible to ignore. Her oil paintings celebrate South African faces and figures with a richness of colour and a deep sensitivity to light — each piece a quiet act of seeing.",
+        "artist_tags": "Oil · Figurative · Portrait"
+      }
+    }
+  },
+  "order": ["main"]
+}

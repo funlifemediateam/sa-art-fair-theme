@@ -1,0 +1,76 @@
+{
+  "sections": {
+    "main": {
+      "type": "page-artists",
+      "blocks": {
+        "susan": {
+          "type": "artist",
+          "settings": {
+            "name": "Susan Orpen",
+            "role": "Watercolour · Acrylic · Mixed Media",
+            "bio": "Susan has been practising and teaching art in Hout Bay for over a decade. Her work spans luminous watercolour landscapes to bold acrylic abstracts.",
+            "collection_handle": "susan-orpen",
+            "link": "/collections/susan-orpen"
+          }
+        },
+        "kerri": {
+          "type": "artist",
+          "settings": {
+            "name": "Kerri Sassen",
+            "role": "Abstract · Mixed Media · Art Therapy",
+            "bio": "A qualified occupational art therapist, Kerri creates a space where people explore abstraction freely — no experience needed, just an open mind.",
+            "collection_handle": "kerri-sassen",
+            "link": "/collections/kerri-sassen"
+          }
+        },
+        "zara": {
+          "type": "artist",
+          "settings": {
+            "name": "Zara-Leigh Farinha",
+            "role": "Abstract Acrylic · Oil · Large Format",
+            "bio": "Known for large-format abstract works in acrylic and oil, Zara-Leigh's Friday 'Permission to Play' class is joyful, free, and genuinely surprising.",
+            "collection_handle": "zara-leigh",
+            "link": "/collections/zara-leigh"
+          }
+        },
+        "amara": {
+          "type": "artist",
+          "settings": {
+            "name": "Amara Dube",
+            "role": "Oil · Figurative · Portrait",
+            "bio": "Amara's portrait work celebrates South African faces with a richness of colour and deep sensitivity to light — each piece a quiet act of seeing.",
+            "collection_handle": "amara-dube",
+            "link": "/collections/amara-dube"
+          }
+        },
+        "liesel": {
+          "type": "artist",
+          "settings": {
+            "name": "Liesel van der Berg",
+            "role": "Ceramics · Sculpture · Mixed Media",
+            "bio": "Working between clay and canvas, Liesel creates hand-built ceramic pieces and mixed media works that explore texture, form, and the quiet beauty of imperfection.",
+            "collection_handle": "liesel-van-der-berg",
+            "link": "/collections/liesel-van-der-berg"
+          }
+        },
+        "natasha": {
+          "type": "artist",
+          "settings": {
+            "name": "Natasha Hendricks",
+            "role": "Printmaking · Photography · Collage",
+            "bio": "Natasha layers photographic imagery with hand-pulled prints and torn paper — works that draw on Cape Town's urban landscape, memory, and overlooked moments.",
+            "collection_handle": "natasha-hendricks",
+            "link": "/collections/natasha-hendricks"
+          }
+        }
+      },
+      "block_order": ["susan", "kerri", "zara", "amara", "liesel", "natasha"],
+      "settings": {
+        "eyebrow": "SA Art Fair",
+        "heading": "Our Artists",
+        "intro": "Meet the artists behind The Studio — each bringing a unique voice, medium, and teaching approach to Hout Bay."
+      }
+    }
+  },
+  "order": ["main"]
+}

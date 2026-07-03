@@ -1,0 +1,13 @@
+{
+  "sections": {
+    "main": {
+      "type": "collection-gallery",
+      "settings": {
+        "eyebrow": "SA Art Fair",
+        "intro": "Original paintings, prints, and mixed media by our resident Hout Bay artists — each piece made in the studio and available to collect.",
+        "products_per_page": 24
+      }
+    }
+  },
+  "order": ["main"]
+}

@@ -1,0 +1,14 @@
+{
+  "sections": {
+    "main": {
+      "type": "collection-artist",
+      "settings": {
+        "artist_name": "Zara-Leigh Farinha",
+        "artist_role": "Abstract Acrylic · Oil · Large Format",
+        "artist_bio": "Zara-Leigh's energy is contagious. Known for large-format abstract works in acrylic and oil, her Friday 'Permission to Play' class is exactly what it sounds like — joyful, free, and genuinely surprising every time.",
+        "artist_tags": "Abstract Acrylic · Oil on Canvas · Large Format"
+      }
+    }
+  },
+  "order": ["main"]
+}

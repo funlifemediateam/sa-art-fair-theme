@@ -1,0 +1,16 @@
+{
+  "sections": {
+    "booking-app": {
+      "type": "booking-app",
+      "blocks": {},
+      "block_order": [],
+      "settings": {
+        "eyebrow": "Book a Class",
+        "heading": "Choose Your Session",
+        "subheading": "",
+        "hold_minutes": 15
+      }
+    }
+  },
+  "order": ["booking-app"]
+}

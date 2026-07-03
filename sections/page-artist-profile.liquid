@@ -1,0 +1,351 @@
+{%- assign col_handle = section.settings.collection_handle -%}
+{%- assign artist_col = collections[col_handle] -%}
+
+{%- style -%}
+  /* ── Artist Hero ── */
+  .artist-hero {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    background: #2e1a28;
+    align-items: center;
+  }
+  .artist-hero__media {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 56px 48px;
+    background: #2e1a28;
+  }
+  .artist-hero__frame {
+    width: 300px;
+    aspect-ratio: 3 / 4;
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+    border: 2px solid rgba(196,94,130,0.55);
+    box-shadow:
+      0 0 0 6px rgba(196,94,130,0.08),
+      0 8px 32px rgba(0,0,0,0.45),
+      0 24px 64px rgba(0,0,0,0.3);
+  }
+  .artist-hero__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+  }
+  .artist-hero__placeholder {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(160deg, #2d5040 0%, #2e1a28 100%);
+  }
+  .artist-hero__content {
+    padding: 72px 64px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .artist-hero__eyebrow {
+    font-family: var(--font-body-family);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #c45e82;
+    margin: 0 0 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .artist-hero__eyebrow::before {
+    content: '';
+    display: block;
+    width: 28px;
+    height: 1px;
+    background: #c45e82;
+    flex-shrink: 0;
+  }
+  .artist-hero__name {
+    font-family: var(--font-heading-family);
+    font-size: clamp(2.2rem, 3.5vw, 3.2rem);
+    font-weight: 700;
+    color: #fef6f8;
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    margin: 0 0 10px;
+  }
+  .artist-hero__role {
+    font-family: var(--font-body-family);
+    font-size: 0.78rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(242,237,229,0.45);
+    margin: 0 0 32px;
+  }
+  .artist-hero__bio {
+    font-family: var(--font-body-family);
+    font-size: 1rem;
+    color: rgba(242,237,229,0.75);
+    line-height: 1.85;
+    margin: 0 0 28px;
+    max-width: 480px;
+  }
+  .artist-hero__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .artist-hero__tag {
+    font-family: var(--font-body-family);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    color: rgba(242,237,229,0.65);
+    border: 1px solid rgba(242,237,229,0.2);
+    padding: 5px 14px;
+    border-radius: 2px;
+  }
+
+  /* ── Works grid ── */
+  .artist-works {
+    background: #fef6f8;
+    padding: 80px 0 96px;
+  }
+  .artist-works__container {
+    max-width: 1280px;
+    margin-inline: auto;
+    padding-inline: 40px;
+  }
+  .artist-works__header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 44px;
+    gap: 20px;
+  }
+  .artist-works__eyebrow {
+    font-family: var(--font-body-family);
+    font-size: 0.68rem;
+    font-weight: 400;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: #c45e82;
+    margin: 0 0 10px;
+  }
+  .artist-works__heading {
+    font-family: var(--font-heading-family);
+    font-size: clamp(1.8rem, 2.8vw, 2.4rem);
+    font-weight: 700;
+    color: #2e1a28;
+    line-height: 1.1;
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+  .artist-works__count {
+    font-family: var(--font-body-family);
+    font-size: 0.82rem;
+    color: #9e6880;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .artist-works__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+  .artist-work-card {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+  }
+  .artist-work-card__img-wrap {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    border-radius: 6px;
+    background: #f0d8e4;
+    margin-bottom: 14px;
+  }
+  .artist-work-card__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.55s ease;
+  }
+  .artist-work-card:hover .artist-work-card__img { transform: scale(1.04); }
+  .artist-work-card__placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(145deg, #f0d8e4 0%, #e8c8d6 100%);
+  }
+  .artist-work-card__sold {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(20,16,14,0.78);
+    color: #fef6f8;
+    font-family: var(--font-body-family);
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    padding: 7px 15px;
+    border-radius: 2px;
+    pointer-events: none;
+  }
+  .artist-work-card--sold .artist-work-card__img {
+    filter: grayscale(0.2) brightness(0.92);
+  }
+  .artist-work-card__title {
+    font-family: var(--font-heading-family);
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #2e1a28;
+    line-height: 1.25;
+    margin: 0 0 5px;
+    transition: color 0.2s;
+  }
+  .artist-work-card:hover .artist-work-card__title { color: #c45e82; }
+  .artist-work-card__meta {
+    font-family: var(--font-body-family);
+    font-size: 0.78rem;
+    color: #9e6880;
+    margin: 0 0 8px;
+  }
+  .artist-work-card__price {
+    font-family: var(--font-body-family);
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #2e1a28;
+    margin: 0;
+  }
+  .artist-work-card__price--sold { color: #9e6880; font-weight: 400; }
+  .artist-works__empty {
+    font-family: var(--font-body-family);
+    font-size: 1rem;
+    color: #9e6880;
+    font-style: italic;
+    grid-column: 1 / -1;
+    padding: 48px 0;
+    text-align: center;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 960px) {
+    .artist-hero { grid-template-columns: 1fr; }
+    .artist-hero__media  { order: 1; padding: 40px 24px; }
+    .artist-hero__content { order: 2; padding: 44px 36px; }
+    .artist-works__grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 580px) {
+    .artist-hero__media  { padding: 32px 24px; }
+    .artist-hero__content { padding: 36px 24px; }
+    .artist-works { padding: 56px 0 64px; }
+    .artist-works__container { padding-inline: 24px; }
+  }
+{%- endstyle -%}
+
+{%- assign artist_name = section.settings.artist_name | default: page.title -%}
+
+<div class="artist-hero">
+  <div class="artist-hero__media">
+    <div class="artist-hero__frame">
+      {%- if section.settings.artist_photo != blank -%}
+        {{ section.settings.artist_photo | image_url: width: 700 | image_tag:
+            class: 'artist-hero__img',
+            loading: 'eager',
+            alt: artist_name | escape }}
+      {%- else -%}
+        <div class="artist-hero__placeholder"></div>
+      {%- endif -%}
+    </div>
+  </div>
+
+  <div class="artist-hero__content">
+    <span class="artist-hero__eyebrow">Artist</span>
+    <h1 class="artist-hero__name">{{ artist_name | escape }}</h1>
+    {%- if section.settings.artist_role != blank -%}
+      <p class="artist-hero__role">{{ section.settings.artist_role }}</p>
+    {%- endif -%}
+    {%- if section.settings.artist_bio != blank -%}
+      <p class="artist-hero__bio">{{ section.settings.artist_bio }}</p>
+    {%- endif -%}
+    {%- if section.settings.artist_tags != blank -%}
+      <div class="artist-hero__tags">
+        {%- assign tag_list = section.settings.artist_tags | split: '·' -%}
+        {%- for tag in tag_list -%}
+          <span class="artist-hero__tag">{{ tag | strip }}</span>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+<div class="artist-works">
+  <div class="artist-works__container">
+    <div class="artist-works__header">
+      <div>
+        <p class="artist-works__eyebrow">Original Works</p>
+        <h2 class="artist-works__heading">Available artworks</h2>
+      </div>
+      {%- if artist_col != empty and artist_col.products_count > 0 -%}
+        <span class="artist-works__count">{{ artist_col.products_count }} work{%- if artist_col.products_count != 1 -%}s{%- endif -%}</span>
+      {%- endif -%}
+    </div>
+
+    <div class="artist-works__grid">
+      {%- if artist_col != empty and artist_col.products_count > 0 -%}
+        {%- for product in artist_col.products -%}
+          {%- assign is_sold = false -%}
+          {%- unless product.available -%}{%- assign is_sold = true -%}{%- endunless -%}
+          <a href="{{ product.url }}" class="artist-work-card{% if is_sold %} artist-work-card--sold{% endif %}">
+            <div class="artist-work-card__img-wrap">
+              {%- if product.featured_image -%}
+                {{ product.featured_image | image_url: width: 700 | image_tag:
+                    class: 'artist-work-card__img',
+                    loading: 'lazy',
+                    alt: product.featured_image.alt | default: product.title | escape }}
+              {%- else -%}
+                <div class="artist-work-card__placeholder"></div>
+              {%- endif -%}
+              {%- if is_sold -%}<span class="artist-work-card__sold">Sold</span>{%- endif -%}
+            </div>
+            <h3 class="artist-work-card__title">{{ product.title }}</h3>
+            {%- if product.type != blank -%}
+              <p class="artist-work-card__meta">{{ product.type }}</p>
+            {%- endif -%}
+            {%- if is_sold -%}
+              <p class="artist-work-card__price artist-work-card__price--sold">{{ product.price | money_without_trailing_zeros }} (SOLD)</p>
+            {%- elsif product.price > 0 -%}
+              <p class="artist-work-card__price">
+                {%- if product.price_varies -%}From {%- endif -%}
+                {{ product.price_min | money_without_trailing_zeros }}
+              </p>
+            {%- endif -%}
+          </a>
+        {%- endfor -%}
+      {%- else -%}
+        <p class="artist-works__empty">Works coming soon — check back shortly.</p>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Artist profile",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    { "type": "image_picker", "id": "artist_photo",        "label": "Artist photo" },
+    { "type": "text",         "id": "artist_name",         "label": "Name",              "info": "Leave blank to use the page title" },
+    { "type": "text",         "id": "artist_role",         "label": "Medium / Role",     "placeholder": "Oil on Canvas · Watercolour" },
+    { "type": "textarea",     "id": "artist_bio",          "label": "Bio" },
+    { "type": "text",         "id": "artist_tags",         "label": "Specialty tags",    "info": "Separate with · e.g. Abstract · Oil · Large Format" },
+    { "type": "text",         "id": "collection_handle",   "label": "Collection handle", "info": "URL handle of this artist's collection — artworks will appear here automatically" }
+  ]
+}
+{% endschema %}

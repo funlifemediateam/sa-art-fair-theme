@@ -1,0 +1,14 @@
+{
+  "sections": {
+    "main": {
+      "type": "collection-artist",
+      "settings": {
+        "artist_name": "Susan Orpen",
+        "artist_role": "Watercolour · Acrylic · Mixed Media",
+        "artist_bio": "Susan has been practising and teaching art in Hout Bay for over a decade. Her work spans luminous watercolour landscapes to bold acrylic abstracts — and her teaching style makes even the most uncertain beginner feel completely at ease.",
+        "artist_tags": "Watercolour · Acrylic · Mixed Media"
+      }
+    }
+  },
+  "order": ["main"]
+}

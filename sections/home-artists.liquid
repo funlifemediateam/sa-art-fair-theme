@@ -1,0 +1,216 @@
+{% style %}
+  .hart-section {
+    background: #2e1a28;
+    padding: 88px 0 96px;
+  }
+  .hart-container {
+    max-width: 1200px;
+    margin-inline: auto;
+    padding-inline: 40px;
+  }
+  .hart-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 52px;
+    gap: 20px;
+  }
+  .hart-eyebrow {
+    font-family: var(--font-body-family);
+    font-size: 0.68rem;
+    font-weight: 400;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: #c45e82;
+    margin: 0 0 10px;
+  }
+  .hart-heading {
+    font-family: var(--font-heading-family);
+    font-size: clamp(1.9rem, 3vw, 2.6rem);
+    font-weight: 700;
+    color: #fef6f8;
+    line-height: 1.1;
+    margin: 0;
+    letter-spacing: -0.015em;
+  }
+  .hart-header-link {
+    font-family: var(--font-body-family);
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: rgba(242,237,229,0.55);
+    text-decoration: none;
+    white-space: nowrap;
+    flex-shrink: 0;
+    border-bottom: 1px solid rgba(242,237,229,0.2);
+    padding-bottom: 2px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .hart-header-link:hover { color: #c45e82; border-color: #c45e82; }
+
+  .hart-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+  }
+
+  .hart-card {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .hart-card__img-wrap {
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    border-radius: 6px;
+    background: #2A4A38;
+    margin-bottom: 22px;
+    position: relative;
+  }
+  .hart-card__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.6s ease;
+  }
+  .hart-card:hover .hart-card__img { transform: scale(1.04); }
+
+  .hart-card__placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(160deg, #2d5040 0%, #2e1a28 100%);
+  }
+
+  .hart-card__name {
+    font-family: var(--font-heading-family);
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #fef6f8;
+    margin: 0 0 6px;
+    line-height: 1.2;
+  }
+  .hart-card__role {
+    font-family: var(--font-body-family);
+    font-size: 0.66rem;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #c45e82;
+    margin: 0 0 14px;
+  }
+  .hart-card__divider {
+    width: 28px;
+    height: 1px;
+    background: rgba(196,94,130,0.35);
+    margin-bottom: 14px;
+  }
+  .hart-card__bio {
+    font-family: var(--font-body-family);
+    font-size: 0.875rem;
+    color: rgba(242,237,229,0.6);
+    line-height: 1.8;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .hart-empty {
+    font-family: var(--font-body-family);
+    font-size: 1rem;
+    color: rgba(242,237,229,0.5);
+    font-style: italic;
+  }
+
+  @media (max-width: 960px) {
+    .hart-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+  }
+  @media (max-width: 600px) {
+    .hart-grid { grid-template-columns: 1fr; gap: 20px; }
+    .hart-card__img-wrap { aspect-ratio: 4 / 3; }
+    .hart-container { padding-inline: 24px; }
+    .hart-section { padding: 64px 0 72px; }
+    .hart-header { flex-direction: column; align-items: flex-start; gap: 12px; margin-bottom: 36px; }
+  }
+{% endstyle %}
+
+<section class="hart-section">
+  <div class="hart-container">
+    <div class="hart-header">
+      <div>
+        <p class="hart-eyebrow">{{ section.settings.eyebrow | default: 'REPRESENTED' }}</p>
+        <h2 class="hart-heading">{{ section.settings.heading | default: 'Our artists' }}</h2>
+      </div>
+      {%- if section.settings.team_page != blank -%}
+        <a href="{{ section.settings.team_page }}" class="hart-header-link">
+          Meet the artists &rarr;
+        </a>
+      {%- endif -%}
+    </div>
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="hart-grid">
+        {%- for block in section.blocks -%}
+          <div class="hart-card" {{ block.shopify_attributes }}>
+            <div class="hart-card__img-wrap">
+              {%- assign col_img = collections[block.settings.collection_handle].image -%}
+              {%- assign card_photo = block.settings.image | default: col_img -%}
+              {%- if card_photo != blank -%}
+                {{ card_photo | image_url: width: 700 | image_tag:
+                    class: 'hart-card__img',
+                    loading: 'lazy',
+                    alt: block.settings.name | escape }}
+              {%- else -%}
+                <div class="hart-card__placeholder"></div>
+              {%- endif -%}
+            </div>
+            {%- if block.settings.name != blank -%}
+              <h3 class="hart-card__name">{{ block.settings.name }}</h3>
+            {%- endif -%}
+            {%- if block.settings.role != blank -%}
+              <p class="hart-card__role">{{ block.settings.role }}</p>
+            {%- endif -%}
+            <div class="hart-card__divider"></div>
+            {%- if block.settings.bio != blank -%}
+              <p class="hart-card__bio">{{ block.settings.bio }}</p>
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- else -%}
+      <p class="hart-empty">Add artists using the theme editor.</p>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Artists / Teachers",
+  "settings": [
+    { "type": "text", "id": "eyebrow",   "label": "Eyebrow",        "default": "REPRESENTED" },
+    { "type": "text", "id": "heading",   "label": "Heading",        "default": "Our artists" },
+    { "type": "url",  "id": "team_page", "label": "Artists page link", "info": "Optional — shows a 'Meet the artists' link" }
+  ],
+  "blocks": [
+    {
+      "type": "artist",
+      "name": "Artist",
+      "settings": [
+        { "type": "text",         "id": "collection_handle", "label": "Collection handle", "info": "e.g. susan-orpen — photo is pulled automatically from the collection image" },
+        { "type": "image_picker", "id": "image", "label": "Photo (override)" },
+        { "type": "text",         "id": "name",  "label": "Name" },
+        { "type": "text",         "id": "role",  "label": "Specialty / Role", "placeholder": "Watercolour · Mixed Media" },
+        { "type": "textarea",     "id": "bio",   "label": "Short bio" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "Artists / Teachers" }]
+}
+{% endschema %}

@@ -1,0 +1,14 @@
+{
+  "sections": {
+    "main": {
+      "type": "collection-artist",
+      "settings": {
+        "artist_name": "Kerri Sassen",
+        "artist_role": "Abstract · Mixed Media · Art Therapy",
+        "artist_bio": "Kerri brings warmth and expertise to every class. A qualified occupational art therapist, she creates a space where people explore abstraction freely — no experience needed, just an open mind and a willingness to experiment.",
+        "artist_tags": "Abstract · Mixed Media · Occupational Art Therapy"
+      }
+    }
+  },
+  "order": ["main"]
+}

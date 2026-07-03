@@ -1,0 +1,442 @@
+{{ 'section-blog-post.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  /* ── Back link ── */
+  .sarticle-back {
+    background: #fef6f8;
+    padding: 20px 40px;
+    border-bottom: 1px solid rgba(46,42,39,0.08);
+  }
+  .sarticle-back__link {
+    font-family: var(--font-body-family);
+    font-size: 0.72rem;
+    font-weight: 400;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #c45e82;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: opacity 0.2s;
+  }
+  .sarticle-back__link:hover { opacity: 0.7; }
+  .sarticle-back__arrow { font-size: 0.9rem; }
+
+  /* ── Article header ── */
+  .sarticle-header {
+    background: #fef6f8;
+    padding: 56px 40px 52px;
+    max-width: 800px;
+    margin-inline: auto;
+    text-align: left;
+  }
+  .sarticle-header__meta {
+    font-family: var(--font-body-family);
+    font-size: 0.68rem;
+    font-weight: 400;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #c45e82;
+    margin: 0 0 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .sarticle-header__meta-dot {
+    width: 3px;
+    height: 3px;
+    background: #c45e82;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .sarticle-header__title {
+    font-family: var(--font-heading-family);
+    font-size: clamp(2rem, 4.5vw, 3.2rem);
+    font-weight: 700;
+    color: #2e1a28;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    margin: 0 0 28px;
+  }
+  .sarticle-header__divider {
+    width: 48px;
+    height: 2px;
+    background: #c45e82;
+  }
+
+  /* ── Featured image ── */
+  .sarticle-image-wrap {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto 56px;
+    overflow: hidden;
+  }
+  .sarticle-image-wrap img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  .sarticle-image-wrap.sarticle-image--large {
+    max-width: 100%;
+  }
+  .sarticle-image-wrap.sarticle-image--medium {
+    max-width: 900px;
+  }
+  .sarticle-image-wrap.sarticle-image--small {
+    max-width: 700px;
+  }
+
+  /* ── Body content ── */
+  .sarticle-body {
+    max-width: 680px;
+    margin-inline: auto;
+    padding: 0 40px 64px;
+    font-family: var(--font-body-family);
+    font-size: 1.05rem;
+    color: #2e1a28;
+    line-height: 1.85;
+  }
+  .sarticle-body p {
+    margin: 0 0 1.5em;
+  }
+  .sarticle-body p:last-child { margin-bottom: 0; }
+  .sarticle-body h2 {
+    font-family: var(--font-heading-family);
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #2e1a28;
+    line-height: 1.2;
+    margin: 2em 0 0.6em;
+    letter-spacing: -0.01em;
+  }
+  .sarticle-body h3 {
+    font-family: var(--font-heading-family);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #2e1a28;
+    margin: 1.8em 0 0.5em;
+  }
+  .sarticle-body ul,
+  .sarticle-body ol {
+    margin: 0 0 1.5em;
+    padding-left: 1.5em;
+  }
+  .sarticle-body li {
+    margin-bottom: 0.4em;
+    line-height: 1.75;
+  }
+  .sarticle-body blockquote {
+    border-left: 3px solid #c45e82;
+    margin: 2em 0;
+    padding: 4px 0 4px 24px;
+    font-style: italic;
+    color: #4a4642;
+  }
+  .sarticle-body a {
+    color: #c45e82;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .sarticle-body a:hover { color: #2e1a28; }
+  .sarticle-body strong { font-weight: 700; color: #2e1a28; }
+  .sarticle-body em { font-style: italic; }
+  .sarticle-body img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+    margin: 1em 0;
+  }
+  .sarticle-body hr {
+    border: none;
+    border-top: 1px solid rgba(46,42,39,0.12);
+    margin: 2.5em 0;
+  }
+
+  /* ── Share + back footer ── */
+  .sarticle-footer {
+    max-width: 680px;
+    margin-inline: auto;
+    padding: 32px 40px 48px;
+    border-top: 1px solid rgba(46,42,39,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .sarticle-footer__back {
+    font-family: var(--font-body-family);
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #2e1a28;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.2s;
+  }
+  .sarticle-footer__back:hover { color: #c45e82; }
+
+  /* ── Related articles ── */
+  .sarticle-related {
+    background: #f9edf2;
+    padding: 72px 40px 80px;
+    border-top: 1px solid rgba(46,42,39,0.08);
+  }
+  .sarticle-related__header {
+    max-width: 1200px;
+    margin-inline: auto;
+    margin-bottom: 36px;
+  }
+  .sarticle-related__eyebrow {
+    font-family: var(--font-body-family);
+    font-size: 0.68rem;
+    font-weight: 400;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #c45e82;
+    margin: 0 0 12px;
+  }
+  .sarticle-related__heading {
+    font-family: var(--font-heading-family);
+    font-size: clamp(1.5rem, 2.5vw, 2rem);
+    font-weight: 700;
+    color: #2e1a28;
+    margin: 0;
+  }
+  .sarticle-related__grid {
+    max-width: 1200px;
+    margin-inline: auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .sarticle-rel-card {
+    background: #F8F4EF;
+    border: 1px solid rgba(46,42,39,0.09);
+    border-radius: 6px;
+    overflow: hidden;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow 0.25s;
+  }
+  .sarticle-rel-card:hover { box-shadow: 0 6px 20px rgba(46,42,39,0.1); }
+  .sarticle-rel-card__img-wrap {
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: #D5C9BC;
+  }
+  .sarticle-rel-card__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s;
+  }
+  .sarticle-rel-card:hover .sarticle-rel-card__img { transform: scale(1.04); }
+  .sarticle-rel-card__placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #D5C9BC 0%, #C4B8AB 100%);
+  }
+  .sarticle-rel-card__body {
+    padding: 18px 20px 22px;
+  }
+  .sarticle-rel-card__date {
+    font-family: var(--font-body-family);
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #c45e82;
+    margin: 0 0 8px;
+  }
+  .sarticle-rel-card__title {
+    font-family: var(--font-heading-family);
+    font-size: 1rem;
+    font-weight: 700;
+    color: #2e1a28;
+    line-height: 1.3;
+    margin: 0;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    .sarticle-back { padding: 16px 24px; }
+    .sarticle-header { padding: 44px 24px 40px; }
+    .sarticle-body { padding: 0 24px 48px; }
+    .sarticle-footer { padding: 28px 24px 40px; }
+    .sarticle-related { padding: 56px 24px 64px; }
+    .sarticle-related__grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 480px) {
+    .sarticle-header__title { font-size: 1.9rem; }
+    .sarticle-body { font-size: 1rem; }
+    .sarticle-related__grid { grid-template-columns: repeat(2, 1fr); }
+  }
+{%- endstyle -%}
+
+<article>
+
+  <div class="sarticle-back">
+    <a href="{{ blog.url }}" class="sarticle-back__link">
+      <span class="sarticle-back__arrow">&larr;</span>
+      {{ blog.title | escape }}
+    </a>
+  </div>
+
+  {%- for block in section.blocks -%}
+    {%- case block.type -%}
+
+      {%- when 'featured_image' -%}
+        {%- if article.image -%}
+          <div class="sarticle-image-wrap sarticle-image--{{ block.settings.image_height | default: 'adapt' }}" {{ block.shopify_attributes }}>
+            <img
+              srcset="
+                {%- if article.image.width >= 750 -%}{{ article.image | image_url: width: 750 }} 750w,{%- endif -%}
+                {%- if article.image.width >= 1100 -%}{{ article.image | image_url: width: 1100 }} 1100w,{%- endif -%}
+                {%- if article.image.width >= 1500 -%}{{ article.image | image_url: width: 1500 }} 1500w,{%- endif -%}
+                {{ article.image | image_url }} {{ article.image.width }}w
+              "
+              sizes="(min-width: 1100px) 1100px, 100vw"
+              src="{{ article.image | image_url: width: 1100 }}"
+              loading="eager"
+              fetchpriority="high"
+              width="{{ article.image.width }}"
+              height="{{ article.image.height }}"
+              alt="{{ article.image.alt | default: article.title | escape }}"
+            >
+          </div>
+        {%- endif -%}
+
+      {%- when 'title' -%}
+        <header class="sarticle-header" {{ block.shopify_attributes }}>
+          <p class="sarticle-header__meta">
+            {%- if block.settings.blog_show_date -%}
+              <span>{{ article.published_at | date: "%B %d, %Y" }}</span>
+            {%- endif -%}
+            {%- if block.settings.blog_show_date and block.settings.blog_show_author and article.author != blank -%}
+              <span class="sarticle-header__meta-dot"></span>
+            {%- endif -%}
+            {%- if block.settings.blog_show_author and article.author != blank -%}
+              <span>By {{ article.author }}</span>
+            {%- endif -%}
+          </p>
+          <h1 class="sarticle-header__title">{{ article.title | escape }}</h1>
+          <div class="sarticle-header__divider"></div>
+        </header>
+
+      {%- when 'content' -%}
+        <div class="sarticle-body" {{ block.shopify_attributes }}>
+          {{ article.content }}
+        </div>
+
+      {%- when 'share' -%}
+        <div class="sarticle-footer" {{ block.shopify_attributes }}>
+          <a href="{{ blog.url }}" class="sarticle-footer__back">
+            &larr; Back to {{ blog.title | escape }}
+          </a>
+          {%- assign share_url = request.origin | append: article.url -%}
+          {%- render 'share-button', block: block, share_link: share_url -%}
+        </div>
+
+      {%- when '@app' -%}
+        {% render block %}
+
+    {%- endcase -%}
+  {%- endfor -%}
+
+</article>
+
+{%- comment -%} Related articles {%- endcomment -%}
+{%- assign related_shown = 0 -%}
+{%- assign has_related = false -%}
+{%- for rel in blog.articles limit: 10 -%}
+  {%- if rel.id != article.id and related_shown < 3 -%}
+    {%- assign has_related = true -%}
+    {%- assign related_shown = related_shown | plus: 1 -%}
+  {%- endif -%}
+{%- endfor -%}
+
+{%- if has_related -%}
+  <div class="sarticle-related">
+    <div class="sarticle-related__header">
+      <p class="sarticle-related__eyebrow">Keep Reading</p>
+      <h2 class="sarticle-related__heading">More from the Studio Journal</h2>
+    </div>
+    <div class="sarticle-related__grid">
+      {%- assign related_shown = 0 -%}
+      {%- for rel in blog.articles limit: 10 -%}
+        {%- if rel.id != article.id and related_shown < 3 -%}
+          {%- assign related_shown = related_shown | plus: 1 -%}
+          <a href="{{ rel.url }}" class="sarticle-rel-card">
+            <div class="sarticle-rel-card__img-wrap">
+              {%- if rel.image -%}
+                {%- assign rel_alt = rel.image.alt | default: rel.title -%}
+                {{ rel.image | image_url: width: 600 | image_tag: class: 'sarticle-rel-card__img', loading: 'lazy', alt: rel_alt }}
+              {%- else -%}
+                <div class="sarticle-rel-card__placeholder"></div>
+              {%- endif -%}
+            </div>
+            <div class="sarticle-rel-card__body">
+              <p class="sarticle-rel-card__date">{{ rel.published_at | date: "%B %d, %Y" }}</p>
+              <h3 class="sarticle-rel-card__title">{{ rel.title | escape }}</h3>
+            </div>
+          </a>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+{%- endif -%}
+
+<script type="application/ld+json">
+  {{ article | structured_data }}
+</script>
+
+{% schema %}
+{
+  "name": "Blog post",
+  "tag": "section",
+  "class": "section",
+  "blocks": [
+    { "type": "@app" },
+    {
+      "type": "featured_image",
+      "name": "Featured image",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "select",
+          "id": "image_height",
+          "label": "Image size",
+          "options": [
+            { "value": "small",  "label": "Small" },
+            { "value": "medium", "label": "Medium" },
+            { "value": "large",  "label": "Large (full width)" }
+          ],
+          "default": "large"
+        }
+      ]
+    },
+    {
+      "type": "title",
+      "name": "Title & meta",
+      "limit": 1,
+      "settings": [
+        { "type": "checkbox", "id": "blog_show_date",   "default": true,  "label": "Show date" },
+        { "type": "checkbox", "id": "blog_show_author", "default": true, "label": "Show author" }
+      ]
+    },
+    { "type": "content", "name": "Content", "limit": 1 },
+    {
+      "type": "share",
+      "name": "Share",
+      "limit": 1,
+      "settings": [
+        { "type": "text", "id": "share_label", "label": "Share label", "default": "Share" }
+      ]
+    }
+  ]
+}
+{% endschema %}

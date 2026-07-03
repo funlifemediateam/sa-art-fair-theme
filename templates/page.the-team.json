@@ -1,0 +1,77 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "the_team": {
+      "type": "page-the-team",
+      "blocks": {
+        "founders": {
+          "type": "founders",
+          "settings": {
+            "image": "shopify://shop_images/B_G_pic.png",
+            "badge": "Founders",
+            "names": "Georgina & Bianca",
+            "role": "Co-Founders & Creatives",
+            "bio": "Met 13 years ago through mutual connections, Georgina and Bianca combined their creative expertise — Bianca's branding and social media skills with Georgina's ceramic work — to establish the SA Art Fair in Hout Bay and, subsequently, The Studio."
+          }
+        },
+        "susan": {
+          "type": "member",
+          "settings": {
+            "image": "shopify://shop_images/WhatsApp_Image_2026-01-07_at_10.03.53.jpg",
+            "name": "Susan Orpen",
+            "role": "Artist & Teacher",
+            "bio": "A celebrated South African artist with over three decades of teaching experience. Trained with a BA in English and History of Art, Susan works across watercolour, acrylic, and mixed media — creating wildlife, landscapes, and portraits that feature in international private collections.",
+            "tags": "Watercolour · Acrylic · Mixed Media"
+          }
+        },
+        "kerri": {
+          "type": "member",
+          "settings": {
+            "image": "shopify://shop_images/donna__2.png",
+            "name": "Kerri Sassen",
+            "role": "Artist & Teacher",
+            "bio": "A self-taught South African artist working across a variety of mediums, recently focusing on larger abstract pieces. Kerri also works as an Occupational Therapist, integrating both careers to celebrate, process, and break through via art.",
+            "tags": "Abstract · Mixed Media · Occupational Art Therapy"
+          }
+        },
+        "zara": {
+          "type": "member",
+          "settings": {
+            "image": "shopify://shop_images/WhatsApp_Image_2026-02-09_at_07.28.19__1.jpg",
+            "name": "Zara-Leigh Farinha",
+            "role": "Artist & Teacher",
+            "bio": "Johannesburg-born and Hout Bay-based, Zara-Leigh works intuitively with abstract acrylic and oil paintings on large-format canvas. With over 10 years' experience as a fashion, decor, and makeup artist across South Africa, London, and New York, she brings a uniquely global creative sensibility.",
+            "tags": "Abstract Acrylic · Oil on Canvas · Large Format"
+          }
+        }
+      },
+      "block_order": [
+        "founders",
+        "susan",
+        "kerri",
+        "zara"
+      ],
+      "settings": {
+        "eyebrow": "The Studio at SA Art Fair",
+        "heading": "Meet the Team",
+        "intro": "The artists, teachers, and creatives who make it all happen in Hout Bay.",
+        "cta_eyebrow": "Join Us",
+        "cta_heading": "Learn from the artists who inspire you.",
+        "cta_text": "Book a place in one of our hands-on workshops and classes, held in our Hout Bay studio.",
+        "cta_btn_label": "View workshops & classes",
+        "cta_btn_url": ""
+      }
+    }
+  },
+  "order": [
+    "the_team"
+  ]
+}

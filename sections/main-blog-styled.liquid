@@ -1,0 +1,320 @@
+{%- style -%}
+  /* ── Hero ── */
+  .sblog-hero {
+    background: #fef6f8;
+    height: 380px;
+    padding: 40px 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-bottom: 1px solid rgba(46,42,39,0.1);
+  }
+  .sblog-hero__eyebrow {
+    font-family: var(--font-body-family);
+    font-size: 0.7rem;
+    font-weight: 400;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: #c45e82;
+    margin: 0 0 18px;
+  }
+  .sblog-hero__title {
+    font-family: var(--font-heading-family);
+    font-size: clamp(2.2rem, 4.5vw, 3.6rem);
+    font-weight: 700;
+    color: #2e1a28;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    margin: 0 0 16px;
+  }
+  .sblog-hero__sub {
+    font-family: var(--font-body-family);
+    font-size: 1rem;
+    color: #6B6460;
+    line-height: 1.75;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  /* ── Shared eyebrow ── */
+  .sblog-eyebrow {
+    font-family: var(--font-body-family);
+    font-size: 0.65rem;
+    font-weight: 400;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #c45e82;
+    margin: 0 0 14px;
+  }
+
+  /* ── Featured article (first post, page 1) ── */
+  .sblog-featured {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    background: #2e1a28;
+    min-height: 480px;
+    text-decoration: none;
+  }
+  .sblog-featured__media {
+    position: relative;
+    overflow: hidden;
+    min-height: 360px;
+  }
+  .sblog-featured__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+  }
+  .sblog-featured:hover .sblog-featured__img { transform: scale(1.03); }
+  .sblog-featured__placeholder {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(160deg, #2d5040 0%, #2e1a28 100%);
+  }
+  .sblog-featured__content {
+    padding: 60px 52px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .sblog-featured__content .sblog-eyebrow { color: rgba(196,94,130,0.9); }
+  .sblog-featured__title {
+    font-family: var(--font-heading-family);
+    font-size: clamp(1.6rem, 2.4vw, 2.2rem);
+    font-weight: 700;
+    color: #fef6f8;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    margin: 0 0 16px;
+    text-decoration: none;
+  }
+  .sblog-featured__title a { color: inherit; text-decoration: none; }
+  .sblog-featured__excerpt {
+    font-family: var(--font-body-family);
+    font-size: 0.95rem;
+    color: rgba(242,237,229,0.72);
+    line-height: 1.8;
+    margin: 0 0 32px;
+    max-width: 380px;
+  }
+  .sblog-featured__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-body-family);
+    font-size: 0.875rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: #2e1a28;
+    background: #c45e82;
+    padding: 14px 28px;
+    text-decoration: none;
+    width: fit-content;
+    transition: background 0.2s;
+  }
+  .sblog-featured__btn:hover { background: #a96924; }
+
+  /* ── Articles grid ── */
+  .sblog-grid-wrap {
+    background: #fef6f8;
+    padding: 64px 40px 80px;
+  }
+  .sblog-grid {
+    max-width: 1200px;
+    margin-inline: auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+  }
+  .sblog-card {
+    background: #FAFAF7;
+    border: 1px solid rgba(46,42,39,0.09);
+    border-radius: 6px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow 0.25s, transform 0.25s;
+  }
+  .sblog-card:hover {
+    box-shadow: 0 8px 28px rgba(46,42,39,0.1);
+    transform: translateY(-2px);
+  }
+  .sblog-card__img-wrap {
+    display: block;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background: #D5C9BC;
+  }
+  .sblog-card__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+  .sblog-card:hover .sblog-card__img { transform: scale(1.05); }
+  .sblog-card__img-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #D5C9BC 0%, #C4B8AB 100%);
+  }
+  .sblog-card__body {
+    padding: 22px 24px 26px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .sblog-card__title {
+    font-family: var(--font-heading-family);
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #2e1a28;
+    line-height: 1.25;
+    margin: 0 0 10px;
+  }
+  .sblog-card__title a { text-decoration: none; color: inherit; transition: color 0.2s; }
+  .sblog-card__title a:hover { color: #c45e82; }
+  .sblog-card__excerpt {
+    font-family: var(--font-body-family);
+    font-size: 0.875rem;
+    color: #6B6460;
+    line-height: 1.7;
+    flex: 1;
+    margin: 0 0 18px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .sblog-card__link {
+    font-family: var(--font-body-family);
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #c45e82;
+    text-decoration: none;
+    letter-spacing: 0.04em;
+    margin-top: auto;
+    transition: opacity 0.2s;
+  }
+  .sblog-card__link:hover { opacity: 0.7; text-decoration: underline; }
+
+  /* ── Pagination ── */
+  .sblog-pagination {
+    max-width: 1200px;
+    margin: 48px auto 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 900px) {
+    .sblog-featured { grid-template-columns: 1fr; }
+    .sblog-featured__media { min-height: 300px; }
+    .sblog-featured__content { padding: 40px 32px; }
+    .sblog-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  }
+  @media (max-width: 580px) {
+    .sblog-hero { height: 280px; padding: 32px 20px; }
+    .sblog-featured__content { padding: 36px 24px; }
+    .sblog-grid { grid-template-columns: 1fr; gap: 16px; }
+    .sblog-grid-wrap { padding: 48px 24px 64px; }
+  }
+{%- endstyle -%}
+
+<div class="sblog-hero">
+  <p class="sblog-hero__eyebrow">{{ section.settings.eyebrow | default: 'Studio Journal' }}</p>
+  <h1 class="sblog-hero__title">{{ blog.title | escape }}</h1>
+  {%- if section.settings.subtitle != blank -%}
+    <p class="sblog-hero__sub">{{ section.settings.subtitle }}</p>
+  {%- endif -%}
+</div>
+
+{%- paginate blog.articles by 7 -%}
+
+  {%- for article in blog.articles -%}
+
+    {%- if forloop.first and paginate.current_page == 1 -%}
+      <a href="{{ article.url }}" class="sblog-featured">
+        <div class="sblog-featured__media">
+          {%- if article.image -%}
+            {%- assign feat_alt = article.image.alt | default: article.title -%}
+            {{ article.image | image_url: width: 1400 | image_tag: class: 'sblog-featured__img', loading: 'eager', alt: feat_alt }}
+          {%- else -%}
+            <div class="sblog-featured__placeholder"></div>
+          {%- endif -%}
+        </div>
+        <div class="sblog-featured__content">
+          <p class="sblog-eyebrow">
+            {{ article.published_at | date: "%B %d, %Y" }}
+            {%- if article.author != blank %} · {{ article.author }}{%- endif -%}
+          </p>
+          <h2 class="sblog-featured__title">{{ article.title | escape }}</h2>
+          {%- if article.excerpt != blank -%}
+            <p class="sblog-featured__excerpt">{{ article.excerpt | strip_html | truncate: 200 }}</p>
+          {%- elsif article.content != blank -%}
+            <p class="sblog-featured__excerpt">{{ article.content | strip_html | truncate: 200 }}</p>
+          {%- endif -%}
+          <span class="sblog-featured__btn">{{ section.settings.read_label | default: 'Read article' }} &rarr;</span>
+        </div>
+      </a>
+      <div class="sblog-grid-wrap">
+        <div class="sblog-grid">
+
+    {%- else -%}
+      <article class="sblog-card">
+        <a href="{{ article.url }}" class="sblog-card__img-wrap" aria-label="{{ article.title | escape }}">
+          {%- if article.image -%}
+            {%- assign card_alt = article.image.alt | default: article.title -%}
+            {{ article.image | image_url: width: 600 | image_tag: class: 'sblog-card__img', loading: 'lazy', alt: card_alt }}
+          {%- else -%}
+            <div class="sblog-card__img-placeholder"></div>
+          {%- endif -%}
+        </a>
+        <div class="sblog-card__body">
+          <p class="sblog-eyebrow">
+            {{ article.published_at | date: "%B %d, %Y" }}
+            {%- if article.author != blank and section.settings.show_author %} · {{ article.author }}{%- endif -%}
+          </p>
+          <h3 class="sblog-card__title"><a href="{{ article.url }}">{{ article.title | escape }}</a></h3>
+          {%- if article.excerpt != blank -%}
+            <p class="sblog-card__excerpt">{{ article.excerpt | strip_html | truncate: 140 }}</p>
+          {%- elsif article.content != blank -%}
+            <p class="sblog-card__excerpt">{{ article.content | strip_html | truncate: 140 }}</p>
+          {%- endif -%}
+          <a href="{{ article.url }}" class="sblog-card__link">Read &rarr;</a>
+        </div>
+      </article>
+
+    {%- endif -%}
+  {%- endfor -%}
+
+  {%- if paginate.current_page == 1 and blog.articles_count > 1 -%}
+        </div>
+      </div>
+  {%- endif -%}
+
+  {%- if paginate.pages > 1 -%}
+    <div class="sblog-pagination">
+      {%- render 'pagination', paginate: paginate -%}
+    </div>
+  {%- endif -%}
+
+{%- endpaginate -%}
+
+{% schema %}
+{
+  "name": "Blog posts",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    { "type": "text",     "id": "eyebrow",     "label": "Eyebrow",      "default": "Studio Journal" },
+    { "type": "textarea", "id": "subtitle",    "label": "Subtitle",     "default": "Thoughts, reflections, and creative musings from Hout Bay." },
+    { "type": "text",     "id": "read_label",  "label": "Read more text","default": "Read article" },
+    { "type": "checkbox", "id": "show_author", "label": "Show author",  "default": true }
+  ]
+}
+{% endschema %}

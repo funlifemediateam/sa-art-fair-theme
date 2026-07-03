@@ -1,0 +1,587 @@
+{%- liquid
+  if section.settings.featured_collection != blank
+    assign ws_col = section.settings.featured_collection
+  else
+    assign ws_col = collections['workshops']
+  endif
+  if section.settings.view_all_url != blank
+    assign ws_view_all_url = section.settings.view_all_url
+  elsif ws_col != blank
+    assign ws_view_all_url = ws_col.url
+  else
+    assign ws_view_all_url = routes.collections_url | append: '/workshops'
+  endif
+  assign today_str = 'now' | date: '%Y-%m-%d'
+  assign hwp_limit = section.settings.product_limit | default: 4
+-%}
+
+{%- comment -%}
+  Build a sortable "YYYY-MM-DD|product_id" list so we can order products
+  by their next upcoming session date. ISO dates sort lexicographically.
+{%- endcomment -%}
+{%- assign hwp_date_ids = '' -%}
+{%- for p in ws_col.products -%}
+  {%- assign p_next_date = '' -%}
+
+  {%- comment -%} Find next session_date >= today {%- endcomment -%}
+  {%- assign p_session_str = p.metafields.booking.session_dates -%}
+  {%- if p_session_str != blank -%}
+    {%- assign p_sessions = p_session_str | split: ',' -%}
+    {%- for sd in p_sessions -%}
+      {%- assign sd_clean = sd | strip -%}
+      {%- if sd_clean >= today_str -%}
+        {%- if p_next_date == blank or sd_clean < p_next_date -%}
+          {%- assign p_next_date = sd_clean -%}
+        {%- endif -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
+
+  {%- comment -%} Fall back to start_date if no upcoming session found {%- endcomment -%}
+  {%- if p_next_date == blank -%}
+    {%- assign p_start = p.metafields.booking.start_date -%}
+    {%- if p_start != blank -%}
+      {%- assign p_next_date = p_start -%}
+    {%- endif -%}
+  {%- endif -%}
+
+  {%- comment -%} Skip products with no upcoming dates; push far-future ones last {%- endcomment -%}
+  {%- if p_next_date == blank -%}
+    {%- assign p_next_date = '9999-12-31' -%}
+  {%- endif -%}
+
+  {%- assign p_entry = p_next_date | append: '|' | append: p.id -%}
+  {%- if hwp_date_ids == blank -%}
+    {%- assign hwp_date_ids = p_entry -%}
+  {%- else -%}
+    {%- assign hwp_date_ids = hwp_date_ids | append: ',' | append: p_entry -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- assign hwp_sorted = hwp_date_ids | split: ',' | sort -%}
+
+{% style %}
+  .hwp-section {
+    background: #f9edf2;
+    padding: 88px 0 96px;
+  }
+  .hwp-container {
+    max-width: 1200px;
+    margin-inline: auto;
+    padding-inline: 40px;
+  }
+  .hwp-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 44px;
+    gap: 20px;
+  }
+  .hwp-eyebrow {
+    font-family: var(--font-body-family);
+    font-size: 0.68rem;
+    font-weight: 400;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: #c45e82;
+    margin: 0 0 10px;
+  }
+  .hwp-heading {
+    font-family: var(--font-heading-family);
+    font-size: clamp(1.9rem, 3vw, 2.6rem);
+    font-weight: 700;
+    color: #2e1a28;
+    line-height: 1.1;
+    margin: 0;
+    letter-spacing: -0.015em;
+  }
+  .hwp-view-all {
+    font-family: var(--font-body-family);
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #c45e82;
+    text-decoration: none;
+    white-space: nowrap;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: opacity 0.2s;
+  }
+  .hwp-view-all:hover { opacity: 0.65; }
+
+  .hwp-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+  }
+
+  .hwp-card {
+    background: #FAFAF7;
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 2px 12px rgba(46,42,39,0.07);
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+  }
+  .hwp-card:hover {
+    box-shadow: 0 10px 36px rgba(46,42,39,0.13);
+    transform: translateY(-3px);
+  }
+
+  .hwp-card__image-link {
+    display: block;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background: #E2D9CE;
+    position: relative;
+  }
+  .hwp-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s ease;
+  }
+  .hwp-card:hover .hwp-card__image { transform: scale(1.05); }
+  .hwp-card__placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(145deg, #E2D9CE 0%, #CFC5BA 100%);
+  }
+
+  /* Next-class badge overlaid on image — two-line pill */
+  .hwp-card__days {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: rgba(46,26,40,0.82);
+    color: #fef6f8;
+    font-family: var(--font-body-family);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 6px 13px;
+    border-radius: 20px;
+    backdrop-filter: blur(4px);
+    white-space: nowrap;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1px;
+  }
+  .hwp-card__days-label {
+    font-size: 0.58rem;
+    letter-spacing: 0.12em;
+    opacity: 0.78;
+    line-height: 1.2;
+  }
+  .hwp-card__days-val {
+    font-size: 0.76rem;
+    line-height: 1.25;
+  }
+  .hwp-card__days--soon {
+    background: #c45e82;
+    color: #fff;
+  }
+  .hwp-card__days--today {
+    background: #2a7a3b;
+    color: #fff;
+  }
+
+  .hwp-card__body {
+    padding: 20px 24px 24px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  /* Session type + date row */
+  .hwp-card__meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+  }
+  .hwp-card__type {
+    font-family: var(--font-body-family);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #c45e82;
+    background: rgba(196,94,130,0.1);
+    padding: 3px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+  .hwp-card__date {
+    font-family: var(--font-body-family);
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: rgba(46,26,40,0.6);
+    margin: 0 0 10px;
+    line-height: 1.4;
+  }
+  .hwp-card__time {
+    font-size: 0.75rem;
+    color: rgba(46,26,40,0.45);
+  }
+
+  .hwp-card__progress {
+    font-family: var(--font-body-family);
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #c45e82;
+    margin: 0 0 10px;
+    line-height: 1.4;
+  }
+
+  .hwp-card__title {
+    font-family: var(--font-heading-family);
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #2e1a28;
+    line-height: 1.2;
+    margin: 0 0 8px;
+  }
+  .hwp-card__title a { text-decoration: none; color: inherit; }
+  .hwp-card__desc {
+    font-family: var(--font-body-family);
+    font-size: 0.875rem;
+    color: #6B6460;
+    line-height: 1.7;
+    margin: 0 0 16px;
+    flex: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .hwp-card__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 14px;
+    border-top: 1px solid rgba(46,42,39,0.08);
+    margin-top: auto;
+  }
+  .hwp-card__instructor {
+    font-family: var(--font-body-family);
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: rgba(46,26,40,0.55);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .hwp-card__instructor::before {
+    content: '·';
+    color: rgba(46,26,40,0.3);
+  }
+
+  .hwp-card__price {
+    font-family: var(--font-body-family);
+    font-size: 1rem;
+    font-weight: 700;
+    color: #2e1a28;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+  .hwp-card__per {
+    font-size: 0.68rem;
+    font-weight: 500;
+    color: rgba(46,26,40,0.45);
+    text-transform: lowercase;
+    letter-spacing: 0;
+  }
+  .hwp-card__book {
+    font-family: var(--font-body-family);
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #c45e82;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: opacity 0.2s;
+  }
+  .hwp-card__book:hover { opacity: 0.7; text-decoration: underline; }
+
+  .hwp-empty {
+    font-family: var(--font-body-family);
+    font-size: 1rem;
+    color: #6B6460;
+    font-style: italic;
+    padding: 20px 0;
+  }
+
+  @media (max-width: 1100px) {
+    .hwp-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  }
+
+  /* Mobile: horizontal scroll carousel, 2 cards visible */
+  @media (max-width: 640px) {
+    .hwp-section { padding: 56px 0 64px; }
+    .hwp-container { padding-inline: 0; }
+    .hwp-header { padding-inline: 24px; flex-direction: column; align-items: flex-start; gap: 10px; }
+    .hwp-grid {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      gap: 14px;
+      padding: 4px 24px 20px;
+    }
+    .hwp-grid::-webkit-scrollbar { display: none; }
+    .hwp-card {
+      flex: 0 0 calc(50% - 7px);
+      scroll-snap-align: start;
+    }
+  }
+{% endstyle %}
+
+<section class="hwp-section">
+  <div class="hwp-container">
+    <div class="hwp-header">
+      <div>
+        <p class="hwp-eyebrow">{{ section.settings.eyebrow | default: 'STUDIO' }}</p>
+        <h2 class="hwp-heading">{{ section.settings.heading | default: 'Upcoming workshops' }}</h2>
+      </div>
+      <a href="{{ ws_view_all_url }}" class="hwp-view-all">
+        {{ section.settings.view_all | default: 'All workshops' }} &rarr;
+      </a>
+    </div>
+
+    {%- if ws_col != empty and ws_col.products_count > 0 -%}
+      <div class="hwp-grid">
+        {%- assign hwp_shown = 0 -%}
+
+        {%- for date_id_entry in hwp_sorted -%}
+          {%- if hwp_shown >= hwp_limit -%}{% break %}{%- endif -%}
+          {%- assign dparts = date_id_entry | split: '|' -%}
+          {%- assign dparts_next = dparts[0] -%}
+          {%- assign dparts_id = dparts[1] | times: 1 -%}
+
+          {%- comment -%} Skip placeholder far-future entries {%- endcomment -%}
+          {%- if dparts_next == '9999-12-31' -%}{% continue %}{%- endif -%}
+
+          {%- for product in ws_col.products -%}
+            {%- if product.id != dparts_id -%}{% continue %}{%- endif -%}
+
+            {%- comment -%} ── Booking metafields ── {%- endcomment -%}
+            {%- assign mf_start       = product.metafields.booking.start_date -%}
+            {%- assign mf_end         = product.metafields.booking.end_date -%}
+            {%- assign mf_time        = product.metafields.booking.class_time -%}
+            {%- assign mf_is_term     = product.metafields.booking.is_term -%}
+            {%- assign mf_is_one_off      = product.metafields.booking.is_one_off -%}
+            {%- assign mf_sessions        = product.metafields.booking.session_dates -%}
+            {%- assign mf_class_type      = product.metafields.booking.class_type -%}
+            {%- assign mf_instructor_name = product.metafields.booking.instructor_name -%}
+
+            {%- comment -%} Count sessions + find next, last, done/left {%- endcomment -%}
+            {%- assign sess_count = 0 -%}
+            {%- assign sess_left  = 0 -%}
+            {%- assign last_sess_date = '' -%}
+            {%- if mf_sessions != blank -%}
+              {%- assign sess_arr   = mf_sessions | split: ',' -%}
+              {%- assign sess_count = sess_arr | size -%}
+              {%- for sd in sess_arr -%}
+                {%- assign sd_c = sd | strip -%}
+                {%- if sd_c >= today_str -%}
+                  {%- assign sess_left = sess_left | plus: 1 -%}
+                {%- endif -%}
+                {%- if last_sess_date == blank or sd_c > last_sess_date -%}
+                  {%- assign last_sess_date = sd_c -%}
+                {%- endif -%}
+              {%- endfor -%}
+            {%- endif -%}
+            {%- if last_sess_date == blank and mf_end != blank -%}
+              {%- assign last_sess_date = mf_end -%}
+            {%- endif -%}
+            {%- assign sess_done = sess_count | minus: sess_left -%}
+
+            {%- comment -%} Find next upcoming session date {%- endcomment -%}
+            {%- assign next_sess_date = '' -%}
+            {%- if mf_sessions != blank -%}
+              {%- for sd in sess_arr -%}
+                {%- assign sd_c = sd | strip -%}
+                {%- if sd_c >= today_str -%}
+                  {%- if next_sess_date == blank or sd_c < next_sess_date -%}
+                    {%- assign next_sess_date = sd_c -%}
+                  {%- endif -%}
+                {%- endif -%}
+              {%- endfor -%}
+            {%- endif -%}
+            {%- if next_sess_date == blank and mf_start != blank -%}
+              {%- assign next_sess_date = mf_start -%}
+            {%- endif -%}
+
+            {%- comment -%} Days until next session — midnight-to-midnight to avoid time-of-day drift {%- endcomment -%}
+            {%- assign days_until = 0 -%}
+            {%- if next_sess_date != blank -%}
+              {%- assign next_ts           = next_sess_date | date: '%s' | times: 1 -%}
+              {%- assign today_midnight_ts = today_str | date: '%s' | times: 1 -%}
+              {%- assign days_until = next_ts | minus: today_midnight_ts | divided_by: 86400 -%}
+            {%- endif -%}
+
+            {%- comment -%} Badge: timing_label is the second line; first line is always "Next class" {%- endcomment -%}
+            {%- assign timing_label = '' -%}
+            {%- assign days_class   = '' -%}
+            {%- if next_sess_date == blank or days_until < 0 -%}
+              {%- assign timing_label = 'Ongoing' -%}
+            {%- elsif days_until == 0 -%}
+              {%- assign timing_label = 'Today' -%}
+              {%- assign days_class = 'hwp-card__days--today' -%}
+            {%- elsif days_until == 1 -%}
+              {%- assign timing_label = 'Tomorrow' -%}
+              {%- assign days_class = 'hwp-card__days--soon' -%}
+            {%- elsif days_until <= 7 -%}
+              {%- assign timing_label = 'In ' | append: days_until | append: ' days' -%}
+              {%- assign days_class = 'hwp-card__days--soon' -%}
+            {%- else -%}
+              {%- assign weeks_until = days_until | divided_by: 7 -%}
+              {%- if weeks_until <= 1 -%}
+                {%- assign timing_label = 'Next week' -%}
+              {%- elsif weeks_until < 5 -%}
+                {%- assign timing_label = 'In ' | append: weeks_until | append: ' weeks' -%}
+              {%- else -%}
+                {%- assign timing_label = next_sess_date | date: '%-d %b' -%}
+              {%- endif -%}
+            {%- endif -%}
+
+            {%- comment -%} Session type label {%- endcomment -%}
+            {%- assign type_label = '' -%}
+            {%- if mf_is_term == true or mf_is_term == 'true' -%}
+              {%- if sess_count > 0 -%}
+                {%- assign type_label = 'Term · ' | append: sess_count | append: ' sessions' -%}
+              {%- else -%}
+                {%- assign type_label = 'Term' -%}
+              {%- endif -%}
+            {%- elsif mf_is_one_off == true or mf_is_one_off == 'true' -%}
+              {%- assign type_label = 'Single session' -%}
+            {%- endif -%}
+
+            {%- comment -%} "per class" / "per workshop" suffix for price {%- endcomment -%}
+            {%- if mf_class_type == 'workshop' -%}
+              {%- assign per_label = 'per workshop' -%}
+            {%- else -%}
+              {%- assign per_label = 'per class' -%}
+            {%- endif -%}
+
+            {%- comment -%} Date display: start – last session (or end date) · time {%- endcomment -%}
+            {%- assign date_display = '' -%}
+            {%- if mf_start != blank -%}
+              {%- if last_sess_date != blank and last_sess_date != mf_start -%}
+                {%- assign last_formatted = last_sess_date | date: '%-d %b %Y' -%}
+                {%- assign date_display = mf_start | date: '%-d %b' | append: ' – ' | append: last_formatted -%}
+              {%- else -%}
+                {%- assign date_display = mf_start | date: '%-d %b %Y' -%}
+              {%- endif -%}
+            {%- endif -%}
+
+            <article class="hwp-card">
+              <a href="{{ product.url }}" class="hwp-card__image-link" aria-label="{{ product.title | escape }}">
+                {%- if product.featured_image -%}
+                  {{ product.featured_image | image_url: width: 900 | image_tag: class: 'hwp-card__image', loading: 'lazy', alt: product.featured_image.alt | default: product.title }}
+                {%- else -%}
+                  <div class="hwp-card__placeholder"></div>
+                {%- endif -%}
+                {%- if timing_label != blank -%}
+                  {%- if timing_label == 'Ongoing' -%}
+                    <span class="hwp-card__days">
+                      <span class="hwp-card__days-val">{{ timing_label }}</span>
+                    </span>
+                  {%- else -%}
+                    <span class="hwp-card__days {{ days_class }}">
+                      <span class="hwp-card__days-label">Next class</span>
+                      <span class="hwp-card__days-val">{{ timing_label }}</span>
+                    </span>
+                  {%- endif -%}
+                {%- endif -%}
+              </a>
+
+              <div class="hwp-card__body">
+                <div class="hwp-card__meta">
+                  {%- if type_label != blank -%}
+                    <span class="hwp-card__type">{{ type_label }}</span>
+                  {%- endif -%}
+                  {%- if mf_instructor_name != blank -%}
+                    <span class="hwp-card__instructor">{{ mf_instructor_name }}</span>
+                  {%- endif -%}
+                </div>
+
+                {%- if date_display != blank -%}
+                  <p class="hwp-card__date">
+                    {{ date_display }}
+                    {%- if mf_time != blank -%}<span class="hwp-card__time"> · {{ mf_time }}</span>{%- endif -%}
+                  </p>
+                {%- endif -%}
+
+                {%- if sess_count > 1 -%}
+                  <p class="hwp-card__progress">
+                    {%- if sess_done > 0 and sess_left > 0 -%}
+                      {%- if sess_done == 1 -%}1 session done{%- else -%}{{ sess_done }} sessions done{%- endif -%}
+                      &nbsp;&middot;&nbsp;
+                      {%- if sess_left == 1 -%}1 session to go{%- else -%}{{ sess_left }} sessions to go{%- endif -%}
+                    {%- elsif sess_left > 0 -%}
+                      {{ sess_left }} sessions to go
+                    {%- else -%}
+                      All {{ sess_count }} sessions complete
+                    {%- endif -%}
+                  </p>
+                {%- endif -%}
+
+                <h3 class="hwp-card__title">
+                  <a href="{{ product.url }}">{{ product.title }}</a>
+                </h3>
+
+                {%- if product.description != blank -%}
+                  <p class="hwp-card__desc">{{ product.description | strip_html | truncate: 110 }}</p>
+                {%- endif -%}
+
+                <div class="hwp-card__footer">
+                  <span class="hwp-card__price">
+                    {%- if product.price_varies -%}From {{ product.price_min | money_without_trailing_zeros }}
+                    {%- else -%}{{ product.price | money_without_trailing_zeros }}{%- endif -%}
+                    <span class="hwp-card__per">{{ per_label }}</span>
+                  </span>
+                  <a href="{{ product.url }}" class="hwp-card__book">Book &rarr;</a>
+                </div>
+              </div>
+            </article>
+
+            {%- assign hwp_shown = hwp_shown | plus: 1 -%}
+            {%- break -%}
+          {%- endfor -%}
+        {%- endfor -%}
+
+        {%- if hwp_shown == 0 -%}
+          <p class="hwp-empty">No upcoming sessions — check back soon.</p>
+        {%- endif -%}
+      </div>
+    {%- else -%}
+      <p class="hwp-empty">No sessions available yet — check back soon.</p>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Workshops Preview",
+  "settings": [
+    { "type": "text",       "id": "eyebrow",              "label": "Eyebrow",           "default": "STUDIO" },
+    { "type": "text",       "id": "heading",              "label": "Heading",           "default": "Upcoming workshops" },
+    { "type": "collection", "id": "featured_collection",  "label": "Collection",        "info": "Select the collection to display. Defaults to 'workshops' if left blank." },
+    { "type": "range",      "id": "product_limit",        "label": "Number of items",   "min": 2, "max": 8, "step": 1, "default": 4 },
+    { "type": "header",     "content": "View all link" },
+    { "type": "text",       "id": "view_all",             "label": "Link text",         "default": "All workshops" },
+    { "type": "url",        "id": "view_all_url",         "label": "Link URL",          "info": "Leave blank to auto-use the selected collection URL." }
+  ],
+  "presets": [{ "name": "Workshops Preview" }]
+}
+{% endschema %}

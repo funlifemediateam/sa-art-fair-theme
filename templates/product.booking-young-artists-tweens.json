@@ -1,0 +1,90 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "title": {
+          "type": "title",
+          "settings": {}
+        },
+        "price": {
+          "type": "price",
+          "settings": {}
+        },
+        "share": {
+          "type": "share",
+          "settings": {
+            "share_label": "Share"
+          }
+        }
+      },
+      "block_order": [
+        "title",
+        "price",
+        "share"
+      ],
+      "settings": {
+        "enable_sticky_info": false,
+        "color_scheme": "scheme-1",
+        "media_size": "large",
+        "constrain_to_viewport": true,
+        "media_fit": "contain",
+        "gallery_layout": "stacked",
+        "mobile_thumbnails": "hide",
+        "media_position": "left",
+        "image_zoom": "lightbox",
+        "hide_variants": true,
+        "enable_video_looping": false,
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    },
+    "booking": {
+      "type": "product-booking",
+      "settings": {
+        "eyebrow": "Reserve A Seat",
+        "heading": "Choose a date",
+        "event_schedule": "",
+        "cta_text": "Book",
+        "hold_minutes": 15
+      }
+    },
+    "class-details": {
+      "type": "class-details",
+      "settings": {
+        "padding_top": 48,
+        "padding_bottom": 48
+      }
+    },
+    "class-info": {
+      "type": "class-info",
+      "settings": {
+        "padding_top": 48,
+        "padding_bottom": 48
+      }
+    },
+    "disclosures": {
+      "type": "disclosures",
+      "settings": {
+        "padding_top": 36,
+        "padding_bottom": 0
+      }
+    }
+  },
+  "order": [
+    "main",
+    "booking",
+    "class-details",
+    "class-info",
+    "disclosures"
+  ]
+}

@@ -1,0 +1,96 @@
+{%- style -%}
+  .chero {
+    background: #2e1a28;
+    height: 380px;
+    padding: 40px 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  .chero__eyebrow {
+    font-family: var(--font-body-family);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #c45e82;
+    margin: 0 0 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+  }
+  .chero__eyebrow::before,
+  .chero__eyebrow::after {
+    content: '';
+    display: block;
+    width: 32px;
+    height: 1px;
+    background: rgba(196,94,130,0.55);
+    flex-shrink: 0;
+  }
+  .chero__heading {
+    font-family: var(--font-heading-family);
+    font-size: clamp(2.6rem, 5vw, 4rem);
+    font-weight: 700;
+    color: #fef6f8;
+    margin: 0 0 22px;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+  }
+  .chero__intro {
+    font-family: var(--font-body-family);
+    font-size: 1rem;
+    color: rgba(254,246,248,0.55);
+    max-width: 460px;
+    margin: 0 auto;
+    line-height: 1.85;
+  }
+  @media screen and (max-width: 749px) {
+    .chero { height: 280px; padding: 32px 20px; }
+    .chero__heading { font-size: clamp(2rem, 8vw, 2.6rem); }
+  }
+{%- endstyle -%}
+
+<div class="chero">
+  <p class="chero__eyebrow">{{ section.settings.eyebrow }}</p>
+  <h1 class="chero__heading">
+    {%- if section.settings.heading != blank -%}
+      {{ section.settings.heading }}
+    {%- else -%}
+      {{ collection.title }}
+    {%- endif -%}
+  </h1>
+  {%- if section.settings.intro != blank -%}
+    <p class="chero__intro">{{ section.settings.intro }}</p>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Collection Hero",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text",
+      "default": "SA Art Fair"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Title",
+      "info": "Leave blank to use the collection name automatically"
+    },
+    {
+      "type": "textarea",
+      "id": "intro",
+      "label": "Description"
+    }
+  ],
+  "presets": [{ "name": "Collection Hero" }]
+}
+{% endschema %}

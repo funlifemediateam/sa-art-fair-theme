@@ -1,0 +1,454 @@
+{%- if product.template_suffix contains 'booking' or product.type == 'Workshop' or product.type == 'Class' -%}
+
+<style>
+  product-form .product-form__quantity,
+  product-form .product-form__buttons,
+  .variant-picker,
+  .product-form__input--quantity { display: none !important; }
+  html:has(.bk-page) main > .shopify-section:first-child { display: none !important; }
+</style>
+
+{%- style -%}
+
+/* ── Page layout ── */
+.bk-page { padding: 3rem 0 6rem; }
+
+.bk-layout {
+  display: grid;
+  grid-template-columns: 1fr 460px;
+  grid-template-rows: auto 1fr;
+  grid-template-areas: "media card" "info card";
+  gap: 0 3.5rem;
+  align-items: start;
+}
+.bk-media { grid-area: media; }
+.bk-media-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  object-fit: cover;
+}
+.bk-info {
+  grid-area: info;
+  padding-top: 2rem;
+}
+.bk-info-eyebrow {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #c45e82;
+  margin: 0 0 0.5rem;
+}
+.bk-info-title {
+  font-size: clamp(1.5rem, 2.8vw, 2.4rem);
+  font-weight: 700;
+  color: #2e1a28;
+  margin: 0 0 1rem;
+  letter-spacing: -0.01em;
+  line-height: 1.12;
+}
+.bk-info-desc {
+  font-size: 0.92rem;
+  color: rgba(46,26,40,0.6);
+  line-height: 1.78;
+}
+.bk-info-desc p { margin: 0 0 0.75em; }
+.bk-info-desc p:last-child { margin-bottom: 0; }
+
+.bk-sidebar { grid-area: card; }
+
+/* ── Card ── */
+.bk-card {
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.1);
+  border-radius: 12px;
+  padding: 2rem;
+  position: sticky;
+  top: 90px;
+}
+
+/* ── Eyebrow ── */
+.bk-eyebrow {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(0,0,0,0.42);
+  margin: 0 0 0.45rem;
+}
+
+/* ── Price ── */
+.bk-price-line {
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  margin: 0 0 1.6rem;
+}
+.bk-price-amount {
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: #1a1a1a;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  min-height: 2.8rem;
+}
+.bk-price-per {
+  font-size: 1rem;
+  font-weight: 400;
+  color: rgba(0,0,0,0.42);
+}
+
+/* ── Sessions ── */
+.bk-sessions-label {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 0.65rem;
+}
+.bk-sessions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 280px;
+  overflow-y: auto;
+  margin-bottom: 1.5rem;
+  padding-right: 3px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0,0,0,0.14) transparent;
+}
+.bk-session-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 13px 16px;
+  border: 1.5px solid #e5e5e5;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.13s, background 0.13s;
+  width: 100%;
+}
+.bk-session-item:hover {
+  border-color: #c9873a;
+  background: #fdf8f2;
+}
+.bk-session-item.is-selected {
+  border-color: #c9873a;
+  background: #fdf3e8;
+}
+.bk-session-item.is-soldout {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+.bk-session-name {
+  font-size: 0.92rem;
+  font-weight: 400;
+  color: #1a1a1a;
+  line-height: 1.3;
+}
+.bk-session-spots {
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: rgba(0,0,0,0.38);
+  white-space: nowrap;
+  margin-left: 10px;
+  flex-shrink: 0;
+}
+.bk-session-spots.is-soldout { color: #c0392b; }
+
+/* ── Fields ── */
+.bk-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.1rem;
+}
+.bk-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.bk-field label {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+.bk-field input {
+  padding: 10px 14px;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 0.92rem;
+  color: #1a1a1a;
+  background: #fff;
+  transition: border-color 0.13s;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+  font-family: var(--font-body-family);
+  -moz-appearance: textfield;
+}
+.bk-field input:focus { border-color: #c9873a; }
+.bk-field input::placeholder { color: rgba(0,0,0,0.22); }
+.bk-field input[type="number"]::-webkit-inner-spin-button,
+.bk-field input[type="number"]::-webkit-outer-spin-button { opacity: 0; }
+.bk-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+/* ── Total ── */
+.bk-total-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f5f0eb;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 1rem;
+}
+.bk-total-label {
+  font-size: 0.88rem;
+  color: rgba(0,0,0,0.42);
+}
+.bk-total-amount {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+/* ── Error ── */
+.bk-error {
+  font-size: 0.78rem;
+  color: #c0392b;
+  background: rgba(192,57,43,0.06);
+  border: 1px solid rgba(192,57,43,0.18);
+  border-radius: 6px;
+  padding: 8px 12px;
+  margin-bottom: 0.8rem;
+  display: none;
+}
+
+/* ── Submit ── */
+.bk-submit {
+  display: block;
+  width: 100%;
+  padding: 15px 24px;
+  background: #1a1a1a;
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s;
+  margin-bottom: 0.8rem;
+  font-family: var(--font-body-family);
+}
+.bk-submit:hover:not(:disabled) { background: #333; }
+.bk-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ── Subtext ── */
+.bk-subtext {
+  font-size: 0.73rem;
+  color: rgba(0,0,0,0.32);
+  text-align: center;
+  letter-spacing: 0.01em;
+}
+
+/* ── Responsive ── */
+@media (max-width: 960px) {
+  .bk-layout {
+    grid-template-columns: 1fr;
+    grid-template-areas: "media" "card" "info";
+    gap: 1.8rem 0;
+  }
+  .bk-card { position: static; }
+  .bk-page { padding: 1.8rem 0 4rem; }
+}
+@media (max-width: 749px) {
+  .bk-card { padding: 1.5rem 1.2rem; border-radius: 10px; }
+  .bk-price-amount { font-size: 2rem; }
+}
+
+{%- endstyle -%}
+
+{%- assign _dm = 0 -%}
+{%- if product.metafields.booking.day_sun == 'true' -%}{%- assign _dm = _dm | plus: 1 -%}{%- endif -%}
+{%- if product.metafields.booking.day_mon == 'true' -%}{%- assign _dm = _dm | plus: 2 -%}{%- endif -%}
+{%- if product.metafields.booking.day_tue == 'true' -%}{%- assign _dm = _dm | plus: 4 -%}{%- endif -%}
+{%- if product.metafields.booking.day_wed == 'true' -%}{%- assign _dm = _dm | plus: 8 -%}{%- endif -%}
+{%- if product.metafields.booking.day_thu == 'true' -%}{%- assign _dm = _dm | plus: 16 -%}{%- endif -%}
+{%- if product.metafields.booking.day_fri == 'true' -%}{%- assign _dm = _dm | plus: 32 -%}{%- endif -%}
+{%- if product.metafields.booking.day_sat == 'true' -%}{%- assign _dm = _dm | plus: 64 -%}{%- endif -%}
+{%- assign _pv = product.variants | first -%}
+
+<div class="bk-page page-width"
+     data-hold="{{ section.settings.hold_minutes | default: 15 }}"
+     data-cta="{{ section.settings.cta_text | default: 'Book' | escape }}"
+     data-title="{{ product.title | escape }}"
+     data-class-time="{{ product.metafields.booking.class_time | escape }}"
+     data-is-one-off="{{ product.metafields.booking.is_one_off | downcase }}"
+     data-session-dates="{{ product.metafields.booking.session_dates | escape }}"
+     data-start-date="{{ product.metafields.booking.start_date }}"
+     data-end-date="{{ product.metafields.booking.end_date }}"
+     data-day-mask="{{ _dm }}"
+     data-primary-variant="{{ _pv.id }}"
+     data-primary-price="{{ _pv.price }}">
+
+  <div class="bk-layout">
+
+    {%- comment -%} Left: product image {%- endcomment -%}
+    <div class="bk-media">
+      {%- if product.featured_image -%}
+        <img
+          src="{{ product.featured_image | image_url: width: 900 }}"
+          srcset="{{ product.featured_image | image_url: width: 500 }} 500w,
+                  {{ product.featured_image | image_url: width: 900 }} 900w,
+                  {{ product.featured_image | image_url: width: 1400 }} 1400w"
+          sizes="(max-width: 960px) 100vw, calc(100vw - 520px)"
+          alt="{{ product.featured_image.alt | default: product.title | escape }}"
+          loading="eager"
+          width="{{ product.featured_image.width }}"
+          height="{{ product.featured_image.height }}"
+          class="bk-media-img">
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} Left below image: title + description {%- endcomment -%}
+    <div class="bk-info">
+      {%- if section.settings.event_schedule != blank -%}
+        <p class="bk-info-eyebrow">{{ section.settings.event_schedule }}</p>
+      {%- endif -%}
+      <h1 class="bk-info-title">{{ product.title }}</h1>
+      {%- if product.description != blank -%}
+        <div class="bk-info-desc">{{ product.description }}</div>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} Right: sticky booking card {%- endcomment -%}
+    <div class="bk-sidebar">
+      <div class="bk-card">
+
+        <p class="bk-eyebrow">{{ section.settings.eyebrow | default: 'Reserve A Seat' }}</p>
+
+        <div class="bk-price-line">
+          <span class="bk-price-amount" id="bk-price-display"></span>
+          <span class="bk-price-per">/ seat</span>
+        </div>
+
+        <p class="bk-sessions-label">{{ section.settings.heading | default: 'Choose a date' }}</p>
+
+        <div class="bk-sessions-list" id="bk-sessions">
+          {%- for variant in product.variants -%}
+            <button class="bk-session-item{% unless variant.available %} is-soldout{% endunless %}"
+                    type="button"
+                    data-variant-id="{{ variant.id }}"
+                    data-price="{{ variant.price }}">
+              <span class="bk-session-name">
+                {%- if variant.title == 'Default Title' -%}Book a Session{%- else -%}{{ variant.title }}{%- endif -%}
+              </span>
+              {%- if variant.available -%}
+                {%- if variant.inventory_management != blank and variant.inventory_quantity > 0 -%}
+                  <span class="bk-session-spots">{{ variant.inventory_quantity }} left</span>
+                {%- else -%}
+                  <span class="bk-session-spots">Available</span>
+                {%- endif -%}
+              {%- else -%}
+                <span class="bk-session-spots is-soldout">Sold out</span>
+              {%- endif -%}
+            </button>
+          {%- endfor -%}
+        </div>
+
+        <div class="bk-fields">
+          <div class="bk-field">
+            <label for="bk-name">Full name</label>
+            <input type="text" id="bk-name" placeholder="Your full name" autocomplete="name">
+          </div>
+          <div class="bk-field">
+            <label for="bk-email">Email</label>
+            <input type="email" id="bk-email" placeholder="your@email.com" autocomplete="email">
+          </div>
+          <div class="bk-row">
+            <div class="bk-field">
+              <label for="bk-phone">Phone</label>
+              <input type="tel" id="bk-phone" placeholder="+27 xx xxx xxxx" autocomplete="tel">
+            </div>
+            <div class="bk-field">
+              <label for="bk-seats">Seats</label>
+              <input type="number" id="bk-seats" value="1" min="1" max="10">
+            </div>
+          </div>
+        </div>
+
+        <div class="bk-total-row">
+          <span class="bk-total-label">Total</span>
+          <span class="bk-total-amount" id="bk-total"></span>
+        </div>
+
+        <p class="bk-error" id="bk-error"></p>
+
+        <button type="button" class="bk-submit" id="bk-submit" disabled>
+          {{ section.settings.cta_text | default: 'Book' }} 1 seat
+        </button>
+
+        <p class="bk-subtext">Digital ticket emailed instantly &middot; no shipping required</p>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="{{ 'booking.js' | asset_url }}" defer="defer"></script>
+
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Booking",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Card eyebrow",
+      "default": "Reserve A Seat"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Session list label",
+      "default": "Choose a date"
+    },
+    {
+      "type": "text",
+      "id": "event_schedule",
+      "label": "Event schedule label",
+      "info": "Shown above the product title, e.g. 'Every Saturday · 2 PM – 5 PM'"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "Button text prefix",
+      "default": "Book"
+    },
+    {
+      "type": "range",
+      "id": "hold_minutes",
+      "min": 5,
+      "max": 30,
+      "step": 5,
+      "label": "Cart hold time (minutes)",
+      "default": 15
+    }
+  ],
+  "presets": [{ "name": "Booking" }]
+}
+{% endschema %}

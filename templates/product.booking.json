@@ -1,0 +1,50 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "booking_widget": {
+          "type": "shopify://apps/sa-booking-admin/blocks/booking-widget/019effec-1823-75cb-82db-853f80a4249c",
+          "settings": {
+            "class_product": "",
+            "eyebrow": "Book Your Spot",
+            "hold_minutes": 15
+          }
+        },
+        "title":       { "type": "title",       "disabled": true, "settings": {} },
+        "price":       { "type": "price",       "disabled": true, "settings": {} },
+        "description": { "type": "description", "disabled": true, "settings": {} },
+        "share":       { "type": "share",       "disabled": true, "settings": { "share_label": "Share" } }
+      },
+      "block_order": ["booking_widget", "title", "price", "description", "share"],
+      "settings": {
+        "enable_sticky_info": false,
+        "color_scheme": "scheme-1",
+        "media_size": "large",
+        "constrain_to_viewport": true,
+        "media_fit": "contain",
+        "gallery_layout": "stacked",
+        "mobile_thumbnails": "hide",
+        "media_position": "left",
+        "image_zoom": "lightbox",
+        "hide_variants": true,
+        "enable_video_looping": false,
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    },
+    "class-details": {
+      "type": "class-details",
+      "settings": { "padding_top": 48, "padding_bottom": 48 }
+    },
+    "class-info": {
+      "type": "class-info",
+      "settings": { "padding_top": 48, "padding_bottom": 48 }
+    },
+    "disclosures": {
+      "type": "disclosures",
+      "settings": { "padding_top": 36, "padding_bottom": 0 }
+    }
+  },
+  "order": ["main", "class-details", "class-info", "disclosures"]
+}

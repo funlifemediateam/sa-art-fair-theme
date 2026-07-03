@@ -1,0 +1,164 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "sa_booking_admin_booking_widget_x3drrx": {
+          "type": "shopify://apps/sa-booking-admin/blocks/booking-widget/019effec-1823-75cb-82db-853f80a4249c",
+          "disabled": true,
+          "settings": {
+            "eyebrow": "Book Your Spot",
+            "heading": "",
+            "subheading": "",
+            "hold_minutes": 15
+          }
+        },
+        "vendor": {
+          "type": "text",
+          "settings": {
+            "text": "{{ product.vendor }}",
+            "text_style": "uppercase"
+          }
+        },
+        "title": {
+          "type": "title",
+          "settings": {}
+        },
+        "price": {
+          "type": "price",
+          "settings": {}
+        },
+        "variant_picker": {
+          "type": "variant_picker",
+          "settings": {
+            "picker_type": "button",
+            "swatch_shape": "circle"
+          }
+        },
+        "quantity_selector": {
+          "type": "quantity_selector",
+          "settings": {}
+        },
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "settings": {
+            "show_dynamic_checkout": true,
+            "show_gift_card_recipient": true
+          }
+        },
+        "description": {
+          "type": "description",
+          "settings": {}
+        },
+        "share": {
+          "type": "share",
+          "settings": {
+            "share_label": "Share"
+          }
+        }
+      },
+      "block_order": [
+        "sa_booking_admin_booking_widget_x3drrx",
+        "vendor",
+        "title",
+        "price",
+        "variant_picker",
+        "quantity_selector",
+        "buy_buttons",
+        "description",
+        "share"
+      ],
+      "settings": {
+        "enable_sticky_info": true,
+        "color_scheme": "scheme-1",
+        "media_size": "large",
+        "constrain_to_viewport": true,
+        "media_fit": "contain",
+        "gallery_layout": "stacked",
+        "mobile_thumbnails": "hide",
+        "media_position": "left",
+        "image_zoom": "lightbox",
+        "hide_variants": true,
+        "enable_video_looping": false,
+        "padding_top": 36,
+        "padding_bottom": 12
+      }
+    },
+    "disclosures": {
+      "type": "disclosures",
+      "settings": {
+        "heading": "Disclosures",
+        "heading_size": "h2",
+        "open_by_default": false,
+        "color_scheme": "",
+        "padding_top": 36,
+        "padding_bottom": 0
+      }
+    },
+    "booking_app_dc3xJE": {
+      "type": "booking-app",
+      "disabled": true,
+      "name": "Booking App",
+      "settings": {
+        "collection": "",
+        "eyebrow": "Book a Class",
+        "heading": "Choose Your Session",
+        "subheading": "",
+        "hold_minutes": 15
+      }
+    },
+    "product_booking_QfCNji": {
+      "type": "product-booking",
+      "disabled": true,
+      "name": "Booking",
+      "settings": {
+        "eyebrow": "Reserve A Seat",
+        "heading": "Choose a date",
+        "event_schedule": "",
+        "cta_text": "Book",
+        "hold_minutes": 15
+      }
+    },
+    "booking_class_PARrPJ": {
+      "type": "booking-class",
+      "disabled": true,
+      "name": "Booking — Single Class",
+      "settings": {
+        "class_product": "young-artist-programme-for-tweens-teens-with-janice-grant",
+        "eyebrow": "Book Your Spot",
+        "heading": "",
+        "subheading": "",
+        "hold_minutes": 15
+      }
+    },
+    "booking_class_mG8Vka": {
+      "type": "booking-class",
+      "disabled": true,
+      "name": "SA Booking Widget",
+      "settings": {
+        "class_product": "young-artist-programme-for-tweens-teens-with-janice-grant",
+        "eyebrow": "Book Your Spot",
+        "heading": "",
+        "subheading": "",
+        "hold_minutes": 15
+      }
+    }
+  },
+  "order": [
+    "main",
+    "disclosures",
+    "booking_app_dc3xJE",
+    "product_booking_QfCNji",
+    "booking_class_PARrPJ",
+    "booking_class_mG8Vka"
+  ]
+}
