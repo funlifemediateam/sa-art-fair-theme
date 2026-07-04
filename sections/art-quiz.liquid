@@ -10,8 +10,8 @@
   style="position:relative;min-height:{{ section.settings.min_height | default: 80 }}vh;display:flex;align-items:center;justify-content:center;overflow:hidden"
 >
 
-  {%- if section.settings.bg_image != blank -%}
-    <div aria-hidden="true" style="position:absolute;inset:0;z-index:0">
+  <div aria-hidden="true" style="position:absolute;inset:0;z-index:0">
+    {%- if section.settings.bg_image != blank -%}
       <img
         src="{{ section.settings.bg_image | image_url: width: 2400 }}"
         alt=""
@@ -20,11 +20,18 @@
         style="width:100%;height:100%;object-fit:cover;object-position:center"
         loading="lazy"
       >
-      <div style="position:absolute;inset:0;background:rgba(0,0,0,{{ overlay_alpha }})"></div>
-    </div>
-  {%- else -%}
-    <div aria-hidden="true" style="position:absolute;inset:0;z-index:0;background:{{ section.settings.fallback_bg | default: '#2e1a28' }}"></div>
-  {%- endif -%}
+    {%- else -%}
+      <img
+        src="https://cdn.shopify.com/s/files/1/0745/5771/8606/files/between-states.jpg?v=1783088320"
+        alt=""
+        width="2400"
+        height="1600"
+        style="width:100%;height:100%;object-fit:cover;object-position:center"
+        loading="lazy"
+      >
+    {%- endif -%}
+    <div style="position:absolute;inset:0;background:rgba(0,0,0,{{ overlay_alpha }})"></div>
+  </div>
 
   <div style="position:relative;z-index:1;text-align:center;padding:80px 24px;max-width:680px;width:100%">
     <p style="font-size:0.7rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:{{ accent }};margin:0 0 18px">Art Personality</p>
@@ -99,12 +106,6 @@
       "unit": "%",
       "label": "Image overlay darkness",
       "default": 50
-    },
-    {
-      "type": "color",
-      "id": "fallback_bg",
-      "label": "Fallback background colour (when no image is set)",
-      "default": "#2e1a28"
     },
     {
       "type": "header",
