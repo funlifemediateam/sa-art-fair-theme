@@ -1,6 +1,7 @@
 (function () {
   'use strict';
 
+  function init() {
   var startBtn = document.getElementById('sa-quiz-start-btn');
   var overlay  = document.getElementById('sa-quiz-overlay');
   if (!startBtn || !overlay) return;
@@ -318,5 +319,13 @@
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape' && overlay.style.display !== 'none') hideOverlay();
   });
+
+  } // end init()
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
 
 })();

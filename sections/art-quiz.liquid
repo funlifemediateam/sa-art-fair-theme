@@ -1,5 +1,3 @@
-{{ 'quiz.js' | asset_url | script_tag }}
-
 {%- assign quiz_heading    = section.settings.heading    | default: "What's Your Art Personality?" -%}
 {%- assign quiz_subheading = section.settings.subheading | default: 'See how your personality can shape your journey as a collector.' -%}
 {%- assign quiz_cta        = section.settings.cta_text   | default: 'Take the Test' -%}
@@ -15,8 +13,10 @@
     {%- if section.settings.intro_image != blank -%}
       <div style="flex:1;min-width:280px;max-width:580px;overflow:hidden;border-radius:8px">
         <img
-          src="{{ section.settings.intro_image | img_url: '1200x' }}"
+          src="{{ section.settings.intro_image | image_url: width: 1200 }}"
           alt="{{ section.settings.heading | escape }}"
+          width="{{ section.settings.intro_image.width }}"
+          height="{{ section.settings.intro_image.height }}"
           style="width:100%;display:block;object-fit:cover"
           loading="lazy"
         >
@@ -48,6 +48,7 @@
 <script>
   window.__saQuizApiUrl = {{ quiz_api_url | json }};
 </script>
+<script src="{{ 'quiz.js' | asset_url }}" defer></script>
 
 {% schema %}
 {
