@@ -82,6 +82,10 @@
         '.sa-dot-past   { background: ' + DARK + '; }',
         '.sa-dot-now    { background: ' + ORANGE + '; transform: scale(1.5); }',
         '.sa-dot-future { background: #ddd; }',
+        '.sa-text-choice { transition: border-color .15s, background .15s; }',
+        '.sa-text-choice:hover { border-color: ' + DARK + '; background: #faf8f6; }',
+        '.sa-text-choice.sa-chosen { border-color: ' + ORANGE + '; background: #fdf9f5; }',
+        '.sa-text-choice.sa-chosen .sa-opt-badge { border-color: ' + ORANGE + '; background: ' + ORANGE + '; color: #fff; }',
         '@media (max-width: 640px) {',
         '  .sa-pairs { flex-direction: column !important; gap: 4px !important; }',
         '  .sa-choice { flex: none !important; height: 42vw !important; min-height: 180px; max-height: 280px; }',
@@ -115,8 +119,8 @@
         + '</div>';
     }
 
-    /* ── Render: question ── */
-    function renderQuestion(qi) {
+    /* ── Render: image question ── */
+    function renderImageQuestion(qi) {
       var q     = cfg.questions[qi];
       var total = cfg.questions.length;
 
@@ -149,6 +153,56 @@
         + '</div></div>';
 
       return html;
+    }
+
+    /* ── Render: text question (4-option pills) ── */
+    function renderTextQuestion(qi) {
+      var q     = cfg.questions[qi];
+      var total = cfg.questions.length;
+      var sides = ['a', 'b', 'c', 'd'].filter(function (s) {
+        return q['option_' + s] && q['option_' + s].label;
+      });
+
+      var html = '<div style="width:100%;max-width:600px;margin:0 auto;padding:28px 24px 48px">';
+
+      html += '<div style="text-align:center;margin-bottom:28px">'
+        + dots(qi, total)
+        + '<p style="font-size:.7rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#c4b9b2;margin:12px 0 0">Question ' + (qi + 1) + ' of ' + total + '</p>'
+        + '</div>';
+
+      html += '<h2 style="text-align:center;font-size:clamp(1.05rem,2.8vw,1.45rem);font-weight:700;letter-spacing:-.02em;color:' + DARK + ';margin:0 0 30px;line-height:1.35">'
+        + esc(q.label) + '</h2>';
+
+      html += '<div style="display:flex;flex-direction:column;gap:10px">';
+      sides.forEach(function (side) {
+        var opt = q['option_' + side];
+        html += '<button class="sa-text-choice" data-side="' + side + '" style="'
+          + 'width:100%;text-align:left;padding:16px 20px;'
+          + 'background:#fff;border:1.5px solid #e5ddd7;border-radius:8px;cursor:pointer;'
+          + 'font-size:.93rem;color:' + DARK + ';line-height:1.45;'
+          + 'display:flex;align-items:center;gap:14px'
+          + '">'
+          + '<span class="sa-opt-badge" style="'
+          + 'flex-shrink:0;width:28px;height:28px;border-radius:50%;'
+          + 'border:1.5px solid #d5cdc7;display:flex;align-items:center;justify-content:center;'
+          + 'font-size:.68rem;font-weight:700;color:#aaa;letter-spacing:.04em;transition:all .15s'
+          + '">' + side.toUpperCase() + '</span>'
+          + '<span>' + esc(opt.label) + '</span>'
+          + '</button>';
+      });
+      html += '</div>';
+
+      html += '<div style="text-align:center;margin-top:20px">'
+        + '<button id="sa-quiz-back" style="background:none;border:none;cursor:pointer;font-size:.78rem;color:#c4b9b2;letter-spacing:.05em;padding:8px 16px">← Back</button>'
+        + '</div></div>';
+
+      return html;
+    }
+
+    /* ── Question dispatcher ── */
+    function renderQuestion(qi) {
+      var q = cfg.questions[qi];
+      return (q.type === 'text') ? renderTextQuestion(qi) : renderImageQuestion(qi);
     }
 
     /* ── Render: email capture ── */
@@ -298,6 +352,20 @@
             step++;
             setBody(step < cfg.questions.length ? renderQuestion(step) : renderEmailCapture());
           }, 220);
+        };
+      });
+
+      document.querySelectorAll('.sa-text-choice').forEach(function (el) {
+        el.onclick = function () {
+          var side = el.dataset.side;
+          document.querySelectorAll('.sa-text-choice').forEach(function (c) { c.classList.remove('sa-chosen'); });
+          el.classList.add('sa-chosen');
+          answers = answers.filter(function (a) { return a.question_index !== step; });
+          answers.push({ question_index: step, side: side });
+          setTimeout(function () {
+            step++;
+            setBody(step < cfg.questions.length ? renderQuestion(step) : renderEmailCapture());
+          }, 180);
         };
       });
 
