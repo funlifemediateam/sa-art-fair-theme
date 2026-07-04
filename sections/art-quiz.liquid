@@ -1,0 +1,139 @@
+{{ 'quiz.js' | asset_url | script_tag }}
+
+{%- assign quiz_heading    = section.settings.heading    | default: "What's Your Art Personality?" -%}
+{%- assign quiz_subheading = section.settings.subheading | default: 'See how your personality can shape your journey as a collector.' -%}
+{%- assign quiz_cta        = section.settings.cta_text   | default: 'Take the Test' -%}
+{%- assign quiz_api_url    = section.settings.api_url    | default: 'https://sa-art-fair-admin.vercel.app' -%}
+
+<div
+  id="sa-art-quiz-section"
+  data-api="{{ quiz_api_url | escape }}"
+  style="background:{{ section.settings.bg_color | default: '#f2eeea' }};padding:{{ section.settings.padding_v | default: 60 }}px 0"
+>
+  <div style="max-width:1200px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:48px;flex-wrap:wrap">
+
+    {%- if section.settings.intro_image != blank -%}
+      <div style="flex:1;min-width:280px;max-width:580px;overflow:hidden;border-radius:8px">
+        <img
+          src="{{ section.settings.intro_image | img_url: '1200x' }}"
+          alt="{{ section.settings.heading | escape }}"
+          style="width:100%;display:block;object-fit:cover"
+          loading="lazy"
+        >
+      </div>
+    {%- endif -%}
+
+    <div style="flex:1;min-width:260px">
+      <p style="font-size:0.72rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:{{ section.settings.accent_color | default: '#c9873a' }};margin:0 0 10px">Art Personality</p>
+      <h2 id="sa-quiz-heading" style="font-size:clamp(1.6rem,4vw,2.4rem);font-weight:700;line-height:1.15;color:{{ section.settings.text_color | default: '#1a1a1a' }};margin:0 0 16px">
+        {{ quiz_heading }}
+      </h2>
+      <p id="sa-quiz-subheading" style="font-size:1rem;line-height:1.65;color:{{ section.settings.text_color | default: '#1a1a1a' }};opacity:0.75;margin:0 0 28px">
+        {{ quiz_subheading }}
+      </p>
+      <button
+        id="sa-quiz-start-btn"
+        style="display:inline-flex;align-items:center;justify-content:center;padding:14px 32px;background:{{ section.settings.text_color | default: '#1a1a1a' }};color:{{ section.settings.bg_color | default: '#f2eeea' }};font-size:0.85rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;border:none;cursor:pointer;border-radius:2px"
+      >
+        {{ quiz_cta }}
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- Full-screen quiz overlay (rendered by quiz.js) -->
+<div id="sa-quiz-overlay" style="display:none;position:fixed;inset:0;z-index:10000;background:#fff;overflow-y:auto"></div>
+
+<script>
+  window.__saQuizApiUrl = {{ quiz_api_url | json }};
+</script>
+
+{% schema %}
+{
+  "name": "Art Personality Quiz",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "What's Your Art Personality?"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "See how your personality can shape your journey as a collector."
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "Button text",
+      "default": "Take the Test"
+    },
+    {
+      "type": "image_picker",
+      "id": "intro_image",
+      "label": "Intro image (right side)"
+    },
+    {
+      "type": "header",
+      "content": "Colours"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background colour",
+      "default": "#f2eeea"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text colour",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent colour",
+      "default": "#c9873a"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "padding_v",
+      "min": 20,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Vertical padding",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "Advanced"
+    },
+    {
+      "type": "text",
+      "id": "api_url",
+      "label": "Admin API URL",
+      "default": "https://sa-art-fair-admin.vercel.app",
+      "info": "Leave as default unless your admin app URL has changed."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Art Personality Quiz"
+    }
+  ]
+}
+{% endschema %}
