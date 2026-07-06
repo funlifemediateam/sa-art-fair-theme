@@ -3,7 +3,7 @@
 {%- assign quiz_cta        = section.settings.cta_text   | default: 'Take the Test' -%}
 {%- assign quiz_api_url    = section.settings.api_url    | default: 'https://sa-art-fair-admin.vercel.app' -%}
 {%- assign overlay_alpha   = section.settings.overlay_opacity | divided_by: 100.0 -%}
-{%- assign accent          = section.settings.accent_color | default: '#c9873a' -%}
+{%- assign accent          = section.settings.accent_color | default: '#f26b52' -%}
 
 <section
   id="sa-art-quiz-section"
@@ -43,7 +43,7 @@
     </p>
     <button
       id="sa-quiz-start-btn"
-      style="display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:16px 42px;background:#fff;color:#2e1a28;font-size:0.82rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;border:none;cursor:pointer;border-radius:2px"
+      style="display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:16px 42px;background:#fff;color:#1d1c21;font-size:0.82rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;border:none;cursor:pointer;border-radius:2px"
     >
       <span>{{- quiz_cta -}}</span>
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
@@ -117,7 +117,7 @@
       "type": "color",
       "id": "accent_color",
       "label": "Accent colour",
-      "default": "#c9873a"
+      "default": "#f26b52"
     },
     {
       "type": "header",

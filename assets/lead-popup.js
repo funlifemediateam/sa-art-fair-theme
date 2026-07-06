@@ -6,8 +6,9 @@
   var API_URL      = window.__saLeadApiUrl     || 'https://sa-art-fair-admin.vercel.app';
   var GOOGLE_ID    = window.__saGoogleClientId || '';
   var FB_ID        = window.__saFbAppId        || '';
-  var DARK         = '#2e1a28';
-  var ORANGE       = '#c9873a';
+  var DARK         = '#1d1c21';
+  var ORANGE       = '#f26b52';
+  var RUST         = '#a35536';
 
   var shown = false;
   var timer = null;
@@ -131,7 +132,7 @@
       + '<button id="sa-popup-close" aria-label="Close" style="position:absolute;top:12px;right:14px;background:none;border:none;cursor:pointer;width:30px;height:30px;display:flex;align-items:center;justify-content:center;color:#aaa;border-radius:50%">'
       + '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>'
       + '</button>'
-      + '<p style="font-size:.68rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:' + ORANGE + ';margin:0 0 10px">SA Art Fair</p>'
+      + '<p style="font-size:.68rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:' + RUST + ';margin:0 0 10px">SA Art Fair</p>'
       + '<h3 style="margin:0 0 8px;font-size:1.15rem;font-weight:700;line-height:1.3;color:' + DARK + '">Stay in the loop.</h3>'
       + '<p style="margin:0 0 20px;font-size:.85rem;color:#777;line-height:1.6">Be first to know about new artists, exhibitions and exclusive works.</p>'
       + googleBtn + fbBtn + divider

@@ -12,8 +12,9 @@
     var answers = [];
     var step    = 0;
 
-    var DARK   = '#2e1a28';
-    var ORANGE = '#c9873a';
+    var DARK   = '#1d1c21';
+    var ORANGE = '#f26b52';
+    var RUST   = '#a35536';
 
     function esc(s) {
       return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -107,7 +108,7 @@
     /* ── Render: intro ── */
     function renderIntro() {
       return '<div style="max-width:540px;margin:0 auto;padding:68px 24px;text-align:center">'
-        + '<p style="font-size:.7rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:' + ORANGE + ';margin:0 0 18px">Art Personality</p>'
+        + '<p style="font-size:.7rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:' + RUST + ';margin:0 0 18px">Art Personality</p>'
         + '<h1 style="font-size:clamp(1.9rem,5vw,3rem);font-weight:700;line-height:1.1;letter-spacing:-.025em;color:' + DARK + ';margin:0 0 22px">' + esc(cfg.title || "What's Your Art Personality?") + '</h1>'
         + '<p style="font-size:1rem;color:#666;line-height:1.75;margin:0 0 10px">' + esc(cfg.subtitle || '') + '</p>'
         + (cfg.description ? '<p style="font-size:.85rem;color:#999;line-height:1.72;margin:0 0 40px;max-width:440px;margin-left:auto;margin-right:auto">' + esc(cfg.description) + '</p>' : '<div style="height:28px"></div>')
@@ -270,7 +271,7 @@
         + '<div style="width:56px;height:56px;border-radius:50%;background:' + ORANGE + ';margin:0 auto 22px;display:flex;align-items:center;justify-content:center">'
         + '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>'
         + '</div>'
-        + '<p style="font-size:.7rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:' + ORANGE + ';margin:0 0 12px">Almost there</p>'
+        + '<p style="font-size:.7rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:' + RUST + ';margin:0 0 12px">Almost there</p>'
         + '<h2 style="font-size:clamp(1.5rem,4vw,2rem);font-weight:700;letter-spacing:-.02em;margin:0 0 12px;color:' + DARK + '">Where should we send your result?</h2>'
         + '<p style="font-size:.9rem;color:#888;line-height:1.65;margin:0 0 28px">Sign in or enter your email to reveal your art personality type.</p>'
         + googleBtn + fbBtn + divider
@@ -306,7 +307,7 @@
 
       var html = '<div style="max-width:640px;margin:0 auto;padding:48px 24px 72px">';
 
-      html += '<p style="font-size:.7rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:' + ORANGE + ';text-align:center;margin:0 0 14px">Your Art Personality</p>';
+      html += '<p style="font-size:.7rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:' + RUST + ';text-align:center;margin:0 0 14px">Your Art Personality</p>';
       html += '<h2 style="font-size:clamp(2rem,5vw,2.8rem);font-weight:700;letter-spacing:-.025em;text-align:center;margin:0 0 24px;color:' + DARK + '">' + esc(personality.name) + '</h2>';
 
       if (personality.description) {

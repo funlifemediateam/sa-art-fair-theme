@@ -153,7 +153,7 @@
         "heading": "What's Your Art Personality?",
         "subheading": "See how your personality can shape your journey as a collector.",
         "cta_text": "Take the Test",
-        "accent_color": "#c9873a",
+        "accent_color": "#f26b52",
         "api_url": "https://sa-art-fair-admin.vercel.app"
       }
     }

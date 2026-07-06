@@ -126,8 +126,8 @@
 {%- if cls_p == blank -%}
 
   {%- if request.design_mode -%}
-    <div style="padding:40px;text-align:center;background:#fef6f8;border:2px dashed #c45e82;border-radius:12px;font-family:sans-serif;margin-top:8px">
-      <p style="font-weight:700;margin:0 0 6px;color:#2e1a28;">No class selected</p>
+    <div style="padding:40px;text-align:center;background:#eeefeb;border:2px dashed #f26b52;border-radius:12px;font-family:sans-serif;margin-top:8px">
+      <p style="font-weight:700;margin:0 0 6px;color:#1d1c21;">No class selected</p>
       <p style="color:rgba(0,0,0,0.5);font-size:0.88rem;margin:0;">Use <strong>Switch class</strong> in the bar above, or pick a class in the Settings panel on the right. On a class product page this fills in automatically.</p>
     </div>
   {%- endif -%}
@@ -252,7 +252,7 @@
   .sa-admin-bar {
     position: relative;
     display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;
-    background: #2e1a28; color: #fff;
+    background: #0f4a52; color: #fff;
     padding: 10px 16px; margin-bottom: 4px;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-size: 0.8rem; border-radius: 8px;
@@ -273,12 +273,12 @@
     cursor: pointer; transition: background 0.15s;
   }
   .sa-admin-bar-btn:hover { background: rgba(255,255,255,0.2); }
-  .sa-activate-btn { background: rgba(196,94,130,0.4); border-color: rgba(196,94,130,0.6); }
-  .sa-activate-btn:hover { background: rgba(196,94,130,0.6); }
+  .sa-activate-btn { background: rgba(242,107,82,0.5); border-color: rgba(242,107,82,0.7); }
+  .sa-activate-btn:hover { background: rgba(242,107,82,0.7); }
   .sa-admin-bar-switcher { position: relative; }
   .sa-switcher-dropdown {
     position: absolute; top: calc(100% + 6px); right: 0;
-    background: #2e1a28; border: 1px solid rgba(255,255,255,0.15);
+    background: #0f4a52; border: 1px solid rgba(255,255,255,0.15);
     border-radius: 8px; padding: 8px; min-width: 240px;
     box-shadow: 0 8px 24px rgba(0,0,0,0.4); z-index: 200;
   }
@@ -289,7 +289,7 @@
     font-size: 0.78rem; transition: background 0.12s;
   }
   .sa-switcher-item:hover { background: rgba(255,255,255,0.1); }
-  .sa-switcher-item.is-current { background: rgba(196,94,130,0.25); }
+  .sa-switcher-item.is-current { background: rgba(242,107,82,0.35); }
 </style>
 
 {% schema %}
