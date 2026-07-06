@@ -502,3 +502,36 @@ body.template-index #MainContent {
 .saf-wl-remove:hover {
   color: #c45e82;
 }
+
+/* ══ Mobile Buy Art / Learn Art bottom bar ══ */
+.saf-mobile-ctas {
+  display: none;
+}
+@media screen and (max-width: 989px) {
+  .saf-mobile-ctas {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 60;
+    display: flex;
+    gap: 0.8rem;
+    padding: 0.8rem 1.2rem calc(0.8rem + env(safe-area-inset-bottom, 0px));
+    background: rgba(254, 246, 248, 0.94);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-top: 1px solid rgba(46, 26, 40, 0.12);
+  }
+  .saf-mobile-ctas .saf-cta {
+    flex: 1;
+    height: 4rem;
+  }
+  /* Reserve space so page content and footer aren't hidden behind the bar */
+  body {
+    padding-bottom: calc(5.8rem + env(safe-area-inset-bottom, 0px));
+  }
+  /* Booking hold-timer banners stack above the CTA bar */
+  #sa-bk-banner-container {
+    bottom: calc(5.8rem + env(safe-area-inset-bottom, 0px));
+  }
+}

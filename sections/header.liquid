@@ -42,14 +42,11 @@
   }
 
   /* ── Two-row header: logo · search · icons / nav below (Rise Art layout) ── */
-  .header__search-bar {
-    display: none;
-  }
   @media screen and (min-width: 990px) {
     .header--middle-left {
       grid-template-areas:
         'heading search icons'
-        '. navigation navigation' !important;
+        '. navigation ctas' !important;
       grid-template-columns: auto minmax(24rem, 1fr) auto !important;
       column-gap: 2.4rem;
       row-gap: 1.2rem;
@@ -64,11 +61,25 @@
       justify-self: start;
       margin-left: -1rem;
     }
-    .header__search-bar {
-      display: block;
-      grid-area: search;
-      width: 100%;
+  }
+  /* Mobile: search bar gets its own full-width row */
+  @media screen and (max-width: 989px) {
+    .header {
+      grid-template-areas:
+        'left-icons heading icons'
+        'search search search' !important;
+      row-gap: 0.6rem;
     }
+  }
+  .header__search-bar {
+    display: block;
+    grid-area: search;
+    width: 100%;
+  }
+  .header__search-bar predictive-search,
+  .header__search-bar search-form {
+    position: relative;
+    display: block;
   }
   .header__search-bar .search {
     position: relative;
@@ -173,16 +184,87 @@
     border-top: 1px solid rgba(var(--color-foreground), 0.08);
     margin-top: 0.6rem;
   }
+  /* Same height as the 4.4rem icon buttons so it centres on the icon row */
   .saf-currency summary {
     display: flex;
     align-items: center;
     gap: 0.5rem;
     cursor: pointer;
-    padding: 0.6rem 0.8rem;
+    height: 4.4rem;
+    padding: 0 0.8rem;
     font-size: 1.3rem;
     letter-spacing: 0.03em;
     color: rgba(var(--color-foreground), 0.88);
     white-space: nowrap;
+  }
+  .header__icons {
+    align-items: center;
+  }
+  .header__icon-menu,
+  .header__icon-menu > details {
+    display: flex;
+    align-items: center;
+  }
+
+  /* ── Buy Art / Learn Art CTAs (desktop: right end of nav row) ── */
+  .saf-header-ctas {
+    grid-area: ctas;
+    justify-self: end;
+    display: flex;
+    gap: 0.8rem;
+    align-items: center;
+  }
+  .saf-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 3.4rem;
+    padding: 0 1.8rem;
+    border-radius: 999px;
+    font-family: var(--font-body-family);
+    font-size: 1.15rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  }
+  .saf-cta--buy {
+    background-color: rgb(var(--color-button));
+    color: rgb(var(--color-button-text));
+    border: 1px solid rgb(var(--color-button));
+  }
+  .saf-cta--buy:hover {
+    background-color: transparent;
+    color: rgba(var(--color-foreground), 0.95);
+  }
+  .saf-cta--learn {
+    background-color: transparent;
+    color: rgba(var(--color-foreground), 0.9);
+    border: 1px solid rgba(var(--color-foreground), 0.4);
+  }
+  .saf-cta--learn:hover {
+    border-color: rgba(var(--color-foreground), 0.9);
+    color: rgb(var(--color-foreground));
+  }
+  /* Transparent-over-hero state: buttons flip to white treatment */
+  .section-header.header-at-top .header-wrapper--transparent .saf-cta--buy {
+    background-color: #fff;
+    color: #2e1a28;
+    border-color: #fff;
+  }
+  .section-header.header-at-top .header-wrapper--transparent .saf-cta--buy:hover {
+    background-color: transparent;
+    color: #fff;
+  }
+  .section-header.header-at-top .header-wrapper--transparent .saf-cta--learn {
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.7);
+  }
+  @media screen and (max-width: 989px) {
+    .saf-header-ctas {
+      display: none;
+    }
   }
   .saf-currency .header__icon-panel-option[aria-current='true'] {
     font-weight: 600;
@@ -224,13 +306,6 @@
     .header__icon-menu--desktop,
     .saf-currency,
     .header__icon--gift-card {
-      display: none !important;
-    }
-  }
-  @media screen and (min-width: 990px) {
-    /* Inline bar replaces the modal search on desktop (!important — base.css
-       .header:not(.header--top-center) * > .header__search wins otherwise) */
-    .header__icons details-modal.header__search {
       display: none !important;
     }
   }
@@ -447,6 +522,13 @@
       endif
     %}
 
+    {%- comment -%} Persistent Buy Art / Learn Art CTAs (desktop; mobile gets a
+      fixed bottom bar rendered in theme.liquid) {%- endcomment -%}
+    <div class="saf-header-ctas">
+      <a href="/collections/gallery" class="saf-cta saf-cta--buy">Buy Art</a>
+      <a href="/collections/classes-workshops" class="saf-cta saf-cta--learn">Learn Art</a>
+    </div>
+
     {%- if section.settings.logo_position == 'middle-center' -%}
       {%- if request.page_type == 'index' -%}
         <h1 class="header__heading">
@@ -485,8 +567,6 @@
     {%- endif -%}
 
     <div class="header__icons">
-      {% render 'header-search', input_id: 'Search-In-Modal' %}
-
       {%- if shop.customer_accounts_enabled -%}
         {%- comment -%} Account dropdown (desktop) {%- endcomment -%}
         <header-menu class="header__icon-menu header__icon-menu--desktop">

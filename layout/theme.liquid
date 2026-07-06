@@ -414,5 +414,12 @@
     {%- unless template.name == 'page' and page.handle contains 'quiz' -%}
       {%- render 'lead-popup' -%}
     {%- endunless -%}
+
+    {%- comment -%} Mobile-only persistent Buy Art / Learn Art bar (desktop CTAs
+      live in the header nav row) {%- endcomment -%}
+    <div class="saf-mobile-ctas" role="navigation" aria-label="Quick shortcuts">
+      <a href="/collections/gallery" class="saf-cta saf-cta--buy">Buy Art</a>
+      <a href="/collections/classes-workshops" class="saf-cta saf-cta--learn">Learn Art</a>
+    </div>
   </body>
 </html>
