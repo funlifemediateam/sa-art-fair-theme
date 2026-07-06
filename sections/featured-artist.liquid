@@ -1,0 +1,546 @@
+{%- comment -%}
+  New Artist Collection — featured artist spotlight.
+  Content (artist, photo, artworks, copy) is managed in the SA Booking admin
+  app and stored in the shop metafield booking_app.featured_artist (json).
+  This section only controls layout: colours, cards per view, placement.
+{%- endcomment -%}
+
+{%- assign fa = shop.metafields.booking_app.featured_artist.value -%}
+{%- assign fa_show = false -%}
+{%- if fa and fa.enabled -%}{%- assign fa_show = true -%}{%- endif -%}
+
+{%- assign artist_col = collections[fa.artistHandle] -%}
+{%- assign hfa_eyebrow = section.settings.eyebrow_override | default: fa.eyebrow -%}
+{%- assign hfa_heading = section.settings.heading_override | default: fa.heading | default: artist_col.title -%}
+{%- assign hfa_pv = section.settings.products_per_view | default: 2 -%}
+
+{% style %}
+  .hfa-section {
+    background: var(--hfa-bg);
+    color: var(--hfa-text);
+    padding-top: {{ section.settings.padding_top | default: 88 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | default: 96 }}px;
+  }
+  .hfa-section--light {
+    --hfa-bg: #f8f4ee;
+    --hfa-text: #1a1a1a;
+    --hfa-muted: rgba(26, 26, 26, 0.62);
+    --hfa-accent: #c45e82;
+    --hfa-line: rgba(46, 26, 40, 0.14);
+    --hfa-btn-bg: #2e1a28;
+    --hfa-btn-text: #fef6f8;
+    --hfa-badge-bg: #2e1a28;
+    --hfa-badge-text: #fef6f8;
+    --hfa-img-bg: #ece6dd;
+  }
+  .hfa-section--dark {
+    --hfa-bg: #2e1a28;
+    --hfa-text: #fef6f8;
+    --hfa-muted: rgba(242, 237, 229, 0.62);
+    --hfa-accent: #c45e82;
+    --hfa-line: rgba(242, 237, 229, 0.18);
+    --hfa-btn-bg: #fef6f8;
+    --hfa-btn-text: #2e1a28;
+    --hfa-badge-bg: #fef6f8;
+    --hfa-badge-text: #2e1a28;
+    --hfa-img-bg: #3d2635;
+  }
+  .hfa-container {
+    max-width: 1280px;
+    margin-inline: auto;
+    padding-inline: 40px;
+  }
+  .hfa-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: clamp(36px, 5vw, 72px);
+    align-items: center;
+  }
+  /* Grid children default to min-width:auto — the carousel track would
+     blow the column out past the viewport without this */
+  .hfa-grid > * { min-width: 0; }
+
+  /* ── Artist photo ── */
+  .hfa-photo-wrap {
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    border-radius: 8px;
+    background: var(--hfa-img-bg);
+    isolation: isolate;
+  }
+  .hfa-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.8s ease;
+  }
+  .hfa-photo-wrap:hover .hfa-photo { transform: scale(1.03); }
+
+  /* ── Header copy ── */
+  .hfa-header { text-align: center; margin-bottom: 34px; }
+  .hfa-eyebrow {
+    font-family: var(--font-body-family);
+    font-size: 0.68rem;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: var(--hfa-accent);
+    margin: 0 0 12px;
+  }
+  .hfa-heading {
+    font-family: var(--font-heading-family);
+    font-size: clamp(1.9rem, 3.2vw, 2.7rem);
+    font-weight: 700;
+    line-height: 1.08;
+    letter-spacing: -0.015em;
+    color: var(--hfa-text);
+    margin: 0 0 14px;
+  }
+  .hfa-bio {
+    font-family: var(--font-body-family);
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--hfa-text);
+    margin: 0 0 14px;
+  }
+  .hfa-intro {
+    font-family: var(--font-body-family);
+    font-size: 0.95rem;
+    line-height: 1.85;
+    color: var(--hfa-muted);
+    max-width: 58ch;
+    margin: 0 auto;
+    white-space: pre-line;
+  }
+
+  /* ── Carousel ── */
+  .hfa-carousel { position: relative; }
+  .hfa-track {
+    display: flex;
+    gap: 24px;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    cursor: grab;
+    padding-bottom: 4px;
+  }
+  .hfa-track::-webkit-scrollbar { display: none; }
+  .hfa-track.is-dragging {
+    scroll-snap-type: none;
+    cursor: grabbing;
+    scroll-behavior: auto;
+    user-select: none;
+  }
+  .hfa-track:focus-visible {
+    outline: 2px solid var(--hfa-accent);
+    outline-offset: 4px;
+    border-radius: 4px;
+  }
+
+  .hfa-card {
+    flex: 0 0 calc((100% - (var(--hfa-pv, 2) - 1) * 24px) / var(--hfa-pv, 2));
+    scroll-snap-align: start;
+    text-decoration: none;
+    color: var(--hfa-text);
+  }
+  .hfa-card__img-wrap {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    border-radius: 6px;
+    background: var(--hfa-img-bg);
+    margin-bottom: 16px;
+    isolation: isolate; /* traps badge/heart z-index inside — never above the header */
+  }
+  .hfa-card__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.6s ease;
+  }
+  .hfa-card:hover .hfa-card__img { transform: scale(1.04); }
+  .hfa-card--sold .hfa-card__img { opacity: 0.55; }
+  .hfa-card__placeholder { width: 100%; height: 100%; }
+
+  /* Heart sits top-left here (badge owns the top-right corner) */
+  .hfa-card .saf-wishlist-toggle { right: auto; left: 0.8rem; }
+
+  .hfa-badge {
+    position: absolute;
+    top: 0.9rem;
+    right: 0.9rem;
+    z-index: 2; /* hard ceiling — header stacking rules */
+    width: 4.6rem;
+    height: 4.6rem;
+    border-radius: 50%;
+    background: var(--hfa-badge-bg);
+    color: var(--hfa-badge-text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-family: var(--font-body-family);
+    font-size: 0.56rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    line-height: 1.45;
+    padding: 0.6rem;
+  }
+
+  .hfa-card__title {
+    font-family: var(--font-body-family);
+    font-size: 0.95rem;
+    font-weight: 600;
+    line-height: 1.4;
+    margin: 0 0 4px;
+    transition: color 0.2s;
+  }
+  .hfa-card:hover .hfa-card__title { color: var(--hfa-accent); }
+  .hfa-card__price {
+    font-family: var(--font-body-family);
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--hfa-text);
+    margin: 0;
+  }
+  .hfa-card__price--sold { color: var(--hfa-muted); text-decoration: line-through; }
+
+  /* ── Progress + arrows ── */
+  .hfa-controls {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin-top: 26px;
+  }
+  /* display:flex above would defeat the hidden attribute without this */
+  .hfa-controls[hidden] { display: none; }
+  .hfa-progress {
+    flex: 1;
+    height: 2px;
+    background: var(--hfa-line);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .hfa-progress__thumb {
+    height: 100%;
+    width: 40%;
+    background: var(--hfa-text);
+    border-radius: 2px;
+    transform: translateX(0);
+    transition: transform 0.15s linear;
+  }
+  .hfa-arrows { display: flex; gap: 10px; }
+  .hfa-arrow {
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    border: 1px solid var(--hfa-line);
+    background: transparent;
+    color: var(--hfa-text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s, opacity 0.2s;
+    padding: 0;
+  }
+  .hfa-arrow svg { width: 1.5rem; height: 1.5rem; }
+  .hfa-arrow:hover { border-color: var(--hfa-text); }
+  .hfa-arrow[disabled] { opacity: 0.3; cursor: default; pointer-events: none; }
+
+  .hfa-cta-row { text-align: center; margin-top: 34px; }
+  .hfa-btn {
+    display: inline-block;
+    background: var(--hfa-btn-bg);
+    color: var(--hfa-btn-text);
+    font-family: var(--font-body-family);
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 999px;
+    padding: 15px 38px;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+  .hfa-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+
+  .hfa-placeholder {
+    border: 1.5px dashed var(--hfa-line);
+    border-radius: 10px;
+    padding: 56px 32px;
+    text-align: center;
+    font-family: var(--font-body-family);
+    color: var(--hfa-muted);
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+
+  @media (max-width: 989px) {
+    .hfa-grid { grid-template-columns: 1fr; gap: 32px; }
+    .hfa-photo-wrap { aspect-ratio: 4 / 3; max-width: 640px; margin-inline: auto; width: 100%; }
+    .hfa-container { padding-inline: 24px; }
+    .hfa-section {
+      padding-top: {{ section.settings.padding_top | default: 88 | times: 0.72 | round }}px;
+      padding-bottom: {{ section.settings.padding_bottom | default: 96 | times: 0.72 | round }}px;
+    }
+    /* Full-bleed swipe on small screens */
+    .hfa-track { margin-inline: -24px; padding-inline: 24px; scroll-padding-inline: 24px; }
+    .hfa-card { flex-basis: min(70vw, 340px); }
+    .hfa-header { margin-bottom: 26px; }
+  }
+{% endstyle %}
+
+{%- if fa_show -%}
+<section class="hfa-section hfa-section--{{ section.settings.scheme | default: 'light' }}"
+  aria-label="{{ hfa_eyebrow | default: 'New artist collection' | escape }}">
+  <div class="hfa-container">
+    <div class="hfa-grid" data-hfa style="--hfa-pv: {{ hfa_pv }}">
+
+      {%- comment -%} Photo: theme-editor override → app upload → artist collection image {%- endcomment -%}
+      <div class="hfa-photo-wrap">
+        {%- if section.settings.image != blank -%}
+          {{ section.settings.image | image_url: width: 1000 | image_tag: class: 'hfa-photo', loading: 'lazy', alt: hfa_heading | escape }}
+        {%- elsif fa.photo != blank -%}
+          <img class="hfa-photo" loading="lazy" alt="{{ hfa_heading | escape }}" width="1000" height="1333"
+            src="{{ fa.photo }}{% if fa.photo contains '?' %}&{% else %}?{% endif %}width=1000">
+        {%- elsif artist_col.image -%}
+          {{ artist_col.image | image_url: width: 1000 | image_tag: class: 'hfa-photo', loading: 'lazy', alt: hfa_heading | escape }}
+        {%- else -%}
+          <div class="hfa-card__placeholder"></div>
+        {%- endif -%}
+      </div>
+
+      <div>
+        <div class="hfa-header">
+          {%- if hfa_eyebrow != blank -%}<p class="hfa-eyebrow">{{ hfa_eyebrow }}</p>{%- endif -%}
+          {%- if hfa_heading != blank -%}<h2 class="hfa-heading">{{ hfa_heading }}</h2>{%- endif -%}
+          {%- if fa.bio != blank -%}<p class="hfa-bio">{{ fa.bio }}</p>{%- endif -%}
+          {%- if fa.intro != blank -%}<p class="hfa-intro">{{ fa.intro }}</p>{%- endif -%}
+        </div>
+
+        {%- assign rendered_cards = 0 -%}
+        <div class="hfa-carousel">
+          <div class="hfa-track" tabindex="0" role="region"
+            aria-label="Artworks by {{ hfa_heading | default: 'the featured artist' | escape }}">
+            {%- for item in fa.products -%}
+              {%- if item.handle == blank -%}{%- continue -%}{%- endif -%}
+              {%- assign product = all_products[item.handle] -%}
+              {%- if product.empty? or product.id == blank -%}{%- continue -%}{%- endif -%}
+              {%- assign rendered_cards = rendered_cards | plus: 1 -%}
+              {%- assign is_sold = false -%}
+              {%- unless product.available -%}{%- assign is_sold = true -%}{%- endunless -%}
+
+              <a href="{{ product.url }}" class="hfa-card{% if is_sold %} hfa-card--sold{% endif %}">
+                <div class="hfa-card__img-wrap">
+                  {%- if product.featured_image -%}
+                    {%- assign hfa_alt = product.featured_image.alt | default: product.title -%}
+                    {{ product.featured_image | image_url: width: 700 | image_tag: class: 'hfa-card__img', loading: 'lazy', alt: hfa_alt }}
+                  {%- else -%}
+                    <div class="hfa-card__placeholder"></div>
+                  {%- endif -%}
+                  {%- if section.settings.show_hearts -%}
+                    <button type="button" class="saf-wishlist-toggle"
+                      data-product-id="{{ product.id }}"
+                      data-product-handle="{{ product.handle }}"
+                      aria-label="Save {{ product.title | escape }} to wishlist"
+                      aria-pressed="false">
+                      <span class="svg-wrapper">{{ 'icon-heart.svg' | inline_asset_content }}</span>
+                    </button>
+                  {%- endif -%}
+                  {%- if rendered_cards == 1 and section.settings.show_badge and fa.badge != blank -%}
+                    <span class="hfa-badge" aria-hidden="true">{{ fa.badge }}</span>
+                  {%- endif -%}
+                  {%- if is_sold -%}<span class="saf-sold-badge">Sold</span>{%- endif -%}
+                </div>
+                <h3 class="hfa-card__title">{{ product.title }}</h3>
+                {%- if section.settings.show_prices and product.price > 0 -%}
+                  <p class="hfa-card__price{% if is_sold %} hfa-card__price--sold{% endif %}">
+                    {%- if product.price_varies -%}From {% endif -%}
+                    {{- product.price_min | money_without_trailing_zeros -}}
+                  </p>
+                {%- endif -%}
+              </a>
+            {%- endfor -%}
+          </div>
+
+          <div class="hfa-controls" data-hfa-controls hidden>
+            <div class="hfa-progress" aria-hidden="true"><div class="hfa-progress__thumb"></div></div>
+            <div class="hfa-arrows">
+              <button type="button" class="hfa-arrow" data-hfa-prev aria-label="Previous artworks">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+              </button>
+              <button type="button" class="hfa-arrow" data-hfa-next aria-label="Next artworks">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {%- if rendered_cards == 0 and request.design_mode -%}
+          <div class="hfa-placeholder">No artworks selected yet — pick them in the booking admin app under <strong>New Artist</strong>.</div>
+        {%- endif -%}
+
+        {%- if artist_col != blank and fa.buttonLabel != blank -%}
+          <div class="hfa-cta-row">
+            <a href="{{ artist_col.url }}" class="hfa-btn">{{ fa.buttonLabel }}</a>
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  (function () {
+    function initHfa(root) {
+      var track = root.querySelector('.hfa-track');
+      if (!track || track.dataset.hfaInit) return;
+      track.dataset.hfaInit = '1';
+      var controls = root.querySelector('[data-hfa-controls]');
+      var thumb = root.querySelector('.hfa-progress__thumb');
+      var prev = root.querySelector('[data-hfa-prev]');
+      var next = root.querySelector('[data-hfa-next]');
+      var rafPending = false;
+
+      function step() {
+        var card = track.querySelector('.hfa-card');
+        if (!card) return track.clientWidth;
+        return card.getBoundingClientRect().width + 24;
+      }
+
+      function update() {
+        rafPending = false;
+        var max = track.scrollWidth - track.clientWidth;
+        var overflowing = max > 4;
+        if (controls) controls.hidden = !overflowing;
+        if (!overflowing) return;
+        if (thumb) {
+          var frac = track.clientWidth / track.scrollWidth;
+          thumb.style.width = (frac * 100) + '%';
+          thumb.style.transform = 'translateX(' + (track.scrollLeft / track.clientWidth * 100) + '%)';
+        }
+        if (prev) prev.disabled = track.scrollLeft <= 2;
+        if (next) next.disabled = track.scrollLeft >= max - 2;
+      }
+
+      function queueUpdate() {
+        if (rafPending) return;
+        rafPending = true;
+        requestAnimationFrame(update);
+      }
+
+      track.addEventListener('scroll', queueUpdate, { passive: true });
+      window.addEventListener('resize', queueUpdate);
+      if (prev) prev.addEventListener('click', function () { track.scrollBy({ left: -step(), behavior: 'smooth' }); });
+      if (next) next.addEventListener('click', function () { track.scrollBy({ left: step(), behavior: 'smooth' }); });
+
+      /* Keyboard */
+      track.addEventListener('keydown', function (e) {
+        if (e.key === 'ArrowRight') { e.preventDefault(); track.scrollBy({ left: step(), behavior: 'smooth' }); }
+        if (e.key === 'ArrowLeft') { e.preventDefault(); track.scrollBy({ left: -step(), behavior: 'smooth' }); }
+      });
+
+      /* Mouse drag-to-scroll (touch + trackpad already scroll natively) */
+      var down = false, startX = 0, startScroll = 0, moved = 0;
+      track.addEventListener('pointerdown', function (e) {
+        if (e.pointerType !== 'mouse' || e.button !== 0) return;
+        down = true; moved = 0; startX = e.clientX; startScroll = track.scrollLeft;
+        track.classList.add('is-dragging');
+        try { track.setPointerCapture(e.pointerId); } catch (err) {}
+      });
+      track.addEventListener('pointermove', function (e) {
+        if (!down) return;
+        var dx = e.clientX - startX;
+        if (Math.abs(dx) > moved) moved = Math.abs(dx);
+        track.scrollLeft = startScroll - dx;
+      });
+      function endDrag() {
+        if (!down) return;
+        down = false;
+        track.classList.remove('is-dragging');
+      }
+      track.addEventListener('pointerup', endDrag);
+      track.addEventListener('pointercancel', endDrag);
+      /* A real drag must not trigger the card link it ends on */
+      track.addEventListener('click', function (e) {
+        if (moved > 8) { e.preventDefault(); e.stopPropagation(); moved = 0; }
+      }, true);
+
+      update();
+    }
+
+    function boot() {
+      document.querySelectorAll('[data-hfa]').forEach(initHfa);
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+    else boot();
+    document.addEventListener('shopify:section:load', function (e) {
+      var root = e.target.querySelector('[data-hfa]');
+      if (root) initHfa(root);
+    });
+  })();
+</script>
+
+{%- elsif request.design_mode -%}
+<section class="hfa-section hfa-section--{{ section.settings.scheme | default: 'light' }}">
+  <div class="hfa-container">
+    <div class="hfa-placeholder">
+      <strong>New Artist Collection</strong><br>
+      This section is set up in the booking admin app — open the <strong>New Artist</strong> tab,
+      choose an artist and their artworks, then turn the section on.<br>
+      Only layout options (colours, cards per view, placement) live here in the theme editor.
+    </div>
+  </div>
+</section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "New Artist Collection",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "The artist, photo, artworks and all wording are managed in the SA Booking admin app under the 'New Artist' tab. This panel only controls how the section looks."
+    },
+    {
+      "type": "select",
+      "id": "scheme",
+      "label": "Colour scheme",
+      "options": [
+        { "value": "light", "label": "Light (cream)" },
+        { "value": "dark", "label": "Dark (plum)" }
+      ],
+      "default": "light"
+    },
+    {
+      "type": "range",
+      "id": "products_per_view",
+      "label": "Artworks side-by-side (desktop)",
+      "min": 2, "max": 4, "step": 1, "default": 2
+    },
+    { "type": "checkbox", "id": "show_prices", "label": "Show prices", "default": true },
+    { "type": "checkbox", "id": "show_badge", "label": "Show round badge on first artwork", "default": true },
+    { "type": "checkbox", "id": "show_hearts", "label": "Show wishlist hearts", "default": true },
+    {
+      "type": "header",
+      "content": "Overrides (optional)"
+    },
+    { "type": "text", "id": "eyebrow_override", "label": "Eyebrow override", "info": "Leave blank to use the text from the app" },
+    { "type": "text", "id": "heading_override", "label": "Heading override", "info": "Leave blank to use the text from the app" },
+    { "type": "image_picker", "id": "image", "label": "Photo override", "info": "Leave empty to use the photo uploaded in the app" },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    { "type": "range", "id": "padding_top", "label": "Top padding", "min": 0, "max": 140, "step": 4, "default": 88, "unit": "px" },
+    { "type": "range", "id": "padding_bottom", "label": "Bottom padding", "min": 0, "max": 140, "step": 4, "default": 96, "unit": "px" }
+  ],
+  "presets": [{ "name": "New Artist Collection" }]
+}
+{% endschema %}

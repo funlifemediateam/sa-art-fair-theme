@@ -30,7 +30,7 @@
           "type": "buttons",
           "settings": {
             "button_label_1": "View the gallery",
-            "button_link_1": "shopify://collections/all",
+            "button_link_1": "shopify://collections/gallery",
             "button_style_secondary_1": false,
             "button_label_2": "Book a workshop",
             "button_link_2": "shopify://collections/workshops",
@@ -62,24 +62,37 @@
       "settings": {
         "workshops_eyebrow": "Hout Bay Studio",
         "workshops_heading": "Workshops & Classes",
-        "workshops_desc": "Hands-on creative sessions for all levels — painting, drawing, sewing, and more.",
+        "workshops_desc": "Hands-on creative sessions for all levels \u2014 painting, drawing, sewing, and more.",
         "workshops_btn": "View Schedule",
-        "workshops_url": "",
+        "workshops_url": "shopify://collections/workshops-classes",
         "gallery_eyebrow": "Original Artworks",
         "gallery_heading": "The Gallery",
         "gallery_desc": "Discover and collect original paintings, prints, and mixed media from our resident artists.",
         "gallery_btn": "Browse Art",
-        "gallery_url": ""
+        "gallery_url": "shopify://collections/gallery"
+      }
+    },
+    "featured_artist": {
+      "type": "featured-artist",
+      "settings": {
+        "scheme": "light",
+        "products_per_view": 2,
+        "show_prices": true,
+        "show_badge": true,
+        "show_hearts": true,
+        "padding_top": 88,
+        "padding_bottom": 96
       }
     },
     "workshops_preview": {
       "type": "home-workshops-preview",
       "settings": {
         "eyebrow": "STUDIO",
-        "heading": "Upcoming workshops",
-        "collection_handle": "workshops",
-        "product_limit": 3,
-        "view_all": "All workshops"
+        "heading": "Upcoming Workshops & Classes",
+        "featured_collection": "workshops-classes",
+        "product_limit": 4,
+        "view_all": "All Workshops & Classes",
+        "view_all_url": "shopify://collections/workshops-classes"
       }
     },
     "artists_preview": {
@@ -90,8 +103,8 @@
           "settings": {
             "collection_handle": "susan-orpen",
             "name": "Susan Orpen",
-            "role": "Watercolour · Acrylic · Mixed Media",
-            "bio": "Susan has been practising and teaching art in Hout Bay for over a decade. Her work spans watercolour landscapes to bold acrylic abstracts — and her teaching style makes even the most uncertain beginner feel at ease."
+            "role": "Watercolour \u00b7 Acrylic \u00b7 Mixed Media",
+            "bio": "Susan has been practising and teaching art in Hout Bay for over a decade. Her work spans watercolour landscapes to bold acrylic abstracts \u2014 and her teaching style makes even the most uncertain beginner feel at ease."
           }
         },
         "kerri": {
@@ -99,8 +112,8 @@
           "settings": {
             "collection_handle": "kerri-sassen",
             "name": "Kerri Sassen",
-            "role": "Abstract · Mixed Media · Art Therapy",
-            "bio": "Kerri brings warmth and expertise to every class. A qualified occupational art therapist, she creates a space where people explore abstraction freely — no experience needed, just an open mind."
+            "role": "Abstract \u00b7 Mixed Media \u00b7 Art Therapy",
+            "bio": "Kerri brings warmth and expertise to every class. A qualified occupational art therapist, she creates a space where people explore abstraction freely \u2014 no experience needed, just an open mind."
           }
         },
         "zara": {
@@ -108,8 +121,8 @@
           "settings": {
             "collection_handle": "zara-leigh",
             "name": "Zara-Leigh Farinha",
-            "role": "Abstract Acrylic · Oil · Large Format",
-            "bio": "Zara-Leigh's energy is contagious. Known for large-format abstract works in acrylic and oil, her Friday 'Permission to Play' class is exactly what it sounds like — joyful, free, and surprising."
+            "role": "Abstract Acrylic \u00b7 Oil \u00b7 Large Format",
+            "bio": "Zara-Leigh's energy is contagious. Known for large-format abstract works in acrylic and oil, her Friday 'Permission to Play' class is exactly what it sounds like \u2014 joyful, free, and surprising."
           }
         }
       },
@@ -133,11 +146,26 @@
         "product_limit": 4,
         "view_all": "All artworks"
       }
+    },
+    "art_quiz_home": {
+      "type": "art-quiz",
+      "settings": {
+        "heading": "What's Your Art Personality?",
+        "subheading": "See how your personality can shape your journey as a collector.",
+        "cta_text": "Take the Test",
+        "bg_color": "#f2eeea",
+        "text_color": "#2e1a28",
+        "accent_color": "#c9873a",
+        "padding_v": 80,
+        "api_url": "https://sa-art-fair-admin.vercel.app"
+      }
     }
   },
   "order": [
     "image_banner",
     "two_paths",
+    "featured_artist",
+    "art_quiz_home",
     "workshops_preview",
     "artists_preview",
     "gallery_preview"
