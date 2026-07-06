@@ -535,7 +535,7 @@
             <span class="wishlist-count-bubble" hidden></span>
           </summary>
           <ul class="header__icon-panel" role="list">
-            <li><a href="/pages/wishlist">My Wishlist</a></li>
+            <li><a href="/collections/wishlist">My Wishlist</a></li>
             <li>
               <p class="header__icon-panel-note" data-wishlist-summary>No saved items yet</p>
             </li>
@@ -544,16 +544,20 @@
       </header-menu>
 
       {%- comment -%} Wishlist link (mobile) {%- endcomment -%}
-      <a href="/pages/wishlist" class="header__icon header__icon--wishlist-mobile link focus-inset large-up-hide" aria-label="My Wishlist">
+      <a href="/collections/wishlist" class="header__icon header__icon--wishlist-mobile link focus-inset large-up-hide" aria-label="My Wishlist">
         <span class="svg-wrapper">{{ 'icon-heart.svg' | inline_asset_content }}</span>
         <span class="wishlist-count-bubble" hidden></span>
       </a>
 
-      {%- comment -%} Gift card {%- endcomment -%}
-      {%- assign gift_card_href = section.settings.gift_card_link | default: '/products/gift-card' -%}
-      <a href="{{ gift_card_href }}" class="header__icon header__icon--gift-card link focus-inset" aria-label="Gift Card">
-        <span class="svg-wrapper">{{ 'icon-gift-card.svg' | inline_asset_content }}</span>
-      </a>
+      {%- comment -%} Gift card — hidden until a gift card product exists (gift
+        cards need one-time activation in admin) or an explicit link is set {%- endcomment -%}
+      {%- assign gift_card_product = all_products['gift-card'] -%}
+      {%- if section.settings.gift_card_link != blank or gift_card_product.id != blank -%}
+        {%- assign gift_card_href = section.settings.gift_card_link | default: '/products/gift-card' -%}
+        <a href="{{ gift_card_href }}" class="header__icon header__icon--gift-card link focus-inset" aria-label="Gift Card">
+          <span class="svg-wrapper">{{ 'icon-gift-card.svg' | inline_asset_content }}</span>
+        </a>
+      {%- endif -%}
 
       {%- comment -%} Display-only currency selector (checkout is always ZAR) {%- endcomment -%}
       <div class="header__icon-menu saf-currency">
