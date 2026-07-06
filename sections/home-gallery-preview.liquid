@@ -87,24 +87,7 @@
     background: linear-gradient(145deg, #f0d8e4 0%, #e8c8d6 100%);
   }
 
-  /* SOLD badge — centered on the image */
-  .hgp-sold-badge {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgba(20, 16, 14, 0.78);
-    color: #fef6f8;
-    font-family: var(--font-body-family);
-    font-size: 0.58rem;
-    font-weight: 700;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    padding: 7px 15px;
-    border-radius: 2px;
-    pointer-events: none;
-    backdrop-filter: blur(2px);
-  }
+  /* SOLD image desaturation */
 
   .hgp-item--sold .hgp-image {
     filter: grayscale(0.2) brightness(0.92);
@@ -207,7 +190,10 @@
                 <div class="hgp-placeholder"></div>
               {%- endif -%}
               {%- if is_sold -%}
-                <span class="hgp-sold-badge">Sold</span>
+                <span class="saf-sold-badge">Sold</span>
+              {%- endif -%}
+              {%- if product.tags contains 'dummy' -%}
+                <span class="saf-dummy-badge">&#9679; Placeholder</span>
               {%- endif -%}
             </div>
 

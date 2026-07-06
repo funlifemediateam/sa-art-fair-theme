@@ -473,6 +473,18 @@
               {%- assign per_label = 'per class' -%}
             {%- endif -%}
 
+            {%- comment -%} Badge top label — "Starts" before first session (term only), else "Next class" / "Next workshop" {%- endcomment -%}
+            {%- if mf_class_type == 'workshop' -%}
+              {%- assign days_label = 'Next workshop' -%}
+            {%- else -%}
+              {%- assign days_label = 'Next class' -%}
+            {%- endif -%}
+            {%- if mf_is_term == true or mf_is_term == 'true' -%}
+              {%- if sess_done == 0 -%}
+                {%- assign days_label = 'Starts' -%}
+              {%- endif -%}
+            {%- endif -%}
+
             {%- comment -%} Date display: start – last session (or end date) · time {%- endcomment -%}
             {%- assign date_display = '' -%}
             {%- if mf_start != blank -%}
@@ -491,6 +503,9 @@
                 {%- else -%}
                   <div class="hwp-card__placeholder"></div>
                 {%- endif -%}
+                {%- if product.tags contains 'dummy' -%}
+                  <span class="saf-dummy-badge">&#9679; Placeholder</span>
+                {%- endif -%}
                 {%- if timing_label != blank -%}
                   {%- if timing_label == 'Ongoing' -%}
                     <span class="hwp-card__days">
@@ -498,7 +513,7 @@
                     </span>
                   {%- else -%}
                     <span class="hwp-card__days {{ days_class }}">
-                      <span class="hwp-card__days-label">Next class</span>
+                      <span class="hwp-card__days-label">{{ days_label }}</span>
                       <span class="hwp-card__days-val">{{ timing_label }}</span>
                     </span>
                   {%- endif -%}

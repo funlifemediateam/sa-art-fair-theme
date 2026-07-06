@@ -262,6 +262,9 @@
                     <span class="artist-card__initial">{{ block.settings.name | slice: 0 }}</span>
                   </div>
                 {%- endif -%}
+                {%- if collections[block.settings.collection_handle].metafields.site.is_dummy == 'true' -%}
+                  <span class="saf-dummy-badge">&#9679; Placeholder</span>
+                {%- endif -%}
               </div>
               <div class="artist-card__info">
                 <h2 class="artist-card__name">{{ block.settings.name }}</h2>
@@ -292,6 +295,9 @@
                   <div class="artist-card__placeholder">
                     <span class="artist-card__initial">{{ block.settings.name | slice: 0 }}</span>
                   </div>
+                {%- endif -%}
+                {%- if collections[block.settings.collection_handle].metafields.site.is_dummy == 'true' -%}
+                  <span class="saf-dummy-badge">&#9679; Placeholder</span>
                 {%- endif -%}
               </div>
               <div class="artist-card__info">
@@ -332,6 +338,9 @@
                     <div class="artist-card__placeholder">
                       <span class="artist-card__initial">{{ block.settings.name | slice: 0 }}</span>
                     </div>
+                  {%- endif -%}
+                  {%- if collections[block.settings.collection_handle].metafields.site.is_dummy == 'true' -%}
+                    <span class="saf-dummy-badge">&#9679; Placeholder</span>
                   {%- endif -%}
                 </div>
                 <div class="artist-card__info">

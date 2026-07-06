@@ -1,0 +1,634 @@
+{{- 'template-collection.css' | asset_url | stylesheet_tag -}}
+{{- 'component-facets.css' | asset_url | stylesheet_tag -}}
+<script src="{{ 'facets.js' | asset_url }}" defer="defer"></script>
+
+{%- liquid
+  assign today_str = 'now' | date: '%Y-%m-%d'
+-%}
+
+{%- style -%}
+  /* ── Card shell ── */
+  .ccls-card {
+    background: #FAFAF7;
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    box-shadow: 0 2px 12px rgba(46,42,39,0.07);
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+  }
+  .ccls-card:hover {
+    box-shadow: 0 10px 36px rgba(46,42,39,0.13);
+    transform: translateY(-3px);
+  }
+
+  /* ── Image ── */
+  .ccls-card__img-link {
+    display: block;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background: #E2D9CE;
+    position: relative;
+    flex-shrink: 0;
+    isolation: isolate; /* contain badge z-indices so they never escape above sticky header */
+  }
+  .ccls-card__img {
+    width: 100%; height: 100%;
+    object-fit: cover; display: block;
+    transition: transform 0.5s ease;
+  }
+  .ccls-card:hover .ccls-card__img { transform: scale(1.05); }
+  .ccls-card__img-placeholder {
+    width: 100%; height: 100%;
+    background: linear-gradient(145deg, #E2D9CE 0%, #CFC5BA 100%);
+  }
+
+  /* ── Timing badge ── */
+  .ccls-days {
+    position: absolute; top: 12px; right: 12px;
+    background: rgba(46,26,40,0.82); color: #fef6f8;
+    font-family: var(--font-body-family);
+    font-weight: 700; letter-spacing: 0.06em;
+    text-transform: uppercase; padding: 6px 13px;
+    border-radius: 20px; backdrop-filter: blur(4px);
+    white-space: nowrap; display: flex;
+    flex-direction: column; align-items: center;
+    text-align: center; gap: 1px; z-index: 10;
+    pointer-events: none;
+  }
+  .ccls-days__label { font-size: 0.58rem; letter-spacing: 0.12em; opacity: 0.78; line-height: 1.2; }
+  .ccls-days__val   { font-size: 0.76rem; line-height: 1.25; }
+  .ccls-days--soon  { background: #c45e82; color: #fff; }
+  .ccls-days--today { background: #2a7a3b; color: #fff; }
+
+  /* ── Body ── */
+  .ccls-card__body {
+    padding: 18px 22px 22px;
+    display: flex; flex-direction: column; flex: 1;
+  }
+  .ccls-card__meta {
+    display: flex; align-items: center;
+    gap: 8px; margin-bottom: 8px; flex-wrap: wrap;
+  }
+  .ccls-card__type {
+    font-family: var(--font-body-family);
+    font-size: 0.65rem; font-weight: 700;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: #c45e82; background: rgba(196,94,130,0.1);
+    padding: 3px 8px; border-radius: 4px; white-space: nowrap;
+  }
+  .ccls-card__instructor {
+    font-family: var(--font-body-family);
+    font-size: 0.72rem; font-weight: 500;
+    color: rgba(46,26,40,0.55);
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+  .ccls-card__instructor::before { content: '·'; color: rgba(46,26,40,0.3); }
+  .ccls-card__date {
+    font-family: var(--font-body-family);
+    font-size: 0.78rem; font-weight: 500;
+    color: rgba(46,26,40,0.6); margin: 0 0 8px; line-height: 1.4;
+  }
+  .ccls-card__time { font-size: 0.75rem; color: rgba(46,26,40,0.45); }
+  .ccls-card__progress {
+    font-family: var(--font-body-family);
+    font-size: 0.75rem; font-weight: 600;
+    color: #c45e82; margin: 0 0 8px; line-height: 1.4;
+  }
+  .ccls-card__title {
+    font-family: var(--font-heading-family);
+    font-size: 1.05rem; font-weight: 700;
+    color: #2e1a28; line-height: 1.2; margin: 0 0 6px;
+  }
+  .ccls-card__title a { text-decoration: none; color: inherit; }
+  .ccls-card:hover .ccls-card__title a { color: #c45e82; }
+  .ccls-card__desc {
+    font-family: var(--font-body-family);
+    font-size: 0.875rem; color: #6B6460;
+    line-height: 1.7; margin: 0 0 14px; flex: 1;
+    display: -webkit-box; -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .ccls-card__footer {
+    display: flex; align-items: center;
+    justify-content: space-between;
+    padding-top: 12px;
+    border-top: 1px solid rgba(46,42,39,0.08);
+    margin-top: auto;
+  }
+  .ccls-card__price {
+    font-family: var(--font-body-family);
+    font-size: 1rem; font-weight: 700; color: #2e1a28;
+    display: flex; flex-direction: column; gap: 1px;
+  }
+  .ccls-card__per {
+    font-size: 0.68rem; font-weight: 500;
+    color: rgba(46,26,40,0.45); text-transform: lowercase;
+  }
+  .ccls-card__book {
+    font-family: var(--font-body-family);
+    font-size: 0.875rem; font-weight: 700; color: #c45e82;
+    text-decoration: none; display: inline-flex;
+    align-items: center; gap: 4px; transition: opacity 0.2s;
+  }
+  .ccls-card__book:hover { opacity: 0.7; text-decoration: underline; }
+
+  /* grid__item must stretch to full height for equal-height cards */
+  #product-grid.product-grid > .grid__item { display: flex; flex-direction: column; }
+
+  /* Empty state */
+  .ccls-empty {
+    font-family: var(--font-body-family);
+    font-size: 1rem; color: rgba(46,26,40,0.45);
+    font-style: italic; padding: 60px 0; text-align: center;
+  }
+  .ccls-empty a { color: #c45e82; }
+
+  /* ── Type filter tabs ── */
+  /* hidden by default; shown only on collections that set show_type_filter */
+  .ccls-tabs-wrap { display: none; }
+  .ccls-tabs-wrap[data-col="workshops-classes"],
+  .ccls-tabs-wrap[data-col="workshops-and-classes"] {
+    display: block;
+    padding: 0 5rem 24px;
+    max-width: var(--page-width);
+    margin: 0 auto;
+  }
+  .ccls-tabs {
+    display: inline-flex;
+    gap: 0;
+    background: rgba(46,26,40,0.06);
+    border-radius: 100px;
+    padding: 4px;
+  }
+  .ccls-tab {
+    font-family: var(--font-body-family);
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: rgba(46,26,40,0.55);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 9px 22px;
+    border-radius: 100px;
+    transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+    white-space: nowrap;
+    line-height: 1;
+  }
+  .ccls-tab:hover:not(.ccls-tab--active) {
+    color: #2e1a28;
+    background: rgba(46,26,40,0.08);
+  }
+  .ccls-tab--active {
+    background: #2e1a28;
+    color: #fef6f8;
+    box-shadow: 0 2px 8px rgba(46,26,40,0.2);
+  }
+  .ccls-tab--active[data-filter="class"]    { background: #c45e82; }
+  .ccls-tab--active[data-filter="workshop"] { background: #c45e82; }
+
+  @media screen and (max-width: 749px) {
+    .ccls-tabs-wrap {
+      padding: 0 1.5rem 20px;
+    }
+    .ccls-tabs {
+      width: 100%;
+      display: flex;
+    }
+    .ccls-tab {
+      flex: 1;
+      padding: 10px 10px;
+      font-size: 0.78rem;
+      text-align: center;
+    }
+  }
+{%- endstyle -%}
+
+<div class="section-{{ section.id }}-padding">
+  {%- paginate collection.products by section.settings.products_per_page -%}
+
+      <div class="ccls-tabs-wrap" data-col="{{ collection.handle }}" data-collection-url="{{ collection.url }}">
+        <div class="ccls-tabs" role="tablist" aria-label="Filter by type">
+          <button class="ccls-tab ccls-tab--active" data-filter="all"      role="tab" aria-selected="true"  type="button">View All</button>
+          <button class="ccls-tab"                  data-filter="class"    role="tab" aria-selected="false" type="button">Classes</button>
+          <button class="ccls-tab"                  data-filter="workshop" role="tab" aria-selected="false" type="button">Workshops</button>
+        </div>
+      </div>
+
+    <aside
+      aria-labelledby="verticalTitle"
+      class="facets-wrapper page-width"
+      id="main-collection-filters"
+      data-id="{{ section.id }}"
+    >
+      {%- render 'facets',
+        results: collection,
+        enable_filtering: section.settings.enable_filtering,
+        enable_sorting: section.settings.enable_sorting,
+        filter_type: 'horizontal',
+        paginate: paginate
+      -%}
+    </aside>
+
+    <div
+      class="product-grid-container"
+      id="ProductGridContainer"
+    >
+      {%- if collection.products.size == 0 -%}
+        <div class="collection collection--empty page-width" id="product-grid" data-id="{{ section.id }}">
+          <div class="loading-overlay gradient"></div>
+          <p class="ccls-empty">
+            No classes match those filters —
+            <a href="{{ collection.url }}">clear all filters</a>
+          </p>
+        </div>
+      {%- else -%}
+        <div class="collection page-width">
+          <div class="loading-overlay gradient"></div>
+          <ul
+            id="product-grid"
+            data-id="{{ section.id }}"
+            class="grid product-grid grid--2-col-tablet-down grid--4-col-desktop"
+          >
+            {%- for product in collection.products -%}
+              {%- comment -%} ── Booking metafields ── {%- endcomment -%}
+              {%- assign mf_start    = product.metafields.booking.start_date -%}
+              {%- assign mf_end      = product.metafields.booking.end_date -%}
+              {%- assign mf_time     = product.metafields.booking.class_time -%}
+              {%- assign mf_is_term  = product.metafields.booking.is_term -%}
+              {%- assign mf_sessions = product.metafields.booking.session_dates -%}
+              {%- assign mf_class_type      = product.metafields.booking.class_type -%}
+              {%- assign mf_instructor_name = product.metafields.booking.instructor_name -%}
+
+              {%- assign sess_count = 0 -%}
+              {%- assign sess_left  = 0 -%}
+              {%- assign next_sess_date = '' -%}
+              {%- assign last_sess_date = '' -%}
+              {%- if mf_sessions != blank -%}
+                {%- assign sess_arr   = mf_sessions | split: ',' -%}
+                {%- assign sess_count = sess_arr | size -%}
+                {%- for sd in sess_arr -%}
+                  {%- assign sd_c = sd | strip -%}
+                  {%- if sd_c >= today_str -%}
+                    {%- assign sess_left = sess_left | plus: 1 -%}
+                    {%- if next_sess_date == blank or sd_c < next_sess_date -%}
+                      {%- assign next_sess_date = sd_c -%}
+                    {%- endif -%}
+                  {%- endif -%}
+                  {%- if last_sess_date == blank or sd_c > last_sess_date -%}
+                    {%- assign last_sess_date = sd_c -%}
+                  {%- endif -%}
+                {%- endfor -%}
+              {%- endif -%}
+              {%- if next_sess_date == blank and mf_start != blank -%}
+                {%- assign next_sess_date = mf_start -%}
+              {%- endif -%}
+              {%- if last_sess_date == blank and mf_end != blank -%}
+                {%- assign last_sess_date = mf_end -%}
+              {%- endif -%}
+              {%- assign sess_done = sess_count | minus: sess_left -%}
+
+              {%- assign days_until = 0 -%}
+              {%- if next_sess_date != blank -%}
+                {%- assign next_ts  = next_sess_date | date: '%s' | times: 1 -%}
+                {%- assign today_ts = today_str | date: '%s' | times: 1 -%}
+                {%- assign days_until = next_ts | minus: today_ts | divided_by: 86400 -%}
+              {%- endif -%}
+
+              {%- assign timing_val = '' -%}
+              {%- assign timing_cls = '' -%}
+              {%- if next_sess_date == blank or days_until < 0 -%}
+                {%- assign timing_val = 'Ongoing' -%}
+              {%- elsif days_until == 0 -%}
+                {%- assign timing_val = 'Today' -%}
+                {%- assign timing_cls = 'ccls-days--today' -%}
+              {%- elsif days_until == 1 -%}
+                {%- assign timing_val = 'Tomorrow' -%}
+                {%- assign timing_cls = 'ccls-days--soon' -%}
+              {%- elsif days_until <= 7 -%}
+                {%- assign timing_val = 'In ' | append: days_until | append: ' days' -%}
+                {%- assign timing_cls = 'ccls-days--soon' -%}
+              {%- else -%}
+                {%- assign weeks_until = days_until | divided_by: 7 -%}
+                {%- if weeks_until <= 1 -%}
+                  {%- assign timing_val = 'Next week' -%}
+                {%- elsif weeks_until < 5 -%}
+                  {%- assign timing_val = 'In ' | append: weeks_until | append: ' weeks' -%}
+                {%- else -%}
+                  {%- assign timing_val = next_sess_date | date: '%-d %b' -%}
+                {%- endif -%}
+              {%- endif -%}
+
+              {%- assign days_label = 'Next class' -%}
+              {%- if mf_class_type == 'workshop' -%}
+                {%- assign days_label = 'Next workshop' -%}
+              {%- endif -%}
+              {%- if mf_is_term == 'true' or mf_is_term == true -%}
+                {%- if sess_done == 0 -%}
+                  {%- assign days_label = 'Starts' -%}
+                {%- endif -%}
+              {%- endif -%}
+
+              {%- assign type_label = '' -%}
+              {%- if mf_is_term == 'true' or mf_is_term == true -%}
+                {%- if sess_count > 0 -%}
+                  {%- assign type_label = 'Term · ' | append: sess_count | append: ' sessions' -%}
+                {%- else -%}
+                  {%- assign type_label = 'Term' -%}
+                {%- endif -%}
+              {%- elsif product.metafields.booking.is_one_off == 'true' -%}
+                {%- assign type_label = 'Single session' -%}
+              {%- endif -%}
+
+              {%- assign date_display = '' -%}
+              {%- if mf_start != blank -%}
+                {%- if last_sess_date != blank and last_sess_date != mf_start -%}
+                  {%- assign date_display = mf_start | date: '%-d %b' | append: ' – ' | append: last_sess_date | date: '%-d %b %Y' -%}
+                {%- else -%}
+                  {%- assign date_display = mf_start | date: '%-d %b %Y' -%}
+                {%- endif -%}
+              {%- endif -%}
+
+              {%- assign per_label = 'per class' -%}
+              {%- if mf_class_type == 'workshop' -%}
+                {%- assign per_label = 'per workshop' -%}
+              {%- endif -%}
+
+              {%- assign item_filter_type = 'class' -%}
+              {%- if product.tags contains 'workshop' -%}{%- assign item_filter_type = 'workshop' -%}{%- endif -%}
+              <li class="grid__item" data-ptype="{{ product.type | downcase }}" data-class-type="{{ item_filter_type }}" data-next-date="{{ next_sess_date }}">
+                <article class="ccls-card">
+
+                  <a href="{{ product.url }}" class="ccls-card__img-link" aria-label="{{ product.title | escape }}">
+                    {%- if product.featured_image -%}
+                      {{ product.featured_image | image_url: width: 700
+                         | image_tag: class: 'ccls-card__img', loading: 'lazy',
+                           alt: product.featured_image.alt | default: product.title }}
+                    {%- else -%}
+                      <div class="ccls-card__img-placeholder"></div>
+                    {%- endif -%}
+
+                    {%- if product.tags contains 'dummy' -%}
+                      <span class="saf-dummy-badge">&#9679; Placeholder</span>
+                    {%- endif -%}
+                    {%- unless product.available -%}
+                      <span class="saf-sold-badge">Sold</span>
+                    {%- endunless -%}
+
+                    {%- if timing_val != blank -%}
+                      {%- if timing_val == 'Ongoing' -%}
+                        <span class="ccls-days">
+                          <span class="ccls-days__val">Ongoing</span>
+                        </span>
+                      {%- else -%}
+                        <span class="ccls-days {{ timing_cls }}">
+                          <span class="ccls-days__label">{{ days_label }}</span>
+                          <span class="ccls-days__val">{{ timing_val }}</span>
+                        </span>
+                      {%- endif -%}
+                    {%- endif -%}
+                  </a>
+
+                  <div class="ccls-card__body">
+                    <div class="ccls-card__meta">
+                      {%- if type_label != blank -%}
+                        <span class="ccls-card__type">{{ type_label }}</span>
+                      {%- endif -%}
+                      {%- if mf_instructor_name != blank -%}
+                        <span class="ccls-card__instructor">{{ mf_instructor_name }}</span>
+                      {%- endif -%}
+                    </div>
+
+                    {%- if date_display != blank -%}
+                      <p class="ccls-card__date">
+                        {{ date_display -}}
+                        {%- if mf_time != blank -%}
+                          <span class="ccls-card__time"> · {{ mf_time }}</span>
+                        {%- endif -%}
+                      </p>
+                    {%- endif -%}
+
+                    {%- if sess_count > 1 -%}
+                      <p class="ccls-card__progress">
+                        {%- if sess_done > 0 and sess_left > 0 -%}
+                          {%- if sess_done == 1 -%}1 session done{%- else -%}{{ sess_done }} sessions done{%- endif -%}
+                          &nbsp;&middot;&nbsp;
+                          {%- if sess_left == 1 -%}1 session to go{%- else -%}{{ sess_left }} sessions to go{%- endif -%}
+                        {%- elsif sess_left > 0 -%}
+                          {{ sess_left }} sessions to go
+                        {%- else -%}
+                          All {{ sess_count }} sessions complete
+                        {%- endif -%}
+                      </p>
+                    {%- endif -%}
+
+                    <h3 class="ccls-card__title">
+                      <a href="{{ product.url }}">{{ product.title }}</a>
+                    </h3>
+
+                    {%- if product.description != blank -%}
+                      <p class="ccls-card__desc">{{ product.description | strip_html | truncate: 120 }}</p>
+                    {%- endif -%}
+
+                    <div class="ccls-card__footer">
+                      <span class="ccls-card__price">
+                        {%- if product.price_varies -%}From {{ product.price_min | money_without_trailing_zeros }}
+                        {%- else -%}{{ product.price | money_without_trailing_zeros }}{%- endif -%}
+                        <span class="ccls-card__per">{{ per_label }}</span>
+                      </span>
+                      <a href="{{ product.url }}" class="ccls-card__book" tabindex="-1" aria-hidden="true">Book &rarr;</a>
+                    </div>
+                  </div>
+
+                </article>
+              </li>
+            {%- endfor -%}
+          </ul>
+
+          {%- if paginate.pages > 1 -%}
+            {%- render 'pagination', paginate: paginate, anchor: '' -%}
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+  {%- endpaginate -%}
+</div>
+
+<script>
+(function () {
+  var wrap = document.querySelector('.ccls-tabs-wrap[data-collection-url]');
+  if (!wrap) return;
+  var tabs = wrap.querySelectorAll('.ccls-tab[data-filter]');
+  var grid = document.getElementById('product-grid');
+  if (!tabs.length || !grid) return;
+
+  var collectionUrl = wrap.dataset.collectionUrl;
+  var allLoaded = false;       // true once all pages fetched
+  var pendingFilter = 'all';   // filter to apply once load completes
+
+  function sortGrid() {
+    var today = new Date().toISOString().slice(0, 10);
+    var items = Array.from(grid.querySelectorAll('.grid__item'));
+    items.sort(function (a, b) {
+      var da = (a.dataset.nextDate || '').trim();
+      var db = (b.dataset.nextDate || '').trim();
+      var af = da && da >= today;
+      var bf = db && db >= today;
+      if (af && !bf) return -1;
+      if (!af && bf) return 1;
+      if (!da && !db) return 0;
+      if (!da) return 1;
+      if (!db) return -1;
+      return da < db ? -1 : da > db ? 1 : 0;
+    });
+    items.forEach(function (item) { grid.appendChild(item); });
+  }
+
+  function setActiveTab(filter) {
+    tabs.forEach(function (t) {
+      var active = t.dataset.filter === filter;
+      t.classList.toggle('ccls-tab--active', active);
+      t.setAttribute('aria-selected', active ? 'true' : 'false');
+    });
+  }
+
+  function applyFilter(filter) {
+    var items = grid.querySelectorAll('.grid__item');
+    items.forEach(function (item) {
+      var ct = item.dataset.classType;
+      item.style.display = (!ct || filter === 'all' || ct === filter) ? '' : 'none';
+    });
+    var pager = document.querySelector('.pagination');
+    if (pager) pager.style.display = (allLoaded && filter !== 'all') ? 'none' : '';
+    grid.style.opacity = '1';
+  }
+
+  // Fetch one page of the collection, return array of .grid__item elements
+  function fetchPage(page) {
+    var url = collectionUrl + '?sort_by=title-ascending' + (page > 1 ? '&page=' + page : '');
+    return fetch(url)
+      .then(function (r) { return r.text(); })
+      .then(function (html) {
+        var doc = new DOMParser().parseFromString(html, 'text/html');
+        return Array.from(doc.querySelectorAll('#product-grid .grid__item'));
+      })
+      .catch(function () { return []; });
+  }
+
+  // Load ALL pages (handles CDN serving any products_per_page value)
+  function loadAll() {
+    return fetchPage(1).then(function (p1) {
+      if (!p1.length) return [];
+      // Check if there's a page 2 by seeing if the first page was "full"
+      // Fetch page 2 anyway — if it returns 0 items, no harm done
+      return fetchPage(2).then(function (p2) {
+        // Deduplicate by product link href
+        var seen = new Set();
+        return p1.concat(p2).filter(function (item) {
+          var a = item.querySelector('a[href]');
+          var key = a ? a.getAttribute('href') : null;
+          if (!key || seen.has(key)) return false;
+          seen.add(key);
+          return true;
+        });
+      });
+    });
+  }
+
+  // On page load: fetch all products, sort, apply View All
+  grid.style.transition = 'opacity 0.2s ease';
+  loadAll().then(function (items) {
+    if (items.length) {
+      grid.innerHTML = '';
+      items.forEach(function (item) { grid.appendChild(item.cloneNode(true)); });
+    }
+    allLoaded = true;
+    sortGrid();
+    applyFilter(pendingFilter);
+  });
+
+  tabs.forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      var filter = this.dataset.filter;
+      setActiveTab(filter);
+      pendingFilter = filter;
+
+      grid.style.opacity = '0';
+      setTimeout(function () {
+        if (allLoaded) {
+          sortGrid();
+          applyFilter(filter);
+        }
+        // else: loadAll() is still running — pendingFilter will be applied when it completes
+      }, 150);
+    });
+  });
+})();
+</script>
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Classes Grid",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "label": "Classes per page",
+      "min": 8,
+      "max": 48,
+      "step": 4,
+      "default": 16
+    },
+    {
+      "type": "checkbox",
+      "id": "show_type_filter",
+      "label": "Show Class / Workshop filter tabs",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_filtering",
+      "label": "Enable filtering",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sorting",
+      "label": "Enable sorting",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 36
+    }
+  ],
+  "presets": [{ "name": "Classes Grid" }]
+}
+{% endschema %}

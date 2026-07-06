@@ -235,14 +235,16 @@
             {%- else -%}
               {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
             {%- endif -%}
+            {%- if product.tags contains 'dummy' -%}
+              <span class="saf-dummy-badge">&#9679; Placeholder</span>
+            {%- endif -%}
+            {%- unless product.available -%}
+              <span class="saf-sold-badge">Sold</span>
+            {%- endunless -%}
             <div class="cgal-overlay">
               <div class="cgal-info">
                 <p class="cgal-title">{{ product.title }}</p>
-                {%- if product.available -%}
-                  <p class="cgal-price">{{ product.price | money }}</p>
-                {%- else -%}
-                  <span class="cgal-sold-badge">Sold</span>
-                {%- endif -%}
+                <p class="cgal-price">{{ product.price | money }}</p>
               </div>
             </div>
           </a>

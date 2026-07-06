@@ -27,10 +27,15 @@
 .select .svg-wrapper svg { opacity: 0.5; }
 .select:hover .svg-wrapper svg { opacity: 1; }
 
-/* ── Header: reduce height ── */
+/* ── Header: reduce height + stay above card badges ── */
 .header {
   padding-top: 14px !important;
   padding-bottom: 14px !important;
+}
+/* .section-header has position:sticky (see header.liquid PR #2147 fix) — give it
+   a z-index so it paints above our positioned card badges (z-index 10–20). */
+.section-header {
+  z-index: 50;
 }
 
 @media screen and (max-width: 749px) {
@@ -216,6 +221,126 @@
   filter: grayscale(1) brightness(0.42);
 }
 
+/* Contain all card badges within the card image stacking context so they never
+   appear above the sticky header, regardless of their z-index values. */
+.card__inner,
+.card-media {
+  isolation: isolate;
+}
+
+/* ── Placeholder / dummy content badge (always visible until content is replaced) ── */
+.saf-dummy-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 20;
+  background: rgba(22, 163, 74, 0.92);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  border-radius: 4px;
+  pointer-events: none;
+  font-family: system-ui, -apple-system, sans-serif;
+  line-height: 1;
+  white-space: nowrap;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
+}
+
+/* ── Sold badge (always visible, top-right corner) ── */
+.saf-sold-badge {
+  display: inline-flex;
+  align-items: center;
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 20;
+  background: rgba(46, 26, 40, 0.92);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  border-radius: 4px;
+  pointer-events: none;
+  font-family: system-ui, -apple-system, sans-serif;
+  line-height: 1;
+  white-space: nowrap;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
+}
+
+/* ── Booking timing badge (bottom-left of collection card image) ── */
+.saf-timing-badge {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  z-index: 20;
+  background: rgba(46, 26, 40, 0.85);
+  color: #fef6f8;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-weight: 700;
+  padding: 5px 10px;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1px;
+  pointer-events: none;
+  backdrop-filter: blur(4px);
+  white-space: nowrap;
+  line-height: 1;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.25);
+}
+.saf-timing-badge--soon { background: #c45e82; }
+.saf-timing-badge--today { background: #2a7a3b; }
+.saf-timing-badge__lbl {
+  font-size: 0.54rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.8;
+  line-height: 1.2;
+}
+.saf-timing-badge__val {
+  font-size: 0.72rem;
+  line-height: 1.25;
+}
+
+/* ── Class meta strip below card title (collection grid) ── */
+.saf-class-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin: 5px 0 7px;
+}
+.saf-class-meta__type {
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #c45e82;
+  background: rgba(196, 94, 130, 0.1);
+  padding: 2px 7px;
+  border-radius: 4px;
+  display: inline-block;
+  align-self: flex-start;
+}
+.saf-class-meta__instructor {
+  font-size: 0.75rem;
+  color: rgba(46, 26, 40, 0.6);
+  font-weight: 500;
+}
+.saf-class-meta__date {
+  font-size: 0.72rem;
+  color: rgba(46, 26, 40, 0.5);
+}
+
 /* ── Hero banner: CTA buttons always visible in viewport ── */
 /* JS sets --hero-fit-height via custom.js; CSS-only fallback uses 200px offset */
 .banner--large:not(.banner--adapt) {
@@ -224,4 +349,156 @@
 .banner--large:not(.banner--mobile-bottom):not(.banner--adapt) .banner__content {
   min-height: var(--hero-fit-height, min(39rem, calc(100vh - 200px))) !important;
   padding-bottom: 2.5rem !important;
+}
+
+/* ══ Rise Art-style header: transparent over homepage hero ══ */
+/* Header stays position:sticky; hero is pulled up behind it. The banner must be
+   the first section on the index template for the overlay to line up. */
+body.template-index #MainContent {
+  margin-top: calc(-1 * var(--header-height, 90px));
+}
+
+/* Transparent state: only while at the top of the homepage (.header-at-top
+   toggled by custom.js initTransparentHeader at scrollY < 40) */
+.section-header.header-at-top .header-wrapper--transparent {
+  --color-foreground: 255, 255, 255;
+  background-color: transparent !important;
+  background-image: none !important;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: none;
+  border-bottom-color: transparent !important;
+}
+.section-header.header-at-top .header-wrapper--transparent .header__heading-logo {
+  filter: brightness(0) invert(1);
+}
+.section-header.header-at-top .header-wrapper--transparent .field__input.search__input {
+  background-color: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.5);
+  color: #fff;
+}
+.section-header.header-at-top .header-wrapper--transparent .field__input.search__input::placeholder {
+  color: rgba(255, 255, 255, 0.75);
+}
+/* Dropdown panels must stay opaque and readable over the hero photo */
+.section-header.header-at-top .header-wrapper--transparent .header__icon-panel,
+.section-header.header-at-top .header-wrapper--transparent .predictive-search {
+  --color-foreground: 46, 26, 40;
+  background-color: rgb(var(--color-background));
+}
+
+/* ══ Wishlist ══ */
+/* Heart toggle on product cards — bottom-right (top corners hold badges) */
+.saf-wishlist-toggle {
+  position: absolute;
+  top: 0.8rem;
+  right: 0.8rem;
+  z-index: 2; /* above the card's full-card overlay link (z-index 1) */
+  width: 3.4rem;
+  height: 3.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(46, 26, 40, 0.15);
+  border-radius: 100%;
+  cursor: pointer;
+  padding: 0;
+  color: #2e1a28;
+  transition: transform 0.15s ease, background-color 0.15s ease;
+}
+.saf-wishlist-toggle:hover {
+  transform: scale(1.08);
+  background: #fff;
+}
+/* Sold badge occupies top-right — drop the heart below it */
+.card-wrapper:has(.saf-sold-badge) .saf-wishlist-toggle {
+  top: 4.6rem;
+}
+.saf-wishlist-toggle .svg-wrapper,
+.saf-wishlist-toggle svg {
+  width: 1.7rem;
+  height: 1.7rem;
+  pointer-events: none;
+}
+.saf-wishlist-toggle svg path {
+  fill: currentColor;
+}
+.saf-wishlist-toggle.is-active {
+  color: #c45e82;
+}
+.saf-wishlist-toggle.is-active svg path {
+  fill: #c45e82;
+}
+
+/* Product page variant — inline under the title */
+.saf-wishlist-toggle--product {
+  position: static;
+  width: auto;
+  height: auto;
+  border-radius: 6px;
+  padding: 0.7rem 1.2rem;
+  gap: 0.7rem;
+  margin: 0.4rem 0 0.8rem;
+  background: transparent;
+  border: 1px solid rgba(46, 26, 40, 0.25);
+  font-size: 1.25rem;
+  letter-spacing: 0.04em;
+  font-family: var(--font-body-family);
+}
+.saf-wishlist-toggle--product:hover {
+  transform: none;
+  background: rgba(46, 26, 40, 0.04);
+}
+
+/* Wishlist page */
+.saf-wishlist-nudge {
+  color: rgba(46, 26, 40, 0.7);
+}
+.saf-wishlist-empty {
+  padding: 4rem 0;
+  text-align: center;
+}
+.saf-wishlist-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(22rem, 1fr));
+  gap: 2.4rem;
+  margin-top: 2.4rem;
+}
+.saf-wl-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.saf-wl-card img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 6px;
+}
+.saf-wl-title {
+  color: #2e1a28;
+  text-decoration: none;
+  font-size: 1.4rem;
+}
+.saf-wl-title:hover {
+  text-decoration: underline;
+}
+.saf-wl-price {
+  font-size: 1.3rem;
+  color: rgba(46, 26, 40, 0.75);
+}
+.saf-wl-remove {
+  align-self: flex-start;
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 1.2rem;
+  color: rgba(46, 26, 40, 0.55);
+  text-decoration: underline;
+  cursor: pointer;
+  font-family: var(--font-body-family);
+}
+.saf-wl-remove:hover {
+  color: #c45e82;
 }

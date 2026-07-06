@@ -106,6 +106,17 @@
                       </h2>
                     </a>
                   </div>
+                  <button
+                    type="button"
+                    class="saf-wishlist-toggle saf-wishlist-toggle--product"
+                    data-product-id="{{ product.id }}"
+                    data-product-handle="{{ product.handle }}"
+                    aria-label="Save {{ product.title | escape }} to wishlist"
+                    aria-pressed="false"
+                  >
+                    <span class="svg-wrapper">{{ 'icon-heart.svg' | inline_asset_content }}</span>
+                    <span class="saf-wishlist-toggle__label">Save to wishlist</span>
+                  </button>
                 {%- when 'price' -%}
                   <div id="price-{{ section.id }}" role="status" {{ block.shopify_attributes }}>
                     {%- render 'price',

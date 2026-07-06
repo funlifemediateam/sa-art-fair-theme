@@ -320,10 +320,18 @@
         document.documentElement.classList.add('shopify-design-mode');
       }
     </script>
+    <script>
+      window.SAF_CONFIG = {
+        customerId: {{ customer.id | json }},
+        wishlistApi: 'https://sa-art-fair-admin.vercel.app/api/wishlist'
+      };
+    </script>
     <script src="{{ 'custom.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'currency.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'wishlist.js' | asset_url }}" defer="defer"></script>
   </head>
 
-  <body class="gradient{% if settings.animations_hover_elements != 'none' %} animate--hover-{{ settings.animations_hover_elements }}{% endif %}">
+  <body class="gradient template-{{ request.page_type }}{% if settings.animations_hover_elements != 'none' %} animate--hover-{{ settings.animations_hover_elements }}{% endif %}">
     <a class="skip-to-content-link button visually-hidden" href="#MainContent">
       {{ 'accessibility.skip_to_text' | t }}
     </a>
@@ -403,5 +411,8 @@
     {%- if settings.cart_type == 'drawer' -%}
       <script src="{{ 'cart-drawer.js' | asset_url }}" defer="defer"></script>
     {%- endif -%}
+    {%- unless template.name == 'page' and page.handle contains 'quiz' -%}
+      {%- render 'lead-popup' -%}
+    {%- endunless -%}
   </body>
 </html>

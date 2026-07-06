@@ -108,6 +108,82 @@
               </div>
             </div>
           {%- endif -%}
+          {%- if card_product.tags contains 'dummy' -%}
+            <span class="saf-dummy-badge">&#9679; Placeholder</span>
+          {%- endif -%}
+          {%- unless card_product.available -%}
+            <span class="saf-sold-badge">Sold</span>
+          {%- endunless -%}
+          {%- comment -%} Booking timing badge — only shows when booking metafields exist {%- endcomment -%}
+          {%- assign _bk_start = card_product.metafields.booking.start_date -%}
+          {%- assign _bk_sessions = card_product.metafields.booking.session_dates -%}
+          {%- if _bk_start != blank or _bk_sessions != blank -%}
+            {%- liquid
+              assign _bk_today = 'now' | date: '%Y-%m-%d'
+              assign _bk_next = ''
+              assign _bk_sess_count = 0
+              assign _bk_sess_left = 0
+              if _bk_sessions != blank
+                assign _bk_arr = _bk_sessions | split: ','
+                assign _bk_sess_count = _bk_arr | size
+                for _sd in _bk_arr
+                  assign _sd_c = _sd | strip
+                  if _sd_c >= _bk_today
+                    assign _bk_sess_left = _bk_sess_left | plus: 1
+                    if _bk_next == blank or _sd_c < _bk_next
+                      assign _bk_next = _sd_c
+                    endif
+                  endif
+                endfor
+              endif
+              assign _bk_sess_done = _bk_sess_count | minus: _bk_sess_left
+              if _bk_next == blank and _bk_start != blank
+                assign _bk_next = _bk_start
+              endif
+              assign _bk_days = 0
+              if _bk_next != blank
+                assign _next_ts = _bk_next | date: '%s' | times: 1
+                assign _today_ts = _bk_today | date: '%s' | times: 1
+                assign _bk_days = _next_ts | minus: _today_ts | divided_by: 86400
+              endif
+              assign _bk_val = ''
+              assign _bk_cls = ''
+              if _bk_next == blank or _bk_days < 0
+                assign _bk_val = 'Ongoing'
+              elsif _bk_days == 0
+                assign _bk_val = 'Today'
+                assign _bk_cls = 'saf-timing-badge--today'
+              elsif _bk_days == 1
+                assign _bk_val = 'Tomorrow'
+                assign _bk_cls = 'saf-timing-badge--soon'
+              elsif _bk_days <= 7
+                assign _bk_val = 'In ' | append: _bk_days | append: ' days'
+                assign _bk_cls = 'saf-timing-badge--soon'
+              else
+                assign _bk_wks = _bk_days | divided_by: 7
+                if _bk_wks <= 1
+                  assign _bk_val = 'Next week'
+                elsif _bk_wks < 5
+                  assign _bk_val = 'In ' | append: _bk_wks | append: ' weeks'
+                else
+                  assign _bk_val = _bk_next | date: '%-d %b'
+                endif
+              endif
+              assign _bk_lbl = 'Next class'
+              assign _bk_is_term = card_product.metafields.booking.is_term
+              if _bk_is_term == 'true' or _bk_is_term == true
+                if _bk_sess_done == 0
+                  assign _bk_lbl = 'Starts'
+                endif
+              endif
+            -%}
+            {%- if _bk_val != blank -%}
+              <span class="saf-timing-badge {{ _bk_cls }}">
+                {%- unless _bk_val == 'Ongoing' -%}<span class="saf-timing-badge__lbl">{{ _bk_lbl }}</span>{%- endunless -%}
+                <span class="saf-timing-badge__val">{{ _bk_val }}</span>
+              </span>
+            {%- endif -%}
+          {%- endif -%}
           <div class="card__content">
             <div class="card__information">
               <h3
@@ -145,6 +221,20 @@
             </div>
           </div>
         </div>
+        {%- if card_product and card_product.id -%}
+          {%- comment -%} Direct child of .card (outside the isolated .card__inner) so
+            z-index 2 beats the full-card overlay link (z-index 1) and stays clickable {%- endcomment -%}
+          <button
+            type="button"
+            class="saf-wishlist-toggle"
+            data-product-id="{{ card_product.id }}"
+            data-product-handle="{{ card_product.handle }}"
+            aria-label="Save {{ card_product.title | escape }} to wishlist"
+            aria-pressed="false"
+          >
+            <span class="svg-wrapper">{{ 'icon-heart.svg' | inline_asset_content }}</span>
+          </button>
+        {%- endif -%}
         <div class="card__content">
           <div class="card__information">
             <h3
@@ -169,6 +259,34 @@
               {%- endif -%}
 
               <span class="caption-large light">{{ block.settings.description | escape }}</span>
+
+              {%- comment -%} Booking class meta: type pill, instructor, start date + time {%- endcomment -%}
+              {%- assign _bk2_start = card_product.metafields.booking.start_date -%}
+              {%- assign _bk2_sessions = card_product.metafields.booking.session_dates -%}
+              {%- if _bk2_start != blank or _bk2_sessions != blank -%}
+                {%- liquid
+                  assign _bk2_is_term = card_product.metafields.booking.is_term
+                  assign _bk2_cnt = 0
+                  if _bk2_sessions != blank
+                    assign _bk2_arr = _bk2_sessions | split: ','
+                    assign _bk2_cnt = _bk2_arr | size
+                  endif
+                -%}
+                <div class="saf-class-meta">
+                  {%- if _bk2_is_term == 'true' or _bk2_is_term == true -%}
+                    <span class="saf-class-meta__type">Term{%- if _bk2_cnt > 0 %} &middot; {{ _bk2_cnt }} sessions{%- endif -%}</span>
+                  {%- endif -%}
+                  {%- if card_product.metafields.booking.instructor_name != blank -%}
+                    <span class="saf-class-meta__instructor">{{ card_product.metafields.booking.instructor_name }}</span>
+                  {%- endif -%}
+                  {%- if _bk2_start != blank -%}
+                    <span class="saf-class-meta__date">
+                      {{- _bk2_start | date: '%-d %b %Y' -}}
+                      {%- if card_product.metafields.booking.class_time != blank %} &middot; {{ card_product.metafields.booking.class_time }}{%- endif -%}
+                    </span>
+                  {%- endif -%}
+                </div>
+              {%- endif -%}
 
               {%- if show_rating and card_product.metafields.reviews.rating.value != blank -%}
                 {% liquid

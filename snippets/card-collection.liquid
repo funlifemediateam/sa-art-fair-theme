@@ -76,6 +76,9 @@
           </div>
         </div>
       {%- endif -%}
+      {%- if card_collection.metafields.site.is_dummy == 'true' -%}
+        <span class="saf-dummy-badge">&#9679; Placeholder</span>
+      {%- endif -%}
       {%- if card_collection == blank -%}
         <div class="card__media">
           {{ placeholder_image | placeholder_svg_tag: 'placeholder-svg' }}

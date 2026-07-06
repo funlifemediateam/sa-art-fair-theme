@@ -56,7 +56,9 @@
 <div id="sa-quiz-overlay" style="display:none;position:fixed;inset:0;z-index:10000;background:#fff;overflow-y:auto"></div>
 
 <script>
-  window.__saQuizApiUrl = {{ quiz_api_url | json }};
+  window.__saQuizApiUrl     = {{ quiz_api_url | json }};
+  window.__saGoogleClientId = {{ shop.metafields.booking_app.google_client_id | default: '' | json }};
+  window.__saFbAppId        = {{ shop.metafields.booking_app.facebook_app_id  | default: '' | json }};
 </script>
 <script src="{{ 'quiz.js' | asset_url }}" defer></script>
 

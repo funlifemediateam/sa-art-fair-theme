@@ -2,14 +2,73 @@
 
   /* ── Hero: size to exactly fill visible viewport below header ── */
   function fitHero() {
+    /* Refresh --header-height first: StickyHeader measures it at connectedCallback,
+       before async CSS loads, which can capture a wildly wrong value (e.g. the
+       unstyled inline search). The homepage negative-margin overlay depends on it. */
+    var headerSection = document.querySelector('.section-header');
+    if (headerSection) {
+      document.documentElement.style.setProperty('--header-height', headerSection.offsetHeight + 'px');
+    }
     var banner = document.querySelector('.banner--large:not(.banner--adapt)');
     if (!banner) return;
-    /* Measure the sticky header height — NOT banner.top, which is scroll-relative and
-       goes negative when scrolled, causing the hero to render impossibly tall on resize. */
-    var header = document.querySelector('sticky-header') || document.querySelector('.header-wrapper');
-    var headerH = header ? header.getBoundingClientRect().height : 0;
-    var h = window.innerHeight - headerH;
+    var h;
+    if (document.body.classList.contains('template-index')) {
+      /* Homepage: header overlays the hero (pulled up via negative margin), so the
+         hero only needs to clear the announcement bar above it. */
+      var annBar = document.querySelector('.announcement-bar-section');
+      var annH = annBar ? annBar.getBoundingClientRect().height : 0;
+      h = window.innerHeight - annH;
+    } else {
+      /* Measure the sticky header height — NOT banner.top, which is scroll-relative and
+         goes negative when scrolled, causing the hero to render impossibly tall on resize. */
+      var header = document.querySelector('sticky-header') || document.querySelector('.header-wrapper');
+      var headerH = header ? header.getBoundingClientRect().height : 0;
+      h = window.innerHeight - headerH;
+    }
     if (h > 0) banner.style.setProperty('--hero-fit-height', h + 'px');
+  }
+
+  /* ── Homepage: transparent header over hero until scrolled ── */
+  function initTransparentHeader() {
+    var wrapper = document.querySelector('.header-wrapper--transparent');
+    if (!wrapper) return;
+    var section = document.querySelector('.section-header');
+    if (!section) return;
+    var ticking = false;
+    function update() {
+      ticking = false;
+      section.classList.toggle('header-at-top', window.scrollY < 40);
+    }
+    window.addEventListener('scroll', function () {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(update);
+      }
+    }, { passive: true });
+    update();
+  }
+
+  /* ── Desktop: open header icon dropdowns on hover ── */
+  function initHeaderHoverMenus() {
+    if (!window.matchMedia('(hover: hover) and (min-width: 990px)').matches) return;
+    document.querySelectorAll('.header__icon-menu').forEach(function (menu) {
+      var details = menu.querySelector('details');
+      if (!details) return;
+      var closeTimer;
+      menu.addEventListener('mouseenter', function () {
+        window.clearTimeout(closeTimer);
+        details.setAttribute('open', '');
+        var summary = details.querySelector('summary');
+        if (summary) summary.setAttribute('aria-expanded', 'true');
+      });
+      menu.addEventListener('mouseleave', function () {
+        closeTimer = window.setTimeout(function () {
+          details.removeAttribute('open');
+          var summary = details.querySelector('summary');
+          if (summary) summary.setAttribute('aria-expanded', 'false');
+        }, 150);
+      });
+    });
   }
 
   /* ── Announcement bar: one pill at a time, slides to next ── */
@@ -296,6 +355,8 @@
     initPillSlider();
     initBookingTimers();
     initCartRemoveFallback();
+    initTransparentHeader();
+    initHeaderHoverMenus();
   }
 
   if (document.readyState === 'loading') {

@@ -1,0 +1,9 @@
+{%- assign _sa_quiz_url = shop.metafields.booking_app.quiz_api_url | default: 'https://sa-art-fair-admin.vercel.app' -%}
+{%- assign _sa_google   = shop.metafields.booking_app.google_client_id | default: '' -%}
+{%- assign _sa_fb       = shop.metafields.booking_app.facebook_app_id  | default: '' -%}
+<script>
+  window.__saLeadApiUrl      = {{ _sa_quiz_url | json }};
+  window.__saGoogleClientId  = {{ _sa_google   | json }};
+  window.__saFbAppId         = {{ _sa_fb       | json }};
+</script>
+<script src="{{ 'lead-popup.js' | asset_url }}" defer></script>

@@ -16,6 +16,7 @@ echo "→ Syncing editor settings from Shopify..."
 shopify theme pull \
   --store "$STORE" \
   --theme "$THEME" \
+  --nodelete \
   --only "templates/*.json" \
   --only "sections/*.json" \
   --only "config/settings_data.json"

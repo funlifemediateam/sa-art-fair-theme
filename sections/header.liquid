@@ -41,19 +41,197 @@
     border-bottom-color: rgba(var(--color-foreground), 0.08) !important;
   }
 
-  /* ── Logo left · Nav perfectly centred · Icons right ── */
+  /* ── Two-row header: logo · search · icons / nav below (Rise Art layout) ── */
+  .header__search-bar {
+    display: none;
+  }
   @media screen and (min-width: 990px) {
     .header--middle-left {
-      grid-template-columns: 1fr auto 1fr !important;
+      grid-template-areas:
+        'heading search icons'
+        '. navigation navigation' !important;
+      grid-template-columns: auto minmax(24rem, 1fr) auto !important;
+      column-gap: 2.4rem;
+      row-gap: 1.2rem;
+      align-items: center;
     }
-    /* Keep logo flush left inside its 1fr column */
     .header--middle-left .header__heading,
     .header--middle-left .header__heading-link {
       justify-self: start;
     }
-    /* Centre the nav inside its auto column */
+    /* Nav row starts under the search bar */
     .header--middle-left .header__inline-menu {
-      justify-self: center;
+      justify-self: start;
+      margin-left: -1rem;
+    }
+    .header__search-bar {
+      display: block;
+      grid-area: search;
+      width: 100%;
+    }
+  }
+  .header__search-bar .search {
+    position: relative;
+  }
+  .header__search-bar .field__input.search__input {
+    border-radius: 6px;
+    background-color: rgba(var(--color-foreground), 0.04);
+    box-shadow: none;
+    border: 1px solid rgba(var(--color-foreground), 0.18);
+    height: 4.4rem;
+    min-height: 4.4rem;
+    padding-left: 4.2rem;
+    transition: background-color 0.25s ease, border-color 0.25s ease;
+  }
+  .header__search-bar .field__input.search__input:focus {
+    border-color: rgba(var(--color-foreground), 0.55);
+    background-color: rgb(var(--color-background));
+    outline: none;
+    box-shadow: none;
+  }
+  .header__search-bar .field:after,
+  .header__search-bar .field:before {
+    display: none;
+  }
+  /* Leading search icon inside the bar */
+  .header__search-bar .search__button {
+    left: 0;
+    right: auto;
+    top: 0;
+    height: 4.4rem;
+    width: 4.2rem;
+  }
+  .header__search-bar .search__button:after,
+  .header__search-bar .search__button:before {
+    display: none;
+  }
+  .header__search-bar .reset__button {
+    right: 0;
+    top: 0;
+    height: 4.4rem;
+  }
+  .header__search-bar .predictive-search {
+    top: calc(100% + 0.4rem);
+    left: 0;
+    width: 100%;
+    border-radius: 6px;
+  }
+
+  /* ── Header icon dropdowns (account / wishlist / currency) ── */
+  .header__icons {
+    gap: 0.4rem;
+  }
+  .header__icon-menu {
+    position: relative;
+  }
+  .header__icon-menu > details > summary::-webkit-details-marker {
+    display: none;
+  }
+  .header__icon-menu .header__icon-panel {
+    position: absolute;
+    top: 100%;
+    right: -0.5rem;
+    min-width: 18rem;
+    padding: 1rem 0;
+    margin: 0;
+    background-color: rgb(var(--color-background));
+    border: 1px solid rgba(var(--color-foreground), 0.12);
+    border-radius: 6px;
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12);
+    list-style: none;
+    z-index: 6;
+  }
+  .header__icon-panel li {
+    list-style: none;
+  }
+  .header__icon-panel a,
+  .header__icon-panel button.header__icon-panel-option {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 0.9rem 1.6rem;
+    font-size: 1.3rem;
+    letter-spacing: 0.03em;
+    color: rgba(var(--color-foreground), 0.85);
+    text-decoration: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: var(--font-body-family);
+  }
+  .header__icon-panel a:hover,
+  .header__icon-panel button.header__icon-panel-option:hover {
+    color: rgb(var(--color-foreground));
+    background-color: rgba(var(--color-foreground), 0.05);
+  }
+  .header__icon-panel .header__icon-panel-note {
+    padding: 0.8rem 1.6rem 0.2rem;
+    margin: 0;
+    font-size: 1.1rem;
+    line-height: 1.5;
+    color: rgba(var(--color-foreground), 0.6);
+    border-top: 1px solid rgba(var(--color-foreground), 0.08);
+    margin-top: 0.6rem;
+  }
+  .saf-currency summary {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    padding: 0.6rem 0.8rem;
+    font-size: 1.3rem;
+    letter-spacing: 0.03em;
+    color: rgba(var(--color-foreground), 0.88);
+    white-space: nowrap;
+  }
+  .saf-currency .header__icon-panel-option[aria-current='true'] {
+    font-weight: 600;
+    color: rgb(var(--color-foreground));
+  }
+  .wishlist-count-bubble {
+    position: absolute;
+    background-color: rgb(var(--color-button));
+    color: rgb(var(--color-button-text));
+    height: 1.7rem;
+    min-width: 1.7rem;
+    border-radius: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    bottom: 0.4rem;
+    right: 0.2rem;
+    padding: 0 0.3rem;
+    line-height: 1;
+  }
+  /* Count bubble must stay hidden when empty (display:flex would beat [hidden]) */
+  .wishlist-count-bubble[hidden] {
+    display: none !important;
+  }
+  /* Heart icon: outline via currentColor (svg has no fill attribute of its own) */
+  .header__icon--wishlist svg path,
+  .header__icon--wishlist-mobile svg path {
+    fill: currentColor;
+  }
+  .header__icon--wishlist .svg-wrapper,
+  .header__icon--wishlist-mobile .svg-wrapper {
+    width: 2rem;
+    height: 2rem;
+  }
+  /* Mobile: hide desktop-only header items (!important — base.css
+     .header__icon:not(.header__icon--summary) outranks a single class) */
+  @media screen and (max-width: 989px) {
+    .header__icon-menu--desktop,
+    .saf-currency,
+    .header__icon--gift-card {
+      display: none !important;
+    }
+  }
+  @media screen and (min-width: 990px) {
+    /* Inline bar replaces the modal search on desktop (!important — base.css
+       .header:not(.header--top-center) * > .header__search wins otherwise) */
+    .header__icons details-modal.header__search {
+      display: none !important;
     }
   }
 
@@ -192,7 +370,7 @@
   {% if header_tag == 'sticky-header' %}
     data-sticky-type="{{ section.settings.sticky_header_type }}"
   {% endif %}
-  class="header-wrapper color-{{ section.settings.color_scheme }} gradient{% if section.settings.show_line_separator %} header-wrapper--border-bottom{% endif %}"
+  class="header-wrapper color-{{ section.settings.color_scheme }} gradient{% if section.settings.show_line_separator %} header-wrapper--border-bottom{% endif %}{% if request.page_type == 'index' %} header-wrapper--transparent{% endif %}"
 >
   {%- liquid
     assign social_links = false
@@ -255,6 +433,10 @@
       {%- endif -%}
     {%- endif -%}
 
+    <div class="header__search-bar">
+      {% render 'header-search-inline', input_id: 'Search-Inline' %}
+    </div>
+
     {%- liquid
       if section.settings.menu != blank
         if section.settings.menu_type_desktop == 'dropdown'
@@ -302,60 +484,95 @@
       {%- endif -%}
     {%- endif -%}
 
-    <div class="header__icons{% if section.settings.enable_country_selector or section.settings.enable_language_selector %} header__icons--localization header-localization{% endif %}">
-      <div class="desktop-localization-wrapper">
-        {%- if section.settings.enable_country_selector and localization.available_countries.size > 1 -%}
-          <localization-form class="small-hide medium-hide" data-prevent-hide>
-            {%- form 'localization', id: 'HeaderCountryForm', class: 'localization-form' -%}
-              <div>
-                <h2 class="visually-hidden" id="HeaderCountryLabel">{{ 'localization.country_label' | t }}</h2>
-                {%- render 'country-localization', localPosition: 'HeaderCountry' -%}
-              </div>
-            {%- endform -%}
-          </localization-form>
-        {% endif %}
-
-        {%- if section.settings.enable_language_selector and localization.available_languages.size > 1 -%}
-          <localization-form class="small-hide medium-hide" data-prevent-hide>
-            {%- form 'localization', id: 'HeaderLanguageForm', class: 'localization-form' -%}
-              <div>
-                <h2 class="visually-hidden" id="HeaderLanguageLabel">{{ 'localization.language_label' | t }}</h2>
-                {%- render 'language-localization', localPosition: 'HeaderLanguage' -%}
-              </div>
-            {%- endform -%}
-          </localization-form>
-        {%- endif -%}
-      </div>
+    <div class="header__icons">
       {% render 'header-search', input_id: 'Search-In-Modal' %}
 
       {%- if shop.customer_accounts_enabled -%}
-        <a
-          href="{%- if customer -%}{{ routes.account_url }}{%- else -%}{{ routes.account_login_url }}{%- endif -%}"
-          class="header__icon header__icon--account link focus-inset{% if section.settings.menu != blank %} small-hide{% endif %}"
-          rel="nofollow"
-        >
-          {%- if section.settings.enable_customer_avatar -%}
-            <account-icon>
-              {%- if customer and customer.has_avatar? -%}
-                {{ customer | avatar }}
+        {%- comment -%} Account dropdown (desktop) {%- endcomment -%}
+        <header-menu class="header__icon-menu header__icon-menu--desktop">
+          <details id="Details-HeaderAccount">
+            <summary
+              class="header__icon header__icon--account link focus-inset"
+              aria-label="{{ 'customer.account_fallback' | t }}"
+              aria-expanded="false"
+            >
+              {%- if section.settings.enable_customer_avatar -%}
+                <account-icon>
+                  {%- if customer and customer.has_avatar? -%}
+                    {{ customer | avatar }}
+                  {%- else -%}
+                    <span class="svg-wrapper">{{ 'icon-account.svg' | inline_asset_content }}</span>
+                  {%- endif -%}
+                </account-icon>
               {%- else -%}
                 <span class="svg-wrapper">{{ 'icon-account.svg' | inline_asset_content }}</span>
               {%- endif -%}
-            </account-icon>
-          {%- else -%}
-            <span class="svg-wrapper">{{ 'icon-account.svg' | inline_asset_content }}</span>
-          {%- endif -%}
-          <span class="visually-hidden">
-            {%- liquid
-              if customer
-                echo 'customer.account_fallback' | t
-              else
-                echo 'customer.log_in' | t
-              endif
-            -%}
-          </span>
-        </a>
+            </summary>
+            <ul class="header__icon-panel" role="list">
+              {%- if customer -%}
+                <li><a href="{{ routes.account_url }}" rel="nofollow">My Profile</a></li>
+                <li><a href="{{ routes.account_url }}#orders" rel="nofollow">My Bookings</a></li>
+                <li><a href="{{ routes.account_logout_url }}" rel="nofollow">Sign out</a></li>
+              {%- else -%}
+                <li><a href="{{ routes.account_login_url }}" rel="nofollow">Sign in</a></li>
+                <li><a href="{{ routes.account_register_url }}" rel="nofollow">Create account</a></li>
+              {%- endif -%}
+            </ul>
+          </details>
+        </header-menu>
       {%- endif -%}
+
+      {%- comment -%} Wishlist dropdown (desktop) {%- endcomment -%}
+      <header-menu class="header__icon-menu header__icon-menu--desktop">
+        <details id="Details-HeaderWishlist">
+          <summary
+            class="header__icon header__icon--wishlist link focus-inset"
+            aria-label="My Wishlist"
+            aria-expanded="false"
+            id="wishlist-icon-bubble"
+          >
+            <span class="svg-wrapper">{{ 'icon-heart.svg' | inline_asset_content }}</span>
+            <span class="wishlist-count-bubble" hidden></span>
+          </summary>
+          <ul class="header__icon-panel" role="list">
+            <li><a href="/pages/wishlist">My Wishlist</a></li>
+            <li>
+              <p class="header__icon-panel-note" data-wishlist-summary>No saved items yet</p>
+            </li>
+          </ul>
+        </details>
+      </header-menu>
+
+      {%- comment -%} Wishlist link (mobile) {%- endcomment -%}
+      <a href="/pages/wishlist" class="header__icon header__icon--wishlist-mobile link focus-inset large-up-hide" aria-label="My Wishlist">
+        <span class="svg-wrapper">{{ 'icon-heart.svg' | inline_asset_content }}</span>
+        <span class="wishlist-count-bubble" hidden></span>
+      </a>
+
+      {%- comment -%} Gift card {%- endcomment -%}
+      {%- assign gift_card_href = section.settings.gift_card_link | default: '/products/gift-card' -%}
+      <a href="{{ gift_card_href }}" class="header__icon header__icon--gift-card link focus-inset" aria-label="Gift Card">
+        <span class="svg-wrapper">{{ 'icon-gift-card.svg' | inline_asset_content }}</span>
+      </a>
+
+      {%- comment -%} Display-only currency selector (checkout is always ZAR) {%- endcomment -%}
+      <div class="header__icon-menu saf-currency">
+        <details id="Details-HeaderCurrency">
+          <summary aria-label="Currency" aria-expanded="false">
+            <span data-currency-flag>&#127487;&#127462;</span>
+            <span data-currency-label>R (ZAR)</span>
+          </summary>
+          <ul class="header__icon-panel header__icon-panel--currency" role="list">
+            <li><button type="button" class="header__icon-panel-option" data-currency="ZAR">&#127487;&#127462;&nbsp; R (ZAR)</button></li>
+            <li><button type="button" class="header__icon-panel-option" data-currency="USD">&#127482;&#127480;&nbsp; $ (USD)</button></li>
+            <li><button type="button" class="header__icon-panel-option" data-currency="EUR">&#127466;&#127482;&nbsp; &euro; (EUR)</button></li>
+            <li><button type="button" class="header__icon-panel-option" data-currency="GBP">&#127468;&#127463;&nbsp; &pound; (GBP)</button></li>
+            <li>
+              <p class="header__icon-panel-note">Prices in other currencies are estimates. You'll be charged in ZAR at checkout.</p>
+            </li>
+          </ul>
+        </details>
+      </div>
 
       {%- for block in section.blocks -%}
         {%- case block.type -%}
@@ -414,7 +631,7 @@
 
       this.currentScrollTop = 0;
       this.preventReveal = false;
-      this.predictiveSearch = this.querySelector('predictive-search');
+      this.predictiveSearches = Array.from(this.querySelectorAll('predictive-search'));
 
       this.onScrollHandler = this.onScroll.bind(this);
       this.hideHeaderOnScrollUp = () => (this.preventReveal = true);
@@ -446,7 +663,7 @@
     onScroll() {
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
 
-      if (this.predictiveSearch && this.predictiveSearch.isOpen) return;
+      if (this.predictiveSearches.some((search) => search.isOpen)) return;
 
       if (scrollTop > this.currentScrollTop && scrollTop > this.headerBounds.bottom) {
         this.header.classList.add('scrolled-past-header');
@@ -498,7 +715,7 @@
 
     closeSearchModal() {
       this.searchModal = this.searchModal || this.header.querySelector('details-modal');
-      this.searchModal.close(false);
+      if (this.searchModal) this.searchModal.close(false);
     }
   }
 
@@ -688,6 +905,12 @@
       "default": true,
       "label": "t:sections.header.settings.enable_customer_avatar.label",
       "info": "t:sections.header.settings.enable_customer_avatar.info"
+    },
+    {
+      "type": "url",
+      "id": "gift_card_link",
+      "label": "Gift card link",
+      "info": "Where the gift card header icon points. Defaults to /products/gift-card."
     },
     {
       "type": "header",
