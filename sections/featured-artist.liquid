@@ -57,8 +57,9 @@
     align-items: center;
   }
   /* Grid children default to min-width:auto — the carousel track would
-     blow the column out past the viewport without this */
-  .hfa-grid > * { min-width: 0; }
+     blow the column out past the viewport without this. .hfa-content > *
+     included because those become grid items on phones (display: contents) */
+  .hfa-grid > *, .hfa-content > * { min-width: 0; }
 
   /* ── Artist photo ── */
   .hfa-photo-wrap {
@@ -79,7 +80,6 @@
 
   /* ── Header copy ── */
   .hfa-header { text-align: center; margin-bottom: 14px; }
-  .hfa-photo-mini { display: none; }
   .hfa-story { text-align: center; margin-bottom: 34px; }
   .hfa-eyebrow {
     font-family: var(--font-body-family);
@@ -310,35 +310,73 @@
     .hfa-card { flex-basis: min(70vw, 340px); }
   }
 
-  /* ── Phones: compact editorial layout — the whole section reads as one screen.
-        Big photo becomes a thumbnail beside the title; story clamps with a
-        tap-to-expand; two artworks sit side by side. ── */
+  /* ── Phones: one-screen editorial layout. Title on top, then the artist
+        photo with a swipeable artwork card beside it (next card peeks in),
+        clamped story with tap-to-expand, CTA. The content wrapper becomes
+        display:contents so its children join the grid alongside the photo. ── */
   @media (max-width: 749px) {
     .hfa-section {
       padding-top: {{ section.settings.padding_top | default: 88 | times: 0.45 | round }}px;
       padding-bottom: {{ section.settings.padding_bottom | default: 96 | times: 0.45 | round }}px;
     }
-    .hfa-photo-wrap { display: none; }
-    .hfa-header {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      text-align: left;
-      margin-bottom: 12px;
+    .hfa-grid {
+      display: grid;
+      grid-template-columns: 47% minmax(0, 1fr);
+      grid-template-areas:
+        "header header"
+        "photo  carousel"
+        "story  story"
+        "cta    cta";
+      column-gap: 12px;
+      row-gap: 0;
+      align-items: stretch;
     }
-    .hfa-photo-mini {
-      display: block;
-      width: 84px;
-      height: 112px; /* 3:4 — the img's height attribute wins over aspect-ratio here */
-      object-fit: cover;
-      border-radius: 8px;
-      flex-shrink: 0;
-      background: var(--hfa-img-bg);
-    }
-    .hfa-header__text { min-width: 0; }
+    .hfa-content { display: contents; }
+
+    .hfa-header { grid-area: header; margin-bottom: 14px; }
     .hfa-eyebrow { font-size: 0.6rem; margin-bottom: 6px; }
-    .hfa-heading { font-size: 1.5rem; margin-bottom: 0; }
-    .hfa-story { text-align: left; margin-bottom: 16px; }
+    .hfa-heading { font-size: 1.55rem; margin-bottom: 0; }
+
+    /* Photo fills the row height so its bottom sits flush with the card text */
+    .hfa-photo-wrap {
+      grid-area: photo;
+      aspect-ratio: auto;
+      height: 100%;
+      width: auto;
+      max-width: none;
+      margin: 0;
+    }
+    .hfa-carousel { grid-area: carousel; min-width: 0; }
+
+    /* One card visible, 12% of the next peeking in as a swipe cue */
+    .hfa-track { margin-inline: 0; padding-inline: 0; scroll-padding-inline: 0; gap: 10px; }
+    .hfa-card { flex-basis: 88%; }
+    .hfa-card__img-wrap { margin-bottom: 8px; border-radius: 5px; }
+    .hfa-card__title {
+      font-size: 0.78rem;
+      margin-bottom: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .hfa-card__price { font-size: 0.76rem; }
+    .hfa-card .saf-wishlist-toggle { width: 2.6rem; height: 2.6rem; top: 0.5rem; left: 0.5rem; }
+    .hfa-card .saf-wishlist-toggle svg,
+    .hfa-card .saf-wishlist-toggle .svg-wrapper { width: 1.3rem; height: 1.3rem; }
+    .hfa-badge {
+      width: 3.4rem;
+      height: 3.4rem;
+      font-size: 0.42rem;
+      top: 0.5rem;
+      right: 0.5rem;
+      padding: 0.4rem;
+    }
+
+    /* Touch swipes; the progress line shows position — arrows just add clutter here */
+    .hfa-arrows { display: none; }
+    .hfa-controls { margin-top: 10px; }
+
+    .hfa-story { grid-area: story; text-align: left; margin: 16px 0 0; }
     .hfa-bio { font-size: 0.64rem; letter-spacing: 0.1em; margin-bottom: 8px; }
     .hfa-intro { font-size: 0.85rem; line-height: 1.65; margin: 0; max-width: none; }
     .hfa-story:not(.is-expanded) .hfa-bio {
@@ -355,27 +393,7 @@
     }
     .hfa-more:not([hidden]) { display: inline-block; }
 
-    /* Two compact cards side by side, contained (no full-bleed) */
-    .hfa-track { margin-inline: 0; padding-inline: 0; scroll-padding-inline: 0; gap: 12px; }
-    .hfa-card { flex-basis: calc(50% - 6px); }
-    .hfa-card__img-wrap { margin-bottom: 10px; border-radius: 5px; }
-    .hfa-card__title { font-size: 0.78rem; margin-bottom: 2px; }
-    .hfa-card__price { font-size: 0.76rem; }
-    .hfa-card .saf-wishlist-toggle { width: 2.6rem; height: 2.6rem; top: 0.5rem; left: 0.5rem; }
-    .hfa-card .saf-wishlist-toggle svg,
-    .hfa-card .saf-wishlist-toggle .svg-wrapper { width: 1.3rem; height: 1.3rem; }
-    .hfa-badge {
-      width: 3.4rem;
-      height: 3.4rem;
-      font-size: 0.42rem;
-      top: 0.5rem;
-      right: 0.5rem;
-      padding: 0.4rem;
-    }
-    .hfa-controls { margin-top: 14px; gap: 16px; }
-    .hfa-arrow { width: 3.2rem; height: 3.2rem; }
-    .hfa-arrow svg { width: 1.2rem; height: 1.2rem; }
-    .hfa-cta-row { margin-top: 20px; }
+    .hfa-cta-row { grid-area: cta; margin-top: 18px; }
     .hfa-btn { padding: 12px 30px; font-size: 0.68rem; }
   }
 {% endstyle %}
@@ -400,27 +418,10 @@
         {%- endif -%}
       </div>
 
-      <div>
-        {%- comment -%} Same photo, small — replaces the big one on phones {%- endcomment -%}
-        {%- capture hfa_mini_src -%}
-          {%- if section.settings.image != blank -%}
-            {{- section.settings.image | image_url: width: 400 -}}
-          {%- elsif fa.photo != blank -%}
-            {{- fa.photo -}}{%- if fa.photo contains '?' -%}&{%- else -%}?{%- endif -%}width=400
-          {%- elsif artist_col.image -%}
-            {{- artist_col.image | image_url: width: 400 -}}
-          {%- endif -%}
-        {%- endcapture -%}
-        {%- assign hfa_mini_src = hfa_mini_src | strip -%}
-
+      <div class="hfa-content">
         <div class="hfa-header">
-          {%- if hfa_mini_src != blank -%}
-            <img class="hfa-photo-mini" src="{{ hfa_mini_src }}" width="200" height="267" loading="lazy" alt="">
-          {%- endif -%}
-          <div class="hfa-header__text">
-            {%- if hfa_eyebrow != blank -%}<p class="hfa-eyebrow">{{ hfa_eyebrow }}</p>{%- endif -%}
-            {%- if hfa_heading != blank -%}<h2 class="hfa-heading">{{ hfa_heading }}</h2>{%- endif -%}
-          </div>
+          {%- if hfa_eyebrow != blank -%}<p class="hfa-eyebrow">{{ hfa_eyebrow }}</p>{%- endif -%}
+          {%- if hfa_heading != blank -%}<h2 class="hfa-heading">{{ hfa_heading }}</h2>{%- endif -%}
         </div>
         {%- if fa.bio != blank or fa.intro != blank -%}
           <div class="hfa-story" data-hfa-story>
