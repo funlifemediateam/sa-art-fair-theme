@@ -35,9 +35,25 @@
     var section = document.querySelector('.section-header');
     if (!section) return;
     var ticking = false;
+    var badgesHidden = false;
     function update() {
       ticking = false;
-      section.classList.toggle('header-at-top', window.scrollY < 40);
+      var atTop = window.scrollY < 40;
+      section.classList.toggle('header-at-top', atTop);
+      /* While the header is transparent at page top, fade any card badge that
+         falls inside the header strip — z-index can't hide what's visible
+         *through* a transparent header. */
+      if (atTop || badgesHidden) {
+        var headerBottom = section.getBoundingClientRect().bottom;
+        badgesHidden = false;
+        document
+          .querySelectorAll('.saf-dummy-badge, .saf-sold-badge, .saf-timing-badge')
+          .forEach(function (badge) {
+            var hide = atTop && badge.getBoundingClientRect().top < headerBottom;
+            if (hide) badgesHidden = true;
+            badge.classList.toggle('saf-badge--under-header', hide);
+          });
+      }
     }
     window.addEventListener('scroll', function () {
       if (!ticking) {

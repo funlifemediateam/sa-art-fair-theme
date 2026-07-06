@@ -32,11 +32,10 @@
   padding-top: 14px !important;
   padding-bottom: 14px !important;
 }
-/* .section-header has position:sticky (see header.liquid PR #2147 fix) — give it
-   a z-index so it paints above our positioned card badges (z-index 10–20). */
-.section-header {
-  z-index: 50;
-}
+/* NOTE: do NOT try to raise the header with a bare `.section-header { z-index }` —
+   Dawn's `.section-header.shopify-section-group-header-group { z-index: 3 }` in
+   base.css has higher specificity and always wins. The header stays at 3; card
+   badges are kept BELOW it instead (z-index 2 + isolated tile containers below). */
 
 @media screen and (max-width: 749px) {
   .header {
@@ -221,11 +220,25 @@
   filter: grayscale(1) brightness(0.42);
 }
 
-/* Contain all card badges within the card image stacking context so they never
-   appear above the sticky header, regardless of their z-index values. */
+/* Contain card badges/overlays inside their tile's stacking context so they never
+   appear above the sticky header (z-index 3). Dawn's .card / .card-wrapper are NOT
+   isolated here — the quick-add modal lives inside them and must escape. Standard
+   Dawn cards rely on badge z-index 2 < header 3 instead. */
 .card__inner,
-.card-media {
+.card-media,
+.cgal-item,
+.hart-card__img-wrap,
+.ccls-card__img-link,
+.hgp-item__img-wrap,
+.hwp-card__image-link,
+.artist-card_artist_photo {
   isolation: isolate;
+}
+
+/* Faded while the transparent homepage header overlaps them at page top
+   (toggled by initTransparentHeader() in custom.js). */
+.saf-badge--under-header {
+  opacity: 0;
 }
 
 /* ── Placeholder / dummy content badge (always visible until content is replaced) ── */
@@ -236,7 +249,8 @@
   position: absolute;
   top: 8px;
   left: 8px;
-  z-index: 20;
+  z-index: 2; /* must stay < header's 3 — badge escapes non-isolated Dawn cards to root */
+  transition: opacity 0.25s ease;
   background: rgba(22, 163, 74, 0.92);
   color: #fff;
   font-size: 10px;
@@ -259,7 +273,8 @@
   position: absolute;
   top: 8px;
   right: 8px;
-  z-index: 20;
+  z-index: 2; /* must stay < header's 3 */
+  transition: opacity 0.25s ease;
   background: rgba(46, 26, 40, 0.92);
   color: #fff;
   font-size: 10px;
@@ -280,7 +295,8 @@
   position: absolute;
   bottom: 8px;
   left: 8px;
-  z-index: 20;
+  z-index: 2; /* must stay < header's 3 */
+  transition: opacity 0.25s ease;
   background: rgba(46, 26, 40, 0.85);
   color: #fef6f8;
   font-family: system-ui, -apple-system, sans-serif;
