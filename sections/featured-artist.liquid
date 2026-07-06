@@ -78,7 +78,9 @@
   .hfa-photo-wrap:hover .hfa-photo { transform: scale(1.03); }
 
   /* ── Header copy ── */
-  .hfa-header { text-align: center; margin-bottom: 34px; }
+  .hfa-header { text-align: center; margin-bottom: 14px; }
+  .hfa-photo-mini { display: none; }
+  .hfa-story { text-align: center; margin-bottom: 34px; }
   .hfa-eyebrow {
     font-family: var(--font-body-family);
     font-size: 0.68rem;
@@ -113,6 +115,20 @@
     max-width: 58ch;
     margin: 0 auto;
     white-space: pre-line;
+  }
+  .hfa-more {
+    display: none; /* mobile-only, shown via :not([hidden]) below */
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 8px 0 0;
+    font-family: var(--font-body-family);
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--hfa-accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
   }
 
   /* ── Carousel ── */
@@ -292,7 +308,75 @@
     /* Full-bleed swipe on small screens */
     .hfa-track { margin-inline: -24px; padding-inline: 24px; scroll-padding-inline: 24px; }
     .hfa-card { flex-basis: min(70vw, 340px); }
-    .hfa-header { margin-bottom: 26px; }
+  }
+
+  /* ── Phones: compact editorial layout — the whole section reads as one screen.
+        Big photo becomes a thumbnail beside the title; story clamps with a
+        tap-to-expand; two artworks sit side by side. ── */
+  @media (max-width: 749px) {
+    .hfa-section {
+      padding-top: {{ section.settings.padding_top | default: 88 | times: 0.45 | round }}px;
+      padding-bottom: {{ section.settings.padding_bottom | default: 96 | times: 0.45 | round }}px;
+    }
+    .hfa-photo-wrap { display: none; }
+    .hfa-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-align: left;
+      margin-bottom: 12px;
+    }
+    .hfa-photo-mini {
+      display: block;
+      width: 84px;
+      height: 112px; /* 3:4 — the img's height attribute wins over aspect-ratio here */
+      object-fit: cover;
+      border-radius: 8px;
+      flex-shrink: 0;
+      background: var(--hfa-img-bg);
+    }
+    .hfa-header__text { min-width: 0; }
+    .hfa-eyebrow { font-size: 0.6rem; margin-bottom: 6px; }
+    .hfa-heading { font-size: 1.5rem; margin-bottom: 0; }
+    .hfa-story { text-align: left; margin-bottom: 16px; }
+    .hfa-bio { font-size: 0.64rem; letter-spacing: 0.1em; margin-bottom: 8px; }
+    .hfa-intro { font-size: 0.85rem; line-height: 1.65; margin: 0; max-width: none; }
+    .hfa-story:not(.is-expanded) .hfa-bio {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .hfa-story:not(.is-expanded) .hfa-intro {
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .hfa-more:not([hidden]) { display: inline-block; }
+
+    /* Two compact cards side by side, contained (no full-bleed) */
+    .hfa-track { margin-inline: 0; padding-inline: 0; scroll-padding-inline: 0; gap: 12px; }
+    .hfa-card { flex-basis: calc(50% - 6px); }
+    .hfa-card__img-wrap { margin-bottom: 10px; border-radius: 5px; }
+    .hfa-card__title { font-size: 0.78rem; margin-bottom: 2px; }
+    .hfa-card__price { font-size: 0.76rem; }
+    .hfa-card .saf-wishlist-toggle { width: 2.6rem; height: 2.6rem; top: 0.5rem; left: 0.5rem; }
+    .hfa-card .saf-wishlist-toggle svg,
+    .hfa-card .saf-wishlist-toggle .svg-wrapper { width: 1.3rem; height: 1.3rem; }
+    .hfa-badge {
+      width: 3.4rem;
+      height: 3.4rem;
+      font-size: 0.42rem;
+      top: 0.5rem;
+      right: 0.5rem;
+      padding: 0.4rem;
+    }
+    .hfa-controls { margin-top: 14px; gap: 16px; }
+    .hfa-arrow { width: 3.2rem; height: 3.2rem; }
+    .hfa-arrow svg { width: 1.2rem; height: 1.2rem; }
+    .hfa-cta-row { margin-top: 20px; }
+    .hfa-btn { padding: 12px 30px; font-size: 0.68rem; }
   }
 {% endstyle %}
 
@@ -317,12 +401,34 @@
       </div>
 
       <div>
+        {%- comment -%} Same photo, small — replaces the big one on phones {%- endcomment -%}
+        {%- capture hfa_mini_src -%}
+          {%- if section.settings.image != blank -%}
+            {{- section.settings.image | image_url: width: 400 -}}
+          {%- elsif fa.photo != blank -%}
+            {{- fa.photo -}}{%- if fa.photo contains '?' -%}&{%- else -%}?{%- endif -%}width=400
+          {%- elsif artist_col.image -%}
+            {{- artist_col.image | image_url: width: 400 -}}
+          {%- endif -%}
+        {%- endcapture -%}
+        {%- assign hfa_mini_src = hfa_mini_src | strip -%}
+
         <div class="hfa-header">
-          {%- if hfa_eyebrow != blank -%}<p class="hfa-eyebrow">{{ hfa_eyebrow }}</p>{%- endif -%}
-          {%- if hfa_heading != blank -%}<h2 class="hfa-heading">{{ hfa_heading }}</h2>{%- endif -%}
-          {%- if fa.bio != blank -%}<p class="hfa-bio">{{ fa.bio }}</p>{%- endif -%}
-          {%- if fa.intro != blank -%}<p class="hfa-intro">{{ fa.intro }}</p>{%- endif -%}
+          {%- if hfa_mini_src != blank -%}
+            <img class="hfa-photo-mini" src="{{ hfa_mini_src }}" width="200" height="267" loading="lazy" alt="">
+          {%- endif -%}
+          <div class="hfa-header__text">
+            {%- if hfa_eyebrow != blank -%}<p class="hfa-eyebrow">{{ hfa_eyebrow }}</p>{%- endif -%}
+            {%- if hfa_heading != blank -%}<h2 class="hfa-heading">{{ hfa_heading }}</h2>{%- endif -%}
+          </div>
         </div>
+        {%- if fa.bio != blank or fa.intro != blank -%}
+          <div class="hfa-story" data-hfa-story>
+            {%- if fa.bio != blank -%}<p class="hfa-bio">{{ fa.bio }}</p>{%- endif -%}
+            {%- if fa.intro != blank -%}<p class="hfa-intro">{{ fa.intro }}</p>{%- endif -%}
+            <button type="button" class="hfa-more" data-hfa-more hidden aria-expanded="false">Read more</button>
+          </div>
+        {%- endif -%}
 
         {%- assign rendered_cards = 0 -%}
         <div class="hfa-carousel">
@@ -471,6 +577,28 @@
       track.addEventListener('click', function (e) {
         if (moved > 8) { e.preventDefault(); e.stopPropagation(); moved = 0; }
       }, true);
+
+      /* Story clamp (phones): show Read more only when text is actually cut off */
+      var story = root.querySelector('[data-hfa-story]');
+      var more = story && story.querySelector('[data-hfa-more]');
+      if (story && more) {
+        var clampable = story.querySelectorAll('.hfa-bio, .hfa-intro');
+        var refreshMore = function () {
+          if (story.classList.contains('is-expanded')) return;
+          var clamped = false;
+          clampable.forEach(function (el) {
+            if (el.scrollHeight > el.clientHeight + 2) clamped = true;
+          });
+          more.hidden = !clamped;
+        };
+        more.addEventListener('click', function () {
+          var expanded = story.classList.toggle('is-expanded');
+          more.textContent = expanded ? 'Read less' : 'Read more';
+          more.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+        });
+        window.addEventListener('resize', refreshMore);
+        refreshMore();
+      }
 
       update();
     }
