@@ -117,7 +117,7 @@
     white-space: pre-line;
   }
   .hfa-more {
-    display: none; /* mobile-only, shown via :not([hidden]) below */
+    display: none; /* JS unhides it only when the story is actually clamped */
     background: none;
     border: none;
     padding: 0;
@@ -130,6 +130,7 @@
     text-underline-offset: 3px;
     cursor: pointer;
   }
+  .hfa-more:not([hidden]) { display: inline-block; }
 
   /* ── Carousel ── */
   .hfa-carousel { position: relative; }
@@ -297,6 +298,32 @@
     line-height: 1.7;
   }
 
+  /* ── Desktop: compact vertical rhythm so the whole section fits one screen.
+        Square artwork crops + clamped story (Read more) keep the height
+        bounded no matter how much the client writes. ── */
+  @media (min-width: 990px) {
+    .hfa-heading { font-size: clamp(1.8rem, 2.6vw, 2.4rem); margin-bottom: 10px; }
+    .hfa-header { margin-bottom: 8px; }
+    .hfa-bio { margin-bottom: 10px; }
+    .hfa-intro { line-height: 1.7; }
+    .hfa-story { margin-bottom: 24px; }
+    .hfa-story:not(.is-expanded) .hfa-bio {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .hfa-story:not(.is-expanded) .hfa-intro {
+      display: -webkit-box;
+      -webkit-line-clamp: 4;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .hfa-card__img-wrap { aspect-ratio: 1 / 1; margin-bottom: 12px; }
+    .hfa-controls { margin-top: 18px; }
+    .hfa-cta-row { margin-top: 22px; }
+  }
+
   @media (max-width: 989px) {
     .hfa-grid { grid-template-columns: 1fr; gap: 32px; }
     .hfa-photo-wrap { aspect-ratio: 4 / 3; max-width: 640px; margin-inline: auto; width: 100%; }
@@ -391,8 +418,6 @@
       -webkit-box-orient: vertical;
       overflow: hidden;
     }
-    .hfa-more:not([hidden]) { display: inline-block; }
-
     .hfa-cta-row { grid-area: cta; margin-top: 18px; }
     .hfa-btn { padding: 12px 30px; font-size: 0.68rem; }
   }
@@ -667,8 +692,8 @@
       "type": "header",
       "content": "Spacing"
     },
-    { "type": "range", "id": "padding_top", "label": "Top padding", "min": 0, "max": 140, "step": 4, "default": 88, "unit": "px" },
-    { "type": "range", "id": "padding_bottom", "label": "Bottom padding", "min": 0, "max": 140, "step": 4, "default": 96, "unit": "px" }
+    { "type": "range", "id": "padding_top", "label": "Top padding", "min": 0, "max": 140, "step": 4, "default": 56, "unit": "px" },
+    { "type": "range", "id": "padding_bottom", "label": "Bottom padding", "min": 0, "max": 140, "step": 4, "default": 64, "unit": "px" }
   ],
   "presets": [{ "name": "New Artist Collection" }]
 }
