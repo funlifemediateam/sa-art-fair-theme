@@ -1,0 +1,13 @@
+{
+  "sections": {
+    "main": {
+      "type": "collection-gallery",
+      "settings": {
+        "eyebrow": "SA Art Fair",
+        "intro": "Original works from our Hout Bay studio, curated by palette — find the piece that matches your space.",
+        "products_per_page": 24
+      }
+    }
+  },
+  "order": ["main"]
+}

@@ -62,7 +62,7 @@
       "settings": {
         "workshops_eyebrow": "Hout Bay Studio",
         "workshops_heading": "Workshops & Classes",
-        "workshops_desc": "Hands-on creative sessions for all levels — painting, drawing, sewing, and more.",
+        "workshops_desc": "Hands-on creative sessions for all levels \u2014 painting, drawing, sewing, and more.",
         "workshops_btn": "View Schedule",
         "workshops_url": "shopify://collections/workshops-classes",
         "gallery_eyebrow": "Original Artworks",
@@ -103,8 +103,8 @@
           "settings": {
             "collection_handle": "susan-orpen",
             "name": "Susan Orpen",
-            "role": "Watercolour · Acrylic · Mixed Media",
-            "bio": "Susan has been practising and teaching art in Hout Bay for over a decade. Her work spans watercolour landscapes to bold acrylic abstracts — and her teaching style makes even the most uncertain beginner feel at ease."
+            "role": "Watercolour \u00b7 Acrylic \u00b7 Mixed Media",
+            "bio": "Susan has been practising and teaching art in Hout Bay for over a decade. Her work spans watercolour landscapes to bold acrylic abstracts \u2014 and her teaching style makes even the most uncertain beginner feel at ease."
           }
         },
         "kerri": {
@@ -112,8 +112,8 @@
           "settings": {
             "collection_handle": "kerri-sassen",
             "name": "Kerri Sassen",
-            "role": "Abstract · Mixed Media · Art Therapy",
-            "bio": "Kerri brings warmth and expertise to every class. A qualified occupational art therapist, she creates a space where people explore abstraction freely — no experience needed, just an open mind."
+            "role": "Abstract \u00b7 Mixed Media \u00b7 Art Therapy",
+            "bio": "Kerri brings warmth and expertise to every class. A qualified occupational art therapist, she creates a space where people explore abstraction freely \u2014 no experience needed, just an open mind."
           }
         },
         "zara": {
@@ -121,8 +121,8 @@
           "settings": {
             "collection_handle": "zara-leigh",
             "name": "Zara-Leigh Farinha",
-            "role": "Abstract Acrylic · Oil · Large Format",
-            "bio": "Zara-Leigh's energy is contagious. Known for large-format abstract works in acrylic and oil, her Friday 'Permission to Play' class is exactly what it sounds like — joyful, free, and surprising."
+            "role": "Abstract Acrylic \u00b7 Oil \u00b7 Large Format",
+            "bio": "Zara-Leigh's energy is contagious. Known for large-format abstract works in acrylic and oil, her Friday 'Permission to Play' class is exactly what it sounds like \u2014 joyful, free, and surprising."
           }
         }
       },
@@ -156,12 +156,53 @@
         "accent_color": "#f26b52",
         "api_url": "https://sa-art-fair-admin.vercel.app"
       }
+    },
+    "shop_by_colour": {
+      "type": "shop-by-colour",
+      "blocks": {
+        "sbc_warm": {
+          "type": "colour",
+          "settings": {
+            "collection": "warm-tones",
+            "title": "Warm",
+            "swatch": "#c96a4a"
+          }
+        },
+        "sbc_cool": {
+          "type": "colour",
+          "settings": {
+            "collection": "cool-tones",
+            "title": "Cool",
+            "swatch": "#18727d"
+          }
+        },
+        "sbc_neutral": {
+          "type": "colour",
+          "settings": {
+            "collection": "neutral-tones",
+            "title": "Neutral",
+            "swatch": "#b7ab99"
+          }
+        }
+      },
+      "block_order": [
+        "sbc_warm",
+        "sbc_cool",
+        "sbc_neutral"
+      ],
+      "settings": {
+        "eyebrow": "ART FOR YOUR SPACE",
+        "heading": "Shop by Colour",
+        "image_position": "left",
+        "background": "#f5ece6"
+      }
     }
   },
   "order": [
     "image_banner",
     "two_paths",
     "featured_artist",
+    "shop_by_colour",
     "art_quiz_home",
     "workshops_preview",
     "artists_preview",
