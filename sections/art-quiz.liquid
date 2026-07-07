@@ -13,7 +13,9 @@
   <div aria-hidden="true" style="position:absolute;inset:0;z-index:0">
     {%- if section.settings.bg_image != blank -%}
       <img
-        src="{{ section.settings.bg_image | image_url: width: 2400 }}"
+        src="{{ section.settings.bg_image | image_url: width: 1600 }}"
+        srcset="{{ section.settings.bg_image | image_url: width: 800 }} 800w, {{ section.settings.bg_image | image_url: width: 1200 }} 1200w, {{ section.settings.bg_image | image_url: width: 1600 }} 1600w, {{ section.settings.bg_image | image_url: width: 2400 }} 2400w"
+        sizes="100vw"
         alt=""
         width="{{ section.settings.bg_image.width }}"
         height="{{ section.settings.bg_image.height }}"
@@ -22,7 +24,9 @@
       >
     {%- else -%}
       <img
-        src="https://cdn.shopify.com/s/files/1/0745/5771/8606/files/earth-memory_99e1d4c5-cee5-40d7-abd0-0fe5154bd2bf.jpg?v=1783088446"
+        src="https://cdn.shopify.com/s/files/1/0745/5771/8606/files/earth-memory_99e1d4c5-cee5-40d7-abd0-0fe5154bd2bf.jpg?v=1783088446&width=1600"
+        srcset="https://cdn.shopify.com/s/files/1/0745/5771/8606/files/earth-memory_99e1d4c5-cee5-40d7-abd0-0fe5154bd2bf.jpg?v=1783088446&width=800 800w, https://cdn.shopify.com/s/files/1/0745/5771/8606/files/earth-memory_99e1d4c5-cee5-40d7-abd0-0fe5154bd2bf.jpg?v=1783088446&width=1200 1200w, https://cdn.shopify.com/s/files/1/0745/5771/8606/files/earth-memory_99e1d4c5-cee5-40d7-abd0-0fe5154bd2bf.jpg?v=1783088446&width=1600 1600w, https://cdn.shopify.com/s/files/1/0745/5771/8606/files/earth-memory_99e1d4c5-cee5-40d7-abd0-0fe5154bd2bf.jpg?v=1783088446&width=2400 2400w"
+        sizes="100vw"
         alt=""
         width="3783"
         height="3496"
