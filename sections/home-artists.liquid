@@ -98,6 +98,8 @@
     isolation: isolate;
   }
   .hart-card__img {
+    position: relative;
+    z-index: 1;
     width: 100%;
     height: 100%;
     object-fit: contain;
@@ -105,6 +107,17 @@
     transition: transform 0.6s ease;
   }
   .hart-card:hover .hart-card__img { transform: scale(1.04); }
+
+  /* Blurred echo of the photo fills the frame behind the contained image,
+     so portrait/landscape photos never sit against flat empty bars */
+  .hart-card__img-bg {
+    position: absolute;
+    inset: -12px;
+    background-size: cover;
+    background-position: center;
+    filter: blur(16px) brightness(0.72) saturate(0.9);
+    transform: scale(1.08);
+  }
 
   .hart-card__placeholder {
     width: 100%;
@@ -289,6 +302,7 @@
             <div class="hart-card__img-wrap">
               {%- if app_photo != blank -%}
                 {%- assign sep = '?' -%}{%- if app_photo contains '?' -%}{%- assign sep = '&' -%}{%- endif -%}
+                <div class="hart-card__img-bg" style="background-image: url('{{ app_photo }}{{ sep }}width=100');" aria-hidden="true"></div>
                 <img
                   class="hart-card__img"
                   loading="lazy"
@@ -301,6 +315,7 @@
                   sizes="(max-width: 749px) 78vw, 25vw"
                 >
               {%- elsif card_photo != blank -%}
+                <div class="hart-card__img-bg" style="background-image: url('{{ card_photo | image_url: width: 100 }}');" aria-hidden="true"></div>
                 {{ card_photo | image_url: width: 700 | image_tag:
                     class: 'hart-card__img',
                     loading: 'lazy',
