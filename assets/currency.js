@@ -19,7 +19,8 @@
     '.predictive-search__item-price',
     '.saf-wl-price',
     '.hfa-card__price',
-    '.hgp-item__price'
+    '.hgp-item__price',
+    '.hau-card__price'
   ].join(',');
   /* Never rewrite anything inside the booking widget or its timer banners */
   var EXCLUDE_CLOSEST = '#sa-bk-banner-container, [data-api], [data-saf-no-convert]';
