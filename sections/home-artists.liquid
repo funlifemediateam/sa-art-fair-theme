@@ -1,18 +1,44 @@
+{%- comment -%}
+  Our artists — up to 4 artists side by side on desktop (fits one viewport),
+  a swipeable one-card-plus-peek carousel with a progress line on mobile.
+  App overrides: shop.metafields.booking_app.our_artists (json, "Our Artists"
+  tab in the admin app). If the app lists artists, they drive the section;
+  otherwise the theme-editor blocks do. Per-field fallback:
+  app value → theme-editor block (matched by collection handle) → collection.
+{%- endcomment -%}
+
+{%- assign oa_cfg = shop.metafields.booking_app.our_artists.value -%}
+{%- assign oa_eyebrow = section.settings.eyebrow | default: 'REPRESENTED' -%}
+{%- assign oa_heading = section.settings.heading | default: 'Our artists' -%}
+{%- assign oa_button = section.settings.button_label | default: 'Meet all artists' -%}
+{%- if oa_cfg.eyebrow != blank -%}{%- assign oa_eyebrow = oa_cfg.eyebrow -%}{%- endif -%}
+{%- if oa_cfg.heading != blank -%}{%- assign oa_heading = oa_cfg.heading -%}{%- endif -%}
+{%- if oa_cfg.buttonLabel != blank -%}{%- assign oa_button = oa_cfg.buttonLabel -%}{%- endif -%}
+
+{%- assign use_app = false -%}
+{%- if oa_cfg.artists.size > 0 -%}{%- assign use_app = true -%}{%- endif -%}
+{%- if use_app -%}
+  {%- assign oa_count = oa_cfg.artists.size -%}
+{%- else -%}
+  {%- assign oa_count = section.blocks.size -%}
+{%- endif -%}
+{%- if oa_count > 4 -%}{%- assign oa_count = 4 -%}{%- endif -%}
+
 {% style %}
   .hart-section {
     background: #0f4a52;
-    padding: 88px 0 96px;
+    padding: clamp(48px, 7vh, 80px) 0;
   }
   .hart-container {
-    max-width: 1200px;
+    max-width: 1280px;
     margin-inline: auto;
-    padding-inline: 40px;
+    padding-inline: clamp(24px, 4vw, 48px);
   }
   .hart-header {
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
-    margin-bottom: 52px;
+    margin-bottom: clamp(26px, 4vh, 44px);
     gap: 20px;
   }
   .hart-eyebrow {
@@ -52,23 +78,24 @@
 
   .hart-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 32px;
+    grid-template-columns: repeat({{ oa_count | at_least: 1 }}, minmax(0, 1fr));
+    gap: clamp(20px, 2.2vw, 30px);
   }
 
   .hart-card {
     display: flex;
     flex-direction: column;
+    min-width: 0;
   }
 
   .hart-card__img-wrap {
-    aspect-ratio: 3 / 4;
+    height: clamp(240px, 40vh, 380px);
     overflow: hidden;
     border-radius: 6px;
-    background: #2A4A38;
-    margin-bottom: 22px;
+    background: #0c3d44;
+    margin-bottom: 18px;
     position: relative;
-    position: relative;
+    isolation: isolate;
   }
   .hart-card__img {
     width: 100%;
@@ -87,7 +114,7 @@
 
   .hart-card__name {
     font-family: var(--font-heading-family);
-    font-size: 1.35rem;
+    font-size: 1.3rem;
     font-weight: 700;
     color: #eeefeb;
     margin: 0 0 6px;
@@ -100,25 +127,28 @@
     letter-spacing: 0.2em;
     text-transform: uppercase;
     color: #d2d241;
-    margin: 0 0 14px;
+    margin: 0 0 12px;
   }
   .hart-card__divider {
     width: 28px;
     height: 1px;
     background: rgba(242,107,82,0.45);
-    margin-bottom: 14px;
+    margin-bottom: 12px;
   }
   .hart-card__bio {
     font-family: var(--font-body-family);
-    font-size: 0.875rem;
+    font-size: 0.85rem;
     color: rgba(242,237,229,0.6);
-    line-height: 1.8;
+    line-height: 1.7;
     margin: 0;
     display: -webkit-box;
-    -webkit-line-clamp: 4;
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
+
+  .hart-progress { display: none; }
+  .hart-button { display: none; }
 
   .hart-empty {
     font-family: var(--font-body-family);
@@ -127,80 +157,238 @@
     font-style: italic;
   }
 
-  @media (max-width: 960px) {
-    .hart-grid {
-      grid-template-columns: repeat(2, 1fr);
-      gap: 24px;
-    }
+  @media (prefers-reduced-motion: reduce) {
+    .hart-card__img, .hart-header-link, .hart-button { transition: none; }
   }
-  @media (max-width: 600px) {
-    .hart-grid { grid-template-columns: 1fr; gap: 20px; }
-    .hart-card__img-wrap { aspect-ratio: 4 / 3; }
+
+  /* ── Mobile: one swipeable card with a peek of the next, fits one screen ── */
+  @media (max-width: 749px) {
+    .hart-section { padding: 30px 0 34px; }
     .hart-container { padding-inline: 24px; }
-    .hart-section { padding: 64px 0 72px; }
-    .hart-header { flex-direction: column; align-items: flex-start; gap: 12px; margin-bottom: 36px; }
+    .hart-header { margin-bottom: 18px; }
+    .hart-header-link { display: none; }
+    .hart-eyebrow { margin-bottom: 6px; }
+
+    .hart-grid {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      margin-inline: -24px;
+      padding-inline: 24px;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    .hart-grid::-webkit-scrollbar { display: none; }
+    .hart-card {
+      flex: 0 0 78%;
+      max-width: 78%;
+      scroll-snap-align: start;
+    }
+    .hart-card__img-wrap {
+      height: min(30vh, 260px);
+      margin-bottom: 12px;
+    }
+    .hart-card:hover .hart-card__img { transform: none; }
+    .hart-card__name { font-size: 1.15rem; margin-bottom: 4px; }
+    .hart-card__role { font-size: 0.6rem; margin-bottom: 8px; }
+    .hart-card__divider { display: none; }
+    .hart-card__bio {
+      font-size: 0.8rem;
+      line-height: 1.6;
+      -webkit-line-clamp: 2;
+    }
+
+    .hart-progress {
+      display: block;
+      position: relative;
+      height: 1px;
+      margin-top: 16px;
+      background: rgba(238,239,235,0.18);
+    }
+    .hart-progress__fill {
+      position: absolute;
+      top: -0.5px;
+      left: 0;
+      height: 2px;
+      width: 25%;
+      background: #d2d241;
+      transition: width 0.15s ease, transform 0.15s ease;
+      will-change: transform;
+    }
+
+    .hart-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 18px;
+      width: 100%;
+      padding: 13px 20px;
+      border: 1px solid rgba(238,239,235,0.35);
+      border-radius: 999px;
+      font-family: var(--font-body-family);
+      font-size: 0.74rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #eeefeb;
+      text-decoration: none;
+      transition: border-color 0.25s ease, color 0.25s ease;
+    }
+    .hart-button:hover { border-color: #d2d241; color: #d2d241; }
+    .hart-button svg { width: 14px; height: 14px; }
   }
 {% endstyle %}
 
 <section class="hart-section">
-  <div class="hart-container">
+  <div class="hart-container" data-hart>
     <div class="hart-header">
       <div>
-        <p class="hart-eyebrow">{{ section.settings.eyebrow | default: 'REPRESENTED' }}</p>
-        <h2 class="hart-heading">{{ section.settings.heading | default: 'Our artists' }}</h2>
+        <p class="hart-eyebrow">{{ oa_eyebrow }}</p>
+        <h2 class="hart-heading">{{ oa_heading }}</h2>
       </div>
       {%- if section.settings.team_page != blank -%}
         <a href="{{ section.settings.team_page }}" class="hart-header-link">
-          Meet the artists &rarr;
+          {{ oa_button }} &rarr;
         </a>
       {%- endif -%}
     </div>
 
-    {%- if section.blocks.size > 0 -%}
-      <div class="hart-grid">
-        {%- for block in section.blocks -%}
-          <div class="hart-card" {{ block.shopify_attributes }}>
+    {%- if oa_count > 0 -%}
+      <div class="hart-grid" data-hart-track>
+        {%- for i in (1..oa_count) -%}
+          {%- assign idx = forloop.index0 -%}
+
+          {%- comment -%} Resolve this card's artist: app entry and/or theme block {%- endcomment -%}
+          {%- assign app_a = nil -%}{%- assign blk = nil -%}
+          {%- if use_app -%}
+            {%- assign app_a = oa_cfg.artists[idx] -%}
+            {%- assign card_handle = app_a.handle -%}
+            {%- for b in section.blocks -%}
+              {%- if b.settings.collection_handle == card_handle -%}{%- assign blk = b -%}{%- endif -%}
+            {%- endfor -%}
+          {%- else -%}
+            {%- assign blk = section.blocks[idx] -%}
+            {%- assign card_handle = blk.settings.collection_handle -%}
+          {%- endif -%}
+          {%- assign col = collections[card_handle] -%}
+
+          {%- assign card_name = app_a.name | default: blk.settings.name | default: col.title -%}
+          {%- assign card_role = app_a.role | default: blk.settings.role -%}
+          {%- assign card_bio = app_a.bio | default: blk.settings.bio -%}
+          {%- if card_bio == blank and col != blank -%}
+            {%- assign card_bio = col.description | strip_html | truncate: 220 -%}
+          {%- endif -%}
+          {%- assign app_photo = app_a.photo -%}
+          {%- assign card_photo = blk.settings.image | default: col.image -%}
+          {%- assign card_alt = card_name | escape -%}
+
+          <div class="hart-card" {% if blk %}{{ blk.shopify_attributes }}{% endif %}>
             <div class="hart-card__img-wrap">
-              {%- assign col_img = collections[block.settings.collection_handle].image -%}
-              {%- assign card_photo = block.settings.image | default: col_img -%}
-              {%- if card_photo != blank -%}
+              {%- if app_photo != blank -%}
+                {%- assign sep = '?' -%}{%- if app_photo contains '?' -%}{%- assign sep = '&' -%}{%- endif -%}
+                <img
+                  class="hart-card__img"
+                  loading="lazy"
+                  decoding="async"
+                  width="700"
+                  height="875"
+                  alt="{{ card_name | escape }}"
+                  src="{{ app_photo }}{{ sep }}width=700"
+                  srcset="{{ app_photo }}{{ sep }}width=400 400w, {{ app_photo }}{{ sep }}width=700 700w, {{ app_photo }}{{ sep }}width=1000 1000w"
+                  sizes="(max-width: 749px) 78vw, 25vw"
+                >
+              {%- elsif card_photo != blank -%}
                 {{ card_photo | image_url: width: 700 | image_tag:
                     class: 'hart-card__img',
                     loading: 'lazy',
-                    alt: block.settings.name | escape }}
+                    decoding: 'async',
+                    widths: '400, 700, 1000',
+                    sizes: '(max-width: 749px) 78vw, 25vw',
+                    alt: card_alt }}
               {%- else -%}
                 <div class="hart-card__placeholder"></div>
               {%- endif -%}
-              {%- if collections[block.settings.collection_handle].metafields.site.is_dummy == 'true' -%}
+              {%- if col.metafields.site.is_dummy == 'true' -%}
                 <span class="saf-dummy-badge">&#9679; Placeholder</span>
               {%- endif -%}
             </div>
-            {%- if block.settings.name != blank -%}
-              <h3 class="hart-card__name">{{ block.settings.name }}</h3>
+            {%- if card_name != blank -%}
+              <h3 class="hart-card__name">{{ card_name }}</h3>
             {%- endif -%}
-            {%- if block.settings.role != blank -%}
-              <p class="hart-card__role">{{ block.settings.role }}</p>
+            {%- if card_role != blank -%}
+              <p class="hart-card__role">{{ card_role }}</p>
             {%- endif -%}
             <div class="hart-card__divider"></div>
-            {%- if block.settings.bio != blank -%}
-              <p class="hart-card__bio">{{ block.settings.bio }}</p>
+            {%- if card_bio != blank -%}
+              <p class="hart-card__bio">{{ card_bio }}</p>
             {%- endif -%}
           </div>
         {%- endfor -%}
       </div>
+
+      <div class="hart-progress" aria-hidden="true"><span class="hart-progress__fill"></span></div>
+      {%- if section.settings.team_page != blank -%}
+        <a class="hart-button" href="{{ section.settings.team_page }}">
+          {{ oa_button }}
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+        </a>
+      {%- endif -%}
     {%- else -%}
-      <p class="hart-empty">Add artists using the theme editor.</p>
+      <p class="hart-empty">Add artists in the admin app (Our Artists tab) or using the theme editor.</p>
     {%- endif -%}
   </div>
 </section>
+
+<script>
+  (function () {
+    function initHart(scope) {
+      (scope || document).querySelectorAll('[data-hart]').forEach(function (root) {
+        if (root.dataset.hartBound) return;
+        root.dataset.hartBound = '1';
+        var track = root.querySelector('[data-hart-track]');
+        var fill  = root.querySelector('.hart-progress__fill');
+        if (!track || !fill) return;
+        var count = track.children.length;
+        var ticking = false;
+        function paint() {
+          ticking = false;
+          var max = track.scrollWidth - track.clientWidth;
+          if (max <= 0 || !count) return;
+          var seg = 100 / count;
+          fill.style.width = seg + '%';
+          fill.style.transform = 'translateX(' + (track.scrollLeft / max) * (100 / seg - 1) * 100 + '%)';
+        }
+        track.addEventListener('scroll', function () {
+          if (!ticking) { ticking = true; requestAnimationFrame(paint); }
+        }, { passive: true });
+        paint();
+      });
+    }
+    initHart();
+
+    /* Theme editor: rebind after section reload, scroll to the edited card */
+    document.addEventListener('shopify:section:load', function (e) { initHart(e.target); });
+    document.addEventListener('shopify:block:select', function (e) {
+      var card = e.target.closest ? e.target.closest('.hart-card') : null;
+      if (card && card.scrollIntoView && window.innerWidth < 750) {
+        card.scrollIntoView({ inline: 'start', block: 'nearest' });
+      }
+    });
+  })();
+</script>
 
 {% schema %}
 {
   "name": "Artists / Teachers",
   "settings": [
+    { "type": "paragraph", "content": "Artists, wording and photos can also be managed from the SA Art Fair admin app (Our Artists tab) — artists chosen there override these blocks." },
     { "type": "text", "id": "eyebrow",   "label": "Eyebrow",        "default": "REPRESENTED" },
     { "type": "text", "id": "heading",   "label": "Heading",        "default": "Our artists" },
-    { "type": "url",  "id": "team_page", "label": "Artists page link", "info": "Optional — shows a 'Meet the artists' link" }
+    { "type": "text", "id": "button_label", "label": "Button / link text", "default": "Meet all artists" },
+    { "type": "url",  "id": "team_page", "label": "Artists page link", "info": "The 'meet all artists' button and link go here" }
   ],
   "blocks": [
     {
@@ -215,6 +403,7 @@
       ]
     }
   ],
+  "max_blocks": 4,
   "presets": [{ "name": "Artists / Teachers" }]
 }
 {% endschema %}
