@@ -174,15 +174,29 @@
     .hart-card__img, .hart-header-link, .hart-button { transition: none; }
   }
 
-  /* ── Mobile: one swipeable card with a peek of the next, fits one screen ── */
+  /* ── Mobile: fills the screen between header and bottom CTA bar like an
+        app view; the photo flexes to absorb the height, one card + peek ── */
   @media (max-width: 749px) {
-    .hart-section { padding: 30px 0 34px; }
-    .hart-container { padding-inline: 24px; }
-    .hart-header { margin-bottom: 18px; }
+    .hart-section {
+      padding: 20px 0 24px;
+      height: calc(100vh - var(--header-height, 170px) - 62px);
+      height: calc(100svh - var(--header-height, 170px) - 62px);
+      min-height: 520px;
+      display: flex;
+    }
+    .hart-container {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      padding-inline: 24px;
+    }
+    .hart-header { margin-bottom: 14px; flex-shrink: 0; }
     .hart-header-link { display: none; }
     .hart-eyebrow { margin-bottom: 6px; }
 
     .hart-grid {
+      flex: 1 1 auto;
+      min-height: 0;
       display: flex;
       gap: 12px;
       overflow-x: auto;
@@ -190,34 +204,39 @@
       scroll-snap-type: x mandatory;
       margin-inline: -24px;
       padding-inline: 24px;
+      scroll-padding-inline: 24px;
       scrollbar-width: none;
       -webkit-overflow-scrolling: touch;
     }
     .hart-grid::-webkit-scrollbar { display: none; }
     .hart-card {
-      flex: 0 0 78%;
-      max-width: 78%;
+      flex: 0 0 74%;
+      max-width: 74%;
       scroll-snap-align: start;
     }
     .hart-card__img-wrap {
-      height: min(30vh, 260px);
+      flex: 1 1 auto;
+      min-height: 0;
+      height: auto;
       margin-bottom: 12px;
     }
     .hart-card:hover .hart-card__img { transform: none; }
-    .hart-card__name { font-size: 1.15rem; margin-bottom: 4px; }
-    .hart-card__role { font-size: 0.6rem; margin-bottom: 8px; }
+    .hart-card__name { font-size: 1.15rem; margin-bottom: 4px; flex-shrink: 0; }
+    .hart-card__role { font-size: 0.6rem; margin-bottom: 8px; flex-shrink: 0; }
     .hart-card__divider { display: none; }
     .hart-card__bio {
       font-size: 0.8rem;
       line-height: 1.6;
       -webkit-line-clamp: 2;
+      flex-shrink: 0;
     }
 
     .hart-progress {
       display: block;
       position: relative;
       height: 1px;
-      margin-top: 16px;
+      margin-top: 14px;
+      flex-shrink: 0;
       background: rgba(238,239,235,0.18);
     }
     .hart-progress__fill {
@@ -236,7 +255,8 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
-      margin-top: 18px;
+      margin-top: 14px;
+      flex-shrink: 0;
       width: 100%;
       padding: 13px 20px;
       border: 1px solid rgba(238,239,235,0.35);
