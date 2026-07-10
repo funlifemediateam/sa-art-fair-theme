@@ -12,7 +12,7 @@
   font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: #a35536;
+  color: #0f4a52;
   margin: 0 0 0.7rem;
   display: flex;
   align-items: center;
@@ -192,8 +192,8 @@
   font-weight: 600;
   padding: 1px 4px;
   border-radius: 3px;
-  background: rgba(242,107,82,0.12);
-  color: #a35536;
+  background: rgba(15,74,82,0.10);
+  color: #0f4a52;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -217,7 +217,7 @@
 .bk-app-cal-legend-dot {
   width: 6px;
   height: 6px;
-  background: #f26b52;
+  background: #0f4a52;
   border-radius: 50%;
   flex-shrink: 0;
 }
@@ -265,7 +265,7 @@
   overflow: hidden;
   transition: border-color 0.14s;
 }
-.bk-app-card.is-open { border-color: #f26b52; }
+.bk-app-card.is-open { border-color: #0f4a52; }
 
 .bk-app-card-hdr {
   display: flex;
@@ -338,8 +338,8 @@
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
 }
-.bk-app-type:hover { border-color: #f26b52; background: #fef5f2; }
-.bk-app-type.is-sel { border-color: #f26b52; background: #fdece7; }
+.bk-app-type:hover { border-color: #0f4a52; background: #eef4f4; }
+.bk-app-type.is-sel { border-color: #0f4a52; background: #e2eeee; }
 
 .bk-app-type-radio {
   width: 16px;
@@ -351,12 +351,12 @@
   position: relative;
   transition: border-color 0.13s;
 }
-.bk-app-type.is-sel .bk-app-type-radio { border-color: #f26b52; }
+.bk-app-type.is-sel .bk-app-type-radio { border-color: #0f4a52; }
 .bk-app-type.is-sel .bk-app-type-radio::after {
   content: '';
   position: absolute;
   inset: 3px;
-  background: #f26b52;
+  background: #0f4a52;
   border-radius: 50%;
 }
 .bk-app-type-info { flex: 1; min-width: 0; }
@@ -398,7 +398,7 @@
   transition: border-color 0.13s;
   -moz-appearance: textfield;
 }
-.bk-app-field input:focus { border-color: #f26b52; }
+.bk-app-field input:focus { border-color: #0f4a52; }
 .bk-app-field input::placeholder { color: rgba(0,0,0,0.22); }
 .bk-app-field input[type="number"]::-webkit-inner-spin-button,
 .bk-app-field input[type="number"]::-webkit-outer-spin-button { opacity: 0; }
