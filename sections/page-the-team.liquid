@@ -345,6 +345,32 @@
     .theteam-member--alt .theteam-member__content { padding: 36px 24px; }
     .theteam-cta { padding: 64px 24px; }
   }
+  /* ── Social links (rendered by snippets/social-links.liquid) ── */
+  .saf-socials {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px;
+    margin-top: 22px;
+  }
+  .saf-socials__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+  .saf-socials__link svg { width: 19px; height: 19px; display: block; }
+  .saf-socials__site-label {
+    font-family: var(--font-body-family);
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+  }
+  .theteam-member__socials { color: #1d1c21; margin-top: 20px; }
+  .theteam-member__socials .saf-socials__link:hover { color: #a35536; }
+  .theteam-founders__socials { color: rgba(242,237,229,0.8); margin-top: 26px; }
+  .theteam-founders__socials .saf-socials__link:hover { color: #d2d241; }
 {%- endstyle -%}
 
 <div class="theteam-hero">
@@ -377,6 +403,9 @@
         <h2 class="theteam-founders__names">{{ block.settings.names | default: 'Georgina & Bianca' }}</h2>
         <p class="theteam-founders__role">{{ block.settings.role | default: 'Co-Founders & Creatives' }}</p>
         <p class="theteam-founders__bio">{{ block.settings.bio }}</p>
+        {%- assign founders_names = block.settings.names | default: 'Georgina & Bianca' -%}
+        {%- assign social_key = founders_names | handleize -%}
+        {% render 'social-links', person_key: social_key, extra_class: 'theteam-founders__socials' %}
       </div>
     </div>
 
@@ -416,6 +445,8 @@
             {%- endfor -%}
           </div>
         {%- endif -%}
+        {%- assign social_key = block.settings.name | handleize -%}
+        {% render 'social-links', person_key: social_key, extra_class: 'theteam-member__socials' %}
       </div>
     </div>
 
