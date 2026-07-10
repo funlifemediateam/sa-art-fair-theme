@@ -1,12 +1,3 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "current": {
     "logo": "shopify://shop_images/create-a-transparent-logo-appropriate-for-this-site-based-on-the-style-and-theme-keep-it-clean-minimal-modern-the-name-is-sa-art-fair-modern-stylish-elegant-creative-modern-minimal-wi_971b19fd-9d37-41ce-a5fa-c496eff076c7.webp",
@@ -131,10 +122,10 @@
     "color_schemes": {
       "scheme-1": {
         "settings": {
-          "background": "#eeefeb",
+          "background": "#f26b52",
           "background_gradient": "",
           "text": "#1d1c21",
-          "button": "#1d1c21",
+          "button": "#0f4a52",
           "button_label": "#eeefeb",
           "secondary_button_label": "#1d1c21",
           "shadow": "#1d1c21"
@@ -142,24 +133,24 @@
       },
       "scheme-2": {
         "settings": {
-          "background": "#f5ece6",
+          "background": "#f69b87",
           "background_gradient": "",
           "text": "#1d1c21",
-          "button": "#1d1c21",
-          "button_label": "#f5ece6",
+          "button": "#0f4a52",
+          "button_label": "#eeefeb",
           "secondary_button_label": "#1d1c21",
           "shadow": "#1d1c21"
         }
       },
       "scheme-3": {
         "settings": {
-          "background": "#0f4a52",
+          "background": "#a35536",
           "background_gradient": "",
           "text": "#eeefeb",
           "button": "#d2d241",
           "button_label": "#1d1c21",
           "secondary_button_label": "#eeefeb",
-          "shadow": "#0f4a52"
+          "shadow": "#854c42"
         }
       },
       "scheme-4": {
@@ -178,7 +169,7 @@
           "background": "#f26b52",
           "background_gradient": "",
           "text": "#1d1c21",
-          "button": "#1d1c21",
+          "button": "#0f4a52",
           "button_label": "#eeefeb",
           "secondary_button_label": "#1d1c21",
           "shadow": "#a35536"

@@ -9,7 +9,7 @@
   border-radius: 2px;
   transition: border-color 0.18s;
 }
-.select:hover { border-color: #f26b52; }
+.select:hover { border-color: #0f4a52; }
 
 /* The <select> itself */
 .select__select {
@@ -340,7 +340,7 @@
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #a35536;
+  color: #0f4a52;
   background: rgba(163, 85, 54, 0.12);
   padding: 2px 7px;
   border-radius: 4px;
@@ -441,10 +441,10 @@ body.template-index #MainContent {
   fill: currentColor;
 }
 .saf-wishlist-toggle.is-active {
-  color: #f26b52;
+  color: #0f4a52;
 }
 .saf-wishlist-toggle.is-active svg path {
-  fill: #f26b52;
+  fill: #0f4a52;
 }
 
 /* Product page variant — inline under the title */
@@ -516,7 +516,7 @@ body.template-index #MainContent {
   font-family: var(--font-body-family);
 }
 .saf-wl-remove:hover {
-  color: #a35536;
+  color: #0f4a52;
 }
 
 /* ══ Mobile Buy Art / Learn Art bottom bar ══ */

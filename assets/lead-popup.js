@@ -7,8 +7,8 @@
   var GOOGLE_ID    = window.__saGoogleClientId || '';
   var FB_ID        = window.__saFbAppId        || '';
   var DARK         = '#1d1c21';
-  var ORANGE       = '#f26b52';
-  var RUST         = '#a35536';
+  var ORANGE       = '#0f4a52';
+  var RUST         = '#0f4a52';
 
   var shown = false;
   var timer = null;
