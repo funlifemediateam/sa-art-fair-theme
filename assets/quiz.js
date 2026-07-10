@@ -13,8 +13,8 @@
     var step    = 0;
 
     var DARK   = '#1d1c21';
-    var ORANGE = '#0f4a52';
-    var RUST   = '#0f4a52';
+    var ORANGE = '#f26b52';
+    var RUST   = '#a35536';
 
     function esc(s) {
       return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');

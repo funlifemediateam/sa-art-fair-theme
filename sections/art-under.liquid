@@ -24,9 +24,9 @@
 {%- assign au_col = collections['art-under'] -%}
 {%- assign au_limit = section.settings.product_limit | default: 8 -%}
 
-{%- assign au_bg     = section.settings.color_bg     | default: '#f69b87' -%}
+{%- assign au_bg     = section.settings.color_bg     | default: '#f5ece6' -%}
 {%- assign au_text   = section.settings.color_text   | default: '#1d1c21' -%}
-{%- assign au_accent = section.settings.color_accent | default: '#0f4a52' -%}
+{%- assign au_accent = section.settings.color_accent | default: '#a35536' -%}
 {%- assign au_meta   = au_text | color_mix: au_bg, 50 -%}
 {%- assign au_ph     = au_bg | color_darken: 4 -%}
 {%- assign au_ph2    = au_bg | color_darken: 10 -%}
@@ -397,9 +397,9 @@
     { "type": "text",  "id": "button_label",  "label": "Shop-all link text", "info": "Leave blank for automatic wording" },
     { "type": "range", "id": "product_limit", "label": "Number of artworks", "min": 4, "max": 12, "step": 1, "default": 8 },
     { "type": "header", "content": "Colours" },
-    { "type": "color", "id": "color_bg",     "label": "Background",        "default": "#f69b87" },
+    { "type": "color", "id": "color_bg",     "label": "Background",        "default": "#f5ece6" },
     { "type": "color", "id": "color_text",   "label": "Text",              "default": "#1d1c21", "info": "Headings, titles and prices. Softer shades for meta text are derived automatically." },
-    { "type": "color", "id": "color_accent", "label": "Accent",            "default": "#0f4a52", "info": "Eyebrow, links, hovers and the mobile progress line" }
+    { "type": "color", "id": "color_accent", "label": "Accent",            "default": "#a35536", "info": "Eyebrow, links, hovers and the mobile progress line" }
   ],
   "presets": [{ "name": "Art under R…" }]
 }
