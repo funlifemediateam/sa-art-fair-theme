@@ -149,6 +149,265 @@
     margin-top: 5px;
   }
 
+  /* ── Filter toolbar (cream strip between coral header and grid) ──
+     Mirrors .saf-af on the artists page; styles are duplicated here because
+     each section in this theme is self-contained. */
+  .saf-af {
+    background: #eeefeb;
+    padding: 22px 0;
+  }
+  .saf-af__inner {
+    max-width: 1400px;
+    margin-inline: auto;
+    padding-inline: 40px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .saf-af__search {
+    flex: 1 1 220px;
+    min-width: 180px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid rgba(29,28,33,0.28);
+    border-radius: 999px;
+    padding: 0 18px;
+    height: 44px;
+    background: transparent;
+    transition: border-color 0.2s;
+  }
+  .saf-af__search:focus-within { border-color: #0f4a52; }
+  .saf-af__search svg { flex-shrink: 0; color: rgba(29,28,33,0.55); }
+  .saf-af__search input {
+    flex: 1;
+    border: 0;
+    background: transparent;
+    font-family: var(--font-body-family);
+    font-size: 0.88rem;
+    color: #1d1c21;
+    outline: none;
+    min-width: 0;
+    -webkit-appearance: none;
+  }
+  .saf-af__search input::placeholder { color: rgba(29,28,33,0.5); }
+  .saf-af__search input::-webkit-search-cancel-button { -webkit-appearance: none; }
+
+  .saf-af__select {
+    height: 44px;
+    border: 1px solid rgba(29,28,33,0.28);
+    border-radius: 999px;
+    background: transparent;
+    font-family: var(--font-body-family);
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: #1d1c21;
+    padding: 0 36px 0 18px;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%231d1c21' stroke-width='1.5'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    transition: border-color 0.2s;
+  }
+  .saf-af__select:hover, .saf-af__select:focus-visible { border-color: #0f4a52; outline: none; }
+
+  .saf-af__dd { position: relative; }
+  .saf-af__dd summary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    list-style: none;
+    user-select: none;
+  }
+  .saf-af__dd summary::-webkit-details-marker { display: none; }
+  .saf-af__dd[open] summary { border-color: #0f4a52; }
+  .saf-af__dd-count {
+    background: #0f4a52;
+    color: #eeefeb;
+    font-size: 0.68rem;
+    font-weight: 700;
+    border-radius: 999px;
+    min-width: 18px;
+    height: 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 5px;
+  }
+  .saf-af__dd-count[hidden] { display: none; }
+  .saf-af__dd-panel {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    z-index: 12;
+    background: #eeefeb;
+    border: 1px solid rgba(29,28,33,0.18);
+    border-radius: 14px;
+    box-shadow: 0 14px 40px rgba(29,28,33,0.16);
+    padding: 14px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    width: 300px;
+  }
+
+  .saf-af__pill {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    border: 1px solid rgba(29,28,33,0.28);
+    border-radius: 999px;
+    padding: 7px 14px;
+    font-family: var(--font-body-family);
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: #1d1c21;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+  }
+  .saf-af__pill input { position: absolute; opacity: 0; pointer-events: none; }
+  .saf-af__pill.is-on { background: #0f4a52; border-color: #0f4a52; color: #eeefeb; }
+
+  .saf-af__chip {
+    height: 44px;
+    border: 1px solid rgba(29,28,33,0.28);
+    border-radius: 999px;
+    background: transparent;
+    font-family: var(--font-body-family);
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: #1d1c21;
+    padding: 0 18px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+  }
+  .saf-af__chip[aria-pressed="true"] { background: #0f4a52; border-color: #0f4a52; color: #eeefeb; }
+
+  /* Mobile chip row */
+  .saf-af__chips {
+    display: none;
+    gap: 8px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 12px 16px 2px;
+  }
+  .saf-af__chips::-webkit-scrollbar { display: none; }
+  .saf-af__chips .saf-af__chip { height: 38px; font-size: 0.78rem; flex-shrink: 0; }
+  .saf-af__chip--sheet { display: inline-flex; align-items: center; gap: 7px; }
+
+  /* Filtered empty state */
+  .saf-af-empty {
+    text-align: center;
+    padding: 70px 24px;
+  }
+  .saf-af-empty h3 {
+    font-family: var(--font-heading-family);
+    font-size: 1.6rem;
+    color: #1d1c21;
+    margin: 0 0 10px;
+  }
+  .saf-af-empty p {
+    font-family: var(--font-body-family);
+    font-size: 0.9rem;
+    color: rgba(29,28,33,0.7);
+    margin: 0 0 24px;
+  }
+  .saf-af-empty button {
+    font-family: var(--font-body-family);
+    font-size: 0.82rem;
+    font-weight: 600;
+    background: #0f4a52;
+    color: #eeefeb;
+    border: 0;
+    border-radius: 999px;
+    padding: 13px 28px;
+    cursor: pointer;
+  }
+
+  /* Bottom sheet (mobile) */
+  .saf-sheet { position: fixed; inset: 0; z-index: 100; }
+  .saf-sheet[hidden] { display: none; }
+  .saf-sheet__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(29,28,33,0.45);
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+  .saf-sheet.is-open .saf-sheet__backdrop { opacity: 1; }
+  .saf-sheet__panel {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    background: #eeefeb;
+    border-radius: 20px 20px 0 0;
+    padding: 10px 20px calc(20px + env(safe-area-inset-bottom));
+    max-height: 82vh;
+    overflow-y: auto;
+    transform: translateY(100%);
+    transition: transform 0.28s cubic-bezier(0.32, 0.72, 0, 1);
+  }
+  .saf-sheet.is-open .saf-sheet__panel { transform: translateY(0); }
+  .saf-sheet__handle {
+    width: 38px; height: 4px;
+    background: rgba(29,28,33,0.22);
+    border-radius: 999px;
+    margin: 6px auto 16px;
+  }
+  .saf-sheet__label {
+    font-family: var(--font-body-family);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #0f4a52;
+    margin: 18px 0 10px;
+  }
+  .saf-sheet__label:first-of-type { margin-top: 4px; }
+  .saf-sheet__pills { display: flex; flex-wrap: wrap; gap: 8px; }
+  .saf-sheet__footer {
+    display: flex;
+    gap: 10px;
+    margin-top: 24px;
+  }
+  .saf-sheet__clear {
+    flex: 0 0 auto;
+    font-family: var(--font-body-family);
+    font-size: 0.82rem;
+    font-weight: 600;
+    background: transparent;
+    color: #1d1c21;
+    border: 1px solid rgba(29,28,33,0.35);
+    border-radius: 999px;
+    padding: 13px 20px;
+    cursor: pointer;
+  }
+  .saf-sheet__apply {
+    flex: 1;
+    font-family: var(--font-body-family);
+    font-size: 0.82rem;
+    font-weight: 600;
+    background: #0f4a52;
+    color: #eeefeb;
+    border: 0;
+    border-radius: 999px;
+    padding: 13px 20px;
+    cursor: pointer;
+  }
+
+  /* JS-rendered tile without an image */
+  .cgal-item__noimg {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    background: #e8e0d8;
+  }
+
+  /* Live count */
+  .cgal-count.is-visible { color: #0f4a52; }
+
   /* ── Empty state ── */
   .cgal-empty {
     text-align: center;
@@ -203,6 +462,13 @@
     .cgal-grid { columns: 2; column-gap: 2px; padding: 0 16px; }
     .cgal-header { height: 280px; padding: 32px 20px; }
     .cgal-controls { padding: 20px 16px 12px; }
+    .saf-af { padding: 14px 0 10px; }
+    .saf-af__inner { padding-inline: 16px; }
+    .saf-af__inner .saf-af__select,
+    .saf-af__inner .saf-af__dd,
+    .saf-af__inner .saf-af__chip { display: none; }
+    .saf-af__search { height: 42px; }
+    .saf-af__chips { display: flex; }
     .cgal-overlay { padding: 14px 12px; }
     .cgal-title { font-size: 0.82rem; }
   }
@@ -211,7 +477,42 @@
   }
 {% endstyle %}
 
-<div class="cgal-section">
+{%- liquid
+  comment
+    Filter options are derived from live collection data:
+    artists = product vendors, mediums/colours = medium-*/colour-* tags
+    (canonical medium order matches the artists page taxonomy).
+  endcomment
+  assign canonical_mediums = 'oil,acrylic,watercolour,drawing,printmaking,photography,ceramics,sculpture,mixed-media' | split: ','
+  assign page_mediums = ''
+  for m in canonical_mediums
+    assign m_tag = 'medium-' | append: m
+    if collection.all_tags contains m_tag
+      if page_mediums == blank
+        assign page_mediums = m
+      else
+        assign page_mediums = page_mediums | append: ',' | append: m
+      endif
+    endif
+  endfor
+  assign page_mediums_arr = page_mediums | split: ','
+
+  assign canonical_colours = 'warm,cool,neutral' | split: ','
+  assign page_colours = ''
+  for c in canonical_colours
+    assign c_tag = 'colour-' | append: c
+    if collection.all_tags contains c_tag
+      if page_colours == blank
+        assign page_colours = c
+      else
+        assign page_colours = page_colours | append: ',' | append: c
+      endif
+    endif
+  endfor
+  assign page_colours_arr = page_colours | split: ','
+-%}
+
+<div class="cgal-section" data-gf-root data-gf-url="{{ collection.url }}">
 
   <div class="cgal-header">
     <p class="cgal-eyebrow">{{ section.settings.eyebrow }}</p>
@@ -219,13 +520,104 @@
     <p class="cgal-description">{{ section.settings.intro }}</p>
   </div>
 
+  <div class="saf-af">
+    <div class="saf-af__inner">
+      <div class="saf-af__search">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg>
+        <input type="search" data-gf-q placeholder="Search artworks, artists, mediums…" aria-label="Search artworks" autocomplete="off">
+      </div>
+
+      {%- if collection.all_vendors.size > 0 -%}
+        <select data-gf-artist aria-label="Filter by artist" class="saf-af__select">
+          <option value="">All artists</option>
+          {%- for v in collection.all_vendors -%}
+            <option value="{{ v | escape }}">{{ v | escape }}</option>
+          {%- endfor -%}
+        </select>
+      {%- endif -%}
+
+      {%- if page_mediums != blank -%}
+        <details class="saf-af__dd" data-gf-dd>
+          <summary class="saf-af__select" role="button" aria-label="Filter by medium">
+            Medium <span class="saf-af__dd-count" data-gf-med-count hidden></span>
+          </summary>
+          <div class="saf-af__dd-panel">
+            {%- for m in page_mediums_arr -%}
+              <label class="saf-af__pill">
+                <input type="checkbox" value="{{ m }}" data-gf-medium>
+                <span>{{ m | replace: '-', ' ' | capitalize }}</span>
+              </label>
+            {%- endfor -%}
+          </div>
+        </details>
+      {%- endif -%}
+
+      {%- if page_colours != blank -%}
+        <details class="saf-af__dd" data-gf-dd>
+          <summary class="saf-af__select" role="button" aria-label="Filter by colour">
+            Colour <span class="saf-af__dd-count" data-gf-col-count hidden></span>
+          </summary>
+          <div class="saf-af__dd-panel">
+            {%- for c in page_colours_arr -%}
+              <label class="saf-af__pill">
+                <input type="checkbox" value="{{ c }}" data-gf-colour>
+                <span>{{ c | capitalize }} tones</span>
+              </label>
+            {%- endfor -%}
+          </div>
+        </details>
+      {%- endif -%}
+
+      <select data-gf-price aria-label="Filter by price" class="saf-af__select">
+        <option value="">Any price</option>
+        <option value="0-2500">Under R2 500</option>
+        <option value="2500-5000">R2 500 – R5 000</option>
+        <option value="5000-7500">R5 000 – R7 500</option>
+        <option value="7500-">Over R7 500</option>
+      </select>
+
+      <button type="button" class="saf-af__chip" data-gf-avail aria-pressed="false">Available only</button>
+
+      <select data-gf-sort aria-label="Sort artworks" class="saf-af__select">
+        <option value="featured">Featured</option>
+        <option value="newest">Newest</option>
+        <option value="price-asc">Price: low to high</option>
+        <option value="price-desc">Price: high to low</option>
+        <option value="az">A – Z</option>
+      </select>
+    </div>
+
+    <div class="saf-af__chips">
+      <button type="button" class="saf-af__chip saf-af__chip--sheet" data-gf-open-sheet>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="4" y1="7" x2="20" y2="7"/><circle cx="9" cy="7" r="2.5" fill="#eeefeb"/><line x1="4" y1="17" x2="20" y2="17"/><circle cx="15" cy="17" r="2.5" fill="#eeefeb"/></svg>
+        Sort &amp; filter
+      </button>
+      <button type="button" class="saf-af__chip" data-gf-chip-avail aria-pressed="false">Available</button>
+      {%- for c in page_colours_arr -%}
+        <button type="button" class="saf-af__chip" data-gf-chip-colour="{{ c }}" aria-pressed="false">{{ c | capitalize }}</button>
+      {%- endfor -%}
+      {%- for m in page_mediums_arr -%}
+        <button type="button" class="saf-af__chip" data-gf-chip-medium="{{ m }}" aria-pressed="false">{{ m | replace: '-', ' ' | capitalize }}</button>
+      {%- endfor -%}
+    </div>
+  </div>
+
   {%- paginate collection.products by section.settings.products_per_page -%}
 
     <div class="cgal-controls">
-      <p class="cgal-count">{{ collection.products_count }} work{% if collection.products_count != 1 %}s{% endif %}</p>
+      <p class="cgal-count" data-gf-count aria-live="polite">{{ collection.products_count }} work{% if collection.products_count != 1 %}s{% endif %}</p>
+    </div>
+
+    {%- comment -%}JS-rendered results while search/filters are active{%- endcomment -%}
+    <div class="cgal-grid" data-gf-results hidden></div>
+    <div class="saf-af-empty" data-gf-empty hidden>
+      <h3>No works match</h3>
+      <p>Try a different search or clear your filters.</p>
+      <button type="button" data-gf-clear>Clear filters</button>
     </div>
 
     {%- if collection.products.size > 0 -%}
+    <div data-gf-server>
       <div class="cgal-grid">
         {%- for product in collection.products -%}
           <a href="{{ product.url }}" class="cgal-item">
@@ -268,6 +660,7 @@
           {%- endif -%}
         </div>
       {%- endif -%}
+    </div>
 
     {%- else -%}
       <p class="cgal-empty">No works in this collection yet.</p>
@@ -275,7 +668,81 @@
 
   {%- endpaginate -%}
 
+  <div class="saf-sheet" data-gf-sheet hidden>
+    <div class="saf-sheet__backdrop" data-gf-sheet-close></div>
+    <div class="saf-sheet__panel" role="dialog" aria-modal="true" aria-label="Sort and filter artworks">
+      <div class="saf-sheet__handle"></div>
+
+      <p class="saf-sheet__label">Sort by</p>
+      <div class="saf-sheet__pills" data-gf-sheet-sorts>
+        <label class="saf-af__pill is-on"><input type="radio" name="gf-sheet-sort-{{ section.id }}" value="featured" checked><span>Featured</span></label>
+        <label class="saf-af__pill"><input type="radio" name="gf-sheet-sort-{{ section.id }}" value="newest"><span>Newest</span></label>
+        <label class="saf-af__pill"><input type="radio" name="gf-sheet-sort-{{ section.id }}" value="price-asc"><span>Price: low to high</span></label>
+        <label class="saf-af__pill"><input type="radio" name="gf-sheet-sort-{{ section.id }}" value="price-desc"><span>Price: high to low</span></label>
+        <label class="saf-af__pill"><input type="radio" name="gf-sheet-sort-{{ section.id }}" value="az"><span>A – Z</span></label>
+      </div>
+
+      {%- if collection.all_vendors.size > 0 -%}
+        <p class="saf-sheet__label">Artist</p>
+        <select data-gf-sheet-artist aria-label="Filter by artist" class="saf-af__select" style="width:100%">
+          <option value="">All artists</option>
+          {%- for v in collection.all_vendors -%}
+            <option value="{{ v | escape }}">{{ v | escape }}</option>
+          {%- endfor -%}
+        </select>
+      {%- endif -%}
+
+      {%- if page_mediums != blank -%}
+        <p class="saf-sheet__label">Medium</p>
+        <div class="saf-sheet__pills">
+          {%- for m in page_mediums_arr -%}
+            <label class="saf-af__pill">
+              <input type="checkbox" value="{{ m }}" data-gf-sheet-medium>
+              <span>{{ m | replace: '-', ' ' | capitalize }}</span>
+            </label>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+
+      {%- if page_colours != blank -%}
+        <p class="saf-sheet__label">Colour</p>
+        <div class="saf-sheet__pills">
+          {%- for c in page_colours_arr -%}
+            <label class="saf-af__pill">
+              <input type="checkbox" value="{{ c }}" data-gf-sheet-colour>
+              <span>{{ c | capitalize }} tones</span>
+            </label>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+
+      <p class="saf-sheet__label">Price</p>
+      <div class="saf-sheet__pills" data-gf-sheet-prices>
+        <label class="saf-af__pill is-on"><input type="radio" name="gf-sheet-price-{{ section.id }}" value="" checked><span>Any price</span></label>
+        <label class="saf-af__pill"><input type="radio" name="gf-sheet-price-{{ section.id }}" value="0-2500"><span>Under R2 500</span></label>
+        <label class="saf-af__pill"><input type="radio" name="gf-sheet-price-{{ section.id }}" value="2500-5000"><span>R2 500 – R5 000</span></label>
+        <label class="saf-af__pill"><input type="radio" name="gf-sheet-price-{{ section.id }}" value="5000-7500"><span>R5 000 – R7 500</span></label>
+        <label class="saf-af__pill"><input type="radio" name="gf-sheet-price-{{ section.id }}" value="7500-"><span>Over R7 500</span></label>
+      </div>
+
+      <p class="saf-sheet__label">Availability</p>
+      <div class="saf-sheet__pills">
+        <label class="saf-af__pill">
+          <input type="checkbox" data-gf-sheet-avail>
+          <span>Available only</span>
+        </label>
+      </div>
+
+      <div class="saf-sheet__footer">
+        <button type="button" class="saf-sheet__clear" data-gf-clear>Clear</button>
+        <button type="button" class="saf-sheet__apply" data-gf-sheet-close data-gf-apply>Show all works</button>
+      </div>
+    </div>
+  </div>
+
 </div>
+
+<script src="{{ 'gallery-filter.js' | asset_url }}" defer></script>
 
 {% schema %}
 {
