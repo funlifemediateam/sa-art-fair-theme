@@ -204,7 +204,7 @@
     align-items: center;
   }
 
-  /* ── Buy Art / Learn Art CTAs (desktop: right end of nav row) ── */
+  /* ── Path CTAs (desktop: right end of nav row; labels via theme settings) ── */
   .saf-header-ctas {
     grid-area: ctas;
     justify-self: end;
@@ -236,12 +236,12 @@
     background-color: transparent;
     color: rgba(var(--color-foreground), 0.95);
   }
-  .saf-cta--learn {
+  .saf-cta--create {
     background-color: transparent;
     color: rgba(var(--color-foreground), 0.9);
     border: 1px solid rgba(var(--color-foreground), 0.4);
   }
-  .saf-cta--learn:hover {
+  .saf-cta--create:hover {
     border-color: rgba(var(--color-foreground), 0.9);
     color: rgb(var(--color-foreground));
   }
@@ -255,7 +255,7 @@
     background-color: transparent;
     color: #fff;
   }
-  .section-header.header-at-top .header-wrapper--transparent .saf-cta--learn {
+  .section-header.header-at-top .header-wrapper--transparent .saf-cta--create {
     color: #fff;
     border-color: rgba(255, 255, 255, 0.7);
   }
@@ -520,12 +520,9 @@
       endif
     %}
 
-    {%- comment -%} Persistent Buy Art / Learn Art CTAs (desktop; mobile gets a
-      fixed bottom bar rendered in theme.liquid) {%- endcomment -%}
-    <div class="saf-header-ctas">
-      <a href="/collections/gallery" class="saf-cta saf-cta--buy">Buy Art</a>
-      <a href="/collections/workshops-classes" class="saf-cta saf-cta--learn">Learn Art</a>
-    </div>
+    {%- comment -%} Persistent path CTAs (desktop; mobile gets a fixed bottom
+      bar rendered in theme.liquid). Labels/links: theme settings. {%- endcomment -%}
+    {% render 'path-ctas', wrapper_class: 'saf-header-ctas' %}
 
     {%- if section.settings.logo_position == 'middle-center' -%}
       {%- if request.page_type == 'index' -%}

@@ -12,6 +12,7 @@
         },
         "text_body": {
           "type": "text",
+          "disabled": true,
           "settings": {
             "text": "Browse original works from our resident artists, or book a hands-on workshop in our Hout Bay studio.",
             "text_style": "body"
@@ -19,12 +20,13 @@
         },
         "button": {
           "type": "buttons",
+          "disabled": true,
           "settings": {
             "button_label_1": "View the gallery",
-            "button_link_1": "shopify:\/\/collections\/gallery",
+            "button_link_1": "shopify://collections/gallery",
             "button_style_secondary_1": false,
             "button_label_2": "Book a workshop",
-            "button_link_2": "shopify:\/\/collections\/workshops",
+            "button_link_2": "shopify://collections/workshops",
             "button_style_secondary_2": true
           }
         }
@@ -35,7 +37,7 @@
         "button"
       ],
       "settings": {
-        "image": "shopify:\/\/shop_images\/an-upper-class-art-studio-in-hout-by-cape-town-showcasing-the-art-they-sell-and-people-also-doing-art-classes-or-art-workshops-hyper-relialistic-with-the-mountains-and-ocean-in-the-ba.png",
+        "image": "shopify://shop_images/an-upper-class-art-studio-in-hout-by-cape-town-showcasing-the-art-they-sell-and-people-also-doing-art-classes-or-art-workshops-hyper-relialistic-with-the-mountains-and-ocean-in-the-ba.png",
         "image_overlay_opacity": 40,
         "image_height": "large",
         "image_behavior": "none",
@@ -51,162 +53,62 @@
     "two_paths": {
       "type": "home-two-paths",
       "settings": {
-        "workshops_eyebrow": "Hout Bay Studio",
-        "workshops_heading": "Workshops & Classes",
-        "workshops_desc": "Hands-on creative sessions for all levels — painting, drawing, sewing, and more.",
-        "workshops_btn": "View Schedule",
-        "workshops_url": "shopify:\/\/collections\/workshops-classes",
+        "gallery_first": true,
         "gallery_eyebrow": "Original Artworks",
-        "gallery_heading": "The Gallery",
+        "gallery_heading": "Buy Art",
         "gallery_desc": "Discover and collect original paintings, prints, and mixed media from our resident artists.",
-        "gallery_btn": "Browse Art",
-        "gallery_url": "shopify:\/\/collections\/gallery"
+        "gallery_btn": "Explore the Gallery",
+        "gallery_url": "shopify://collections/gallery",
+        "workshops_eyebrow": "Hout Bay Studio",
+        "workshops_heading": "Create Art",
+        "workshops_desc": "Hands-on creative sessions for all levels — painting, drawing, sewing, and more.",
+        "workshops_btn": "Explore Classes & Workshops",
+        "workshops_url": "shopify://collections/workshops-classes"
       }
     },
-    "featured_artist": {
-      "type": "featured-artist",
-      "settings": {
-        "scheme": "light",
-        "products_per_view": 2,
-        "show_prices": true,
-        "show_badge": true,
-        "show_hearts": true,
-        "padding_top": 56,
-        "padding_bottom": 64
-      }
-    },
-    "workshops_preview": {
-      "type": "home-workshops-preview",
-      "settings": {
-        "eyebrow": "STUDIO",
-        "heading": "Upcoming Workshops & Classes",
-        "featured_collection": "workshops-classes",
-        "product_limit": 4,
-        "view_all": "All Workshops & Classes",
-        "view_all_url": "shopify:\/\/collections\/workshops-classes"
-      }
-    },
-    "artists_preview": {
-      "type": "home-artists",
+    "mission": {
+      "type": "rich-text",
       "blocks": {
-        "susan": {
-          "type": "artist",
+        "mission_caption": {
+          "type": "caption",
           "settings": {
-            "collection_handle": "susan-orpen",
-            "name": "Susan Orpen",
-            "role": "Watercolour · Acrylic · Mixed Media",
-            "bio": "Susan has been practising and teaching art in Hout Bay for over a decade. Her work spans watercolour landscapes to bold acrylic abstracts — and her teaching style makes even the most uncertain beginner feel at ease."
+            "caption": "One creative ecosystem",
+            "text_style": "caption-with-letter-spacing",
+            "text_size": "medium"
           }
         },
-        "kerri": {
-          "type": "artist",
+        "mission_heading": {
+          "type": "heading",
           "settings": {
-            "collection_handle": "kerri-sassen",
-            "name": "Kerri Sassen",
-            "role": "Abstract · Mixed Media · Art Therapy",
-            "bio": "Kerri brings warmth and expertise to every class. A qualified occupational art therapist, she creates a space where people explore abstraction freely — no experience needed, just an open mind."
+            "heading": "Learn. Create. Exhibit. Sell.",
+            "heading_size": "h1"
           }
         },
-        "zara": {
-          "type": "artist",
+        "mission_text": {
+          "type": "text",
           "settings": {
-            "collection_handle": "zara-leigh",
-            "name": "Zara-Leigh Farinha",
-            "role": "Abstract Acrylic · Oil · Large Format",
-            "bio": "Zara-Leigh's energy is contagious. Known for large-format abstract works in acrylic and oil, her Friday 'Permission to Play' class is exactly what it sounds like — joyful, free, and surprising."
+            "text": "<p>SA Art Fair is a working art ecosystem in Hout Bay — a studio where you learn and make, and a gallery where our artists exhibit and sell. Whichever door you come in through, you're part of the same creative circle.</p>"
           }
         }
       },
       "block_order": [
-        "susan",
-        "kerri",
-        "zara"
+        "mission_caption",
+        "mission_heading",
+        "mission_text"
       ],
       "settings": {
-        "eyebrow": "REPRESENTED",
-        "heading": "Our artists",
-        "team_page": "\/pages\/artists"
-      }
-    },
-    "gallery_preview": {
-      "type": "home-gallery-preview",
-      "settings": {
-        "eyebrow": "FROM THE GALLERY",
-        "heading": "New & notable",
-        "collection_handle": "all",
-        "product_limit": 4,
-        "view_all": "All artworks"
-      }
-    },
-    "art_quiz_home": {
-      "type": "art-quiz",
-      "settings": {
-        "heading": "What's Your Art Personality?",
-        "subheading": "See how your personality can shape your journey as a collector.",
-        "cta_text": "Take the Test",
-        "accent_color": "#f26b52",
-        "api_url": "https:\/\/sa-art-fair-admin.vercel.app"
-      }
-    },
-    "shop_by_colour": {
-      "type": "shop-by-colour",
-      "blocks": {
-        "sbc_warm": {
-          "type": "colour",
-          "settings": {
-            "collection": "warm-tones",
-            "title": "Warm",
-            "swatch": "#c96a4a"
-          }
-        },
-        "sbc_cool": {
-          "type": "colour",
-          "settings": {
-            "collection": "cool-tones",
-            "title": "Cool",
-            "swatch": "#18727d"
-          }
-        },
-        "sbc_neutral": {
-          "type": "colour",
-          "settings": {
-            "collection": "neutral-tones",
-            "title": "Neutral",
-            "swatch": "#b7ab99"
-          }
-        }
-      },
-      "block_order": [
-        "sbc_warm",
-        "sbc_cool",
-        "sbc_neutral"
-      ],
-      "settings": {
-        "eyebrow": "ART FOR YOUR SPACE",
-        "heading": "Shop by Colour",
-        "image_position": "left",
-        "background": "#f26b52"
-      }
-    },
-    "art_under": {
-      "type": "art-under",
-      "settings": {
-        "eyebrow": "START YOUR COLLECTION",
-        "heading": "",
-        "button_label": "",
-        "product_limit": 8
+        "desktop_content_position": "center",
+        "content_alignment": "center",
+        "color_scheme": "scheme-2",
+        "full_width": true,
+        "padding_top": 64,
+        "padding_bottom": 72
       }
     }
   },
   "order": [
     "image_banner",
     "two_paths",
-    "featured_artist",
-    "shop_by_colour",
-    "art_under",
-    "art_quiz_home",
-    "workshops_preview",
-    "artists_preview",
-    "gallery_preview"
+    "mission"
   ]
 }

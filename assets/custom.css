@@ -526,7 +526,7 @@ svg.icon-heart .icon-heart__fill {
   color: #0f4a52;
 }
 
-/* ══ Mobile Buy Art / Learn Art bottom bar ══ */
+/* ══ Mobile path-CTA bottom bar (labels via theme settings) ══ */
 .saf-mobile-ctas {
   display: none;
 }
@@ -549,12 +549,13 @@ svg.icon-heart .icon-heart__fill {
     flex: 1;
     height: 4rem;
   }
-  /* Reserve space so page content and footer aren't hidden behind the bar */
-  body {
+  /* Reserve space so page content and footer aren't hidden behind the bar
+     (only when the bar is actually rendered — it's toggleable in settings) */
+  body:has(.saf-mobile-ctas) {
     padding-bottom: calc(5.8rem + env(safe-area-inset-bottom, 0px));
   }
   /* Booking hold-timer banners stack above the CTA bar */
-  #sa-bk-banner-container {
+  body:has(.saf-mobile-ctas) #sa-bk-banner-container {
     bottom: calc(5.8rem + env(safe-area-inset-bottom, 0px));
   }
 }

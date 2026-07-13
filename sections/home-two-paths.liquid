@@ -117,32 +117,44 @@
   }
 {%- endstyle -%}
 
+{%- liquid
+  assign panel_order = 'workshops,gallery' | split: ','
+  if section.settings.gallery_first
+    assign panel_order = 'gallery,workshops' | split: ','
+  endif
+-%}
 <div class="two-paths">
-  <div class="two-paths__panel two-paths__panel--light">
-    {%- if section.settings.workshops_eyebrow != blank -%}
-      <p class="two-paths__eyebrow">{{ section.settings.workshops_eyebrow }}</p>
+  {%- for panel in panel_order -%}
+    {%- assign tone = 'light' -%}
+    {%- if forloop.index == 2 -%}{%- assign tone = 'dark' -%}{%- endif -%}
+    {%- if panel == 'workshops' -%}
+      <div class="two-paths__panel two-paths__panel--{{ tone }}">
+        {%- if section.settings.workshops_eyebrow != blank -%}
+          <p class="two-paths__eyebrow">{{ section.settings.workshops_eyebrow }}</p>
+        {%- endif -%}
+        <h2 class="two-paths__heading">{{ section.settings.workshops_heading }}</h2>
+        <p class="two-paths__desc">{{ section.settings.workshops_desc }}</p>
+        {%- if section.settings.workshops_btn != blank -%}
+          <a href="{{ section.settings.workshops_url | default: '/collections/workshops' }}" class="two-paths__btn">
+            {{ section.settings.workshops_btn }}
+          </a>
+        {%- endif -%}
+      </div>
+    {%- else -%}
+      <div class="two-paths__panel two-paths__panel--{{ tone }}">
+        {%- if section.settings.gallery_eyebrow != blank -%}
+          <p class="two-paths__eyebrow">{{ section.settings.gallery_eyebrow }}</p>
+        {%- endif -%}
+        <h2 class="two-paths__heading">{{ section.settings.gallery_heading }}</h2>
+        <p class="two-paths__desc">{{ section.settings.gallery_desc }}</p>
+        {%- if section.settings.gallery_btn != blank -%}
+          <a href="{{ section.settings.gallery_url | default: '/collections/all' }}" class="two-paths__btn">
+            {{ section.settings.gallery_btn }}
+          </a>
+        {%- endif -%}
+      </div>
     {%- endif -%}
-    <h2 class="two-paths__heading">{{ section.settings.workshops_heading }}</h2>
-    <p class="two-paths__desc">{{ section.settings.workshops_desc }}</p>
-    {%- if section.settings.workshops_btn != blank -%}
-      <a href="{{ section.settings.workshops_url | default: '/collections/workshops' }}" class="two-paths__btn">
-        {{ section.settings.workshops_btn }}
-      </a>
-    {%- endif -%}
-  </div>
-
-  <div class="two-paths__panel two-paths__panel--dark">
-    {%- if section.settings.gallery_eyebrow != blank -%}
-      <p class="two-paths__eyebrow">{{ section.settings.gallery_eyebrow }}</p>
-    {%- endif -%}
-    <h2 class="two-paths__heading">{{ section.settings.gallery_heading }}</h2>
-    <p class="two-paths__desc">{{ section.settings.gallery_desc }}</p>
-    {%- if section.settings.gallery_btn != blank -%}
-      <a href="{{ section.settings.gallery_url | default: '/collections/all' }}" class="two-paths__btn">
-        {{ section.settings.gallery_btn }}
-      </a>
-    {%- endif -%}
-  </div>
+  {%- endfor -%}
 </div>
 
 {% schema %}
@@ -151,6 +163,7 @@
   "tag": "section",
   "class": "section",
   "settings": [
+    { "type": "checkbox","id": "gallery_first",     "label": "Show gallery panel first", "default": false },
     { "type": "text",    "id": "workshops_eyebrow", "label": "Workshops eyebrow",     "default": "Hout Bay Studio" },
     { "type": "text",    "id": "workshops_heading", "label": "Workshops heading",     "default": "Workshops & Classes" },
     { "type": "textarea","id": "workshops_desc",    "label": "Workshops description", "default": "Hands-on creative sessions for all levels." },

@@ -352,9 +352,11 @@
         <p class="hwp-eyebrow">{{ section.settings.eyebrow | default: 'STUDIO' }}</p>
         <h2 class="hwp-heading">{{ section.settings.heading | default: 'Upcoming workshops' }}</h2>
       </div>
-      <a href="{{ ws_view_all_url }}" class="hwp-view-all">
-        {{ section.settings.view_all | default: 'All workshops' }} &rarr;
-      </a>
+      {%- if section.settings.view_all != blank -%}
+        <a href="{{ ws_view_all_url }}" class="hwp-view-all">
+          {{ section.settings.view_all }} &rarr;
+        </a>
+      {%- endif -%}
     </div>
 
     {%- if ws_col != empty and ws_col.products_count > 0 -%}
@@ -594,7 +596,7 @@
     { "type": "collection", "id": "featured_collection",  "label": "Collection",        "info": "Select the collection to display. Defaults to 'workshops' if left blank." },
     { "type": "range",      "id": "product_limit",        "label": "Number of items",   "min": 2, "max": 8, "step": 1, "default": 4 },
     { "type": "header",     "content": "View all link" },
-    { "type": "text",       "id": "view_all",             "label": "Link text",         "default": "All workshops" },
+    { "type": "text",       "id": "view_all",             "label": "Link text",         "default": "All workshops", "info": "Leave blank to hide the link." },
     { "type": "url",        "id": "view_all_url",         "label": "Link URL",          "info": "Leave blank to auto-use the selected collection URL." }
   ],
   "presets": [{ "name": "Workshops Preview" }]

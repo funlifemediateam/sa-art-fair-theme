@@ -415,11 +415,8 @@
       {%- render 'lead-popup' -%}
     {%- endunless -%}
 
-    {%- comment -%} Mobile-only persistent Buy Art / Learn Art bar (desktop CTAs
-      live in the header nav row) {%- endcomment -%}
-    <div class="saf-mobile-ctas" role="navigation" aria-label="Quick shortcuts">
-      <a href="/collections/gallery" class="saf-cta saf-cta--buy">Buy Art</a>
-      <a href="/collections/workshops-classes" class="saf-cta saf-cta--learn">Learn Art</a>
-    </div>
+    {%- comment -%} Mobile-only persistent path CTA bar (desktop CTAs live in
+      the header nav row). Labels/links: theme settings. {%- endcomment -%}
+    {% render 'path-ctas', wrapper_class: 'saf-mobile-ctas' %}
   </body>
 </html>

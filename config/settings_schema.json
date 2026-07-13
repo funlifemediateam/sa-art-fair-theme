@@ -1451,5 +1451,42 @@
         "default": "scheme-1"
       }
     ]
+  },
+  {
+    "name": "Path shortcuts",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Persistent shortcut pills shown at the right of the desktop nav row and in a fixed bottom bar on mobile. A pill only appears when both its label and link are set."
+      },
+      {
+        "type": "checkbox",
+        "id": "saf_show_path_ctas",
+        "label": "Show path shortcut pills",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "saf_cta_buy_label",
+        "label": "First pill label",
+        "default": "Buy Art"
+      },
+      {
+        "type": "url",
+        "id": "saf_cta_buy_url",
+        "label": "First pill link"
+      },
+      {
+        "type": "text",
+        "id": "saf_cta_create_label",
+        "label": "Second pill label",
+        "default": "Create Art"
+      },
+      {
+        "type": "url",
+        "id": "saf_cta_create_url",
+        "label": "Second pill link"
+      }
+    ]
   }
 ]

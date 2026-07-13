@@ -1,0 +1,35 @@
+{%- comment -%}
+  Persistent path shortcut pills (e.g. "Buy Art" / "Create Art").
+  Labels + links come from Theme settings → Path shortcuts, so no client
+  copy lives in code. A pill only renders when both its label and link
+  are set; the wrapper only renders when at least one pill does.
+
+  Accepts:
+  - wrapper_class: 'saf-header-ctas' (desktop nav row) or
+                   'saf-mobile-ctas'  (fixed bottom bar, <990px)
+
+  Usage:
+  {% render 'path-ctas', wrapper_class: 'saf-header-ctas' %}
+{%- endcomment -%}
+{%- liquid
+  assign show_buy = false
+  if settings.saf_cta_buy_label != blank and settings.saf_cta_buy_url != blank
+    assign show_buy = true
+  endif
+  assign show_create = false
+  if settings.saf_cta_create_label != blank and settings.saf_cta_create_url != blank
+    assign show_create = true
+  endif
+-%}
+{%- if settings.saf_show_path_ctas -%}
+  {%- if show_buy or show_create -%}
+    <div class="{{ wrapper_class }}" role="navigation" aria-label="Quick shortcuts">
+      {%- if show_buy -%}
+        <a href="{{ settings.saf_cta_buy_url }}" class="saf-cta saf-cta--buy">{{ settings.saf_cta_buy_label | escape }}</a>
+      {%- endif -%}
+      {%- if show_create -%}
+        <a href="{{ settings.saf_cta_create_url }}" class="saf-cta saf-cta--create">{{ settings.saf_cta_create_label | escape }}</a>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+{%- endif -%}
