@@ -4,7 +4,7 @@
       "type": "collection-hero",
       "settings": {
         "eyebrow": "SA Art Fair",
-        "intro": "Hands-on studio workshops and art classes in Hout Bay \u2014 guided by our resident artists, open to all skill levels."
+        "intro": "Hands-on studio workshops and art classes in Hout Bay — guided by our resident artists, open to all skill levels."
       }
     },
     "product-grid": {
@@ -55,7 +55,7 @@
         "buttons_JN7FCn"
       ],
       "settings": {
-        "image": "shopify://shop_images/an-upper-class-art-studio-in-hout-by-cape-town-showcasing-the-art-they-sell-and-people-also-doing-art-classes-or-art-workshops-hyper-relialistic-with-the-mountains-and-ocean-in-the-ba_55e02391-c205-4ea6-9dc9-5d64542b5fd1.png",
+        "image": "shopify:\/\/shop_images\/an-upper-class-art-studio-in-hout-by-cape-town-showcasing-the-art-they-sell-and-people-also-doing-art-classes-or-art-workshops-hyper-relialistic-with-the-mountains-and-ocean-in-the-ba_55e02391-c205-4ea6-9dc9-5d64542b5fd1.png",
         "image_overlay_opacity": 0,
         "image_height": "medium",
         "image_behavior": "none",

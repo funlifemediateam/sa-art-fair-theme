@@ -21,10 +21,10 @@
           "type": "buttons",
           "settings": {
             "button_label_1": "View the gallery",
-            "button_link_1": "shopify://collections/gallery",
+            "button_link_1": "shopify:\/\/collections\/gallery",
             "button_style_secondary_1": false,
             "button_label_2": "Book a workshop",
-            "button_link_2": "shopify://collections/workshops",
+            "button_link_2": "shopify:\/\/collections\/workshops",
             "button_style_secondary_2": true
           }
         }
@@ -35,7 +35,7 @@
         "button"
       ],
       "settings": {
-        "image": "shopify://shop_images/an-upper-class-art-studio-in-hout-by-cape-town-showcasing-the-art-they-sell-and-people-also-doing-art-classes-or-art-workshops-hyper-relialistic-with-the-mountains-and-ocean-in-the-ba.png",
+        "image": "shopify:\/\/shop_images\/an-upper-class-art-studio-in-hout-by-cape-town-showcasing-the-art-they-sell-and-people-also-doing-art-classes-or-art-workshops-hyper-relialistic-with-the-mountains-and-ocean-in-the-ba.png",
         "image_overlay_opacity": 40,
         "image_height": "large",
         "image_behavior": "none",
@@ -53,14 +53,14 @@
       "settings": {
         "workshops_eyebrow": "Hout Bay Studio",
         "workshops_heading": "Workshops & Classes",
-        "workshops_desc": "Hands-on creative sessions for all levels \u2014 painting, drawing, sewing, and more.",
+        "workshops_desc": "Hands-on creative sessions for all levels — painting, drawing, sewing, and more.",
         "workshops_btn": "View Schedule",
-        "workshops_url": "shopify://collections/workshops-classes",
+        "workshops_url": "shopify:\/\/collections\/workshops-classes",
         "gallery_eyebrow": "Original Artworks",
         "gallery_heading": "The Gallery",
         "gallery_desc": "Discover and collect original paintings, prints, and mixed media from our resident artists.",
         "gallery_btn": "Browse Art",
-        "gallery_url": "shopify://collections/gallery"
+        "gallery_url": "shopify:\/\/collections\/gallery"
       }
     },
     "featured_artist": {
@@ -83,7 +83,7 @@
         "featured_collection": "workshops-classes",
         "product_limit": 4,
         "view_all": "All Workshops & Classes",
-        "view_all_url": "shopify://collections/workshops-classes"
+        "view_all_url": "shopify:\/\/collections\/workshops-classes"
       }
     },
     "artists_preview": {
@@ -94,8 +94,8 @@
           "settings": {
             "collection_handle": "susan-orpen",
             "name": "Susan Orpen",
-            "role": "Watercolour \u00b7 Acrylic \u00b7 Mixed Media",
-            "bio": "Susan has been practising and teaching art in Hout Bay for over a decade. Her work spans watercolour landscapes to bold acrylic abstracts \u2014 and her teaching style makes even the most uncertain beginner feel at ease."
+            "role": "Watercolour · Acrylic · Mixed Media",
+            "bio": "Susan has been practising and teaching art in Hout Bay for over a decade. Her work spans watercolour landscapes to bold acrylic abstracts — and her teaching style makes even the most uncertain beginner feel at ease."
           }
         },
         "kerri": {
@@ -103,8 +103,8 @@
           "settings": {
             "collection_handle": "kerri-sassen",
             "name": "Kerri Sassen",
-            "role": "Abstract \u00b7 Mixed Media \u00b7 Art Therapy",
-            "bio": "Kerri brings warmth and expertise to every class. A qualified occupational art therapist, she creates a space where people explore abstraction freely \u2014 no experience needed, just an open mind."
+            "role": "Abstract · Mixed Media · Art Therapy",
+            "bio": "Kerri brings warmth and expertise to every class. A qualified occupational art therapist, she creates a space where people explore abstraction freely — no experience needed, just an open mind."
           }
         },
         "zara": {
@@ -112,8 +112,8 @@
           "settings": {
             "collection_handle": "zara-leigh",
             "name": "Zara-Leigh Farinha",
-            "role": "Abstract Acrylic \u00b7 Oil \u00b7 Large Format",
-            "bio": "Zara-Leigh's energy is contagious. Known for large-format abstract works in acrylic and oil, her Friday 'Permission to Play' class is exactly what it sounds like \u2014 joyful, free, and surprising."
+            "role": "Abstract Acrylic · Oil · Large Format",
+            "bio": "Zara-Leigh's energy is contagious. Known for large-format abstract works in acrylic and oil, her Friday 'Permission to Play' class is exactly what it sounds like — joyful, free, and surprising."
           }
         }
       },
@@ -125,7 +125,7 @@
       "settings": {
         "eyebrow": "REPRESENTED",
         "heading": "Our artists",
-        "team_page": "/pages/artists"
+        "team_page": "\/pages\/artists"
       }
     },
     "gallery_preview": {
@@ -145,7 +145,7 @@
         "subheading": "See how your personality can shape your journey as a collector.",
         "cta_text": "Take the Test",
         "accent_color": "#f26b52",
-        "api_url": "https://sa-art-fair-admin.vercel.app"
+        "api_url": "https:\/\/sa-art-fair-admin.vercel.app"
       }
     },
     "shop_by_colour": {
