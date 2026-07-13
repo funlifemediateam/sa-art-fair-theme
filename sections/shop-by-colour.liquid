@@ -16,6 +16,7 @@
   .sbc-section {
     background: {{ section.settings.background | default: '#eeefeb' }};
     padding: clamp(52px, 7vh, 84px) 0;
+    scroll-margin-top: calc(var(--header-height, 90px) + 16px);
   }
   .sbc-container {
     max-width: 1280px;
@@ -279,7 +280,9 @@
   }
 {% endstyle %}
 
-<section class="sbc-section">
+{%- comment -%} Stable anchor: wrapper ids change per template publish, so
+  nav links can point at .../gallery#shop-by-colour {%- endcomment -%}
+<section class="sbc-section" id="shop-by-colour">
   <div class="sbc-container{% if section.settings.image_position == 'right' %} sbc-container--flip{% endif %}" data-sbc data-section-id="{{ section.id }}">
     <div class="sbc-media" data-sbc-track>
       {%- for block in section.blocks -%}

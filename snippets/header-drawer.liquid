@@ -1,8 +1,13 @@
 {% comment %}
   Renders a header drawer menu for mobile and desktop.
 
+  When path-based navigation is on (path_enabled), the drawer shows the two
+  path groups as accordions (active path highlighted) plus the global links,
+  instead of the standard menu. Args are resolved by sections/header.liquid.
+
   Usage:
   {% render 'header-drawer' %}
+  {% render 'header-drawer', path_enabled: true, path_state: 'a', a_list: ..., b_list: ..., g_list: ..., a_label: ..., b_label: ..., a_url: ..., b_url: ..., cur_path: ... %}
 {% endcomment %}
 
 <header-drawer data-breakpoint="{% if section.settings.menu_type_desktop == 'drawer' %}desktop{% else %}tablet{% endif %}">
@@ -21,6 +26,123 @@
         <div class="menu-drawer__navigation-container">
           <nav class="menu-drawer__navigation">
             <ul class="menu-drawer__menu has-submenu list-menu" role="list">
+              {%- if path_enabled -%}
+                {%- assign drawer_path_keys = 'a,b' | split: ',' -%}
+                {%- for key in drawer_path_keys -%}
+                  {%- liquid
+                    if key == 'a'
+                      assign p_label = a_label
+                      assign p_url = a_url
+                      assign p_list = a_list
+                    else
+                      assign p_label = b_label
+                      assign p_url = b_url
+                      assign p_list = b_list
+                    endif
+                    assign p_active = false
+                    if path_state == key
+                      assign p_active = true
+                    endif
+                  -%}
+                  {%- if p_label != blank -%}
+                    <li>
+                      {%- if p_list.size > 0 -%}
+                        <details id="Details-menu-drawer-path-{{ key }}">
+                          <summary
+                            id="HeaderDrawer-path-{{ key }}"
+                            class="menu-drawer__menu-item list-menu__item link link--text focus-inset{% if p_active %} menu-drawer__menu-item--active{% endif %}"
+                          >
+                            {{ p_label | escape }}
+                            <span class="svg-wrapper">
+                              {{- 'icon-arrow.svg' | inline_asset_content -}}
+                            </span>
+                            <span class="svg-wrapper">
+                              {{- 'icon-caret.svg' | inline_asset_content -}}
+                            </span>
+                          </summary>
+                          <div
+                            id="link-path-{{ key }}"
+                            class="menu-drawer__submenu has-submenu gradient motion-reduce"
+                            tabindex="-1"
+                          >
+                            <div class="menu-drawer__inner-submenu">
+                              <button class="menu-drawer__close-button link link--text focus-inset" aria-expanded="true">
+                                <span class="svg-wrapper">
+                                  {{- 'icon-arrow.svg' | inline_asset_content -}}
+                                </span>
+                                {{ p_label | escape }}
+                              </button>
+                              <ul class="menu-drawer__menu list-menu" role="list" tabindex="-1">
+                                <li>
+                                  <a
+                                    id="HeaderDrawer-path-{{ key }}-landing"
+                                    href="{{ p_url }}"
+                                    class="menu-drawer__menu-item link link--text list-menu__item focus-inset"
+                                  >
+                                    {{ p_label | escape }}
+                                  </a>
+                                </li>
+                                {%- assign sub_marked = false -%}
+                                {%- for item in p_list -%}
+                                  {%- liquid
+                                    assign item_path = item.url | split: '?' | first | split: '#' | first
+                                    assign item_active = false
+                                    if item_path == cur_path and item_path != blank and sub_marked == false
+                                      assign item_active = true
+                                      assign sub_marked = true
+                                    endif
+                                  -%}
+                                  <li>
+                                    <a
+                                      id="HeaderDrawer-path-{{ key }}-{{ forloop.index }}"
+                                      href="{{ item.url }}"
+                                      class="menu-drawer__menu-item link link--text list-menu__item focus-inset{% if item_active %} menu-drawer__menu-item--active{% endif %}"
+                                      {% if item_active %}
+                                        aria-current="page"
+                                      {% endif %}
+                                    >
+                                      {{ item.title | escape }}
+                                    </a>
+                                  </li>
+                                {%- endfor -%}
+                              </ul>
+                            </div>
+                          </div>
+                        </details>
+                      {%- else -%}
+                        <a
+                          id="HeaderDrawer-path-{{ key }}"
+                          href="{{ p_url }}"
+                          class="menu-drawer__menu-item list-menu__item link link--text focus-inset{% if p_active %} menu-drawer__menu-item--active{% endif %}"
+                        >
+                          {{ p_label | escape }}
+                        </a>
+                      {%- endif -%}
+                    </li>
+                  {%- endif -%}
+                {%- endfor -%}
+                {%- for link in g_list -%}
+                  {%- liquid
+                    assign link_path = link.url | split: '?' | first | split: '#' | first
+                    assign link_active = false
+                    if link_path == cur_path and link_path != blank
+                      assign link_active = true
+                    endif
+                  -%}
+                  <li>
+                    <a
+                      id="HeaderDrawer-global-{{ forloop.index }}"
+                      href="{{ link.url }}"
+                      class="menu-drawer__menu-item list-menu__item link link--text focus-inset{% if link_active %} menu-drawer__menu-item--active{% endif %}"
+                      {% if link_active %}
+                        aria-current="page"
+                      {% endif %}
+                    >
+                      {{ link.title | escape }}
+                    </a>
+                  </li>
+                {%- endfor -%}
+              {%- else -%}
               {%- for link in section.settings.menu.links -%}
                 <li>
                   {%- if link.links != blank -%}
@@ -133,6 +255,7 @@
                   {%- endif -%}
                 </li>
               {%- endfor -%}
+              {%- endif -%}
             </ul>
           </nav>
           <div class="menu-drawer__utility-links">

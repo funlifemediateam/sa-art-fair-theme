@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="{{ 'component-price.css' | asset_url }}" media="print" onload="this.media='all'">
 {%- endif -%}
 
-{%- if section.settings.menu_type_desktop == 'mega' -%}
+{%- if section.settings.menu_type_desktop == 'mega' or section.settings.enable_path_nav -%}
   <link rel="stylesheet" href="{{ 'component-mega-menu.css' | asset_url }}" media="print" onload="this.media='all'">
 {%- endif -%}
 
@@ -264,6 +264,124 @@
       display: none;
     }
   }
+
+  /* ── Path-based navigation (three-state nav + mega menu) ── */
+  /* With path nav on, the nav row spans the logo + search columns so a full
+     path's sub-links fit on one line (default mode keeps the original grid) */
+  @media screen and (min-width: 990px) {
+    .header--path-nav.header--middle-left {
+      grid-template-areas:
+        'heading search icons'
+        'navigation navigation ctas' !important;
+    }
+  }
+  .saf-pnav .list-menu--inline {
+    align-items: center;
+  }
+  /* Active path pill — must be unmistakable (theme button tokens).
+     Double up on .saf-pnav: the later "refined menu typography"
+     .header__menu-item rules carry !important at equal specificity. */
+  .saf-pnav .saf-path-current {
+    background-color: rgb(var(--color-button)) !important;
+    color: rgb(var(--color-button-text)) !important;
+    border-radius: 999px !important;
+    padding: 0.6rem 1.6rem !important;
+    margin-right: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+  }
+  .saf-pnav .saf-path-current:hover {
+    outline: none !important;
+    opacity: 0.92;
+  }
+  /* Low-key switch link to the other path — fixed slot (ctas grid area) */
+  .saf-path-switch {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--font-body-family);
+    font-size: 1.15rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: rgba(var(--color-foreground), 0.6);
+    white-space: nowrap;
+    padding: 0.6rem 0.2rem;
+    transition: color 0.2s ease;
+  }
+  .saf-path-switch:hover {
+    color: rgb(var(--color-foreground));
+  }
+  .saf-path-switch__arrow {
+    display: inline-block;
+    transition: transform 0.2s ease;
+  }
+  .saf-path-switch:hover .saf-path-switch__arrow {
+    transform: translateX(3px);
+  }
+  /* Mega panel: calm, spacious, premium */
+  .saf-mega .mega-menu__content {
+    padding: 4rem 0 4.8rem;
+    border-bottom: 1px solid rgba(var(--color-foreground), 0.08);
+    box-shadow: 0 18px 30px rgba(0, 0, 0, 0.06);
+  }
+  .saf-mega__inner {
+    display: flex;
+    gap: 8rem;
+    align-items: flex-start;
+  }
+  .saf-mega__lead {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.8rem;
+    font-family: var(--font-heading-family);
+    font-size: 2.4rem;
+    line-height: 1.2;
+    color: rgb(var(--color-foreground));
+    text-decoration: none;
+  }
+  .saf-mega__lead-arrow {
+    font-size: 1.8rem;
+    transition: transform 0.2s ease;
+  }
+  .saf-mega__lead:hover .saf-mega__lead-arrow {
+    transform: translateX(4px);
+  }
+  .saf-mega__links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    min-width: 22rem;
+  }
+  .saf-mega__links a {
+    display: inline-block;
+    padding: 0.55rem 0;
+    font-size: 1.4rem;
+    letter-spacing: 0.02em;
+    color: rgba(var(--color-foreground), 0.78);
+    text-decoration: none;
+    transition: color 0.15s ease, transform 0.15s ease;
+  }
+  .saf-mega__links a:hover {
+    color: rgb(var(--color-foreground));
+    transform: translateX(2px);
+  }
+  .saf-mega__links a[aria-current='page'] {
+    color: rgb(var(--color-foreground));
+    font-weight: 500;
+  }
+  .saf-mega__sublinks {
+    list-style: none;
+    margin: 0;
+    padding: 0 0 0 1.6rem;
+  }
+  .saf-mega__sublinks a {
+    font-size: 1.3rem;
+    color: rgba(var(--color-foreground), 0.65);
+  }
   .saf-currency .header__icon-panel-option[aria-current='true'] {
     font-weight: 600;
     color: rgb(var(--color-foreground));
@@ -431,6 +549,119 @@
   endfor
 -%}
 
+{%- liquid
+  comment
+    Path-based navigation. Three states: 'global' (both paths + global links),
+    'a' (inside path 1), 'b' (inside path 2). Link source per state: the menu
+    picker, falling back to the booking app navigation metafield
+    (booking_app.path_nav json: { "global": [], "pathA": [], "pathB": [] },
+    items shaped { "title": "", "url": "" } to match Liquid link drops).
+
+    Detection: the current URL (query/hash/trailing slash stripped) is matched
+    against each list. A global-menu EXACT match always wins (so shared pages
+    like Contact stay in the global state); otherwise a path claims the page
+    when the URL equals one of its links/landing page or sits under one
+    (link path + '/'). No match = global state.
+  endcomment
+  assign saf_path_enabled = section.settings.enable_path_nav
+  assign saf_path_state = 'global'
+  if saf_path_enabled
+    assign saf_path_nav_meta = shop.metafields.booking_app.path_nav.value
+    assign saf_a_label = section.settings.path_a_label
+    assign saf_b_label = section.settings.path_b_label
+    assign saf_a_url = section.settings.path_a_url | default: routes.all_products_collection_url
+    assign saf_b_url = section.settings.path_b_url | default: routes.all_products_collection_url
+
+    comment
+      Menu pickers live in 'Path menu' blocks: a section may hold only one
+      link_list setting, but each block may hold its own.
+    endcomment
+    assign saf_a_list = ''
+    assign saf_b_list = ''
+    assign saf_g_list = ''
+    for saf_blk in section.blocks
+      if saf_blk.type == 'path_menu'
+        if saf_blk.settings.path == 'a' and saf_a_list == blank
+          assign saf_a_list = saf_blk.settings.menu.links
+        elsif saf_blk.settings.path == 'b' and saf_b_list == blank
+          assign saf_b_list = saf_blk.settings.menu.links
+        elsif saf_blk.settings.path == 'global' and saf_g_list == blank
+          assign saf_g_list = saf_blk.settings.menu.links
+        endif
+      endif
+    endfor
+    if saf_a_list == blank
+      assign saf_a_list = saf_path_nav_meta['pathA']
+    endif
+    if saf_b_list == blank
+      assign saf_b_list = saf_path_nav_meta['pathB']
+    endif
+    if saf_g_list == blank
+      assign saf_g_list = saf_path_nav_meta['global']
+    endif
+
+    assign saf_cur = request.path | split: '?' | first | split: '#' | first
+    assign saf_cur_last = saf_cur | slice: -1
+    if saf_cur_last == '/' and saf_cur.size > 1
+      assign saf_cur_len = saf_cur.size | minus: 1
+      assign saf_cur = saf_cur | slice: 0, saf_cur_len
+    endif
+    assign saf_cur_slash = saf_cur | append: '/'
+
+    assign saf_in_g = false
+    for saf_l in saf_g_list
+      assign saf_lp = saf_l.url | split: '?' | first | split: '#' | first
+      if saf_lp == saf_cur and saf_lp != '/' and saf_lp != blank
+        assign saf_in_g = true
+      endif
+    endfor
+
+    assign saf_in_a = false
+    assign saf_a_probe = saf_a_url | split: '?' | first | split: '#' | first | split: ','
+    for saf_l in saf_a_list
+      assign saf_lp = saf_l.url | split: '?' | first | split: '#' | first
+      assign saf_extra = saf_lp | split: ','
+      assign saf_a_probe = saf_a_probe | concat: saf_extra
+    endfor
+    for saf_lp in saf_a_probe
+      if saf_lp == '/' or saf_lp == blank
+        continue
+      endif
+      assign saf_lps = saf_lp | append: '/'
+      assign saf_head = saf_cur_slash | slice: 0, saf_lps.size
+      if saf_lp == saf_cur or saf_head == saf_lps
+        assign saf_in_a = true
+      endif
+    endfor
+
+    assign saf_in_b = false
+    assign saf_b_probe = saf_b_url | split: '?' | first | split: '#' | first | split: ','
+    for saf_l in saf_b_list
+      assign saf_lp = saf_l.url | split: '?' | first | split: '#' | first
+      assign saf_extra = saf_lp | split: ','
+      assign saf_b_probe = saf_b_probe | concat: saf_extra
+    endfor
+    for saf_lp in saf_b_probe
+      if saf_lp == '/' or saf_lp == blank
+        continue
+      endif
+      assign saf_lps = saf_lp | append: '/'
+      assign saf_head = saf_cur_slash | slice: 0, saf_lps.size
+      if saf_lp == saf_cur or saf_head == saf_lps
+        assign saf_in_b = true
+      endif
+    endfor
+
+    if saf_in_g
+      assign saf_path_state = 'global'
+    elsif saf_in_a
+      assign saf_path_state = 'a'
+    elsif saf_in_b
+      assign saf_path_state = 'b'
+    endif
+  endif
+-%}
+
 {% liquid
   assign header_tag = 'div'
 
@@ -457,10 +688,10 @@
       assign localization_forms = true
     endif
   -%}
-  <header class="header header--{{ section.settings.logo_position }} header--mobile-{{ section.settings.mobile_logo_position }} page-width{% if section.settings.menu_type_desktop == 'drawer' %} drawer-menu{% endif %}{% if section.settings.menu != blank %} header--has-menu{% endif %}{% if has_app_block %} header--has-app{% endif %}{% if social_links %} header--has-social{% endif %}{% if shop.customer_accounts_enabled %} header--has-account{% endif %}{% if localization_forms %} header--has-localizations{% endif %}">
+  <header class="header header--{{ section.settings.logo_position }} header--mobile-{{ section.settings.mobile_logo_position }} page-width{% if section.settings.menu_type_desktop == 'drawer' %} drawer-menu{% endif %}{% if section.settings.menu != blank or saf_path_enabled %} header--has-menu{% endif %}{% if saf_path_enabled %} header--path-nav{% endif %}{% if has_app_block %} header--has-app{% endif %}{% if social_links %} header--has-social{% endif %}{% if shop.customer_accounts_enabled %} header--has-account{% endif %}{% if localization_forms %} header--has-localizations{% endif %}">
     {%- liquid
-      if section.settings.menu != blank
-        render 'header-drawer'
+      if section.settings.menu != blank or saf_path_enabled
+        render 'header-drawer', path_enabled: saf_path_enabled, path_state: saf_path_state, a_list: saf_a_list, b_list: saf_b_list, g_list: saf_g_list, a_label: saf_a_label, b_label: saf_b_label, a_url: saf_a_url, b_url: saf_b_url, cur_path: saf_cur
       endif
 
       if section.settings.logo_position == 'top-center' or section.settings.menu == blank
@@ -511,7 +742,9 @@
     </div>
 
     {%- liquid
-      if section.settings.menu != blank
+      if saf_path_enabled
+        render 'header-path-nav', path_state: saf_path_state, a_list: saf_a_list, b_list: saf_b_list, g_list: saf_g_list, a_label: saf_a_label, b_label: saf_b_label, a_url: saf_a_url, b_url: saf_b_url, cur_path: saf_cur, color_scheme: section.settings.menu_color_scheme
+      elsif section.settings.menu != blank
         if section.settings.menu_type_desktop == 'dropdown'
           render 'header-dropdown-menu'
         elsif section.settings.menu_type_desktop != 'drawer'
@@ -520,9 +753,23 @@
       endif
     %}
 
-    {%- comment -%} Persistent path CTAs (desktop; mobile gets a fixed bottom
-      bar rendered in theme.liquid). Labels/links: theme settings. {%- endcomment -%}
-    {% render 'path-ctas', wrapper_class: 'saf-header-ctas' %}
+    {%- comment -%} Right end of the nav row (fixed slot in every state):
+      path nav ON inside a path = low-key switch link to the other path;
+      path nav OFF = the persistent path CTA pills (mobile keeps its fixed
+      bottom bar rendered in theme.liquid either way). {%- endcomment -%}
+    {%- if saf_path_enabled -%}
+      {%- if saf_path_state == 'a' -%}
+        <div class="saf-header-ctas">
+          <a href="{{ saf_b_url }}" class="saf-path-switch"><span class="saf-path-switch__arrow" aria-hidden="true">&rarr;</span>{{ saf_b_label | escape }}</a>
+        </div>
+      {%- elsif saf_path_state == 'b' -%}
+        <div class="saf-header-ctas">
+          <a href="{{ saf_a_url }}" class="saf-path-switch"><span class="saf-path-switch__arrow" aria-hidden="true">&rarr;</span>{{ saf_a_label | escape }}</a>
+        </div>
+      {%- endif -%}
+    {%- else -%}
+      {% render 'path-ctas', wrapper_class: 'saf-header-ctas' %}
+    {%- endif -%}
 
     {%- if section.settings.logo_position == 'middle-center' -%}
       {%- if request.page_type == 'index' -%}
@@ -598,6 +845,7 @@
       {%- endif -%}
 
       {%- comment -%} Wishlist dropdown (desktop) {%- endcomment -%}
+      {%- if section.settings.show_wishlist_icon -%}
       <header-menu class="header__icon-menu header__icon-menu--desktop">
         <details id="Details-HeaderWishlist">
           <summary
@@ -623,18 +871,22 @@
         <span class="svg-wrapper">{{ 'icon-heart.svg' | inline_asset_content }}</span>
         <span class="wishlist-count-bubble" hidden></span>
       </a>
+      {%- endif -%}
 
       {%- comment -%} Gift card — hidden until a gift card product exists (gift
         cards need one-time activation in admin) or an explicit link is set {%- endcomment -%}
       {%- assign gift_card_product = all_products['gift-card'] -%}
+      {%- if section.settings.show_gift_card_icon -%}
       {%- if section.settings.gift_card_link != blank or gift_card_product.id != blank -%}
         {%- assign gift_card_href = section.settings.gift_card_link | default: '/products/gift-card' -%}
         <a href="{{ gift_card_href }}" class="header__icon header__icon--gift-card link focus-inset" aria-label="Gift Card">
           <span class="svg-wrapper">{{ 'icon-gift-card.svg' | inline_asset_content }}</span>
         </a>
       {%- endif -%}
+      {%- endif -%}
 
       {%- comment -%} Display-only currency selector (checkout is always ZAR) {%- endcomment -%}
+      {%- if section.settings.show_currency_selector -%}
       <div class="header__icon-menu saf-currency">
         <details id="Details-HeaderCurrency">
           <summary aria-label="Currency" aria-expanded="false">
@@ -652,6 +904,7 @@
           </ul>
         </details>
       </div>
+      {%- endif -%}
 
       {%- for block in section.blocks -%}
         {%- case block.type -%}
@@ -845,7 +1098,7 @@
 {
   "name": "t:sections.header.name",
   "class": "section-header",
-  "max_blocks": 3,
+  "max_blocks": 6,
   "settings": [
     {
       "type": "select",
@@ -913,6 +1166,62 @@
       ],
       "default": "dropdown",
       "label": "t:sections.header.settings.menu_type_desktop.label"
+    },
+    {
+      "type": "header",
+      "content": "Path-based navigation"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_path_nav",
+      "default": false,
+      "label": "Enable path-based navigation",
+      "info": "Splits the store into two paths (e.g. Buy Art / Create Art): the nav shows both path labels (each with a mega menu) plus global links; inside a path, that path's links and a switch link to the other path. Add 'Path menu' blocks to pick each state's menu; empty ones fall back to the booking app navigation (booking_app.path_nav). A page joins a path when its URL matches or sits under one of that path's links; global-menu pages always stay global. Replaces the standard menu."
+    },
+    {
+      "type": "text",
+      "id": "path_a_label",
+      "default": "Buy Art",
+      "label": "Path 1 label"
+    },
+    {
+      "type": "url",
+      "id": "path_a_url",
+      "label": "Path 1 landing page"
+    },
+    {
+      "type": "text",
+      "id": "path_b_label",
+      "default": "Create Art",
+      "label": "Path 2 label"
+    },
+    {
+      "type": "url",
+      "id": "path_b_url",
+      "label": "Path 2 landing page"
+    },
+    {
+      "type": "header",
+      "content": "Header icons"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_wishlist_icon",
+      "default": true,
+      "label": "Show wishlist icon"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_currency_selector",
+      "default": true,
+      "label": "Show currency selector"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_gift_card_icon",
+      "default": true,
+      "label": "Show gift card icon",
+      "info": "Only appears once a gift card product exists or a gift card link is set below."
     },
     {
       "type": "select",
@@ -1033,6 +1342,29 @@
   "blocks": [
     {
       "type": "@app"
+    },
+    {
+      "type": "path_menu",
+      "name": "Path menu",
+      "settings": [
+        {
+          "type": "select",
+          "id": "path",
+          "label": "Applies to",
+          "options": [
+            { "value": "a", "label": "Path 1" },
+            { "value": "b", "label": "Path 2" },
+            { "value": "global", "label": "Global links" }
+          ],
+          "default": "a"
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "label": "Menu",
+          "info": "Used only while path-based navigation is enabled. Leave empty to fall back to the booking app navigation metafield."
+        }
+      ]
     }
   ]
 }

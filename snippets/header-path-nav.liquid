@@ -1,0 +1,169 @@
+{% comment %}
+  Three-state path navigation (desktop nav row).
+
+  States (path_state):
+  - 'global' — both path labels (each opening a mega menu of its path links)
+               plus the global menu links.
+  - 'a'/'b'  — the active path label as a filled pill linking to its landing
+               page, followed by that path's links inline. The switch link to
+               the other path is rendered separately by the header (fixed
+               position in the ctas grid area).
+
+  Link sources are resolved by sections/header.liquid: each state's menu
+  picker, falling back to the booking app navigation metafield
+  (booking_app.path_nav). Items expose .title and .url in both shapes.
+
+  Accepts:
+  - path_state, a_list, b_list, g_list, a_label, b_label, a_url, b_url
+  - cur_path: normalized current path (no query/hash/trailing slash)
+  - color_scheme: menu color scheme for the mega panel
+
+  Usage (from sections/header.liquid only):
+  {% render 'header-path-nav', path_state: saf_path_state, ... %}
+{% endcomment %}
+
+<nav class="header__inline-menu saf-pnav" data-path-state="{{ path_state }}">
+  <ul class="list-menu list-menu--inline" role="list">
+    {%- if path_state == 'global' or path_state == blank -%}
+      {%- liquid
+        assign path_keys = 'a,b' | split: ','
+      -%}
+      {%- for key in path_keys -%}
+        {%- liquid
+          if key == 'a'
+            assign p_label = a_label
+            assign p_url = a_url
+            assign p_list = a_list
+          else
+            assign p_label = b_label
+            assign p_url = b_url
+            assign p_list = b_list
+          endif
+        -%}
+        {%- if p_label != blank -%}
+          <li>
+            {%- if p_list.size > 0 -%}
+              <header-menu>
+                <details id="Details-HeaderMenu-Path{{ key | upcase }}" class="mega-menu saf-mega">
+                  <summary
+                    id="HeaderMenu-path-{{ key }}"
+                    class="header__menu-item list-menu__item link focus-inset"
+                  >
+                    <span>{{- p_label | escape -}}</span>
+                    {{- 'icon-caret.svg' | inline_asset_content -}}
+                  </summary>
+                  <div
+                    id="MegaMenu-Content-Path{{ key | upcase }}"
+                    class="mega-menu__content color-{{ color_scheme }} gradient motion-reduce global-settings-popup"
+                    tabindex="-1"
+                  >
+                    <div class="saf-mega__inner page-width">
+                      <a class="saf-mega__lead" href="{{ p_url }}">
+                        {{- p_label | escape }} <span class="saf-mega__lead-arrow" aria-hidden="true">&rarr;</span>
+                      </a>
+                      <ul class="saf-mega__links" role="list">
+                        {%- for item in p_list -%}
+                          {%- liquid
+                            assign item_path = item.url | split: '?' | first | split: '#' | first
+                            assign item_active = false
+                            if item_path == cur_path and item_path != blank
+                              assign item_active = true
+                            endif
+                          -%}
+                          <li>
+                            <a
+                              href="{{ item.url }}"
+                              {% if item_active %}aria-current="page"{% endif %}
+                            >
+                              {{- item.title | escape -}}
+                            </a>
+                            {%- if item.links != blank -%}
+                              <ul class="saf-mega__sublinks" role="list">
+                                {%- for child in item.links -%}
+                                  <li><a href="{{ child.url }}">{{ child.title | escape }}</a></li>
+                                {%- endfor -%}
+                              </ul>
+                            {%- endif -%}
+                          </li>
+                        {%- endfor -%}
+                      </ul>
+                    </div>
+                  </div>
+                </details>
+              </header-menu>
+            {%- else -%}
+              <a href="{{ p_url }}" class="header__menu-item list-menu__item link link--text focus-inset">
+                <span>{{- p_label | escape -}}</span>
+              </a>
+            {%- endif -%}
+          </li>
+        {%- endif -%}
+      {%- endfor -%}
+      {%- for link in g_list -%}
+        {%- liquid
+          assign link_path = link.url | split: '?' | first | split: '#' | first
+          assign link_active = false
+          if link_path == cur_path and link_path != blank
+            assign link_active = true
+          endif
+        -%}
+        <li>
+          <a
+            href="{{ link.url }}"
+            class="header__menu-item list-menu__item link link--text focus-inset"
+            {% if link_active %}aria-current="page"{% endif %}
+          >
+            <span{% if link_active %} class="header__active-menu-item"{% endif %}>
+              {{- link.title | escape -}}
+            </span>
+          </a>
+        </li>
+      {%- endfor -%}
+    {%- else -%}
+      {%- liquid
+        if path_state == 'a'
+          assign p_label = a_label
+          assign p_url = a_url
+          assign p_list = a_list
+        else
+          assign p_label = b_label
+          assign p_url = b_url
+          assign p_list = b_list
+        endif
+      -%}
+      <li>
+        <a href="{{ p_url }}" class="header__menu-item list-menu__item link focus-inset saf-path-current" aria-current="true">
+          <span>{{- p_label | escape -}}</span>
+        </a>
+      </li>
+      {%- liquid
+        comment
+          Several links can share one page (e.g. a collection plus its
+          sorted/anchored variants) — outline only the first match.
+        endcomment
+        assign sub_marked = false
+      -%}
+      {%- for item in p_list -%}
+        {%- liquid
+          assign item_path = item.url | split: '?' | first | split: '#' | first
+          assign item_active = false
+          if item_path == cur_path and item_path != blank and sub_marked == false
+            assign item_active = true
+            assign sub_marked = true
+          endif
+        -%}
+        <li>
+          <a
+            href="{{ item.url }}"
+            class="header__menu-item list-menu__item link link--text focus-inset"
+            {% if item_active %}aria-current="page"{% endif %}
+          >
+            <span{% if item_active %} class="header__active-menu-item"{% endif %}>
+              {{- item.title | escape -}}
+            </span>
+          </a>
+        </li>
+      {%- endfor -%}
+    {%- endif -%}
+  </ul>
+</nav>
