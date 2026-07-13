@@ -1,5 +1,8 @@
 {% comment %}
-  Renders social icons.
+  Renders social icons (footer, etc).
+  Links come from shop metafield booking_app.store_socials (written by the booking
+  admin app's Socials tab) with the theme's built-in social settings as per-platform
+  fallback — so the admin app is the source of truth once a link is saved there.
   Accepts:
   - class: {String} a class to be added to the <ul> element (optional).
 
@@ -9,10 +12,19 @@
   %}
 {% endcomment %}
 
+{%- assign store_social = shop.metafields.booking_app.store_socials.value -%}
+{%- assign link_facebook  = store_social.facebook  | default: settings.social_facebook_link -%}
+{%- assign link_instagram = store_social.instagram | default: settings.social_instagram_link -%}
+{%- assign link_youtube   = store_social.youtube   | default: settings.social_youtube_link -%}
+{%- assign link_tiktok    = store_social.tiktok    | default: settings.social_tiktok_link -%}
+{%- assign link_twitter   = store_social.x         | default: settings.social_twitter_link -%}
+{%- assign link_linkedin  = store_social.linkedin -%}
+{%- assign link_website   = store_social.website -%}
+
 <ul class="list-unstyled list-social{% if class %} {{ class}}{% endif %}" role="list">
-  {%- if settings.social_facebook_link != blank -%}
+  {%- if link_facebook != blank -%}
     <li class="list-social__item">
-      <a href="{{ settings.social_facebook_link }}" class="link list-social__link">
+      <a href="{{ link_facebook }}" class="link list-social__link">
         <span class="svg-wrapper">
           {{- 'icon-facebook.svg' | inline_asset_content -}}
         </span>
@@ -20,9 +32,9 @@
       </a>
     </li>
   {%- endif -%}
-  {%- if settings.social_instagram_link != blank -%}
+  {%- if link_instagram != blank -%}
     <li class="list-social__item">
-      <a href="{{ settings.social_instagram_link }}" class="link list-social__link">
+      <a href="{{ link_instagram }}" class="link list-social__link">
         <span class="svg-wrapper">
           {{- 'icon-instagram.svg' | inline_asset_content -}}
         </span>
@@ -30,9 +42,9 @@
       </a>
     </li>
   {%- endif -%}
-  {%- if settings.social_youtube_link != blank -%}
+  {%- if link_youtube != blank -%}
     <li class="list-social__item">
-      <a href="{{ settings.social_youtube_link }}" class="link list-social__link">
+      <a href="{{ link_youtube }}" class="link list-social__link">
         <span class="svg-wrapper">
           {{- 'icon-youtube.svg' | inline_asset_content -}}
         </span>
@@ -40,9 +52,9 @@
       </a>
     </li>
   {%- endif -%}
-  {%- if settings.social_tiktok_link != blank -%}
+  {%- if link_tiktok != blank -%}
     <li class="list-social__item">
-      <a href="{{ settings.social_tiktok_link }}" class="link list-social__link">
+      <a href="{{ link_tiktok }}" class="link list-social__link">
         <span class="svg-wrapper">
           {{- 'icon-tiktok.svg' | inline_asset_content -}}
         </span>
@@ -50,13 +62,33 @@
       </a>
     </li>
   {%- endif -%}
-  {%- if settings.social_twitter_link != blank -%}
+  {%- if link_twitter != blank -%}
     <li class="list-social__item">
-      <a href="{{ settings.social_twitter_link }}" class="link list-social__link">
+      <a href="{{ link_twitter }}" class="link list-social__link">
         <span class="svg-wrapper">
           {{- 'icon-twitter.svg' | inline_asset_content -}}
         </span>
         <span class="visually-hidden">{{ 'general.social.links.twitter' | t }}</span>
+      </a>
+    </li>
+  {%- endif -%}
+  {%- if link_linkedin != blank -%}
+    <li class="list-social__item">
+      <a href="{{ link_linkedin }}" class="link list-social__link">
+        <span class="svg-wrapper">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false" width="18" height="18"><path d="M6.94 8.5H3.56V20.4h3.38V8.5zM5.25 3.2a2 2 0 1 0 0 4.02 2 2 0 0 0 0-4.02zM20.4 13.87c0-3.28-1.75-4.81-4.08-4.81-1.88 0-2.72 1.03-3.19 1.76V8.5h-3.38c.04.94 0 11.9 0 11.9h3.38v-6.65c0-.36.03-.71.13-.97.29-.71.94-1.45 2.03-1.45 1.44 0 2.01 1.09 2.01 2.69v6.38h3.38l-.28-6.53z"/></svg>
+        </span>
+        <span class="visually-hidden">LinkedIn</span>
+      </a>
+    </li>
+  {%- endif -%}
+  {%- if link_website != blank -%}
+    <li class="list-social__item">
+      <a href="{{ link_website }}" class="link list-social__link">
+        <span class="svg-wrapper">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true" focusable="false" width="18" height="18"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.75 5.6 3.75 9S14.5 18.4 12 21c-2.5-2.6-3.75-5.6-3.75-9S9.5 5.6 12 3z"/></svg>
+        </span>
+        <span class="visually-hidden">Website</span>
       </a>
     </li>
   {%- endif -%}

@@ -34,13 +34,51 @@
     border-color: rgba(255,255,255,0.72);
     background: rgba(255,255,255,0.09);
   }
+  .announcement-bar-section { position: relative; }
+  .announcement-socials {
+    position: absolute;
+    left: 2rem;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    z-index: 1;
+  }
+  .announcement-socials .saf-socials {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .announcement-socials .saf-socials__link {
+    display: inline-flex;
+    color: inherit;
+    opacity: 0.85;
+    transition: opacity 0.18s;
+  }
+  .announcement-socials .saf-socials__link:hover { opacity: 1; }
+  .announcement-socials .saf-socials__link svg {
+    width: 17px;
+    height: 17px;
+    display: block;
+  }
   @media screen and (max-width: 749px) {
     .announcement-pills-bar { height: 46px; }
     .announcement-pill { height: 28px; padding: 0 16px; font-size: 0.64rem; }
+    .announcement-socials { left: 1.2rem; }
+    .announcement-socials .saf-socials { gap: 11px; }
+    .announcement-socials .saf-socials__link svg { width: 15px; height: 15px; }
   }
 {%- endstyle -%}
 
 <div class="color-{{ section.settings.color_scheme }} gradient announcement-bar-section">
+  {%- if section.settings.show_socials -%}
+    {%- assign store_social = shop.metafields.booking_app.store_socials.value -%}
+    {%- if store_social -%}
+      <div class="announcement-socials">
+        {% render 'social-links', entry: store_social, icons_only: true %}
+      </div>
+    {%- endif -%}
+  {%- endif -%}
   <div class="announcement-pills-bar">
     <div class="announcement-pills-slider">
       {%- for block in section.blocks -%}
@@ -72,6 +110,13 @@
       "id": "color_scheme",
       "label": "t:sections.all.colors.label",
       "default": "scheme-4"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_socials",
+      "label": "Show social icons",
+      "info": "The links are managed in the booking admin app, under Socials. Only filled-in links get an icon.",
+      "default": true
     }
   ],
   "blocks": [

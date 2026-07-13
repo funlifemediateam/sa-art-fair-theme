@@ -7,12 +7,22 @@
     {%- assign social_key = block.settings.name | handleize -%}
     {% render 'social-links', person_key: social_key, extra_class: 'theteam-member__socials' %}
 
+  Store-level links (announcement bar / footer) live in a separate metafield and are
+  passed in directly instead of looked up by person:
+    {%- assign store_social = shop.metafields.booking_app.store_socials.value -%}
+    {% render 'social-links', entry: store_social, icons_only: true %}
+  icons_only: true renders the website link as a bare globe icon (no domain label).
+
   Icons inherit currentColor — set colour/size on .saf-socials in the calling section.
   Renders nothing when the person has no saved links.
 {%- endcomment -%}
 
-{%- assign saf_socials_map = shop.metafields.booking_app.socials.value -%}
-{%- assign saf_social = saf_socials_map[person_key] -%}
+{%- if entry -%}
+  {%- assign saf_social = entry -%}
+{%- else -%}
+  {%- assign saf_socials_map = shop.metafields.booking_app.socials.value -%}
+  {%- assign saf_social = saf_socials_map[person_key] -%}
+{%- endif -%}
 {%- if saf_social -%}
 <div class="saf-socials{% if extra_class != blank %} {{ extra_class }}{% endif %}">
   {%- if saf_social.instagram -%}
@@ -47,9 +57,9 @@
   {%- endif -%}
   {%- if saf_social.website -%}
     {%- assign saf_site_label = saf_social.website | remove: 'https://' | remove: 'http://' | split: '/' | first | remove_first: 'www.' -%}
-    <a href="{{ saf_social.website }}" class="saf-socials__link saf-socials__link--site" target="_blank" rel="noopener" aria-label="Website" title="{{ saf_site_label | escape }}">
+    <a href="{{ saf_social.website }}" class="saf-socials__link{% unless icons_only %} saf-socials__link--site{% endunless %}" target="_blank" rel="noopener" aria-label="Website" title="{{ saf_site_label | escape }}">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.75 5.6 3.75 9S14.5 18.4 12 21c-2.5-2.6-3.75-5.6-3.75-9S9.5 5.6 12 3z"/></svg>
-      <span class="saf-socials__site-label">{{ saf_site_label }}</span>
+      {%- unless icons_only -%}<span class="saf-socials__site-label">{{ saf_site_label }}</span>{%- endunless -%}
     </a>
   {%- endif -%}
 </div>
