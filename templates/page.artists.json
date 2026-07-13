@@ -10,7 +10,7 @@
             "role": "Watercolour · Acrylic · Mixed Media",
             "bio": "Susan has been practising and teaching art in Hout Bay for over a decade. Her work spans luminous watercolour landscapes to bold acrylic abstracts.",
             "collection_handle": "susan-orpen",
-            "link": "/collections/susan-orpen"
+            "link": "\/collections\/susan-orpen"
           }
         },
         "kerri": {
@@ -20,7 +20,7 @@
             "role": "Abstract · Mixed Media · Art Therapy",
             "bio": "A qualified occupational art therapist, Kerri creates a space where people explore abstraction freely — no experience needed, just an open mind.",
             "collection_handle": "kerri-sassen",
-            "link": "/collections/kerri-sassen"
+            "link": "\/collections\/kerri-sassen"
           }
         },
         "zara": {
@@ -30,7 +30,7 @@
             "role": "Abstract Acrylic · Oil · Large Format",
             "bio": "Known for large-format abstract works in acrylic and oil, Zara-Leigh's Friday 'Permission to Play' class is joyful, free, and genuinely surprising.",
             "collection_handle": "zara-leigh",
-            "link": "/collections/zara-leigh"
+            "link": "\/collections\/zara-leigh"
           }
         },
         "amara": {
@@ -40,7 +40,7 @@
             "role": "Oil · Figurative · Portrait",
             "bio": "Amara's portrait work celebrates South African faces with a richness of colour and deep sensitivity to light — each piece a quiet act of seeing.",
             "collection_handle": "amara-dube",
-            "link": "/collections/amara-dube"
+            "link": "\/collections\/amara-dube"
           }
         },
         "liesel": {
@@ -50,7 +50,7 @@
             "role": "Ceramics · Sculpture · Mixed Media",
             "bio": "Working between clay and canvas, Liesel creates hand-built ceramic pieces and mixed media works that explore texture, form, and the quiet beauty of imperfection.",
             "collection_handle": "liesel-van-der-berg",
-            "link": "/collections/liesel-van-der-berg"
+            "link": "\/collections\/liesel-van-der-berg"
           }
         },
         "natasha": {
@@ -60,17 +60,336 @@
             "role": "Printmaking · Photography · Collage",
             "bio": "Natasha layers photographic imagery with hand-pulled prints and torn paper — works that draw on Cape Town's urban landscape, memory, and overlooked moments.",
             "collection_handle": "natasha-hendricks",
-            "link": "/collections/natasha-hendricks"
+            "link": "\/collections\/natasha-hendricks"
+          }
+        },
+        "artist-1": {
+          "type": "artist",
+          "settings": {
+            "name": "Artist 1",
+            "role": "",
+            "bio": "A multidisciplinary visual artist whose work explores the tension between memory and landscape. Works primarily in oil and mixed media.",
+            "collection_handle": "artist-1",
+            "link": "\/collections\/artist-1"
+          }
+        },
+        "artist-10": {
+          "type": "artist",
+          "settings": {
+            "name": "Artist 10",
+            "role": "",
+            "bio": "A watercolourist known for atmospheric coastal scenes and the quality of light in the Eastern Cape.",
+            "collection_handle": "artist-10",
+            "link": "\/collections\/artist-10"
+          }
+        },
+        "artist-11": {
+          "type": "artist",
+          "settings": {
+            "name": "Artist 11",
+            "role": "",
+            "bio": "A collage and assemblage artist who recycles found materials into densely layered narrative works.",
+            "collection_handle": "artist-11",
+            "link": "\/collections\/artist-11"
+          }
+        },
+        "artist-12": {
+          "type": "artist",
+          "settings": {
+            "name": "Artist 12",
+            "role": "",
+            "bio": "A young emerging artist working in acrylic on paper, drawing on Ndebele geometric traditions in a contemporary context.",
+            "collection_handle": "artist-12",
+            "link": "\/collections\/artist-12"
+          }
+        },
+        "artist-13": {
+          "type": "artist",
+          "settings": {
+            "name": "Artist 13",
+            "role": "",
+            "bio": "A conceptual artist whose text-based works critique commercialism, media, and post-colonial language structures.",
+            "collection_handle": "artist-13",
+            "link": "\/collections\/artist-13"
+          }
+        },
+        "artist-14": {
+          "type": "artist",
+          "settings": {
+            "name": "Artist 14",
+            "role": "",
+            "bio": "A landscape painter working plein air across the winelands and Drakensberg, known for intimate medium-scale oils.",
+            "collection_handle": "artist-14",
+            "link": "\/collections\/artist-14"
+          }
+        },
+        "artist-15": {
+          "type": "artist",
+          "settings": {
+            "name": "Artist 15",
+            "role": "",
+            "bio": "A figurative artist whose tender, intimate domestic scenes are rendered in soft graphite and coloured pencil.",
+            "collection_handle": "artist-15",
+            "link": "\/collections\/artist-15"
+          }
+        },
+        "artist-16": {
+          "type": "artist",
+          "settings": {
+            "name": "Artist 16",
+            "role": "",
+            "bio": "A mosaic artist whose large public commissions celebrate community heritage in Soweto and Durban.",
+            "collection_handle": "artist-16",
+            "link": "\/collections\/artist-16"
+          }
+        },
+        "artist-17": {
+          "type": "artist",
+          "settings": {
+            "name": "Artist 17",
+            "role": "",
+            "bio": "A linoprint artist drawing on Zulu cultural symbolism, pattern, and storytelling to create richly layered prints.",
+            "collection_handle": "artist-17",
+            "link": "\/collections\/artist-17"
+          }
+        },
+        "artist-18": {
+          "type": "artist",
+          "settings": {
+            "name": "Artist 18",
+            "role": "",
+            "bio": "A mixed-media artist whose work excavates personal and collective trauma through layered image and text.",
+            "collection_handle": "artist-18",
+            "link": "\/collections\/artist-18"
+          }
+        },
+        "artist-19": {
+          "type": "artist",
+          "settings": {
+            "name": "Artist 19",
+            "role": "",
+            "bio": "A jeweller and sculptor working at human scale, fusing precious metals with industrial off-cuts and e-waste.",
+            "collection_handle": "artist-19",
+            "link": "\/collections\/artist-19"
+          }
+        },
+        "artist-2": {
+          "type": "artist",
+          "settings": {
+            "name": "Artist 2",
+            "role": "",
+            "bio": "A contemporary painter known for large-scale abstract compositions. Graduated from the Michaelis School of Fine Art in Cape Town.",
+            "collection_handle": "artist-2",
+            "link": "\/collections\/artist-2"
+          }
+        },
+        "artist-20": {
+          "type": "artist",
+          "settings": {
+            "name": "Artist 20",
+            "role": "",
+            "bio": "A portrait photographer whose long-form documentary projects focus on youth, education, and aspiration.",
+            "collection_handle": "artist-20",
+            "link": "\/collections\/artist-20"
+          }
+        },
+        "artist-21": {
+          "type": "artist",
+          "settings": {
+            "name": "Artist 21",
+            "role": "",
+            "bio": "A wire sculptor whose intricate figurative works translate township life into delicate three-dimensional form.",
+            "collection_handle": "artist-21",
+            "link": "\/collections\/artist-21"
+          }
+        },
+        "artist-22": {
+          "type": "artist",
+          "settings": {
+            "name": "Artist 22",
+            "role": "",
+            "bio": "An abstract expressionist painter inspired by jazz, movement, and improvisation in the tradition of the Polly Street Art Centre.",
+            "collection_handle": "artist-22",
+            "link": "\/collections\/artist-22"
+          }
+        },
+        "artist-23": {
+          "type": "artist",
+          "settings": {
+            "name": "Artist 23",
+            "role": "",
+            "bio": "A textile artist and researcher exploring the politics of cloth, weaving, and bodily adornment in Southern Africa.",
+            "collection_handle": "artist-23",
+            "link": "\/collections\/artist-23"
+          }
+        },
+        "artist-24": {
+          "type": "artist",
+          "settings": {
+            "name": "Artist 24",
+            "role": "",
+            "bio": "A pen-and-ink illustrator known for intricately detailed architectural and landscape drawings of vanishing streetscapes.",
+            "collection_handle": "artist-24",
+            "link": "\/collections\/artist-24"
+          }
+        },
+        "artist-25": {
+          "type": "artist",
+          "settings": {
+            "name": "Artist 25",
+            "role": "",
+            "bio": "A multi-media artist whose immersive video and sound installations respond to climate, ecology, and loss.",
+            "collection_handle": "artist-25",
+            "link": "\/collections\/artist-25"
+          }
+        },
+        "artist-3": {
+          "type": "artist",
+          "settings": {
+            "name": "Artist 3",
+            "role": "",
+            "bio": "A sculptor and installation artist whose practice interrogates urban identity and belonging. Based in Johannesburg.",
+            "collection_handle": "artist-3",
+            "link": "\/collections\/artist-3"
+          }
+        },
+        "artist-4": {
+          "type": "artist",
+          "settings": {
+            "name": "Artist 4",
+            "role": "",
+            "bio": "A printmaker and draughtsperson with a deep interest in botanical forms and natural systems. Recent work focuses on the Karoo ecosystem.",
+            "collection_handle": "artist-4",
+            "link": "\/collections\/artist-4"
+          }
+        },
+        "artist-5": {
+          "type": "artist",
+          "settings": {
+            "name": "Artist 5",
+            "role": "",
+            "bio": "A photographer and video artist examining labour, migration, and belonging in post-apartheid South Africa.",
+            "collection_handle": "artist-5",
+            "link": "\/collections\/artist-5"
+          }
+        },
+        "artist-6": {
+          "type": "artist",
+          "settings": {
+            "name": "Artist 6",
+            "role": "",
+            "bio": "An interdisciplinary artist working at the intersection of textiles, performance, and archival research.",
+            "collection_handle": "artist-6",
+            "link": "\/collections\/artist-6"
+          }
+        },
+        "artist-7": {
+          "type": "artist",
+          "settings": {
+            "name": "Artist 7",
+            "role": "",
+            "bio": "A ceramicist whose vessels fuse functional craft with conceptual inquiry into the domestic sphere.",
+            "collection_handle": "artist-7",
+            "link": "\/collections\/artist-7"
+          }
+        },
+        "artist-8": {
+          "type": "artist",
+          "settings": {
+            "name": "Artist 8",
+            "role": "",
+            "bio": "A self-taught charcoal artist celebrated for emotionally charged portraiture capturing ordinary South Africans.",
+            "collection_handle": "artist-8",
+            "link": "\/collections\/artist-8"
+          }
+        },
+        "artist-9": {
+          "type": "artist",
+          "settings": {
+            "name": "Artist 9",
+            "role": "",
+            "bio": "A digital artist and educator whose practice spans augmented reality, generative code, and screen-based installation.",
+            "collection_handle": "artist-9",
+            "link": "\/collections\/artist-9"
+          }
+        },
+        "jacqui-sundelson": {
+          "type": "artist",
+          "settings": {
+            "name": "Jacqui Sundelson",
+            "role": "",
+            "bio": "Jacqui is a self-taught fashion designer whose love affair with fabric began at age twelve. Over the years, she's built four distinct creative labels: Belter (her clothing label), Shloompa (bold robes and gowns), Graze &amp; Gossip (bespoke tableware), and The House of Sunny's (textile-based interior design). She brings that same passion and precision to teaching, sharing foundational skills that open the door to a lifetime of making.",
+            "collection_handle": "jacqui-sundelson",
+            "link": "\/collections\/jacqui-sundelson"
+          }
+        },
+        "janice-grant": {
+          "type": "artist",
+          "settings": {
+            "name": "Janice Grant",
+            "role": "",
+            "bio": "I am an artist and teacher at heart, with a background in fine art, photography and graphic design. Drawing and painting are my happy place—a space where I can slow down, switch off, and just create.\n\nI love pencil and pen, especially a good doodle where I can get lost in detail, but I also enjoy getting messy with oils and experimenting with clay. I’m happiest when I’m exploring and trying new things rather than overthinking them.\n\nTeaching feels completely natural to me. I love sharing creativity in a relaxed, fun way where people feel free to try, play, and surprise themselves. While I don’t focus much on showing my own work, I’m passionate about helping others discover their creativity.\n\nI’m inspired by nature, tiny details, emotions, and a lifelong love of elephants.",
+            "collection_handle": "janice-grant",
+            "link": "\/collections\/janice-grant"
+          }
+        },
+        "shelley-cowling": {
+          "type": "artist",
+          "settings": {
+            "name": "Shelley Cowling",
+            "role": "",
+            "bio": "Shelley is a painter who celebrates the character of buildings, interiors, people, and flowers through vibrant, expressive work. She uses bold colours and loose brushstrokes to capture energy and spontaneity — the essence of her subject rather than precise detail. Her approach invites you to embrace imperfection and see beauty in the everyday.",
+            "collection_handle": "shelley-cowling",
+            "link": "\/collections\/shelley-cowling"
           }
         }
       },
-      "block_order": ["susan", "kerri", "zara", "amara", "liesel", "natasha"],
+      "block_order": [
+        "susan",
+        "kerri",
+        "zara",
+        "amara",
+        "liesel",
+        "natasha",
+        "artist-1",
+        "artist-10",
+        "artist-11",
+        "artist-12",
+        "artist-13",
+        "artist-14",
+        "artist-15",
+        "artist-16",
+        "artist-17",
+        "artist-18",
+        "artist-19",
+        "artist-2",
+        "artist-20",
+        "artist-21",
+        "artist-22",
+        "artist-23",
+        "artist-24",
+        "artist-25",
+        "artist-3",
+        "artist-4",
+        "artist-5",
+        "artist-6",
+        "artist-7",
+        "artist-8",
+        "artist-9",
+        "jacqui-sundelson",
+        "janice-grant",
+        "shelley-cowling"
+      ],
       "settings": {
         "eyebrow": "SA Art Fair",
         "heading": "Our Artists",
-        "intro": "Meet the artists behind The Studio — each bringing a unique voice, medium, and teaching approach to Hout Bay."
+        "intro": "Meet the artists behind The Studio — each bringing a unique voice, medium, and teaching approach to Hout Bay.",
+        "layout": "carousel",
+        "carousel_speed": 50
       }
     }
   },
-  "order": ["main"]
+  "order": [
+    "main"
+  ]
 }

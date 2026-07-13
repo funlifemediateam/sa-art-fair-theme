@@ -1,0 +1,677 @@
+{
+  "title": "What's Your Art Personality?",
+  "subtitle": "See how your personality can shape your journey as a collector.",
+  "description": "Take our Art Personality test and find out what your visual preferences say about you. Over the course of the test we'll show you a series of artwork pairs — simply pick the one that speaks to you. There are no right or wrong answers.",
+  "cta_text": "Discover Your Art Personality",
+  "intro_image": "https:\/\/images.metmuseum.org\/CRDImages\/ep\/original\/DT1025.jpg",
+  "questions": [
+    {
+      "id": "qt1",
+      "type": "text",
+      "label": "When you walk into a gallery, what draws you in first?",
+      "option_a": {
+        "label": "The mood and atmosphere — the feeling of the whole space",
+        "scores": {
+          "expressionist": 0,
+          "minimalist": 1,
+          "romantic": 2,
+          "urban": 0,
+          "surrealist": 0,
+          "colorist": 0
+        }
+      },
+      "option_b": {
+        "label": "A single work that stops you in your tracks",
+        "scores": {
+          "expressionist": 2,
+          "minimalist": 0,
+          "romantic": 0,
+          "urban": 0,
+          "surrealist": 0,
+          "colorist": 1
+        }
+      },
+      "option_c": {
+        "label": "The stories and ideas behind each piece",
+        "scores": {
+          "expressionist": 0,
+          "minimalist": 0,
+          "romantic": 0,
+          "urban": 1,
+          "surrealist": 2,
+          "colorist": 0
+        }
+      },
+      "option_d": {
+        "label": "The interplay of shapes, colour and how they fill the room",
+        "scores": {
+          "expressionist": 0,
+          "minimalist": 2,
+          "romantic": 0,
+          "urban": 0,
+          "surrealist": 0,
+          "colorist": 1
+        }
+      }
+    },
+    {
+      "id": "q1",
+      "type": "image",
+      "label": "Which energy would you rather live inside?",
+      "option_a": {
+        "image": "https:\/\/images.metmuseum.org\/CRDImages\/ep\/original\/DP-42549-001.jpg",
+        "label": "",
+        "scores": {
+          "expressionist": 2,
+          "minimalist": 0,
+          "romantic": 1,
+          "urban": 0,
+          "surrealist": 0,
+          "colorist": 0
+        }
+      },
+      "option_b": {
+        "image": "https:\/\/images.metmuseum.org\/CRDImages\/ep\/original\/DP353257.jpg",
+        "label": "",
+        "scores": {
+          "expressionist": 0,
+          "minimalist": 2,
+          "romantic": 1,
+          "urban": 0,
+          "surrealist": 0,
+          "colorist": 0
+        }
+      }
+    },
+    {
+      "id": "qt2",
+      "type": "text",
+      "label": "What’s your relationship with colour in your own life?",
+      "option_a": {
+        "label": "You gravitate to warm, rich tones — ochre, terracotta, deep plum",
+        "scores": {
+          "expressionist": 0,
+          "minimalist": 0,
+          "romantic": 1,
+          "urban": 0,
+          "surrealist": 0,
+          "colorist": 2
+        }
+      },
+      "option_b": {
+        "label": "You prefer restraint — stone, sage, ivory, soft white",
+        "scores": {
+          "expressionist": 0,
+          "minimalist": 2,
+          "romantic": 1,
+          "urban": 0,
+          "surrealist": 0,
+          "colorist": 0
+        }
+      },
+      "option_c": {
+        "label": "You love drama — stark contrast, bold darks against bright accents",
+        "scores": {
+          "expressionist": 2,
+          "minimalist": 0,
+          "romantic": 0,
+          "urban": 1,
+          "surrealist": 0,
+          "colorist": 0
+        }
+      },
+      "option_d": {
+        "label": "It depends on your mood — you follow feeling, not rules",
+        "scores": {
+          "expressionist": 0,
+          "minimalist": 0,
+          "romantic": 0,
+          "urban": 0,
+          "surrealist": 2,
+          "colorist": 1
+        }
+      }
+    },
+    {
+      "id": "q2",
+      "type": "image",
+      "label": "Which palette speaks to something deeper in you?",
+      "option_a": {
+        "image": "https:\/\/images.metmuseum.org\/CRDImages\/ep\/original\/DP-16323-001.jpg",
+        "label": "",
+        "scores": {
+          "expressionist": 1,
+          "minimalist": 0,
+          "romantic": 0,
+          "urban": 1,
+          "surrealist": 2,
+          "colorist": 0
+        }
+      },
+      "option_b": {
+        "image": "https:\/\/images.metmuseum.org\/CRDImages\/ep\/original\/DT1025.jpg",
+        "label": "",
+        "scores": {
+          "expressionist": 0,
+          "minimalist": 0,
+          "romantic": 2,
+          "urban": 0,
+          "surrealist": 0,
+          "colorist": 2
+        }
+      }
+    },
+    {
+      "id": "qt3",
+      "type": "text",
+      "label": "You have a free afternoon to yourself. You:",
+      "option_a": {
+        "label": "Walk somewhere in nature with no particular destination",
+        "scores": {
+          "expressionist": 0,
+          "minimalist": 1,
+          "romantic": 2,
+          "urban": 0,
+          "surrealist": 0,
+          "colorist": 0
+        }
+      },
+      "option_b": {
+        "label": "Explore a neighbourhood you’ve never visited before",
+        "scores": {
+          "expressionist": 1,
+          "minimalist": 0,
+          "romantic": 0,
+          "urban": 2,
+          "surrealist": 0,
+          "colorist": 0
+        }
+      },
+      "option_c": {
+        "label": "Start making or creating something — anything",
+        "scores": {
+          "expressionist": 2,
+          "minimalist": 0,
+          "romantic": 0,
+          "urban": 0,
+          "surrealist": 0,
+          "colorist": 1
+        }
+      },
+      "option_d": {
+        "label": "Read, write or simply get lost in your own thoughts",
+        "scores": {
+          "expressionist": 0,
+          "minimalist": 1,
+          "romantic": 0,
+          "urban": 0,
+          "surrealist": 2,
+          "colorist": 0
+        }
+      }
+    },
+    {
+      "id": "q3",
+      "type": "image",
+      "label": "Which world holds your imagination?",
+      "option_a": {
+        "image": "https:\/\/images.metmuseum.org\/CRDImages\/ep\/original\/DP-14201-023.jpg",
+        "label": "",
+        "scores": {
+          "expressionist": 0,
+          "minimalist": 0,
+          "romantic": 1,
+          "urban": 0,
+          "surrealist": 2,
+          "colorist": 0
+        }
+      },
+      "option_b": {
+        "image": "https:\/\/www.artic.edu\/iiif\/2\/defb4004-b500-218d-3d9b-9a02423f097d\/full\/843,\/0\/default.jpg",
+        "label": "",
+        "scores": {
+          "expressionist": 0,
+          "minimalist": 0,
+          "romantic": 0,
+          "urban": 2,
+          "surrealist": 0,
+          "colorist": 2
+        }
+      }
+    },
+    {
+      "id": "qt4",
+      "type": "text",
+      "label": "What do you want art in your home to do for you?",
+      "option_a": {
+        "label": "Transport you — to another feeling, time or place",
+        "scores": {
+          "expressionist": 0,
+          "minimalist": 0,
+          "romantic": 2,
+          "urban": 0,
+          "surrealist": 1,
+          "colorist": 0
+        }
+      },
+      "option_b": {
+        "label": "Create a sense of quiet authority and stillness",
+        "scores": {
+          "expressionist": 0,
+          "minimalist": 2,
+          "romantic": 1,
+          "urban": 0,
+          "surrealist": 0,
+          "colorist": 0
+        }
+      },
+      "option_c": {
+        "label": "Make a statement — this is who I am and I mean it",
+        "scores": {
+          "expressionist": 1,
+          "minimalist": 0,
+          "romantic": 0,
+          "urban": 0,
+          "surrealist": 0,
+          "colorist": 2
+        }
+      },
+      "option_d": {
+        "label": "Surprise you — reveal something different every time you look",
+        "scores": {
+          "expressionist": 0,
+          "minimalist": 0,
+          "romantic": 0,
+          "urban": 1,
+          "surrealist": 2,
+          "colorist": 0
+        }
+      }
+    },
+    {
+      "id": "q5",
+      "type": "image",
+      "label": "Where do you feel most alive?",
+      "option_a": {
+        "image": "https:\/\/images.metmuseum.org\/CRDImages\/ep\/original\/DP-20101-001.jpg",
+        "label": "",
+        "scores": {
+          "expressionist": 1,
+          "minimalist": 0,
+          "romantic": 1,
+          "urban": 2,
+          "surrealist": 0,
+          "colorist": 0
+        }
+      },
+      "option_b": {
+        "image": "https:\/\/www.artic.edu\/iiif\/2\/3c27b499-af56-f0d5-93b5-a7f2f1ad5813\/full\/843,\/0\/default.jpg",
+        "label": "",
+        "scores": {
+          "expressionist": 0,
+          "minimalist": 1,
+          "romantic": 2,
+          "urban": 0,
+          "surrealist": 0,
+          "colorist": 1
+        }
+      }
+    },
+    {
+      "id": "qt5",
+      "type": "text",
+      "label": "When a piece of art moves you, it’s usually because…",
+      "option_a": {
+        "label": "It captures a feeling you’ve had but couldn’t name",
+        "scores": {
+          "expressionist": 2,
+          "minimalist": 0,
+          "romantic": 0,
+          "urban": 0,
+          "surrealist": 1,
+          "colorist": 0
+        }
+      },
+      "option_b": {
+        "label": "The craftsmanship is extraordinary — you can feel the skill",
+        "scores": {
+          "expressionist": 0,
+          "minimalist": 2,
+          "romantic": 0,
+          "urban": 1,
+          "surrealist": 0,
+          "colorist": 0
+        }
+      },
+      "option_c": {
+        "label": "It places you inside a specific world or emotional moment",
+        "scores": {
+          "expressionist": 0,
+          "minimalist": 0,
+          "romantic": 2,
+          "urban": 1,
+          "surrealist": 0,
+          "colorist": 0
+        }
+      },
+      "option_d": {
+        "label": "It’s joyful, immediate and fills the space with life",
+        "scores": {
+          "expressionist": 1,
+          "minimalist": 0,
+          "romantic": 0,
+          "urban": 0,
+          "surrealist": 0,
+          "colorist": 2
+        }
+      }
+    },
+    {
+      "id": "q6",
+      "type": "image",
+      "label": "Which scene would you walk into?",
+      "option_a": {
+        "image": "https:\/\/www.artic.edu\/iiif\/2\/2d484387-2509-5e8e-2c43-22f9981972eb\/full\/843,\/0\/default.jpg",
+        "label": "",
+        "scores": {
+          "expressionist": 0,
+          "minimalist": 0,
+          "romantic": 0,
+          "urban": 2,
+          "surrealist": 0,
+          "colorist": 2
+        }
+      },
+      "option_b": {
+        "image": "https:\/\/images.metmuseum.org\/CRDImages\/ep\/original\/DP-31520-001.jpg",
+        "label": "",
+        "scores": {
+          "expressionist": 1,
+          "minimalist": 0,
+          "romantic": 2,
+          "urban": 0,
+          "surrealist": 1,
+          "colorist": 0
+        }
+      }
+    },
+    {
+      "id": "qt6",
+      "type": "text",
+      "label": "When you fall in love with a work, you:",
+      "option_a": {
+        "label": "Act immediately — if it speaks to you now, it always will",
+        "scores": {
+          "expressionist": 2,
+          "minimalist": 0,
+          "romantic": 0,
+          "urban": 0,
+          "surrealist": 0,
+          "colorist": 1
+        }
+      },
+      "option_b": {
+        "label": "Take your time — research the artist, return to it, sit with it",
+        "scores": {
+          "expressionist": 0,
+          "minimalist": 2,
+          "romantic": 0,
+          "urban": 0,
+          "surrealist": 1,
+          "colorist": 0
+        }
+      },
+      "option_c": {
+        "label": "Imagine it in your space — you feel it before you buy it",
+        "scores": {
+          "expressionist": 1,
+          "minimalist": 0,
+          "romantic": 2,
+          "urban": 0,
+          "surrealist": 0,
+          "colorist": 0
+        }
+      },
+      "option_d": {
+        "label": "Want to know its story — who made it, what it means, why",
+        "scores": {
+          "expressionist": 0,
+          "minimalist": 0,
+          "romantic": 0,
+          "urban": 2,
+          "surrealist": 1,
+          "colorist": 0
+        }
+      }
+    },
+    {
+      "id": "q7",
+      "type": "image",
+      "label": "Which image do you keep returning to?",
+      "option_a": {
+        "image": "https:\/\/images.metmuseum.org\/CRDImages\/ad\/original\/DP-21454-001.jpg",
+        "label": "",
+        "scores": {
+          "expressionist": 1,
+          "minimalist": 0,
+          "romantic": 2,
+          "urban": 0,
+          "surrealist": 0,
+          "colorist": 0
+        }
+      },
+      "option_b": {
+        "image": "https:\/\/www.artic.edu\/iiif\/2\/f8fd76e9-c396-5678-36ed-6a348c904d27\/full\/843,\/0\/default.jpg",
+        "label": "",
+        "scores": {
+          "expressionist": 0,
+          "minimalist": 1,
+          "romantic": 0,
+          "urban": 2,
+          "surrealist": 0,
+          "colorist": 0
+        }
+      }
+    },
+    {
+      "id": "qt7",
+      "type": "text",
+      "label": "Which sentence feels most like something you’d say?",
+      "option_a": {
+        "label": "“The world is stranger and more layered than it first appears.”",
+        "scores": {
+          "expressionist": 1,
+          "minimalist": 0,
+          "romantic": 0,
+          "urban": 0,
+          "surrealist": 2,
+          "colorist": 0
+        }
+      },
+      "option_b": {
+        "label": "“Less is more. Restraint and space say everything.”",
+        "scores": {
+          "expressionist": 0,
+          "minimalist": 2,
+          "romantic": 1,
+          "urban": 0,
+          "surrealist": 0,
+          "colorist": 0
+        }
+      },
+      "option_c": {
+        "label": "“Every street corner holds a story worth paying attention to.”",
+        "scores": {
+          "expressionist": 0,
+          "minimalist": 0,
+          "romantic": 0,
+          "urban": 2,
+          "surrealist": 1,
+          "colorist": 0
+        }
+      },
+      "option_d": {
+        "label": "“Colour is joy. There’s no reason to hold back.”",
+        "scores": {
+          "expressionist": 1,
+          "minimalist": 0,
+          "romantic": 0,
+          "urban": 0,
+          "surrealist": 0,
+          "colorist": 2
+        }
+      }
+    },
+    {
+      "id": "q9",
+      "type": "image",
+      "label": "Which atmosphere feels most like you?",
+      "option_a": {
+        "image": "https:\/\/images.metmuseum.org\/CRDImages\/ep\/original\/DP-20099-001.jpg",
+        "label": "",
+        "scores": {
+          "expressionist": 0,
+          "minimalist": 2,
+          "romantic": 1,
+          "urban": 0,
+          "surrealist": 0,
+          "colorist": 0
+        }
+      },
+      "option_b": {
+        "image": "https:\/\/images.metmuseum.org\/CRDImages\/ep\/original\/DT1874.jpg",
+        "label": "",
+        "scores": {
+          "expressionist": 0,
+          "minimalist": 0,
+          "romantic": 1,
+          "urban": 0,
+          "surrealist": 0,
+          "colorist": 2
+        }
+      }
+    }
+  ],
+  "personalities": [
+    {
+      "id": "expressionist",
+      "name": "The Expressionist",
+      "description": "Art is your emotional outlet and mirror. You are drawn to works that feel urgent, unfiltered and alive — where you can sense the artist's hand, their struggle, their joy. Gestural strokes, vibrant tension and raw energy speak directly to you. For you, art does not need to be pretty; it needs to be honest. You collect with your gut, not your head — and that is exactly as it should be.",
+      "image": "https:\/\/images.metmuseum.org\/CRDImages\/ep\/original\/DP-42549-001.jpg",
+      "recommendations": [
+        {
+          "title": "Explore the Gallery",
+          "url": "\/collections\/gallery"
+        },
+        {
+          "title": "Browse our Artists",
+          "url": "\/collections\/artists"
+        },
+        {
+          "title": "See Suggested Classes",
+          "url": "\/collections\/classes"
+        }
+      ]
+    },
+    {
+      "id": "minimalist",
+      "name": "The Serene Minimalist",
+      "description": "You find peace in simplicity. A single well-placed element, clean negative space or a precisely arranged composition gives you more satisfaction than noise ever could. You are drawn to stillness — art that rewards patience, that reveals more the longer you sit with it. Structured compositions and quiet colour harmonies feel like home. You do not collect art to impress; you collect it to breathe.",
+      "image": "https:\/\/images.metmuseum.org\/CRDImages\/ep\/original\/DP353257.jpg",
+      "recommendations": [
+        {
+          "title": "Explore the Gallery",
+          "url": "\/collections\/gallery"
+        },
+        {
+          "title": "Browse our Artists",
+          "url": "\/collections\/artists"
+        },
+        {
+          "title": "See Suggested Classes",
+          "url": "\/collections\/classes"
+        }
+      ]
+    },
+    {
+      "id": "romantic",
+      "name": "The Nature Romantic",
+      "description": "You feel most at home when art puts you in nature's embrace — dappled light through trees, the texture of earth after rain, a horizon that seems to breathe. Impressionist painting, organic forms and landscapes resonate deeply with you. For you, the best art is a window: it transports you somewhere quieter, somewhere alive. You collect pieces that make a room feel like the world got bigger.",
+      "image": "https:\/\/www.artic.edu\/iiif\/2\/3c27b499-af56-f0d5-93b5-a7f2f1ad5813\/full\/843,\/0\/default.jpg",
+      "recommendations": [
+        {
+          "title": "Explore the Gallery",
+          "url": "\/collections\/gallery"
+        },
+        {
+          "title": "Browse our Artists",
+          "url": "\/collections\/artists"
+        },
+        {
+          "title": "See Suggested Classes",
+          "url": "\/collections\/classes"
+        }
+      ]
+    },
+    {
+      "id": "urban",
+      "name": "The Urban Observer",
+      "description": "People are your subject. You are drawn to art that documents the human condition — portraits that reveal character, scenes of city life, works that hold a moment in time and ask you to look closely. You value craft and representation: the ability to capture something real and true about how we live. Your collection tells stories. Every piece you own is a conversation waiting to happen.",
+      "image": "https:\/\/www.artic.edu\/iiif\/2\/f8fd76e9-c396-5678-36ed-6a348c904d27\/full\/843,\/0\/default.jpg",
+      "recommendations": [
+        {
+          "title": "Explore the Gallery",
+          "url": "\/collections\/gallery"
+        },
+        {
+          "title": "Browse our Artists",
+          "url": "\/collections\/artists"
+        },
+        {
+          "title": "See Suggested Classes",
+          "url": "\/collections\/classes"
+        }
+      ]
+    },
+    {
+      "id": "surrealist",
+      "name": "The Surrealist Dreamer",
+      "description": "The line between waking and dreaming is where you feel most at home. You are drawn to art that operates beneath the surface — symbolic, allegorical, psychologically charged. Works that make you look twice, that hide meanings within meanings, that blur reality just enough to reveal something deeper. Logic is overrated. You do not collect art for its face value; you collect it for everything it does not say out loud.",
+      "image": "https:\/\/images.metmuseum.org\/CRDImages\/ep\/original\/DP-14201-023.jpg",
+      "recommendations": [
+        {
+          "title": "Explore the Gallery",
+          "url": "\/collections\/gallery"
+        },
+        {
+          "title": "Browse our Artists",
+          "url": "\/collections\/artists"
+        },
+        {
+          "title": "See Suggested Classes",
+          "url": "\/collections\/classes"
+        }
+      ]
+    },
+    {
+      "id": "colorist",
+      "name": "The Bold Colorist",
+      "description": "Colour is your language. You gravitate towards art that turns up the volume — bold palettes, unexpected combinations, patterns and surfaces that hum with energy. You are drawn to the joyful, the immediate, the unapologetically vibrant. Art, for you, should make a room feel alive the moment you walk in. Your collection is not background decoration; it is the main event — and everyone who visits will feel it.",
+      "image": "https:\/\/images.metmuseum.org\/CRDImages\/ep\/original\/DT1025.jpg",
+      "recommendations": [
+        {
+          "title": "Explore the Gallery",
+          "url": "\/collections\/gallery"
+        },
+        {
+          "title": "Browse our Artists",
+          "url": "\/collections\/artists"
+        },
+        {
+          "title": "See Suggested Classes",
+          "url": "\/collections\/classes"
+        }
+      ]
+    }
+  ]
+}

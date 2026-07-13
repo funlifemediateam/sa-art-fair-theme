@@ -1,0 +1,16 @@
+{
+  "sections": {
+    "main": {
+      "type": "collection-artist",
+      "settings": {
+        "artist_name": "Teacher 13",
+        "artist_role": "",
+        "artist_bio": "",
+        "artist_tags": ""
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

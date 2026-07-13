@@ -1,19 +1,10 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
     "main": {
       "type": "main-product",
       "blocks": {
         "sa_booking_admin_booking_widget_LkJXmc": {
-          "type": "shopify://apps/sa-booking-admin/blocks/booking-widget/019effec-1823-75cb-82db-853f80a4249c",
+          "type": "shopify:\/\/apps\/sa-booking-admin\/blocks\/booking-widget\/019effec-1823-75cb-82db-853f80a4249c",
           "settings": {
             "class_product": "young-artists-with-janice-grant",
             "eyebrow": "Book Your Spot",

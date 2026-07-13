@@ -2,8 +2,6 @@
   "sections": {
     "booking-app": {
       "type": "booking-app",
-      "blocks": {},
-      "block_order": [],
       "settings": {
         "eyebrow": "Book a Class",
         "heading": "Choose Your Session",
@@ -12,5 +10,7 @@
       }
     }
   },
-  "order": ["booking-app"]
+  "order": [
+    "booking-app"
+  ]
 }

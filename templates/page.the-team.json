@@ -1,12 +1,3 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
     "the_team": {
@@ -15,7 +6,7 @@
         "founders": {
           "type": "founders",
           "settings": {
-            "image": "shopify://shop_images/B_G_pic.png",
+            "image": "shopify:\/\/shop_images\/B_G_pic.png",
             "badge": "Founders",
             "names": "Georgina & Bianca",
             "role": "Co-Founders & Creatives",
@@ -25,7 +16,7 @@
         "susan": {
           "type": "member",
           "settings": {
-            "image": "shopify://shop_images/WhatsApp_Image_2026-01-07_at_10.03.53.jpg",
+            "image": "shopify:\/\/shop_images\/WhatsApp_Image_2026-01-07_at_10.03.53.jpg",
             "name": "Susan Orpen",
             "role": "Artist & Teacher",
             "bio": "A celebrated South African artist with over three decades of teaching experience. Trained with a BA in English and History of Art, Susan works across watercolour, acrylic, and mixed media — creating wildlife, landscapes, and portraits that feature in international private collections.",
@@ -35,7 +26,7 @@
         "kerri": {
           "type": "member",
           "settings": {
-            "image": "shopify://shop_images/donna__2.png",
+            "image": "shopify:\/\/shop_images\/donna__2.png",
             "name": "Kerri Sassen",
             "role": "Artist & Teacher",
             "bio": "A self-taught South African artist working across a variety of mediums, recently focusing on larger abstract pieces. Kerri also works as an Occupational Therapist, integrating both careers to celebrate, process, and break through via art.",
@@ -45,7 +36,7 @@
         "zara": {
           "type": "member",
           "settings": {
-            "image": "shopify://shop_images/WhatsApp_Image_2026-02-09_at_07.28.19__1.jpg",
+            "image": "shopify:\/\/shop_images\/WhatsApp_Image_2026-02-09_at_07.28.19__1.jpg",
             "name": "Zara-Leigh Farinha",
             "role": "Artist & Teacher",
             "bio": "Johannesburg-born and Hout Bay-based, Zara-Leigh works intuitively with abstract acrylic and oil paintings on large-format canvas. With over 10 years' experience as a fashion, decor, and makeup artist across South Africa, London, and New York, she brings a uniquely global creative sensibility.",
@@ -67,7 +58,7 @@
         "cta_heading": "Learn from the artists who inspire you.",
         "cta_text": "Book a place in one of our hands-on workshops and classes, held in our Hout Bay studio.",
         "cta_btn_label": "View workshops & classes",
-        "cta_btn_url": ""
+        "cta_btn_url": "shopify:\/\/collections\/workshops-classes"
       }
     }
   },

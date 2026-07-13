@@ -1,0 +1,20 @@
+{%- assign _sa_ga4  = shop.metafields.booking_app.ga4_measurement_id    | default: "" -%}
+{%- assign _sa_gads = shop.metafields.booking_app.gads_conversion_id    | default: "" -%}
+{%- assign _sa_fb   = shop.metafields.booking_app.fb_pixel_id           | default: "" -%}
+{%- if _sa_ga4 != "" -%}
+<script async src="https://www.googletagmanager.com/gtag/js?id={{ _sa_ga4 | escape }}"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "{{ _sa_ga4 | escape }}");
+  {%- if _sa_gads != "" -%}gtag("config", "{{ _sa_gads | escape }}");{%- endif -%}
+</script>
+{%- endif -%}
+{%- if _sa_fb != "" -%}
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version="2.0";n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,"script","https://connect.facebook.net/en_US/fbevents.js");
+fbq("init","{{ _sa_fb | escape }}");
+fbq("track","PageView");
+</script>
+{%- endif -%}
