@@ -440,11 +440,18 @@ body.template-index #MainContent {
 .saf-wishlist-toggle svg path {
   fill: currentColor;
 }
+/* Solid inner-heart path in icon-heart.svg — only shown on saved hearts */
+svg.icon-heart .icon-heart__fill {
+  display: none;
+}
 .saf-wishlist-toggle.is-active {
-  color: #0f4a52;
+  color: #f26b52;
 }
 .saf-wishlist-toggle.is-active svg path {
-  fill: #0f4a52;
+  fill: #f26b52;
+}
+.saf-wishlist-toggle.is-active svg.icon-heart .icon-heart__fill {
+  display: block;
 }
 
 /* Product page variant — inline under the title */

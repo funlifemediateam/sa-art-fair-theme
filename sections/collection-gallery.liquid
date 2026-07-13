@@ -630,9 +630,17 @@
             {%- if product.tags contains 'dummy' -%}
               <span class="saf-dummy-badge">&#9679; Placeholder</span>
             {%- endif -%}
-            {%- unless product.available -%}
+            {%- if product.available -%}
+              <button type="button" class="saf-wishlist-toggle"
+                data-product-id="{{ product.id }}"
+                data-product-handle="{{ product.handle }}"
+                aria-label="Save {{ product.title | escape }} to wishlist"
+                aria-pressed="false">
+                <span class="svg-wrapper">{{ 'icon-heart.svg' | inline_asset_content }}</span>
+              </button>
+            {%- else -%}
               <span class="saf-sold-badge">Sold</span>
-            {%- endunless -%}
+            {%- endif -%}
             <div class="cgal-overlay">
               <div class="cgal-info">
                 <p class="cgal-title">{{ product.title }}</p>

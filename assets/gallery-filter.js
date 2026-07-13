@@ -122,6 +122,8 @@
               var img = (p.images && p.images[0]) || null;
               all.push({
                 position: all.length,
+                id: p.id,
+                handle: p.handle,
                 title: p.title,
                 url: collectionUrl + '/products/' + p.handle,
                 vendor: p.vendor || '',
@@ -183,6 +185,19 @@
     }
 
     /* ── Rendering (mirrors the Liquid tile markup exactly) ── */
+    /* Keep in sync with assets/icon-heart.svg (wishlist.js marks saved state) */
+    var HEART_SVG = '<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-heart" viewBox="0 0 20 20">' +
+      '<path class="icon-heart__fill" d="M10 5.24 8.515 3.773a4.433 4.433 0 0 0-6.21 0 4.293 4.293 0 0 0 0 6.128L10 17.495l7.695-7.593a4.293 4.293 0 0 0 0-6.128 4.433 4.433 0 0 0-6.21 0z"/>' +
+      '<path fill-rule="evenodd" d="M10 5.24 8.515 3.773a4.433 4.433 0 0 0-6.21 0 4.293 4.293 0 0 0 0 6.128L10 17.495l7.695-7.593a4.293 4.293 0 0 0 0-6.128 4.433 4.433 0 0 0-6.21 0zm.765-2.177c2.113-2.084 5.538-2.084 7.65 0a5.29 5.29 0 0 1 0 7.55l-7.695 7.593a1.03 1.03 0 0 1-1.44 0l-7.696-7.594a5.29 5.29 0 0 1 0-7.549C3.697.98 7.122.98 9.234 3.063l.766.755z"/></svg>';
+
+    function heartHtml(it) {
+      return '<button type="button" class="saf-wishlist-toggle"' +
+        ' data-product-id="' + it.id + '"' +
+        ' data-product-handle="' + escapeHtml(it.handle) + '"' +
+        ' aria-label="Save ' + escapeHtml(it.title) + ' to wishlist"' +
+        ' aria-pressed="false"><span class="svg-wrapper">' + HEART_SVG + '</span></button>';
+    }
+
     function tileHtml(it) {
       var imgHtml;
       if (it.image) {
@@ -195,7 +210,7 @@
       return '<a href="' + escapeHtml(it.url) + '" class="cgal-item">' +
         imgHtml +
         (it.dummy ? '<span class="saf-dummy-badge">&#9679; Placeholder</span>' : '') +
-        (it.available ? '' : '<span class="saf-sold-badge">Sold</span>') +
+        (it.available ? heartHtml(it) : '<span class="saf-sold-badge">Sold</span>') +
         '<div class="cgal-overlay"><div class="cgal-info">' +
         '<p class="cgal-title">' + escapeHtml(it.title) + '</p>' +
         '<p class="cgal-price">' + escapeHtml(formatZar(it.price)) + '</p>' +

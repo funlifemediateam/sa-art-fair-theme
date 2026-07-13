@@ -578,27 +578,36 @@
         if (e.key === 'ArrowLeft') { e.preventDefault(); track.scrollBy({ left: -step(), behavior: 'smooth' }); }
       });
 
-      /* Mouse drag-to-scroll (touch + trackpad already scroll natively) */
-      var down = false, startX = 0, startScroll = 0, moved = 0;
+      /* Mouse drag-to-scroll (touch + trackpad already scroll natively).
+         Capture the pointer only once a real drag starts — capturing on
+         pointerdown retargets the derived click to the track, which kills
+         heart toggles and card links for mouse users. */
+      var down = false, captured = false, startX = 0, startScroll = 0, moved = 0;
       track.addEventListener('pointerdown', function (e) {
         if (e.pointerType !== 'mouse' || e.button !== 0) return;
-        down = true; moved = 0; startX = e.clientX; startScroll = track.scrollLeft;
-        track.classList.add('is-dragging');
-        try { track.setPointerCapture(e.pointerId); } catch (err) {}
+        down = true; captured = false; moved = 0; startX = e.clientX; startScroll = track.scrollLeft;
       });
       track.addEventListener('pointermove', function (e) {
         if (!down) return;
         var dx = e.clientX - startX;
         if (Math.abs(dx) > moved) moved = Math.abs(dx);
-        track.scrollLeft = startScroll - dx;
+        if (!captured && moved > 8) {
+          captured = true;
+          track.classList.add('is-dragging');
+          try { track.setPointerCapture(e.pointerId); } catch (err) {}
+        }
+        if (captured) track.scrollLeft = startScroll - dx;
       });
       function endDrag() {
         if (!down) return;
-        down = false;
+        down = false; captured = false;
         track.classList.remove('is-dragging');
       }
       track.addEventListener('pointerup', endDrag);
       track.addEventListener('pointercancel', endDrag);
+      /* Native image drag fires dragstart + pointercancel one move into the
+         gesture, killing drag-to-scroll entirely — suppress it in the track */
+      track.addEventListener('dragstart', function (e) { e.preventDefault(); });
       /* A real drag must not trigger the card link it ends on */
       track.addEventListener('click', function (e) {
         if (moved > 8) { e.preventDefault(); e.stopPropagation(); moved = 0; }
