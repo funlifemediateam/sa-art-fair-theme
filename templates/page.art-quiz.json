@@ -1,0 +1,20 @@
+{
+  "sections": {
+    "art_quiz": {
+      "type": "art-quiz",
+      "settings": {
+        "heading": "What's Your Art Personality?",
+        "subheading": "See how your personality can shape your journey as a collector.",
+        "cta_text": "Take the Test",
+        "overlay_opacity": 50,
+        "accent_color": "#f26b52",
+        "min_height": 85,
+        "api_url": "https://sa-art-fair-admin.vercel.app",
+        "meta_text": "14 questions · 3 minutes"
+      }
+    }
+  },
+  "order": [
+    "art_quiz"
+  ]
+}

@@ -1,13 +1,16 @@
 {%- assign quiz_heading    = section.settings.heading    | default: "What's Your Art Personality?" -%}
 {%- assign quiz_subheading = section.settings.subheading | default: 'See how your personality can shape your journey as a collector.' -%}
 {%- assign quiz_cta        = section.settings.cta_text   | default: 'Take the Test' -%}
+{%- assign quiz_meta       = section.settings.meta_text  | default: '10 questions · 3 minutes' -%}
 {%- assign quiz_api_url    = section.settings.api_url    | default: 'https://sa-art-fair-admin.vercel.app' -%}
 {%- assign overlay_alpha   = section.settings.overlay_opacity | divided_by: 100.0 -%}
 {%- assign accent          = section.settings.accent_color | default: '#0f4a52' -%}
+{%- assign teaser          = section.settings.teaser_mode -%}
+{%- assign quiz_page_url   = section.settings.quiz_page | default: '/collections/art-quiz' -%}
 
 <section
-  id="sa-art-quiz-section"
-  style="position:relative;min-height:{{ section.settings.min_height | default: 80 }}vh;display:flex;align-items:center;justify-content:center;overflow:hidden"
+  id="{% if teaser %}sa-art-quiz-teaser{% else %}sa-art-quiz-section{% endif %}"
+  style="position:relative;{% unless teaser %}min-height:{{ section.settings.min_height | default: 80 }}vh;{% endunless %}display:flex;align-items:center;justify-content:center;overflow:hidden"
 >
 
   <div aria-hidden="true" style="position:absolute;inset:0;z-index:0">
@@ -37,14 +40,25 @@
     <div style="position:absolute;inset:0;background:rgba(0,0,0,{{ overlay_alpha }})"></div>
   </div>
 
-  <div style="position:relative;z-index:1;text-align:center;padding:80px 24px;max-width:680px;width:100%">
+  <div style="position:relative;z-index:1;text-align:center;padding:{% if teaser %}64px 24px{% else %}80px 24px{% endif %};max-width:680px;width:100%">
     <p style="font-size:0.7rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:{{ accent }};margin:0 0 18px">Art Personality</p>
-    <h2 style="font-size:clamp(2rem,5vw,3.4rem);font-weight:700;line-height:1.1;color:#fff;margin:0 0 20px;letter-spacing:-0.02em">
+    <h2 style="font-size:{% if teaser %}clamp(1.7rem,4vw,2.6rem){% else %}clamp(2rem,5vw,3.4rem){% endif %};font-weight:700;line-height:1.1;color:#fff;margin:0 0 20px;letter-spacing:-0.02em">
       {{- quiz_heading -}}
     </h2>
+    {%- unless teaser -%}
     <p style="font-size:1.05rem;line-height:1.7;color:rgba(255,255,255,0.72);margin:0 auto 36px;max-width:500px">
       {{- quiz_subheading -}}
     </p>
+    {%- endunless -%}
+    {%- if teaser -%}
+    <a
+      href="{{ quiz_page_url }}"
+      style="display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:16px 42px;background:#fff;color:#1d1c21;font-size:0.82rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;text-decoration:none;border-radius:2px"
+    >
+      <span>{{- quiz_cta -}}</span>
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+    </a>
+    {%- else -%}
     <button
       id="sa-quiz-start-btn"
       style="display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:16px 42px;background:#fff;color:#1d1c21;font-size:0.82rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;border:none;cursor:pointer;border-radius:2px"
@@ -52,11 +66,15 @@
       <span>{{- quiz_cta -}}</span>
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
     </button>
-    <p style="margin:16px 0 0;font-size:0.72rem;color:rgba(255,255,255,0.38);letter-spacing:0.05em">10 questions · 3 minutes</p>
+    {%- endif -%}
+    {%- if quiz_meta != blank -%}
+    <p style="margin:16px 0 0;font-size:0.72rem;color:rgba(255,255,255,0.38);letter-spacing:0.05em">{{ quiz_meta }}</p>
+    {%- endif -%}
   </div>
 
 </section>
 
+{%- unless teaser -%}
 <div id="sa-quiz-overlay" style="display:none;position:fixed;inset:0;z-index:10000;background:#fff;overflow-y:auto"></div>
 
 <script>
@@ -65,6 +83,7 @@
   window.__saFbAppId        = {{ shop.metafields.booking_app.facebook_app_id  | default: '' | json }};
 </script>
 <script src="{{ 'quiz.js' | asset_url }}" defer></script>
+{%- endunless -%}
 
 {% schema %}
 {
@@ -93,6 +112,13 @@
       "id": "cta_text",
       "label": "Button text",
       "default": "Take the Test"
+    },
+    {
+      "type": "text",
+      "id": "meta_text",
+      "label": "Small text under button",
+      "default": "10 questions · 3 minutes",
+      "info": "Leave blank to hide."
     },
     {
       "type": "header",
@@ -139,6 +165,23 @@
     },
     {
       "type": "header",
+      "content": "Teaser mode"
+    },
+    {
+      "type": "checkbox",
+      "id": "teaser_mode",
+      "label": "Teaser mode",
+      "default": false,
+      "info": "Show a compact banner that links to the quiz page instead of running the quiz here."
+    },
+    {
+      "type": "url",
+      "id": "quiz_page",
+      "label": "Quiz page link",
+      "info": "Where the teaser button goes. Only used in teaser mode."
+    },
+    {
+      "type": "header",
       "content": "Advanced"
     },
     {
@@ -152,6 +195,13 @@
   "presets": [
     {
       "name": "Art Personality Quiz"
+    },
+    {
+      "name": "Quiz teaser",
+      "settings": {
+        "teaser_mode": true,
+        "min_height": 40
+      }
     }
   ]
 }

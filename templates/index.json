@@ -66,6 +66,18 @@
         "workshops_url": "shopify://collections/workshops-classes"
       }
     },
+    "art_quiz_teaser": {
+      "type": "art-quiz",
+      "settings": {
+        "teaser_mode": true,
+        "quiz_page": "/collections/art-quiz",
+        "heading": "What's Your Art Personality?",
+        "cta_text": "Take the Test",
+        "accent_color": "#f26b52",
+        "api_url": "https://sa-art-fair-admin.vercel.app",
+        "meta_text": "14 questions · 3 minutes"
+      }
+    },
     "mission": {
       "type": "rich-text",
       "blocks": {
@@ -109,6 +121,7 @@
   "order": [
     "image_banner",
     "two_paths",
+    "art_quiz_teaser",
     "mission"
   ]
 }
