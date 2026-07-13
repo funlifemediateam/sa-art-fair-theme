@@ -52,6 +52,14 @@
     {%- if block.settings.role != blank -%}
       <p class="artist-card__role">{{ block.settings.role }}</p>
     {%- endif -%}
+    {%- if mediums != blank -%}
+      <ul class="artist-card__mediums" aria-label="Mediums">
+        {%- assign mediums_arr = mediums | split: ',' -%}
+        {%- for m in mediums_arr -%}
+          <li class="artist-card__medium">{{ m | replace: '-', ' ' | capitalize }}</li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
     <div class="artist-card__divider"></div>
     {%- if block.settings.bio != blank -%}
       <p class="artist-card__bio">{{ block.settings.bio }}</p>

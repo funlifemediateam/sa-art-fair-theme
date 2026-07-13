@@ -403,6 +403,28 @@
     color: #0f4a52;
     margin: 0 0 18px;
   }
+  .artist-card__mediums {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+    margin: -8px 0 16px;
+    padding: 0;
+  }
+  .artist-card__medium {
+    font-family: var(--font-body-family);
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(29,28,33,0.65);
+    border: 1px solid rgba(29,28,33,0.25);
+    border-radius: 999px;
+    padding: 4px 10px;
+    line-height: 1;
+    white-space: nowrap;
+  }
   .artist-card__divider {
     width: 24px;
     height: 1px;
@@ -452,7 +474,7 @@
   .artists-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
+    gap: 40px 28px;
   }
 
   /* ── Carousel layout ── */
@@ -505,6 +527,8 @@
     .artist-card__info { padding: 18px 14px 22px; }
     .artist-card__name { font-size: 1.05rem; }
     .artist-card__bio { font-size: 0.8rem; -webkit-line-clamp: 2; }
+    .artist-card__medium { font-size: 0.54rem; padding: 3px 8px; }
+    .artist-card__mediums { gap: 5px; margin: -6px 0 14px; }
     .artist-card__initial { font-size: 3.5rem; }
     .artist-card__teaches { font-size: 0.52rem; padding: 4px 8px; }
   }
