@@ -1,0 +1,61 @@
+{%- comment -%}
+  One artist card for the Artists listing page.
+  Args:
+    block      — the section block (settings: name, role, bio, image, collection_handle, link)
+    attrs      — block.shopify_attributes (omit for aria-hidden carousel duplicates)
+    hidden_dup — true for the carousel's seamless-loop duplicates (aria-hidden, no tabstop)
+    mediums    — comma-separated medium slugs (from artist-card-mediums snippet)
+    teaches    — true when this artist teaches classes/workshops (badge + filter data)
+{%- endcomment -%}
+{%- liquid
+  assign mediums = mediums | strip_newlines | strip
+  assign dest = block.settings.collection_handle | prepend: '/collections/'
+  if block.settings.link != blank
+    assign dest = block.settings.link
+  endif
+  assign col_img = collections[block.settings.collection_handle].image
+  assign artist_photo = col_img | default: block.settings.image
+  assign card_alt = block.settings.name | escape
+-%}
+<a href="{{ dest }}" class="artist-card"
+  {% if hidden_dup %}aria-hidden="true" tabindex="-1"{% else %}{{ attrs }}{% endif %}
+  {% unless hidden_dup %}
+    data-af-card
+    data-af-name="{{ block.settings.name | escape }}"
+    data-af-handle="{{ block.settings.collection_handle | escape }}"
+    data-af-role="{{ block.settings.role | escape }}"
+    data-af-bio="{{ block.settings.bio | escape }}"
+    data-af-mediums="{{ mediums }}"
+    data-af-teaches="{% if teaches %}true{% else %}false{% endif %}"
+  {% endunless %}>
+  <div class="artist-card_artist_photo">
+    {%- if artist_photo != blank -%}
+      {%- if hidden_dup -%}
+        {{ artist_photo | image_url: width: 800 | image_tag: class: 'artist-card__img', loading: 'lazy', alt: '' }}
+      {%- else -%}
+        {{ artist_photo | image_url: width: 800 | image_tag: class: 'artist-card__img', loading: 'lazy', alt: card_alt }}
+      {%- endif -%}
+    {%- else -%}
+      <div class="artist-card__placeholder">
+        <span class="artist-card__initial">{{ block.settings.name | slice: 0 }}</span>
+      </div>
+    {%- endif -%}
+    {%- if teaches -%}
+      <span class="artist-card__teaches">Teaches classes</span>
+    {%- endif -%}
+    {%- if collections[block.settings.collection_handle].metafields.site.is_dummy == 'true' -%}
+      <span class="saf-dummy-badge">&#9679; Placeholder</span>
+    {%- endif -%}
+  </div>
+  <div class="artist-card__info">
+    <h2 class="artist-card__name">{{ block.settings.name }}</h2>
+    {%- if block.settings.role != blank -%}
+      <p class="artist-card__role">{{ block.settings.role }}</p>
+    {%- endif -%}
+    <div class="artist-card__divider"></div>
+    {%- if block.settings.bio != blank -%}
+      <p class="artist-card__bio">{{ block.settings.bio }}</p>
+    {%- endif -%}
+    <span class="artist-card__link">View works &rarr;</span>
+  </div>
+</a>

@@ -1,0 +1,49 @@
+{%- comment -%}
+  Outputs a comma-separated list of canonical medium slugs for one artist.
+  Args:
+    handle   — artist collection handle (mediums auto-derived from medium-* product tags)
+    override — optional comma-separated slug list from the theme-editor block; wins when set
+  Canonical slugs (sync with ARTWORK_MEDIUMS in the booking admin app):
+  oil, acrylic, watercolour, drawing, printmaking, photography, ceramics, sculpture, mixed-media
+{%- endcomment -%}
+{%- liquid
+  assign out = ''
+  if override != blank
+    assign parts = override | downcase | split: ','
+    for p in parts
+      assign slug = p | strip | replace: ' ', '-'
+      if slug == blank
+        continue
+      endif
+      assign hay = ',' | append: out | append: ','
+      assign needle = ',' | append: slug | append: ','
+      unless hay contains needle
+        if out == blank
+          assign out = slug
+        else
+          assign out = out | append: ',' | append: slug
+        endif
+      endunless
+    endfor
+  else
+    for product in collections[handle].products limit: 50
+      for tag in product.tags
+        assign t = tag | downcase
+        assign prefix = t | slice: 0, 7
+        if prefix == 'medium-'
+          assign slug = t | remove_first: 'medium-'
+          assign hay = ',' | append: out | append: ','
+          assign needle = ',' | append: slug | append: ','
+          unless hay contains needle
+            if out == blank
+              assign out = slug
+            else
+              assign out = out | append: ',' | append: slug
+            endif
+          endunless
+        endif
+      endfor
+    endfor
+  endif
+  echo out
+-%}

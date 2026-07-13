@@ -52,6 +52,265 @@
     margin: 0 auto;
   }
 
+  /* ── Filter toolbar (cream strip between coral hero and coral grid) ── */
+  .saf-af {
+    background: #eeefeb;
+    padding: 22px 0;
+    margin-bottom: 56px;
+  }
+  .saf-af__inner {
+    max-width: 1240px;
+    margin-inline: auto;
+    padding-inline: 40px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .saf-af__search {
+    flex: 1 1 220px;
+    min-width: 180px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid rgba(29,28,33,0.28);
+    border-radius: 999px;
+    padding: 0 18px;
+    height: 44px;
+    background: transparent;
+    transition: border-color 0.2s;
+  }
+  .saf-af__search:focus-within { border-color: #0f4a52; }
+  .saf-af__search svg { flex-shrink: 0; color: rgba(29,28,33,0.55); }
+  .saf-af__search input {
+    flex: 1;
+    border: 0;
+    background: transparent;
+    font-family: var(--font-body-family);
+    font-size: 0.88rem;
+    color: #1d1c21;
+    outline: none;
+    min-width: 0;
+    -webkit-appearance: none;
+  }
+  .saf-af__search input::placeholder { color: rgba(29,28,33,0.5); }
+  .saf-af__search input::-webkit-search-cancel-button { -webkit-appearance: none; }
+
+  .saf-af__select {
+    height: 44px;
+    border: 1px solid rgba(29,28,33,0.28);
+    border-radius: 999px;
+    background: transparent;
+    font-family: var(--font-body-family);
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: #1d1c21;
+    padding: 0 36px 0 18px;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%231d1c21' stroke-width='1.5'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    transition: border-color 0.2s;
+  }
+  .saf-af__select:hover, .saf-af__select:focus-visible { border-color: #0f4a52; outline: none; }
+
+  .saf-af__dd { position: relative; }
+  .saf-af__dd summary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    list-style: none;
+    user-select: none;
+  }
+  .saf-af__dd summary::-webkit-details-marker { display: none; }
+  .saf-af__dd[open] summary { border-color: #0f4a52; }
+  .saf-af__dd-count {
+    background: #0f4a52;
+    color: #eeefeb;
+    font-size: 0.68rem;
+    font-weight: 700;
+    border-radius: 999px;
+    min-width: 18px;
+    height: 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 5px;
+  }
+  .saf-af__dd-count[hidden] { display: none; }
+  .saf-af__dd-panel {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    z-index: 12;
+    background: #eeefeb;
+    border: 1px solid rgba(29,28,33,0.18);
+    border-radius: 14px;
+    box-shadow: 0 14px 40px rgba(29,28,33,0.16);
+    padding: 14px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    width: 300px;
+  }
+
+  .saf-af__pill {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    border: 1px solid rgba(29,28,33,0.28);
+    border-radius: 999px;
+    padding: 7px 14px;
+    font-family: var(--font-body-family);
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: #1d1c21;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+  }
+  .saf-af__pill input { position: absolute; opacity: 0; pointer-events: none; }
+  .saf-af__pill.is-on { background: #0f4a52; border-color: #0f4a52; color: #eeefeb; }
+
+  .saf-af__chip {
+    height: 44px;
+    border: 1px solid rgba(29,28,33,0.28);
+    border-radius: 999px;
+    background: transparent;
+    font-family: var(--font-body-family);
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: #1d1c21;
+    padding: 0 18px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+  }
+  .saf-af__chip[aria-pressed="true"] { background: #0f4a52; border-color: #0f4a52; color: #eeefeb; }
+
+  .saf-af__count {
+    flex-basis: 100%;
+    font-family: var(--font-body-family);
+    font-size: 0.74rem;
+    letter-spacing: 0.06em;
+    color: rgba(29,28,33,0.55);
+    margin: 4px 0 0;
+    display: none;
+  }
+  .saf-af__count.is-visible { display: block; }
+
+  /* Mobile chip row */
+  .saf-af__chips {
+    display: none;
+    gap: 8px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 12px 16px 2px;
+  }
+  .saf-af__chips::-webkit-scrollbar { display: none; }
+  .saf-af__chips .saf-af__chip { height: 38px; font-size: 0.78rem; flex-shrink: 0; }
+  .saf-af__chip--sheet { display: inline-flex; align-items: center; gap: 7px; }
+
+  /* Empty state */
+  .saf-af-empty {
+    text-align: center;
+    padding: 70px 24px;
+  }
+  .saf-af-empty h3 {
+    font-family: var(--font-heading-family);
+    font-size: 1.6rem;
+    color: #1d1c21;
+    margin: 0 0 10px;
+  }
+  .saf-af-empty p {
+    font-family: var(--font-body-family);
+    font-size: 0.9rem;
+    color: rgba(29,28,33,0.7);
+    margin: 0 0 24px;
+  }
+  .saf-af-empty button {
+    font-family: var(--font-body-family);
+    font-size: 0.82rem;
+    font-weight: 600;
+    background: #0f4a52;
+    color: #eeefeb;
+    border: 0;
+    border-radius: 999px;
+    padding: 13px 28px;
+    cursor: pointer;
+  }
+
+  /* Bottom sheet (mobile) */
+  .saf-sheet { position: fixed; inset: 0; z-index: 100; }
+  .saf-sheet[hidden] { display: none; }
+  .saf-sheet__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(29,28,33,0.45);
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+  .saf-sheet.is-open .saf-sheet__backdrop { opacity: 1; }
+  .saf-sheet__panel {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    background: #eeefeb;
+    border-radius: 20px 20px 0 0;
+    padding: 10px 20px calc(20px + env(safe-area-inset-bottom));
+    max-height: 82vh;
+    overflow-y: auto;
+    transform: translateY(100%);
+    transition: transform 0.28s cubic-bezier(0.32, 0.72, 0, 1);
+  }
+  .saf-sheet.is-open .saf-sheet__panel { transform: translateY(0); }
+  .saf-sheet__handle {
+    width: 38px; height: 4px;
+    background: rgba(29,28,33,0.22);
+    border-radius: 999px;
+    margin: 6px auto 16px;
+  }
+  .saf-sheet__label {
+    font-family: var(--font-body-family);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #0f4a52;
+    margin: 18px 0 10px;
+  }
+  .saf-sheet__label:first-of-type { margin-top: 4px; }
+  .saf-sheet__pills { display: flex; flex-wrap: wrap; gap: 8px; }
+  .saf-sheet__footer {
+    display: flex;
+    gap: 10px;
+    margin-top: 24px;
+  }
+  .saf-sheet__clear {
+    flex: 0 0 auto;
+    font-family: var(--font-body-family);
+    font-size: 0.82rem;
+    font-weight: 600;
+    background: transparent;
+    color: #1d1c21;
+    border: 1px solid rgba(29,28,33,0.35);
+    border-radius: 999px;
+    padding: 13px 20px;
+    cursor: pointer;
+  }
+  .saf-sheet__apply {
+    flex: 1;
+    font-family: var(--font-body-family);
+    font-size: 0.82rem;
+    font-weight: 600;
+    background: #0f4a52;
+    color: #eeefeb;
+    border: 0;
+    border-radius: 999px;
+    padding: 13px 20px;
+    cursor: pointer;
+  }
+
   /* ── Shared card styles ── */
   .artist-card {
     display: flex;
@@ -66,6 +325,7 @@
     border-color: rgba(242,107,82,0.7);
     box-shadow: 0 0 0 1px rgba(242,107,82,0.2), 0 16px 48px rgba(0,0,0,0.45);
   }
+  .artist-card.is-filtered-out { display: none; }
   .artist-card_artist_photo {
     width: 100%;
     aspect-ratio: 3 / 4;
@@ -84,6 +344,24 @@
     display: block;
   }
   .artist-card:hover .artist-card__img { transform: scale(1.04); }
+  .artist-card__teaches {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 2;
+    background: #0f4a52;
+    color: #eeefeb;
+    font-family: var(--font-body-family);
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    border-radius: 999px;
+    pointer-events: none;
+    line-height: 1;
+    white-space: nowrap;
+  }
   .artist-card__placeholder {
     position: absolute;
     inset: 0;
@@ -165,6 +443,7 @@
     padding: 0 0 100px;
     background: #f26b52;
   }
+  .artists-grid-section[hidden] { display: none; }
   .artists-grid-container {
     max-width: 1240px;
     margin-inline: auto;
@@ -182,6 +461,7 @@
     background: #f26b52;
     overflow: hidden;
   }
+  .artists-carousel-section[hidden] { display: none; }
   .artists-carousel-viewport {
     overflow: hidden;
     width: 100%;
@@ -207,6 +487,16 @@
     .artists-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
     .artists-grid-container { padding-inline: 28px; }
   }
+  @media (max-width: 749px) {
+    .saf-af { padding: 14px 0 10px; margin-bottom: 36px; }
+    .saf-af__inner { padding-inline: 16px; }
+    .saf-af__inner .saf-af__select,
+    .saf-af__inner .saf-af__dd,
+    .saf-af__inner .saf-af__chip { display: none; }
+    .saf-af__search { height: 42px; }
+    .saf-af__chips { display: flex; }
+    .saf-af__count { padding-inline: 16px; }
+  }
   @media (max-width: 600px) {
     .artists-hero { height: 280px; padding: 32px 20px; }
     .artists-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
@@ -216,6 +506,7 @@
     .artist-card__name { font-size: 1.05rem; }
     .artist-card__bio { font-size: 0.8rem; -webkit-line-clamp: 2; }
     .artist-card__initial { font-size: 3.5rem; }
+    .artist-card__teaches { font-size: 0.52rem; padding: 4px 8px; }
   }
 
   /* ── Responsive: carousel ── */
@@ -231,7 +522,53 @@
   }
 {%- endstyle -%}
 
-<div class="artists-page">
+{%- liquid
+  assign artist_meta = shop.metafields.booking_app.artist_meta.value
+  assign show_filters = section.settings.show_filters
+  if section.blocks.size == 0
+    assign show_filters = false
+  endif
+
+  comment
+    Union of all artists' mediums (canonical order) + whether anyone teaches —
+    drives which filter controls appear at all.
+  endcomment
+  assign canonical_mediums = 'oil,acrylic,watercolour,drawing,printmaking,photography,ceramics,sculpture,mixed-media' | split: ','
+  assign any_teaches = false
+-%}
+{%- capture all_mediums_raw -%}
+  {%- for block in section.blocks -%}
+    {%- render 'artist-card-mediums', handle: block.settings.collection_handle, override: block.settings.mediums_override -%},
+  {%- endfor -%}
+{%- endcapture -%}
+{%- liquid
+  assign present_mediums = all_mediums_raw | strip_newlines | remove: ' ' | split: ','
+  assign page_mediums = ''
+  for c in canonical_mediums
+    for p in present_mediums
+      if p == c
+        if page_mediums == blank
+          assign page_mediums = c
+        else
+          assign page_mediums = page_mediums | append: ',' | append: c
+        endif
+        break
+      endif
+    endfor
+  endfor
+  assign page_mediums_arr = page_mediums | split: ','
+
+  for block in section.blocks
+    assign b_handle = block.settings.collection_handle
+    if block.settings.teaches == 'yes'
+      assign any_teaches = true
+    elsif block.settings.teaches != 'no' and artist_meta[b_handle].teaches
+      assign any_teaches = true
+    endif
+  endfor
+-%}
+
+<div class="artists-page" data-af-root {% if section.settings.layout == 'carousel' %}data-af-carousel{% endif %}>
   <div class="artists-hero">
     <p class="artists-hero__eyebrow">{{ section.settings.eyebrow | default: 'SA Art Fair' }}</p>
     <h1 class="artists-hero__heading">{{ section.settings.heading | default: 'Our Artists' }}</h1>
@@ -240,129 +577,208 @@
     {%- endif -%}
   </div>
 
+  {%- if show_filters -%}
+    <div class="saf-af">
+      <div class="saf-af__inner">
+        <div class="saf-af__search">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg>
+          <input type="search" data-af-q placeholder="{{ section.settings.search_placeholder | default: 'Search artists, mediums…' }}" aria-label="Search artists" autocomplete="off">
+        </div>
+
+        <select data-af-artist aria-label="Choose an artist" class="saf-af__select">
+          <option value="">All artists</option>
+          {%- for block in section.blocks -%}
+            <option value="{{ block.settings.collection_handle | escape }}">{{ block.settings.name | escape }}</option>
+          {%- endfor -%}
+        </select>
+
+        {%- if page_mediums != blank -%}
+          <details class="saf-af__dd" data-af-dd>
+            <summary class="saf-af__select" role="button" aria-label="Filter by medium">
+              Medium <span class="saf-af__dd-count" data-af-med-count hidden></span>
+            </summary>
+            <div class="saf-af__dd-panel">
+              {%- for m in page_mediums_arr -%}
+                <label class="saf-af__pill">
+                  <input type="checkbox" value="{{ m }}" data-af-medium>
+                  <span>{{ m | replace: '-', ' ' | capitalize }}</span>
+                </label>
+              {%- endfor -%}
+            </div>
+          </details>
+        {%- endif -%}
+
+        {%- if any_teaches -%}
+          <button type="button" class="saf-af__chip" data-af-teaches aria-pressed="false">Teaches classes</button>
+        {%- endif -%}
+
+        <select data-af-sort aria-label="Sort artists" class="saf-af__select">
+          <option value="featured">Featured</option>
+          <option value="az">A – Z</option>
+          <option value="za">Z – A</option>
+          {%- if any_teaches -%}<option value="teachers">Teaches first</option>{%- endif -%}
+        </select>
+
+        <p class="saf-af__count" data-af-count aria-live="polite"></p>
+      </div>
+
+      <div class="saf-af__chips">
+        <button type="button" class="saf-af__chip saf-af__chip--sheet" data-af-open-sheet>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="4" y1="7" x2="20" y2="7"/><circle cx="9" cy="7" r="2.5" fill="#eeefeb"/><line x1="4" y1="17" x2="20" y2="17"/><circle cx="15" cy="17" r="2.5" fill="#eeefeb"/></svg>
+          Sort &amp; filter
+        </button>
+        {%- if any_teaches -%}
+          <button type="button" class="saf-af__chip" data-af-chip-teaches aria-pressed="false">Teaches classes</button>
+        {%- endif -%}
+        {%- for m in page_mediums_arr -%}
+          <button type="button" class="saf-af__chip" data-af-chip-medium="{{ m }}" aria-pressed="false">{{ m | replace: '-', ' ' | capitalize }}</button>
+        {%- endfor -%}
+      </div>
+    </div>
+  {%- endif -%}
+
   {%- if section.settings.layout == 'carousel' -%}
 
-    <div class="artists-carousel-section">
+    <div class="artists-carousel-section" data-af-carousel-section>
       <div class="artists-carousel-viewport" id="carousel-vp-{{ section.id }}">
         <div class="artists-carousel-track" id="carousel-track-{{ section.id }}">
 
           {%- comment -%}Real cards (with editor attributes){%- endcomment -%}
           {%- for block in section.blocks -%}
-            {%- assign dest = block.settings.collection_handle | prepend: '/collections/' -%}
-            {%- if block.settings.link != blank -%}{%- assign dest = block.settings.link -%}{%- endif -%}
-            {%- assign col_img = collections[block.settings.collection_handle].image -%}
-            {%- assign artist_photo = col_img | default: block.settings.image -%}
-            <a href="{{ dest }}" class="artist-card" {{ block.shopify_attributes }}>
-              <div class="artist-card_artist_photo">
-                {%- if artist_photo != blank -%}
-                  {{ artist_photo | image_url: width: 800 | image_tag:
-                      class: 'artist-card__img', loading: 'lazy', alt: block.settings.name | escape }}
-                {%- else -%}
-                  <div class="artist-card__placeholder">
-                    <span class="artist-card__initial">{{ block.settings.name | slice: 0 }}</span>
-                  </div>
-                {%- endif -%}
-                {%- if collections[block.settings.collection_handle].metafields.site.is_dummy == 'true' -%}
-                  <span class="saf-dummy-badge">&#9679; Placeholder</span>
-                {%- endif -%}
-              </div>
-              <div class="artist-card__info">
-                <h2 class="artist-card__name">{{ block.settings.name }}</h2>
-                {%- if block.settings.role != blank -%}
-                  <p class="artist-card__role">{{ block.settings.role }}</p>
-                {%- endif -%}
-                <div class="artist-card__divider"></div>
-                {%- if block.settings.bio != blank -%}
-                  <p class="artist-card__bio">{{ block.settings.bio }}</p>
-                {%- endif -%}
-                <span class="artist-card__link">View works &rarr;</span>
-              </div>
-            </a>
+            {%- liquid
+              assign b_teaches = false
+              if block.settings.teaches == 'yes'
+                assign b_teaches = true
+              elsif block.settings.teaches != 'no' and artist_meta[block.settings.collection_handle].teaches
+                assign b_teaches = true
+              endif
+            -%}
+            {%- capture b_mediums -%}{%- render 'artist-card-mediums', handle: block.settings.collection_handle, override: block.settings.mediums_override -%}{%- endcapture -%}
+            {%- render 'artist-card', block: block, attrs: block.shopify_attributes, mediums: b_mediums, teaches: b_teaches -%}
           {%- endfor -%}
 
           {%- comment -%}Duplicate cards for seamless loop (aria-hidden, no editor attrs){%- endcomment -%}
           {%- for block in section.blocks -%}
-            {%- assign dest = block.settings.collection_handle | prepend: '/collections/' -%}
-            {%- if block.settings.link != blank -%}{%- assign dest = block.settings.link -%}{%- endif -%}
-            {%- assign col_img = collections[block.settings.collection_handle].image -%}
-            {%- assign artist_photo = col_img | default: block.settings.image -%}
-            <a href="{{ dest }}" class="artist-card" aria-hidden="true" tabindex="-1">
-              <div class="artist-card_artist_photo">
-                {%- if artist_photo != blank -%}
-                  {{ artist_photo | image_url: width: 800 | image_tag:
-                      class: 'artist-card__img', loading: 'lazy', alt: '' }}
-                {%- else -%}
-                  <div class="artist-card__placeholder">
-                    <span class="artist-card__initial">{{ block.settings.name | slice: 0 }}</span>
-                  </div>
-                {%- endif -%}
-                {%- if collections[block.settings.collection_handle].metafields.site.is_dummy == 'true' -%}
-                  <span class="saf-dummy-badge">&#9679; Placeholder</span>
-                {%- endif -%}
-              </div>
-              <div class="artist-card__info">
-                <h2 class="artist-card__name">{{ block.settings.name }}</h2>
-                {%- if block.settings.role != blank -%}
-                  <p class="artist-card__role">{{ block.settings.role }}</p>
-                {%- endif -%}
-                <div class="artist-card__divider"></div>
-                {%- if block.settings.bio != blank -%}
-                  <p class="artist-card__bio">{{ block.settings.bio }}</p>
-                {%- endif -%}
-                <span class="artist-card__link">View works &rarr;</span>
-              </div>
-            </a>
+            {%- render 'artist-card', block: block, hidden_dup: true -%}
           {%- endfor -%}
 
         </div>
       </div>
     </div>
 
+    {%- comment -%}Hidden grid shown while filters/search are active{%- endcomment -%}
+    <div class="artists-grid-section" data-af-grid-section hidden>
+      <div class="artists-grid-container">
+        <div class="artists-grid" data-af-grid>
+          {%- for block in section.blocks -%}
+            {%- liquid
+              assign b_teaches = false
+              if block.settings.teaches == 'yes'
+                assign b_teaches = true
+              elsif block.settings.teaches != 'no' and artist_meta[block.settings.collection_handle].teaches
+                assign b_teaches = true
+              endif
+            -%}
+            {%- capture b_mediums -%}{%- render 'artist-card-mediums', handle: block.settings.collection_handle, override: block.settings.mediums_override -%}{%- endcapture -%}
+            {%- render 'artist-card', block: block, mediums: b_mediums, teaches: b_teaches -%}
+          {%- endfor -%}
+        </div>
+        <div class="saf-af-empty" data-af-empty hidden>
+          <h3>No artists match</h3>
+          <p>Try a different search or clear your filters.</p>
+          <button type="button" data-af-clear>Clear filters</button>
+        </div>
+      </div>
+    </div>
+
   {%- else -%}
 
-    <div class="artists-grid-section">
+    <div class="artists-grid-section" data-af-grid-section>
       <div class="artists-grid-container">
         {%- if section.blocks.size > 0 -%}
-          <div class="artists-grid">
+          <div class="artists-grid" data-af-grid>
             {%- for block in section.blocks -%}
-              {%- assign dest = block.settings.collection_handle | prepend: '/collections/' -%}
-              {%- if block.settings.link != blank -%}{%- assign dest = block.settings.link -%}{%- endif -%}
-              {%- assign col_img = collections[block.settings.collection_handle].image -%}
-              {%- assign artist_photo = col_img | default: block.settings.image -%}
-              <a href="{{ dest }}" class="artist-card" {{ block.shopify_attributes }}>
-                <div class="artist-card_artist_photo">
-                  {%- if artist_photo != blank -%}
-                    {{ artist_photo | image_url: width: 800 | image_tag:
-                        class: 'artist-card__img', loading: 'lazy', alt: block.settings.name | escape }}
-                  {%- else -%}
-                    <div class="artist-card__placeholder">
-                      <span class="artist-card__initial">{{ block.settings.name | slice: 0 }}</span>
-                    </div>
-                  {%- endif -%}
-                  {%- if collections[block.settings.collection_handle].metafields.site.is_dummy == 'true' -%}
-                    <span class="saf-dummy-badge">&#9679; Placeholder</span>
-                  {%- endif -%}
-                </div>
-                <div class="artist-card__info">
-                  <h2 class="artist-card__name">{{ block.settings.name }}</h2>
-                  {%- if block.settings.role != blank -%}
-                    <p class="artist-card__role">{{ block.settings.role }}</p>
-                  {%- endif -%}
-                  <div class="artist-card__divider"></div>
-                  {%- if block.settings.bio != blank -%}
-                    <p class="artist-card__bio">{{ block.settings.bio }}</p>
-                  {%- endif -%}
-                  <span class="artist-card__link">View works &rarr;</span>
-                </div>
-              </a>
+              {%- liquid
+                assign b_teaches = false
+                if block.settings.teaches == 'yes'
+                  assign b_teaches = true
+                elsif block.settings.teaches != 'no' and artist_meta[block.settings.collection_handle].teaches
+                  assign b_teaches = true
+                endif
+              -%}
+              {%- capture b_mediums -%}{%- render 'artist-card-mediums', handle: block.settings.collection_handle, override: block.settings.mediums_override -%}{%- endcapture -%}
+              {%- render 'artist-card', block: block, attrs: block.shopify_attributes, mediums: b_mediums, teaches: b_teaches -%}
             {%- endfor -%}
+          </div>
+          <div class="saf-af-empty" data-af-empty hidden>
+            <h3>No artists match</h3>
+            <p>Try a different search or clear your filters.</p>
+            <button type="button" data-af-clear>Clear filters</button>
           </div>
         {%- endif -%}
       </div>
     </div>
 
   {%- endif -%}
+
+  {%- if show_filters -%}
+    <div class="saf-sheet" data-af-sheet hidden>
+      <div class="saf-sheet__backdrop" data-af-sheet-close></div>
+      <div class="saf-sheet__panel" role="dialog" aria-modal="true" aria-label="Sort and filter artists">
+        <div class="saf-sheet__handle"></div>
+
+        <p class="saf-sheet__label">Sort by</p>
+        <div class="saf-sheet__pills" data-af-sheet-sorts>
+          <label class="saf-af__pill is-on"><input type="radio" name="af-sheet-sort-{{ section.id }}" value="featured" checked><span>Featured</span></label>
+          <label class="saf-af__pill"><input type="radio" name="af-sheet-sort-{{ section.id }}" value="az"><span>A – Z</span></label>
+          <label class="saf-af__pill"><input type="radio" name="af-sheet-sort-{{ section.id }}" value="za"><span>Z – A</span></label>
+          {%- if any_teaches -%}
+            <label class="saf-af__pill"><input type="radio" name="af-sheet-sort-{{ section.id }}" value="teachers"><span>Teaches first</span></label>
+          {%- endif -%}
+        </div>
+
+        <p class="saf-sheet__label">Artist</p>
+        <select data-af-sheet-artist aria-label="Choose an artist" class="saf-af__select" style="width:100%">
+          <option value="">All artists</option>
+          {%- for block in section.blocks -%}
+            <option value="{{ block.settings.collection_handle | escape }}">{{ block.settings.name | escape }}</option>
+          {%- endfor -%}
+        </select>
+
+        {%- if page_mediums != blank -%}
+          <p class="saf-sheet__label">Medium</p>
+          <div class="saf-sheet__pills">
+            {%- for m in page_mediums_arr -%}
+              <label class="saf-af__pill">
+                <input type="checkbox" value="{{ m }}" data-af-sheet-medium>
+                <span>{{ m | replace: '-', ' ' | capitalize }}</span>
+              </label>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+
+        {%- if any_teaches -%}
+          <p class="saf-sheet__label">Classes</p>
+          <div class="saf-sheet__pills">
+            <label class="saf-af__pill">
+              <input type="checkbox" value="1" data-af-sheet-teaches>
+              <span>Teaches classes &amp; workshops</span>
+            </label>
+          </div>
+        {%- endif -%}
+
+        <div class="saf-sheet__footer">
+          <button type="button" class="saf-sheet__clear" data-af-clear>Clear all</button>
+          <button type="button" class="saf-sheet__apply" data-af-sheet-close data-af-apply>Show artists</button>
+        </div>
+      </div>
+    </div>
+  {%- endif -%}
 </div>
+
+{%- if show_filters -%}
+  <script src="{{ 'artists-filter.js' | asset_url }}" defer></script>
+{%- endif -%}
 
 {%- if section.settings.layout == 'carousel' -%}
 <script>
@@ -521,7 +937,16 @@
       "step": 5,
       "default": 55,
       "info": "Only applies in Carousel layout"
-    }
+    },
+    { "type": "header", "content": "Search & filters" },
+    {
+      "type": "checkbox",
+      "id": "show_filters",
+      "label": "Show search & filter bar",
+      "default": true,
+      "info": "Search, artist picker, medium filter, teaches-classes filter and sorting. Mediums come automatically from each artist's artworks; 'teaches classes' is matched automatically to the booking app's teachers."
+    },
+    { "type": "text", "id": "search_placeholder", "label": "Search placeholder", "default": "Search artists, mediums…" }
   ],
   "blocks": [
     {
@@ -533,7 +958,25 @@
         { "type": "text",         "id": "role",              "label": "Medium / Specialty" },
         { "type": "textarea",     "id": "bio",               "label": "Short bio" },
         { "type": "text",         "id": "collection_handle", "label": "Collection handle", "info": "e.g. susan-orpen" },
-        { "type": "url",          "id": "link",              "label": "Override link",     "info": "Optional — overrides the collection handle link" }
+        { "type": "url",          "id": "link",              "label": "Override link",     "info": "Optional — overrides the collection handle link" },
+        {
+          "type": "select",
+          "id": "teaches",
+          "label": "Teaches classes / workshops",
+          "options": [
+            { "value": "auto", "label": "Auto (match booking app teachers)" },
+            { "value": "yes",  "label": "Yes" },
+            { "value": "no",   "label": "No" }
+          ],
+          "default": "auto",
+          "info": "Auto shows the badge when this artist is also a teacher in the booking app"
+        },
+        {
+          "type": "text",
+          "id": "mediums_override",
+          "label": "Mediums (override)",
+          "info": "Leave blank to auto-detect from this artist's artworks. Otherwise comma-separated: oil, acrylic, watercolour, drawing, printmaking, photography, ceramics, sculpture, mixed-media"
+        }
       ]
     }
   ],
