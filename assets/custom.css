@@ -559,3 +559,226 @@ svg.icon-heart .icon-heart__fill {
     bottom: calc(5.8rem + env(safe-area-inset-bottom, 0px));
   }
 }
+
+/* ══ Floating WhatsApp button (number via Theme settings → WhatsApp button) ══
+   --saf-bk-banner-h is published by whatsapp.js = the live height of the booking
+   hold-timer banner (0 when none). Adding it to `bottom` keeps the button clear of
+   the banner on every width; on mobile it also sits above the .saf-mobile-ctas bar. */
+.saf-whatsapp {
+  position: fixed;
+  right: 20px;
+  bottom: calc(20px + var(--saf-bk-banner-h, 0px));
+  z-index: 55;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #25d366;
+  color: #fff;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.22);
+  transition: bottom 0.35s cubic-bezier(0.4, 0, 0.2, 1), transform 0.18s ease, box-shadow 0.18s ease;
+}
+.saf-whatsapp:hover,
+.saf-whatsapp:focus {
+  color: #fff;
+  transform: scale(1.06);
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.28);
+}
+.saf-whatsapp:focus-visible {
+  outline: 3px solid rgba(37, 211, 102, 0.5);
+  outline-offset: 3px;
+}
+.saf-whatsapp svg {
+  width: 32px;
+  height: 32px;
+  fill: currentColor;
+  display: block;
+}
+.saf-whatsapp::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.45);
+  animation: saf-wa-pulse 2.6s ease-out infinite;
+  pointer-events: none;
+}
+@keyframes saf-wa-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.45); }
+  70%  { box-shadow: 0 0 0 14px rgba(37, 211, 102, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .saf-whatsapp::before { animation: none; }
+}
+@media screen and (max-width: 989px) {
+  .saf-whatsapp {
+    width: 52px;
+    height: 52px;
+    right: 16px;
+    bottom: calc(16px + var(--saf-bk-banner-h, 0px) + env(safe-area-inset-bottom, 0px));
+  }
+  .saf-whatsapp svg { width: 29px; height: 29px; }
+  /* Above the fixed mobile path-CTA bar (and the booking banner via the var) */
+  body:has(.saf-mobile-ctas) .saf-whatsapp {
+    bottom: calc(5.8rem + 16px + var(--saf-bk-banner-h, 0px) + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+/* ══ Newsletter signup popup (copy via Theme settings → Newsletter popup) ══ */
+.saf-nl-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99998;
+  background: rgba(29, 28, 33, 0.5);
+  opacity: 0;
+  transition: opacity 0.24s ease;
+}
+.saf-nl {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, calc(-50% + 10px));
+  z-index: 99999;
+  width: calc(100vw - 32px);
+  max-width: 420px;
+  background: #eeefeb;
+  color: #1d1c21;
+  border-radius: 14px;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.32);
+  padding: 34px 30px 26px;
+  opacity: 0;
+  transition: opacity 0.24s ease, transform 0.24s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.saf-nl__close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: rgba(29, 28, 33, 0.5);
+  border-radius: 50%;
+}
+.saf-nl__close:hover { color: #1d1c21; background: rgba(29, 28, 33, 0.06); }
+.saf-nl__eyebrow {
+  margin: 0 0 14px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #0f4a52;
+}
+.saf-nl__offer {
+  display: inline-block;
+  margin: 0 0 14px;
+  background: #f26b52;
+  color: #1d1c21;
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 7px 12px;
+  border-radius: 999px;
+}
+.saf-nl__heading {
+  margin: 0 0 10px;
+  font-family: var(--font-heading-family);
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #1d1c21;
+}
+.saf-nl__text {
+  margin: 0 0 20px;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: rgba(29, 28, 33, 0.72);
+}
+.saf-nl__form { display: flex; flex-direction: column; gap: 10px; }
+.saf-nl__input {
+  width: 100%;
+  padding: 13px 15px;
+  box-sizing: border-box;
+  border: 1.5px solid rgba(29, 28, 33, 0.18);
+  border-radius: 8px;
+  background: #fff;
+  font-size: 0.95rem;
+  color: #1d1c21;
+  outline: none;
+}
+.saf-nl__input:focus { border-color: #0f4a52; }
+.saf-nl__submit {
+  width: 100%;
+  padding: 14px;
+  cursor: pointer;
+  background: #0f4a52;
+  color: #eeefeb;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: background 0.15s ease;
+}
+.saf-nl__submit:hover { background: #0c3a41; }
+.saf-nl__err { margin: 10px 0 0; color: #c0392b; font-size: 0.78rem; }
+.saf-nl__err[hidden] { display: none; }
+.saf-nl__fine { margin: 14px 0 0; font-size: 0.72rem; color: rgba(29, 28, 33, 0.5); text-align: center; }
+.saf-nl__success { text-align: center; padding: 6px 0 4px; }
+.saf-nl__check {
+  width: 54px;
+  height: 54px;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  background: #0f4a52;
+  color: #eeefeb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.saf-nl__code {
+  display: flex;
+  align-items: stretch;
+  margin: 6px auto 12px;
+  max-width: 280px;
+  border: 1.5px dashed #0f4a52;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.saf-nl__code-value {
+  flex: 1;
+  padding: 12px 14px;
+  font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: 0.12em;
+  color: #0f4a52;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.saf-nl__copy {
+  padding: 0 16px;
+  cursor: pointer;
+  border: none;
+  background: #0f4a52;
+  color: #eeefeb;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.saf-nl__copy:hover { background: #0c3a41; }
+@media screen and (max-width: 480px) {
+  .saf-nl { padding: 30px 22px 22px; border-radius: 12px; }
+  .saf-nl__heading { font-size: 1.4rem; }
+}

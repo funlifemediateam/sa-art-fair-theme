@@ -418,5 +418,16 @@
     {%- comment -%} Mobile-only persistent path CTA bar (desktop CTAs live in
       the header nav row). Labels/links: theme settings. {%- endcomment -%}
     {% render 'path-ctas', wrapper_class: 'saf-mobile-ctas' %}
+
+    {%- comment -%} Floating WhatsApp button — hidden until a number is set in
+      Theme settings → WhatsApp button. {%- endcomment -%}
+    {%- render 'whatsapp-button' -%}
+
+    {%- comment -%} Newsletter signup popup. Not rendered on cart; the script
+      itself also skips checkout/booking flows and defers to the quiz lead
+      popup so the two never compete. {%- endcomment -%}
+    {%- unless request.page_type == 'cart' -%}
+      {%- render 'newsletter-popup' -%}
+    {%- endunless -%}
   </body>
 </html>

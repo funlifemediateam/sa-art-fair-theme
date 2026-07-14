@@ -1,0 +1,37 @@
+{%- comment -%}
+  Floating WhatsApp button, shown site-wide.
+
+  Number, pre-filled message and accessible label come from
+  Theme settings → WhatsApp button, so no client data lives in code.
+  Renders nothing when the number is blank (button stays hidden) — the
+  sellable default.
+
+  Mobile stacking: on <990px the button sits above the fixed
+  .saf-mobile-ctas bar, and whatsapp.js raises it above the booking
+  hold-timer banner (#sa-bk-banner-container) whenever that is on screen,
+  so the button, the CTA bar and the booking banner never overlap.
+{%- endcomment -%}
+{%- liquid
+  assign wa_number = settings.saf_whatsapp_number | remove: ' ' | remove: '+' | remove: '-' | remove: '(' | remove: ')' | remove: '.'
+-%}
+{%- if wa_number != blank -%}
+  {%- assign wa_label = settings.saf_whatsapp_label | default: 'Chat with us on WhatsApp' -%}
+  {%- assign wa_href = 'https://wa.me/' | append: wa_number -%}
+  {%- if settings.saf_whatsapp_message != blank -%}
+    {%- assign wa_msg = settings.saf_whatsapp_message | url_encode -%}
+    {%- assign wa_href = wa_href | append: '?text=' | append: wa_msg -%}
+  {%- endif -%}
+  <a
+    class="saf-whatsapp"
+    href="{{ wa_href }}"
+    target="_blank"
+    rel="noopener"
+    aria-label="{{ wa_label | escape }}"
+    title="{{ wa_label | escape }}"
+  >
+    <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+      <path d="M16.004 3.2c-7.06 0-12.8 5.74-12.8 12.8 0 2.256.59 4.46 1.712 6.404L3.2 28.8l6.57-1.712A12.74 12.74 0 0 0 16.004 28.8c7.06 0 12.8-5.74 12.8-12.8s-5.74-12.8-12.8-12.8zm0 23.424c-2.01 0-3.98-.54-5.7-1.562l-.408-.242-4.06 1.058 1.084-3.96-.266-.42a10.6 10.6 0 0 1-1.62-5.62c0-5.86 4.77-10.63 10.63-10.63 2.84 0 5.51 1.106 7.52 3.114a10.56 10.56 0 0 1 3.11 7.52c0 5.86-4.77 10.634-10.63 10.634zm5.83-7.96c-.32-.16-1.89-.932-2.182-1.038-.292-.106-.505-.16-.718.16-.213.32-.824 1.038-1.01 1.25-.186.214-.372.24-.692.08-.32-.16-1.35-.498-2.57-1.586-.95-.848-1.592-1.895-1.778-2.215-.186-.32-.02-.492.14-.652.144-.143.32-.372.48-.558.16-.186.213-.32.32-.532.107-.214.054-.4-.026-.56-.08-.16-.718-1.73-.984-2.37-.26-.622-.522-.538-.718-.548l-.612-.01c-.213 0-.56.08-.852.4-.292.32-1.117 1.092-1.117 2.662s1.143 3.088 1.303 3.302c.16.214 2.25 3.436 5.45 4.818.762.33 1.356.526 1.82.673.765.243 1.46.209 2.01.127.613-.092 1.89-.772 2.156-1.518.266-.746.266-1.386.186-1.518-.08-.133-.292-.213-.612-.373z"/>
+    </svg>
+  </a>
+  <script src="{{ 'whatsapp.js' | asset_url }}" defer></script>
+{%- endif -%}

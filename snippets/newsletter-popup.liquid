@@ -1,0 +1,26 @@
+{%- comment -%}
+  Newsletter signup popup offering a first-order discount.
+
+  All copy + behaviour come from Theme settings → Newsletter popup, so no
+  client data lives in code. Renders nothing unless enabled.
+
+  Gentle by design (see newsletter-popup.js): fires once per visitor
+  (localStorage), easy to dismiss, never on cart/checkout/booking flows, and
+  never competes with the quiz lead popup (lead-popup.js) — if that popup has
+  fired or is still eligible this session, this one waits for a future visit.
+{%- endcomment -%}
+{%- if settings.saf_newsletter_enabled -%}
+  {%- assign _nl_api = shop.metafields.booking_app.quiz_api_url | default: 'https://sa-art-fair-admin.vercel.app' -%}
+  <script>
+    window.__safNewsletter = {
+      apiUrl:  {{ _nl_api | json }},
+      delayMs: {{ settings.saf_newsletter_delay | default: 12 | times: 1000 | json }},
+      code:    {{ settings.saf_newsletter_code | default: '' | json }},
+      offer:   {{ settings.saf_newsletter_discount_label | default: '' | json }},
+      heading: {{ settings.saf_newsletter_heading | default: '' | json }},
+      body:    {{ settings.saf_newsletter_body | default: '' | json }},
+      shop:    {{ shop.name | json }}
+    };
+  </script>
+  <script src="{{ 'newsletter-popup.js' | asset_url }}" defer></script>
+{%- endif -%}

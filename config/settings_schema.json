@@ -1488,5 +1488,81 @@
         "label": "Second pill link"
       }
     ]
+  },
+  {
+    "name": "WhatsApp button",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "A floating WhatsApp button shown on every page. Leave the number blank to hide the button."
+      },
+      {
+        "type": "text",
+        "id": "saf_whatsapp_number",
+        "label": "WhatsApp number",
+        "info": "International format, digits only (e.g. 27821234567). Blank hides the button."
+      },
+      {
+        "type": "text",
+        "id": "saf_whatsapp_message",
+        "label": "Pre-filled message",
+        "info": "Optional. The text the chat opens with."
+      },
+      {
+        "type": "text",
+        "id": "saf_whatsapp_label",
+        "label": "Tooltip / accessible label",
+        "default": "Chat with us on WhatsApp"
+      }
+    ]
+  },
+  {
+    "name": "Newsletter popup",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "A one-time popup offering a discount for signing up. It never interrupts cart, checkout or booking flows, and never competes with the quiz lead popup — it waits for a later visit if that popup is still eligible."
+      },
+      {
+        "type": "checkbox",
+        "id": "saf_newsletter_enabled",
+        "label": "Enable newsletter popup",
+        "default": false
+      },
+      {
+        "type": "range",
+        "id": "saf_newsletter_delay",
+        "label": "Delay before showing",
+        "min": 0,
+        "max": 60,
+        "step": 1,
+        "unit": "s",
+        "default": 12
+      },
+      {
+        "type": "text",
+        "id": "saf_newsletter_code",
+        "label": "Discount code",
+        "info": "The code revealed after signup. Leave blank to collect emails without showing a code."
+      },
+      {
+        "type": "text",
+        "id": "saf_newsletter_discount_label",
+        "label": "Offer label",
+        "default": "10% off your first order"
+      },
+      {
+        "type": "text",
+        "id": "saf_newsletter_heading",
+        "label": "Heading",
+        "default": "Get 10% off your first order"
+      },
+      {
+        "type": "textarea",
+        "id": "saf_newsletter_body",
+        "label": "Body text",
+        "default": "Join our list for first access to new artists, exhibitions and exclusive works — and take 10% off your first purchase."
+      }
+    ]
   }
 ]
