@@ -1,0 +1,45 @@
+{
+  "sections": {
+    "intro": {
+      "type": "rich-text",
+      "blocks": {
+        "caption": { "type": "caption", "settings": { "caption": "Learn. Create. Exhibit. Collect.", "text_style": "caption-with-letter-spacing", "text_size": "medium" } },
+        "heading": { "type": "heading", "settings": { "heading": "Your Creative Ecosystem", "heading_size": "h1" } },
+        "text": { "type": "text", "settings": { "text": "<p>SA Art Fair is a working art ecosystem in Hout Bay — a studio where artists learn and make, an online gallery where they exhibit and sell, and a home for collectors who want to buy from the artists who create. Whichever door you come in through — creator, collector, artist or teacher — you're part of the same creative circle.</p>" } }
+      },
+      "block_order": ["caption", "heading", "text"],
+      "settings": { "desktop_content_position": "center", "content_alignment": "center", "color_scheme": "scheme-1", "full_width": true, "padding_top": 56, "padding_bottom": 40 }
+    },
+    "studio": {
+      "type": "image-with-text",
+      "blocks": {
+        "caption": { "type": "caption", "settings": { "caption": "The studio", "text_style": "caption-with-letter-spacing", "text_size": "medium" } },
+        "heading": { "type": "heading", "settings": { "heading": "Made and shown in Hout Bay", "heading_size": "h2" } },
+        "text": { "type": "text", "settings": { "text": "<p>Our light-filled studio is where classes happen, where our resident artists work, and where much of the art you see online is created. It's a space built for making — and for the community that gathers around it.</p>", "text_style": "body" } }
+      },
+      "block_order": ["caption", "heading", "text"],
+      "settings": { "height": "large", "desktop_image_width": "medium", "layout": "text_first", "content_layout": "no-overlap", "desktop_content_position": "middle", "desktop_content_alignment": "left", "color_scheme": "scheme-2", "section_color_scheme": "scheme-1", "padding_top": 24, "padding_bottom": 24 }
+    },
+    "pillars": {
+      "type": "multicolumn",
+      "blocks": {
+        "c1": { "type": "column", "settings": { "title": "Learn", "text": "<p>Hands-on classes and workshops for every level, led by working artists.</p>", "link_label": "Explore Create Art", "link": "shopify://collections/workshops-classes" } },
+        "c2": { "type": "column", "settings": { "title": "Create", "text": "<p>A studio built for making — the same space our resident artists work in.</p>" } },
+        "c3": { "type": "column", "settings": { "title": "Exhibit", "text": "<p>A curated online gallery where our artists show their latest work.</p>" } },
+        "c4": { "type": "column", "settings": { "title": "Collect", "text": "<p>Buy original art and limited editions directly from the makers.</p>", "link_label": "Explore Collect Art", "link": "shopify://collections/gallery" } }
+      },
+      "block_order": ["c1", "c2", "c3", "c4"],
+      "settings": { "title": "One creative circle", "heading_size": "h2", "image_width": "full", "image_ratio": "adapt", "columns_desktop": 4, "column_alignment": "center", "background_style": "none", "color_scheme": "scheme-5", "columns_mobile": "1", "swipe_on_mobile": true, "padding_top": 48, "padding_bottom": 48 }
+    },
+    "cta": {
+      "type": "rich-text",
+      "blocks": {
+        "heading": { "type": "heading", "settings": { "heading": "Come in through any door", "heading_size": "h2" } },
+        "button": { "type": "button", "settings": { "button_label": "Collect Art", "button_link": "shopify://collections/gallery", "button_style_secondary": false, "button_label_2": "Create Art", "button_link_2": "shopify://collections/workshops-classes", "button_style_secondary_2": true } }
+      },
+      "block_order": ["heading", "button"],
+      "settings": { "desktop_content_position": "center", "content_alignment": "center", "color_scheme": "scheme-1", "full_width": true, "padding_top": 40, "padding_bottom": 56 }
+    }
+  },
+  "order": ["intro", "studio", "pillars", "cta"]
+}

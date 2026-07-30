@@ -1,0 +1,81 @@
+{%- comment -%}
+  "Running tab" of other classes / workshops you might like — shows at the
+  bottom of Class / Workshop product pages only (brief: "I like the running
+  tab at the bottom that shows other classes or workshops you might be
+  interested in"). Self-gating; pulls siblings from the Classes/Workshops
+  collection by product type. Design ref: Elderflower Nursery.
+{%- endcomment -%}
+{%- assign is_class = false -%}
+{%- if product.type == 'Class' or product.type == 'Workshop' or product.template_suffix contains 'booking' -%}
+  {%- assign is_class = true -%}
+{%- endif -%}
+
+{%- if is_class -%}
+  {%- liquid
+    assign src = collections['classes']
+    if product.type == 'Workshop'
+      assign src = collections['workshops']
+    endif
+    if src == empty or src.products_count == 0
+      assign src = product.collections.first
+    endif
+  -%}
+  {%- assign rc_count = 0 -%}
+  {%- for p in src.products -%}{%- unless p.id == product.id -%}{%- assign rc_count = rc_count | plus: 1 -%}{%- endunless -%}{%- endfor -%}
+
+  {%- if rc_count > 0 -%}
+    <style>
+      .rcls { background: #eeefeb; padding: clamp(40px,6vh,72px) 0; }
+      .rcls__inner { max-width: 1280px; margin-inline: auto; padding-inline: clamp(16px,4vw,48px); }
+      .rcls__eyebrow { font-family: var(--font-body-family); font-size: 0.68rem; letter-spacing: 0.22em;
+        text-transform: uppercase; color: #0f4a52; margin: 0 0 8px; }
+      .rcls__heading { font-family: var(--font-heading-family); font-size: clamp(1.6rem,2.4vw,2.1rem);
+        font-weight: 700; color: #1d1c21; margin: 0 0 22px; letter-spacing: -0.01em; }
+      .rcls__track { display: flex; gap: 18px; overflow-x: auto; scroll-snap-type: x mandatory;
+        padding-bottom: 6px; scroll-padding-inline: clamp(16px,4vw,48px); -webkit-overflow-scrolling: touch; }
+      .rcls__track::-webkit-scrollbar { height: 6px; }
+      .rcls__track::-webkit-scrollbar-thumb { background: rgba(29,28,33,0.18); border-radius: 3px; }
+      .rcls__card { scroll-snap-align: start; flex: 0 0 clamp(220px, 26vw, 280px); text-decoration: none;
+        color: #1d1c21; display: flex; flex-direction: column; }
+      .rcls__img { aspect-ratio: 4/3; border-radius: 12px; overflow: hidden; background: #f5ece6; margin-bottom: 12px; }
+      .rcls__img img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .4s ease; }
+      .rcls__card:hover .rcls__img img { transform: scale(1.04); }
+      .rcls__type { font-family: var(--font-body-family); font-size: 0.66rem; letter-spacing: 0.16em;
+        text-transform: uppercase; color: #a35536; margin: 0 0 4px; }
+      .rcls__title { font-family: var(--font-heading-family); font-size: 1.12rem; font-weight: 600;
+        line-height: 1.25; margin: 0 0 6px; }
+      .rcls__price { font-size: 0.98rem; color: #0f4a52; }
+      .rcls__price .rcls__from { color: rgba(29,28,33,0.55); font-size: 0.82rem; }
+      @media (max-width: 749px) {
+        .rcls__card { flex-basis: 62vw; }
+      }
+    </style>
+    <section class="rcls" aria-label="Other classes and workshops">
+      <div class="rcls__inner">
+        <p class="rcls__eyebrow">Keep exploring</p>
+        <h2 class="rcls__heading">You might also like</h2>
+        <div class="rcls__track">
+          {%- assign shown = 0 -%}
+          {%- for p in src.products -%}
+            {%- if p.id == product.id -%}{%- continue -%}{%- endif -%}
+            {%- if shown >= 10 -%}{%- break -%}{%- endif -%}
+            {%- assign shown = shown | plus: 1 -%}
+            <a class="rcls__card" href="{{ p.url }}">
+              <div class="rcls__img">
+                {%- if p.featured_image -%}
+                  <img src="{{ p.featured_image | image_url: width: 560 }}" alt="{{ p.featured_image.alt | default: p.title | escape }}" loading="lazy" width="280" height="210">
+                {%- endif -%}
+              </div>
+              {%- if p.type != blank -%}<p class="rcls__type">{{ p.type }}</p>{%- endif -%}
+              <p class="rcls__title">{{ p.title }}</p>
+              <p class="rcls__price">
+                {%- if p.price_varies -%}<span class="rcls__from">from </span>{%- endif -%}
+                {{ p.price | money }}
+              </p>
+            </a>
+          {%- endfor -%}
+        </div>
+      </div>
+    </section>
+  {%- endif -%}
+{%- endif -%}

@@ -1,0 +1,35 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "settings": { "padding_top": 40, "padding_bottom": 8 }
+    },
+    "faq": {
+      "type": "collapsible-content",
+      "blocks": {
+        "q1": { "type": "collapsible_row", "settings": { "heading": "Where are you based?", "row_content": "<p>We're in Hout Bay, Cape Town. You're welcome to visit the studio to view art in person or join a class — see our Contact page for directions.</p>" } },
+        "q2": { "type": "collapsible_row", "settings": { "heading": "Do I need experience to join a class?", "row_content": "<p>Not at all. Our classes and workshops run from complete-beginner level through to masterclasses, and our teachers meet you exactly where you are.</p>" } },
+        "q3": { "type": "collapsible_row", "settings": { "heading": "How do I book a class or workshop?", "row_content": "<p>Everything is booked online. Open any class, choose your session or the full term, and check out. You'll receive a confirmation by email.</p>" } },
+        "q4": { "type": "collapsible_row", "settings": { "heading": "Can I pay in instalments?", "row_content": "<p>For selected classes you can pay in two — a deposit now and the balance later. Where it's available, you'll see the option on the booking page.</p>" } },
+        "q5": { "type": "collapsible_row", "settings": { "heading": "Do you sell original art online?", "row_content": "<p>Yes. Browse and buy original works and limited-edition prints directly from our resident artists in the gallery.</p>" } },
+        "q6": { "type": "collapsible_row", "settings": { "heading": "Do you ship artworks?", "row_content": "<p>We ship nationwide, and internationally on request. Get in touch if you'd like a shipping quote before you buy.</p>" } },
+        "q7": { "type": "collapsible_row", "settings": { "heading": "Can I see the art in person before buying?", "row_content": "<p>Absolutely. Many works are on show at the studio — contact us to arrange a viewing.</p>" } },
+        "q8": { "type": "collapsible_row", "settings": { "heading": "Can I hire the studio?", "row_content": "<p>Yes — our space is available for creative hire. See the Studio Hire page or send us an enquiry.</p>" } }
+      },
+      "block_order": ["q1", "q2", "q3", "q4", "q5", "q6", "q7", "q8"],
+      "settings": {
+        "caption": "Good to know",
+        "heading": "Frequently asked questions",
+        "heading_size": "h1",
+        "heading_alignment": "center",
+        "layout": "row",
+        "container_color_scheme": "scheme-2",
+        "color_scheme": "scheme-1",
+        "open_first_collapsible_row": false,
+        "padding_top": 28,
+        "padding_bottom": 52
+      }
+    }
+  },
+  "order": ["main", "faq"]
+}

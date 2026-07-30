@@ -421,7 +421,10 @@
   @media screen and (max-width: 989px) {
     .header__icon-menu--desktop,
     .saf-currency,
-    .header__icon--gift-card {
+    .header__icon--gift-card,
+    .header__icon--contact,
+    .header__icon--instagram,
+    .header__icon--location {
       display: none !important;
     }
   }
@@ -809,6 +812,28 @@
     {%- endif -%}
 
     <div class="header__icons">
+      {%- comment -%} Contact / Instagram / Location quick links — settings-driven, on every page {%- endcomment -%}
+      {%- liquid
+        assign saf_store_socials = shop.metafields.booking_app.store_socials.value
+        assign saf_ig_url = saf_store_socials.instagram | default: settings.social_instagram_link
+        assign saf_contact_href = section.settings.contact_url | default: '/pages/contact'
+      -%}
+      {%- if section.settings.show_contact_icon -%}
+        <a href="{{ saf_contact_href }}" class="header__icon header__icon--contact link focus-inset" aria-label="Contact us">
+          <span class="svg-wrapper"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" width="20" height="20" aria-hidden="true"><rect x="2.5" y="4" width="15" height="12" rx="1.5"/><path d="M3 5l7 5 7-5"/></svg></span>
+        </a>
+      {%- endif -%}
+      {%- if section.settings.show_instagram_icon and saf_ig_url != blank -%}
+        <a href="{{ saf_ig_url }}" class="header__icon header__icon--instagram link focus-inset" target="_blank" rel="noopener" aria-label="Instagram (opens in a new tab)">
+          <span class="svg-wrapper">{{ 'icon-instagram.svg' | inline_asset_content }}</span>
+        </a>
+      {%- endif -%}
+      {%- if section.settings.show_location_icon and section.settings.location_url != blank -%}
+        <a href="{{ section.settings.location_url }}" class="header__icon header__icon--location link focus-inset" target="_blank" rel="noopener" aria-label="Find us on the map (opens in a new tab)">
+          <span class="svg-wrapper"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" width="20" height="20" aria-hidden="true"><path d="M10 18s6-5.3 6-10a6 6 0 10-12 0c0 4.7 6 10 6 10z"/><circle cx="10" cy="8" r="2.2"/></svg></span>
+        </a>
+      {%- endif -%}
+
       {%- if shop.customer_accounts_enabled -%}
         {%- comment -%} Account dropdown (desktop) {%- endcomment -%}
         <header-menu class="header__icon-menu header__icon-menu--desktop">
@@ -1222,6 +1247,37 @@
       "default": true,
       "label": "Show gift card icon",
       "info": "Only appears once a gift card product exists or a gift card link is set below."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_contact_icon",
+      "default": true,
+      "label": "Show contact icon"
+    },
+    {
+      "type": "url",
+      "id": "contact_url",
+      "label": "Contact page link",
+      "info": "Where the header contact icon goes. Defaults to /pages/contact."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_instagram_icon",
+      "default": true,
+      "label": "Show Instagram icon",
+      "info": "Uses the store Instagram from the admin app (Socials), or Theme settings › Social media. Opens in a new tab."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_location_icon",
+      "default": true,
+      "label": "Show location icon",
+      "info": "Only appears once a map link is set below. Opens Google Maps in a new tab so visitors keep your site open."
+    },
+    {
+      "type": "url",
+      "id": "location_url",
+      "label": "Map / location link"
     },
     {
       "type": "select",

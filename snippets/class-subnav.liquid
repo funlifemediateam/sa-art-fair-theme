@@ -1,0 +1,53 @@
+{%- comment -%}
+  In-class sub-navigation bar — shows on Class / Workshop product pages only.
+  Brief: "When we click into a workshop or class, can we have the navigation
+  bar showing options (class / workshops / Meet the teachers / contact)".
+  Data-driven: reuses the Create Art path menu (booking_app.path_nav.pathB)
+  plus a Contact link, so nothing is hardcoded. Self-gating.
+{%- endcomment -%}
+{%- assign is_class = false -%}
+{%- if product.type == 'Class' or product.type == 'Workshop' or product.template_suffix contains 'booking' -%}
+  {%- assign is_class = true -%}
+{%- endif -%}
+
+{%- if is_class -%}
+  {%- assign pnav = shop.metafields.booking_app.path_nav.value -%}
+  {%- assign items = pnav.pathB -%}
+  {%- assign contact_url = '/pages/contact' -%}
+  {%- for g in pnav.global -%}
+    {%- assign gt = g.title | downcase -%}
+    {%- if gt contains 'contact' -%}{%- assign contact_url = g.url -%}{%- endif -%}
+  {%- endfor -%}
+
+  <style>
+    .class-subnav { background: #f5ece6; border-bottom: 1px solid rgba(29,28,33,0.08); }
+    .class-subnav__inner { max-width: 1280px; margin-inline: auto; padding: 12px clamp(16px,4vw,48px);
+      display: flex; flex-wrap: wrap; align-items: center; gap: 6px 22px; }
+    .class-subnav__label { font-family: var(--font-body-family); font-size: 0.68rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: #0f4a52; margin-right: 4px; opacity: 0.85; }
+    .class-subnav a { font-family: var(--font-body-family); font-size: 0.95rem; color: #1d1c21;
+      text-decoration: none; padding: 4px 2px; border-bottom: 2px solid transparent; transition: border-color .15s, color .15s; }
+    .class-subnav a:hover { color: #0f4a52; border-bottom-color: #f26b52; }
+    .class-subnav a[aria-current="true"] { border-bottom-color: #0f4a52; color: #0f4a52; }
+    @media (max-width: 749px) {
+      .class-subnav__inner { gap: 4px 16px; overflow-x: auto; flex-wrap: nowrap; -webkit-overflow-scrolling: touch; }
+      .class-subnav__label { display: none; }
+      .class-subnav a { white-space: nowrap; }
+    }
+  </style>
+  <nav class="class-subnav" aria-label="Classes and workshops">
+    <div class="class-subnav__inner">
+      <span class="class-subnav__label">Create Art</span>
+      {%- if items.size > 0 -%}
+        {%- for it in items -%}
+          <a href="{{ it.url }}"{% if request.path == it.url %} aria-current="true"{% endif %}>{{ it.title }}</a>
+        {%- endfor -%}
+      {%- else -%}
+        <a href="/collections/classes">Classes</a>
+        <a href="/collections/workshops">Workshops</a>
+        <a href="/pages/the-team">Meet the Teachers</a>
+      {%- endif -%}
+      <a href="{{ contact_url }}">Contact</a>
+    </div>
+  </nav>
+{%- endif -%}

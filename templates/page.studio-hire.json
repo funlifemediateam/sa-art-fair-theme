@@ -1,0 +1,38 @@
+{
+  "sections": {
+    "intro": {
+      "type": "rich-text",
+      "blocks": {
+        "caption": { "type": "caption", "settings": { "caption": "Studio hire", "text_style": "caption-with-letter-spacing", "text_size": "medium" } },
+        "heading": { "type": "heading", "settings": { "heading": "Hire our Hout Bay studio", "heading_size": "h1" } },
+        "text": { "type": "text", "settings": { "text": "<p>A light-filled, creative space available for hire — for workshops, shoots, small gatherings and private sessions. Tell us what you have in mind and we'll help make it happen.</p>" } }
+      },
+      "block_order": ["caption", "heading", "text"],
+      "settings": { "desktop_content_position": "center", "content_alignment": "center", "color_scheme": "scheme-1", "full_width": true, "padding_top": 56, "padding_bottom": 36 }
+    },
+    "space": {
+      "type": "image-with-text",
+      "blocks": {
+        "heading": { "type": "heading", "settings": { "heading": "The space", "heading_size": "h2" } },
+        "text": { "type": "text", "settings": { "text": "<p>Natural light, generous work surfaces, and everything a creative session needs. The studio comfortably hosts small groups, with the gallery and mountain views as a backdrop.</p>", "text_style": "body" } }
+      },
+      "block_order": ["heading", "text"],
+      "settings": { "height": "large", "desktop_image_width": "medium", "layout": "image_first", "content_layout": "no-overlap", "desktop_content_position": "middle", "desktop_content_alignment": "left", "color_scheme": "scheme-2", "section_color_scheme": "scheme-1", "padding_top": 24, "padding_bottom": 24 }
+    },
+    "included": {
+      "type": "multicolumn",
+      "blocks": {
+        "c1": { "type": "column", "settings": { "title": "Flexible hire", "text": "<p>By the hour, half-day or full day — whatever suits your plans.</p>" } },
+        "c2": { "type": "column", "settings": { "title": "Set up for making", "text": "<p>Tables, easels and space to spread out, with room for a small group.</p>" } },
+        "c3": { "type": "column", "settings": { "title": "A beautiful setting", "text": "<p>An inspiring gallery space in the heart of Hout Bay.</p>" } }
+      },
+      "block_order": ["c1", "c2", "c3"],
+      "settings": { "title": "What's included", "heading_size": "h2", "image_width": "full", "image_ratio": "adapt", "columns_desktop": 3, "column_alignment": "center", "background_style": "none", "color_scheme": "scheme-5", "columns_mobile": "1", "swipe_on_mobile": true, "padding_top": 44, "padding_bottom": 44 }
+    },
+    "enquiry": {
+      "type": "contact-form",
+      "settings": { "heading": "Enquire about hiring the studio", "heading_size": "h2", "color_scheme": "scheme-2", "padding_top": 40, "padding_bottom": 56 }
+    }
+  },
+  "order": ["intro", "space", "included", "enquiry"]
+}

@@ -1,0 +1,189 @@
+{%- comment -%}
+  Testimonials / Reviews — reusable, on-brand, block-driven.
+  Two layouts: "grid" (cards) or "marquee" (a strip that runs along the
+  bottom of a page). Used on the Collect Art and Create Art landing pages
+  and anywhere reviews are wanted.
+
+  App override (optional, matches our_artists / shop_by_colour pattern):
+  shop.metafields.booking_app.testimonials (json) =
+    { eyebrow, heading, items:[ { quote, name, role, rating, photo } ] }
+  If the app provides items they drive the section; otherwise the
+  theme-editor blocks do. Per-field header fallback app → section setting.
+{%- endcomment -%}
+
+{%- assign tcfg = shop.metafields.booking_app.testimonials.value -%}
+{%- assign t_eyebrow = section.settings.eyebrow -%}
+{%- assign t_heading = section.settings.heading -%}
+{%- if tcfg.eyebrow != blank -%}{%- assign t_eyebrow = tcfg.eyebrow -%}{%- endif -%}
+{%- if tcfg.heading != blank -%}{%- assign t_heading = tcfg.heading -%}{%- endif -%}
+
+{%- assign use_app = false -%}
+{%- if tcfg.items.size > 0 -%}{%- assign use_app = true -%}{%- endif -%}
+
+{%- assign bg = section.settings.bg_color -%}
+{%- assign fg = section.settings.text_color -%}
+{%- assign accent = section.settings.accent_color -%}
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    --stst-bg: {{ bg }};
+    --stst-fg: {{ fg }};
+    --stst-accent: {{ accent }};
+    --stst-card: {{ bg | color_mix: '#ffffff', 88 }};
+    --stst-line: {{ fg | color_modify: 'alpha', 0.12 }};
+    --stst-muted: {{ fg | color_mix: bg, 55 }};
+  }
+  .stst-section { background: var(--stst-bg); color: var(--stst-fg); padding: clamp(48px, 7vh, 84px) 0; overflow: hidden; }
+  .stst-container { max-width: 1280px; margin-inline: auto; padding-inline: clamp(24px, 4vw, 48px); }
+  .stst-header { text-align: center; margin-bottom: clamp(28px, 4vh, 48px); }
+  .stst-eyebrow { font-family: var(--font-body-family); font-size: 0.7rem; font-weight: 400; letter-spacing: 0.24em; text-transform: uppercase; color: var(--stst-accent); margin: 0 0 10px; }
+  .stst-heading { font-family: var(--font-heading-family); font-size: clamp(1.9rem, 3vw, 2.6rem); font-weight: 700; line-height: 1.1; letter-spacing: -0.015em; margin: 0; }
+
+  /* ── grid ── */
+  .stst-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: clamp(18px, 2vw, 28px); }
+  .stst-grid.is-few { max-width: 960px; margin-inline: auto; }
+  .stst-card { position: relative; background: var(--stst-card); border: 1px solid var(--stst-line); border-radius: 14px; padding: 30px 28px 26px; display: flex; flex-direction: column; }
+  .stst-quote-mark { font-family: var(--font-heading-family); font-size: 3.4rem; line-height: 0.6; color: var(--stst-accent); margin-bottom: 6px; }
+  .stst-stars { display: flex; gap: 3px; margin-bottom: 12px; color: var(--stst-accent); }
+  .stst-stars svg { width: 16px; height: 16px; }
+  .stst-quote { font-size: 1.02rem; line-height: 1.55; margin: 0 0 20px; flex: 1; }
+  .stst-author { display: flex; align-items: center; gap: 12px; margin-top: auto; }
+  .stst-author__photo { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+  .stst-author__name { font-weight: 600; font-size: 0.95rem; }
+  .stst-author__role { font-size: 0.82rem; color: var(--stst-muted); }
+
+  /* ── marquee ── */
+  .stst-marquee { position: relative; display: flex; width: 100%; -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); }
+  .stst-track { display: flex; gap: 18px; padding-inline: 9px; flex-shrink: 0; animation: stst-scroll var(--stst-speed, 40s) linear infinite; }
+  .stst-marquee:hover .stst-track { animation-play-state: paused; }
+  @media (prefers-reduced-motion: reduce) { .stst-track { animation: none; } }
+  .stst-pill { flex-shrink: 0; max-width: 400px; background: var(--stst-card); border: 1px solid var(--stst-line); border-radius: 12px; padding: 20px 24px; }
+  .stst-pill__quote { font-size: 0.96rem; line-height: 1.5; margin: 0 0 12px; }
+  .stst-pill__who { font-size: 0.82rem; color: var(--stst-muted); }
+  .stst-pill__who strong { color: var(--stst-fg); font-weight: 600; }
+  @keyframes stst-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  @media (max-width: 749px) {
+    .stst-quote { font-size: 0.98rem; }
+    .stst-pill { max-width: 78vw; }
+  }
+{% endstyle %}
+
+{%- capture star_svg -%}<svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10 1.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L10 15l-5.2 2.7 1-5.8L1.5 7.7l5.9-.9z"/></svg>{%- endcapture -%}
+
+<section class="stst-section" aria-label="{{ t_heading | default: 'Testimonials' | escape }}">
+  <div class="stst-container">
+    {%- if t_eyebrow != blank or t_heading != blank -%}
+      <div class="stst-header">
+        {%- if t_eyebrow != blank -%}<p class="stst-eyebrow">{{ t_eyebrow }}</p>{%- endif -%}
+        {%- if t_heading != blank -%}<h2 class="stst-heading">{{ t_heading }}</h2>{%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.layout == 'marquee' -%}
+      <div class="stst-marquee">
+        {%- comment -%} two identical tracks for a seamless loop {%- endcomment -%}
+        {%- for pass in (1..2) -%}
+          <div class="stst-track" style="--stst-speed: {{ section.settings.marquee_speed | default: 40 }}s" {% if pass == 2 %}aria-hidden="true"{% endif %}>
+            {%- if use_app -%}
+              {%- for it in tcfg.items -%}
+                <blockquote class="stst-pill">
+                  <p class="stst-pill__quote">“{{ it.quote }}”</p>
+                  <p class="stst-pill__who"><strong>{{ it.name }}</strong>{% if it.role != blank %} · {{ it.role }}{% endif %}</p>
+                </blockquote>
+              {%- endfor -%}
+            {%- else -%}
+              {%- for block in section.blocks -%}
+                <blockquote class="stst-pill" {{ block.shopify_attributes }}>
+                  <p class="stst-pill__quote">“{{ block.settings.quote }}”</p>
+                  <p class="stst-pill__who"><strong>{{ block.settings.name }}</strong>{% if block.settings.role != blank %} · {{ block.settings.role }}{% endif %}</p>
+                </blockquote>
+              {%- endfor -%}
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+      </div>
+
+    {%- else -%}
+      {%- assign count = section.blocks.size -%}
+      {%- if use_app -%}{%- assign count = tcfg.items.size -%}{%- endif -%}
+      <div class="stst-grid{% if count < 3 %} is-few{% endif %}">
+        {%- if use_app -%}
+          {%- for it in tcfg.items -%}
+            {%- assign rating = it.rating | default: 5 | plus: 0 -%}
+            <figure class="stst-card">
+              <div class="stst-quote-mark" aria-hidden="true">“</div>
+              {%- if rating > 0 -%}<div class="stst-stars" aria-label="{{ rating }} out of 5">{% for i in (1..rating) %}{{ star_svg }}{% endfor %}</div>{%- endif -%}
+              <blockquote class="stst-quote">{{ it.quote }}</blockquote>
+              <figcaption class="stst-author">
+                {%- if it.photo != blank -%}<img class="stst-author__photo" src="{{ it.photo }}" alt="{{ it.name | escape }}" loading="lazy" width="44" height="44">{%- endif -%}
+                <span><span class="stst-author__name">{{ it.name }}</span>{% if it.role != blank %}<br><span class="stst-author__role">{{ it.role }}</span>{% endif %}</span>
+              </figcaption>
+            </figure>
+          {%- endfor -%}
+        {%- else -%}
+          {%- for block in section.blocks -%}
+            {%- assign rating = block.settings.rating | plus: 0 -%}
+            <figure class="stst-card" {{ block.shopify_attributes }}>
+              <div class="stst-quote-mark" aria-hidden="true">“</div>
+              {%- if rating > 0 -%}<div class="stst-stars" aria-label="{{ rating }} out of 5">{% for i in (1..rating) %}{{ star_svg }}{% endfor %}</div>{%- endif -%}
+              <blockquote class="stst-quote">{{ block.settings.quote }}</blockquote>
+              <figcaption class="stst-author">
+                {%- if block.settings.photo != blank -%}<img class="stst-author__photo" src="{{ block.settings.photo | image_url: width: 88 }}" alt="{{ block.settings.name | escape }}" loading="lazy" width="44" height="44">{%- endif -%}
+                <span><span class="stst-author__name">{{ block.settings.name }}</span>{% if block.settings.role != blank %}<br><span class="stst-author__role">{{ block.settings.role }}</span>{% endif %}</span>
+              </figcaption>
+            </figure>
+          {%- endfor -%}
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Testimonials",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    { "type": "paragraph", "content": "Reviews can also be managed from the SA Art Fair admin app (Reviews) — items set there override these blocks." },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "What people say" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Loved by our community" },
+    {
+      "type": "select", "id": "layout", "label": "Layout", "default": "grid",
+      "options": [
+        { "value": "grid", "label": "Cards (grid)" },
+        { "value": "marquee", "label": "Running strip (marquee)" }
+      ]
+    },
+    { "type": "range", "id": "marquee_speed", "min": 20, "max": 90, "step": 5, "unit": "s", "label": "Marquee speed (slower = larger)", "default": 40 },
+    { "type": "header", "content": "Colours" },
+    { "type": "color", "id": "bg_color", "label": "Background", "default": "#eeefeb" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#1d1c21" },
+    { "type": "color", "id": "accent_color", "label": "Accent (stars, quote mark, eyebrow)", "default": "#0f4a52" }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Review",
+      "settings": [
+        { "type": "textarea", "id": "quote", "label": "Quote" },
+        { "type": "text", "id": "name", "label": "Name" },
+        { "type": "text", "id": "role", "label": "Role / context", "placeholder": "Collector · Art class client" },
+        { "type": "range", "id": "rating", "min": 0, "max": 5, "step": 1, "label": "Star rating (0 = hide)", "default": 5 },
+        { "type": "image_picker", "id": "photo", "label": "Photo (optional)" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Testimonials",
+      "blocks": [
+        { "type": "review" },
+        { "type": "review" },
+        { "type": "review" }
+      ]
+    }
+  ]
+}
+{% endschema %}

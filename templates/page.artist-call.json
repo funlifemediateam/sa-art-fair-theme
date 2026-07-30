@@ -1,0 +1,29 @@
+{
+  "sections": {
+    "intro": {
+      "type": "rich-text",
+      "blocks": {
+        "caption": { "type": "caption", "settings": { "caption": "Artist call", "text_style": "caption-with-letter-spacing", "text_size": "medium" } },
+        "heading": { "type": "heading", "settings": { "heading": "Exhibit with SA Art Fair", "heading_size": "h1" } },
+        "text": { "type": "text", "settings": { "text": "<p>We're always looking for South African artists to join our community — to exhibit and sell through our gallery, and to teach in our studio. If that sounds like you, we'd love to see your work.</p>" } }
+      },
+      "block_order": ["caption", "heading", "text"],
+      "settings": { "desktop_content_position": "center", "content_alignment": "center", "color_scheme": "scheme-1", "full_width": true, "padding_top": 56, "padding_bottom": 36 }
+    },
+    "criteria": {
+      "type": "multicolumn",
+      "blocks": {
+        "c1": { "type": "column", "settings": { "title": "Original work", "text": "<p>You make original art — painting, drawing, printmaking, ceramics, photography or mixed media.</p>" } },
+        "c2": { "type": "column", "settings": { "title": "A point of view", "text": "<p>A consistent body of work with a voice of its own.</p>" } },
+        "c3": { "type": "column", "settings": { "title": "Locally rooted", "text": "<p>Based in South Africa and part of the local creative scene.</p>" } }
+      },
+      "block_order": ["c1", "c2", "c3"],
+      "settings": { "title": "What we look for", "heading_size": "h2", "image_width": "full", "image_ratio": "adapt", "columns_desktop": 3, "column_alignment": "center", "background_style": "none", "color_scheme": "scheme-2", "columns_mobile": "1", "swipe_on_mobile": true, "padding_top": 44, "padding_bottom": 44 }
+    },
+    "apply": {
+      "type": "contact-form",
+      "settings": { "heading": "Apply to join", "heading_size": "h2", "color_scheme": "scheme-1", "padding_top": 40, "padding_bottom": 56 }
+    }
+  },
+  "order": ["intro", "criteria", "apply"]
+}

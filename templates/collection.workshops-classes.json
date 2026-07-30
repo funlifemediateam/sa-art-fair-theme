@@ -4,7 +4,7 @@
       "type": "collection-hero",
       "settings": {
         "eyebrow": "SA Art Fair",
-        "intro": "Hands-on studio workshops and art classes in Hout Bay \u2014 guided by our resident artists, open to all skill levels."
+        "intro": "Hands-on studio workshops and art classes in Hout Bay — guided by our resident artists, open to all skill levels."
       }
     },
     "product-grid": {
@@ -56,7 +56,7 @@
         "buttons_JN7FCn"
       ],
       "settings": {
-        "image": "shopify://shop_images/an-upper-class-art-studio-in-hout-by-cape-town-showcasing-the-art-they-sell-and-people-also-doing-art-classes-or-art-workshops-hyper-relialistic-with-the-mountains-and-ocean-in-the-ba_55e02391-c205-4ea6-9dc9-5d64542b5fd1.png",
+        "image": "shopify:\/\/shop_images\/an-upper-class-art-studio-in-hout-by-cape-town-showcasing-the-art-they-sell-and-people-also-doing-art-classes-or-art-workshops-hyper-relialistic-with-the-mountains-and-ocean-in-the-ba_55e02391-c205-4ea6-9dc9-5d64542b5fd1.png",
         "image_overlay_opacity": 0,
         "image_height": "medium",
         "image_behavior": "none",
@@ -68,11 +68,71 @@
         "mobile_content_alignment": "center",
         "show_text_below": true
       }
+    },
+    "art_quiz_teaser": {
+      "type": "art-quiz",
+      "settings": {
+        "teaser_mode": true,
+        "quiz_page": "\/collections\/art-quiz",
+        "heading": "What's Your Art Personality?",
+        "cta_text": "Take the Test",
+        "accent_color": "#f26b52",
+        "api_url": "https:\/\/sa-art-fair-admin.vercel.app",
+        "meta_text": "14 questions · 3 minutes"
+      }
+    },
+    "reviews": {
+      "type": "testimonials",
+      "blocks": {
+        "r0": {
+          "type": "review",
+          "settings": {
+            "quote": "The teachers are patient, warm and endlessly encouraging. I leave every session inspired.",
+            "name": "Lauren",
+            "role": "Art class",
+            "rating": 5
+          }
+        },
+        "r1": {
+          "type": "review",
+          "settings": {
+            "quote": "I hadn't picked up a brush in twenty years — now it's the highlight of my week.",
+            "name": "David",
+            "role": "Workshop attendee",
+            "rating": 5
+          }
+        },
+        "r2": {
+          "type": "review",
+          "settings": {
+            "quote": "A calm, creative space with genuinely brilliant instruction. Highly recommend.",
+            "name": "Aisha",
+            "role": "Art class",
+            "rating": 5
+          }
+        }
+      },
+      "block_order": [
+        "r0",
+        "r1",
+        "r2"
+      ],
+      "settings": {
+        "layout": "grid",
+        "eyebrow": "What our students say",
+        "heading": "From our studio community",
+        "bg_color": "#eeefeb",
+        "text_color": "#1d1c21",
+        "accent_color": "#0f4a52",
+        "marquee_speed": 40
+      }
     }
   },
   "order": [
     "workshops-hero",
     "product-grid",
-    "image_banner_j4J4EQ"
+    "art_quiz_teaser",
+    "image_banner_j4J4EQ",
+    "reviews"
   ]
 }
