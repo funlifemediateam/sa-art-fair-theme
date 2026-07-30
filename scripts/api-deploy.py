@@ -45,6 +45,44 @@ def is_editor_owned(path):
         path.startswith(SETTINGS_PREFIXES) and path.endswith(".json"))
 
 
+def git_autosync(pushed):
+    """After a successful deploy, commit any local changes and push to GitHub.
+
+    The theme repo is the source of truth (Shopify draft themes are not used
+    for history), and pushes were being forgotten — twice a whole round of
+    work sat un-pushed. So every deploy now backs itself up automatically.
+    Opt out with SAF_NO_AUTOSYNC=1. Never fails the deploy on a git error.
+    """
+    if os.environ.get("SAF_NO_AUTOSYNC") == "1":
+        return
+    try:
+        subprocess.run(["git", "add", "-A"], check=True)
+        # Nothing staged? then there is nothing to commit or push.
+        if subprocess.run(["git", "diff", "--cached", "--quiet"]).returncode == 0:
+            print("\nGitHub: working tree clean, nothing to commit.")
+            _git_push()
+            return
+        names = ", ".join(os.path.basename(f) for f in pushed[:4])
+        if len(pushed) > 4:
+            names += f", +{len(pushed) - 4} more"
+        stamp = time.strftime("%Y-%m-%d %H:%M")
+        msg = f"auto: deploy {len(pushed)} file(s) ({names}) — {stamp}"
+        subprocess.run(["git", "commit", "-m", msg], check=True)
+        print(f"\nGitHub: committed — {msg}")
+        _git_push()
+    except Exception as e:
+        print(f"\nGitHub AUTO-SYNC FAILED (deploy is still live): {e}")
+        print("  Run `git add -A && git commit -m '…' && git push origin main` manually.")
+
+
+def _git_push():
+    try:
+        subprocess.run(["git", "push", "origin", "HEAD"], check=True)
+        print("GitHub: pushed to origin ✓")
+    except Exception as e:
+        print(f"GitHub PUSH FAILED (commit is saved locally): {e}")
+
+
 def main():
     explicit = sys.argv[1:]
     files = explicit or local_theme_files()
@@ -93,6 +131,7 @@ def main():
             print(f"  MISSING/FAILED: {f}")
         sys.exit(1)
     print(f"\nDone — {len(to_push)} file(s) live, all verified present.")
+    git_autosync(to_push)
 
 
 if __name__ == "__main__":
