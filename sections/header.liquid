@@ -452,6 +452,22 @@
     text-decoration: none !important;
     border-bottom: none !important;
   }
+  /* Dropdown/mega summaries: the caret is absolutely positioned at right 0.8rem,
+     so the label needs room reserved for it. The padding-right: 1rem above is
+     !important and beats Dawn's summary.list-menu__item { padding-right: 2.7rem },
+     which let the caret sit on top of the last letter ("Collect Ar⌄").
+     summary.header__menu-item outranks it at equal importance. */
+  summary.header__menu-item {
+    padding-right: 2.7rem !important;
+  }
+  summary.header__menu-item .icon-caret {
+    color: rgba(var(--color-foreground), 0.55);
+    transition: transform 0.2s ease, color 0.2s ease;
+  }
+  summary.header__menu-item:hover .icon-caret,
+  details[open] > summary.header__menu-item .icon-caret {
+    color: rgb(var(--color-foreground));
+  }
   .header__active-menu-item {
     color: rgba(var(--color-foreground), 1) !important;
     background-color: transparent !important;
@@ -820,7 +836,7 @@
       -%}
       {%- if section.settings.show_contact_icon -%}
         <a href="{{ saf_contact_href }}" class="header__icon header__icon--contact link focus-inset" aria-label="Contact us">
-          <span class="svg-wrapper"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" width="20" height="20" aria-hidden="true"><rect x="2.5" y="4" width="15" height="12" rx="1.5"/><path d="M3 5l7 5 7-5"/></svg></span>
+          <span class="svg-wrapper"><svg class="icon icon-contact" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" aria-hidden="true"><rect x="2.5" y="4.5" width="15" height="11" rx="1.5"/><path d="M3 5.5l7 5 7-5"/></svg></span>
         </a>
       {%- endif -%}
       {%- if section.settings.show_instagram_icon and saf_ig_url != blank -%}
@@ -830,7 +846,7 @@
       {%- endif -%}
       {%- if section.settings.show_location_icon and section.settings.location_url != blank -%}
         <a href="{{ section.settings.location_url }}" class="header__icon header__icon--location link focus-inset" target="_blank" rel="noopener" aria-label="Find us on the map (opens in a new tab)">
-          <span class="svg-wrapper"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" width="20" height="20" aria-hidden="true"><path d="M10 18s6-5.3 6-10a6 6 0 10-12 0c0 4.7 6 10 6 10z"/><circle cx="10" cy="8" r="2.2"/></svg></span>
+          <span class="svg-wrapper"><svg class="icon icon-location" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" aria-hidden="true"><path d="M10 17.5s5.5-5 5.5-9.5a5.5 5.5 0 10-11 0c0 4.5 5.5 9.5 5.5 9.5z"/><circle cx="10" cy="8" r="2"/></svg></span>
         </a>
       {%- endif -%}
 
