@@ -416,6 +416,14 @@
     width: 2rem;
     height: 2rem;
   }
+  /* Dawn draws the cart in a 40-unit viewBox with heavy padding, so at the row's
+     shared 2rem sizing the painted bag lands ~20% smaller than the 20-unit
+     icons beside it. Size its box up so the glyphs match optically. */
+  .header__icon--cart .svg-wrapper,
+  .header__icon--cart .icon {
+    width: 48px;
+    height: 48px;
+  }
   /* Mobile: hide desktop-only header items (!important — base.css
      .header__icon:not(.header__icon--summary) outranks a single class) */
   @media screen and (max-width: 989px) {
