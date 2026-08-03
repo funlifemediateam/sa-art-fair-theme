@@ -45,12 +45,20 @@
             {%- if p_list.size > 0 -%}
               <header-menu>
                 <details id="Details-HeaderMenu-Path{{ key | upcase }}" class="mega-menu saf-mega">
+                  {%- comment -%}
+                    The label is a real link to the path landing page: clicking
+                    the path name must arrive somewhere, not just open a panel.
+                    The caret stays inside the summary, so it alone toggles the
+                    mega menu for touch and keyboard users.
+                  {%- endcomment -%}
                   <summary
                     id="HeaderMenu-path-{{ key }}"
-                    class="header__menu-item list-menu__item link focus-inset"
+                    class="header__menu-item list-menu__item link focus-inset saf-pnav__summary"
                   >
-                    <span>{{- p_label | escape -}}</span>
-                    {{- 'icon-caret.svg' | inline_asset_content -}}
+                    <a class="saf-pnav__label" href="{{ p_url }}">{{- p_label | escape -}}</a>
+                    <span class="saf-pnav__caret" aria-hidden="true">
+                      {{- 'icon-caret.svg' | inline_asset_content -}}
+                    </span>
                   </summary>
                   <div
                     id="MegaMenu-Content-Path{{ key | upcase }}"

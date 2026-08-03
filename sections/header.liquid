@@ -319,6 +319,35 @@
   .saf-path-switch:hover .saf-path-switch__arrow {
     transform: translateX(3px);
   }
+  /* Path label is a link, caret is the disclosure. The .saf-pnav prefix is
+     required: the refined menu typography rules below use !important on
+     .header__menu-item and would otherwise win at equal specificity. */
+  .saf-pnav .saf-pnav__summary {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .saf-pnav .saf-pnav__label {
+    color: inherit;
+    font: inherit;
+    letter-spacing: inherit;
+    text-decoration: none;
+    padding: 0;
+  }
+  .saf-pnav .saf-pnav__caret {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.4rem;
+    margin: -0.4rem -0.4rem -0.4rem 0;
+    cursor: pointer;
+  }
+  .saf-pnav .saf-pnav__caret svg {
+    height: 0.6rem;
+    transition: transform 0.2s ease;
+  }
+  .saf-pnav details[open] > .saf-pnav__summary .saf-pnav__caret svg {
+    transform: rotate(180deg);
+  }
   /* Mega panel: calm, spacious, premium */
   .saf-mega .mega-menu__content {
     padding: 4rem 0 4.8rem;

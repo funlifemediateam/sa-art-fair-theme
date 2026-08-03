@@ -65,9 +65,28 @@
   }
 
   /* ── Desktop: open header icon dropdowns on hover ── */
+  /* Path labels navigate to their landing page. Without this the browser also
+     runs the summary's toggle, flashing the mega panel open as the page
+     unloads. Modifier/middle clicks fall through so open-in-new-tab still
+     works. */
+  function initPathLabelLinks() {
+    document.querySelectorAll('.saf-pnav__label').forEach(function (link) {
+      link.addEventListener('click', function (event) {
+        if (event.defaultPrevented || event.button !== 0) return;
+        if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+        event.preventDefault();
+        window.location.href = link.href;
+      });
+    });
+  }
+
   function initHeaderHoverMenus() {
     if (!window.matchMedia('(hover: hover) and (min-width: 990px)').matches) return;
-    document.querySelectorAll('.header__icon-menu').forEach(function (menu) {
+    /* Path mega menus hover-open too: the label now navigates, so the panel
+       needs a way to appear that is not a click. mouseleave only fires once
+       the pointer leaves all descendants, so the absolutely-positioned panel
+       counts as inside. */
+    document.querySelectorAll('.header__icon-menu, .saf-pnav header-menu').forEach(function (menu) {
       var details = menu.querySelector('details');
       if (!details) return;
       var closeTimer;
@@ -373,6 +392,7 @@
     initCartRemoveFallback();
     initTransparentHeader();
     initHeaderHoverMenus();
+    initPathLabelLinks();
   }
 
   if (document.readyState === 'loading') {
