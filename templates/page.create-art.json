@@ -1,0 +1,128 @@
+{
+  "sections": {
+    "intro": {
+      "type": "rich-text",
+      "blocks": {
+        "intro_caption": {
+          "type": "caption",
+          "settings": {
+            "caption": "Hout Bay Studio",
+            "text_style": "caption-with-letter-spacing",
+            "text_size": "medium"
+          }
+        },
+        "intro_heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "Create Art",
+            "heading_size": "h1"
+          }
+        },
+        "intro_text": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Small classes, generous teachers and a studio with a view. Whether you have never held a brush or you have been painting for years, there is a seat here for you.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "intro_caption",
+        "intro_heading",
+        "intro_text"
+      ],
+      "settings": {
+        "desktop_content_position": "center",
+        "content_alignment": "center",
+        "color_scheme": "scheme-1",
+        "full_width": true,
+        "padding_top": 64,
+        "padding_bottom": 56
+      }
+    },
+    "classes_carousel": {
+      "type": "home-workshops-preview",
+      "settings": {
+        "eyebrow": "STUDIO CALENDAR",
+        "heading": "Classes",
+        "featured_collection": "classes",
+        "product_limit": 4,
+        "view_all": "All classes"
+      }
+    },
+    "art_quiz_teaser": {
+      "type": "art-quiz",
+      "settings": {
+        "teaser_mode": true,
+        "quiz_page": "/collections/art-quiz",
+        "heading": "What's Your Art Personality?",
+        "cta_text": "Take the Test",
+        "accent_color": "#f26b52",
+        "api_url": "https://sa-art-fair-admin.vercel.app",
+        "meta_text": "14 questions \u00b7 3 minutes"
+      }
+    },
+    "workshops_carousel": {
+      "type": "home-workshops-preview",
+      "settings": {
+        "eyebrow": "ONE-OFF SESSIONS",
+        "heading": "Workshops",
+        "featured_collection": "workshops",
+        "product_limit": 4,
+        "view_all": "All workshops"
+      }
+    },
+    "reviews": {
+      "type": "testimonials",
+      "blocks": {
+        "r0": {
+          "type": "review",
+          "settings": {
+            "quote": "The teachers are patient, warm and endlessly encouraging. I leave every session inspired.",
+            "name": "Lauren",
+            "role": "Art class",
+            "rating": 5
+          }
+        },
+        "r1": {
+          "type": "review",
+          "settings": {
+            "quote": "I hadn't picked up a brush in twenty years \u2014 now it's the highlight of my week.",
+            "name": "David",
+            "role": "Workshop attendee",
+            "rating": 5
+          }
+        },
+        "r2": {
+          "type": "review",
+          "settings": {
+            "quote": "A calm, creative space with genuinely brilliant instruction. Highly recommend.",
+            "name": "Aisha",
+            "role": "Art class",
+            "rating": 5
+          }
+        }
+      },
+      "block_order": [
+        "r0",
+        "r1",
+        "r2"
+      ],
+      "settings": {
+        "layout": "grid",
+        "eyebrow": "What our students say",
+        "heading": "From our studio community",
+        "bg_color": "#f5ece6",
+        "text_color": "#1d1c21",
+        "accent_color": "#0f4a52",
+        "marquee_speed": 40
+      }
+    }
+  },
+  "order": [
+    "intro",
+    "classes_carousel",
+    "art_quiz_teaser",
+    "workshops_carousel",
+    "reviews"
+  ]
+}
