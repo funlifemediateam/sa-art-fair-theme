@@ -80,7 +80,8 @@
             "quote": "The teachers are patient, warm and endlessly encouraging. I leave every session inspired.",
             "name": "Lauren",
             "role": "Art class",
-            "rating": 5
+            "rating": 5,
+            "category": "classes"
           }
         },
         "r1": {
@@ -89,7 +90,8 @@
             "quote": "I hadn't picked up a brush in twenty years \u2014 now it's the highlight of my week.",
             "name": "David",
             "role": "Workshop attendee",
-            "rating": 5
+            "rating": 5,
+            "category": "classes"
           }
         },
         "r2": {
@@ -98,7 +100,8 @@
             "quote": "A calm, creative space with genuinely brilliant instruction. Highly recommend.",
             "name": "Aisha",
             "role": "Art class",
-            "rating": 5
+            "rating": 5,
+            "category": "classes"
           }
         }
       },
@@ -114,7 +117,8 @@
         "bg_color": "#f5ece6",
         "text_color": "#1d1c21",
         "accent_color": "#0f4a52",
-        "marquee_speed": 40
+        "marquee_speed": 40,
+        "category_filter": "classes"
       }
     }
   },

@@ -152,7 +152,8 @@
             "quote": "The whole process was seamless and the piece is even more beautiful in person. I'll definitely collect again.",
             "name": "Megan",
             "role": "Collector",
-            "rating": 5
+            "rating": 5,
+            "category": "collecting"
           }
         },
         "r1": {
@@ -161,7 +162,8 @@
             "quote": "I love that I could buy directly from the artist \u2014 it makes the work feel so much more personal.",
             "name": "Thabo",
             "role": "Collector",
-            "rating": 5
+            "rating": 5,
+            "category": "collecting"
           }
         },
         "r2": {
@@ -170,7 +172,8 @@
             "quote": "Beautifully packaged and delivered on time. A genuinely lovely way to buy original art.",
             "name": "Claire",
             "role": "Collector",
-            "rating": 5
+            "rating": 5,
+            "category": "collecting"
           }
         }
       },
@@ -186,7 +189,8 @@
         "bg_color": "#f5ece6",
         "text_color": "#1d1c21",
         "accent_color": "#0f4a52",
-        "marquee_speed": 40
+        "marquee_speed": 40,
+        "category_filter": "collecting"
       }
     },
     "art_quiz_teaser": {
@@ -209,7 +213,8 @@
           "settings": {
             "quote": "A beautiful piece and a beautiful experience.",
             "name": "Nadia",
-            "role": "Collector"
+            "role": "Collector",
+            "category": "collecting"
           }
         },
         "r1": {
@@ -217,7 +222,8 @@
           "settings": {
             "quote": "Supporting local artists has never felt this easy.",
             "name": "James",
-            "role": "Collector"
+            "role": "Collector",
+            "category": "collecting"
           }
         },
         "r2": {
@@ -225,7 +231,8 @@
           "settings": {
             "quote": "My new favourite gallery \u2014 online or off.",
             "name": "Priya",
-            "role": "Collector"
+            "role": "Collector",
+            "category": "collecting"
           }
         },
         "r3": {
@@ -233,7 +240,8 @@
           "settings": {
             "quote": "The art arrived perfectly and looks stunning at home.",
             "name": "Sipho",
-            "role": "Collector"
+            "role": "Collector",
+            "category": "collecting"
           }
         }
       },
@@ -250,7 +258,8 @@
         "bg_color": "#eeefeb",
         "text_color": "#1d1c21",
         "accent_color": "#f26b52",
-        "marquee_speed": 45
+        "marquee_speed": 45,
+        "category_filter": "collecting"
       }
     }
   },
