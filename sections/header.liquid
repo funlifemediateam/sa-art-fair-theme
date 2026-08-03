@@ -672,8 +672,16 @@
       endif
     endfor
 
+    comment
+      Pages that belong to a path without appearing in its menu — typically a
+      previous landing URL that still has live links pointing at it.
+    endcomment
     assign saf_in_a = false
     assign saf_a_probe = saf_a_url | split: '?' | first | split: '#' | first | split: ','
+    if section.settings.path_a_extra_urls != blank
+      assign saf_a_bonus = section.settings.path_a_extra_urls | replace: ' ', '' | split: ','
+      assign saf_a_probe = saf_a_probe | concat: saf_a_bonus
+    endif
     for saf_l in saf_a_list
       assign saf_lp = saf_l.url | split: '?' | first | split: '#' | first
       assign saf_extra = saf_lp | split: ','
@@ -692,6 +700,10 @@
 
     assign saf_in_b = false
     assign saf_b_probe = saf_b_url | split: '?' | first | split: '#' | first | split: ','
+    if section.settings.path_b_extra_urls != blank
+      assign saf_b_bonus = section.settings.path_b_extra_urls | replace: ' ', '' | split: ','
+      assign saf_b_probe = saf_b_probe | concat: saf_b_bonus
+    endif
     for saf_l in saf_b_list
       assign saf_lp = saf_l.url | split: '?' | first | split: '#' | first
       assign saf_extra = saf_lp | split: ','
@@ -1277,6 +1289,18 @@
       "type": "url",
       "id": "path_b_url",
       "label": "Path 2 landing page"
+    },
+    {
+      "type": "text",
+      "id": "path_a_extra_urls",
+      "label": "Path 1 — extra URLs",
+      "info": "Comma-separated paths that belong to this path but are not in its menu (e.g. /collections/gallery). Sub-pages are matched too."
+    },
+    {
+      "type": "text",
+      "id": "path_b_extra_urls",
+      "label": "Path 2 — extra URLs",
+      "info": "Comma-separated paths that belong to this path but are not in its menu."
     },
     {
       "type": "header",
