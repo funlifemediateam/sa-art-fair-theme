@@ -20,6 +20,30 @@
 {%- assign use_app = false -%}
 {%- if tcfg.items.size > 0 -%}{%- assign use_app = true -%}{%- endif -%}
 
+{%- comment -%}
+  Category filter. One review pool serves both paths, so each landing shows
+  only the reviews that belong to it: 'collecting' on Collect Art, 'classes'
+  on Create Art. A review left as 'both' shows everywhere, which is also the
+  fallback for existing reviews and for app items with no category set.
+{%- endcomment -%}
+{%- assign t_filter = section.settings.category_filter | default: 'all' -%}
+{%- assign t_count = 0 -%}
+{%- if use_app -%}
+  {%- for it in tcfg.items -%}
+    {%- assign it_cat = it.category | default: 'both' -%}
+    {%- if t_filter == 'all' or it_cat == 'both' or it_cat == t_filter -%}
+      {%- assign t_count = t_count | plus: 1 -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- else -%}
+  {%- for block in section.blocks -%}
+    {%- assign b_cat = block.settings.category | default: 'both' -%}
+    {%- if t_filter == 'all' or b_cat == 'both' or b_cat == t_filter -%}
+      {%- assign t_count = t_count | plus: 1 -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endif -%}
+
 {%- assign bg = section.settings.bg_color -%}
 {%- assign fg = section.settings.text_color -%}
 {%- assign accent = section.settings.accent_color -%}
@@ -71,6 +95,11 @@
 
 {%- capture star_svg -%}<svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10 1.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L10 15l-5.2 2.7 1-5.8L1.5 7.7l5.9-.9z"/></svg>{%- endcapture -%}
 
+{%- comment -%}
+  Nothing in this category — render nothing rather than an empty grid. Still
+  shown in the theme editor so the section stays selectable.
+{%- endcomment -%}
+{%- if t_count > 0 or request.design_mode -%}
 <section class="stst-section" aria-label="{{ t_heading | default: 'Testimonials' | escape }}">
   <div class="stst-container">
     {%- if t_eyebrow != blank or t_heading != blank -%}
@@ -87,6 +116,8 @@
           <div class="stst-track" style="--stst-speed: {{ section.settings.marquee_speed | default: 40 }}s" {% if pass == 2 %}aria-hidden="true"{% endif %}>
             {%- if use_app -%}
               {%- for it in tcfg.items -%}
+                {%- assign it_cat = it.category | default: 'both' -%}
+                {%- unless t_filter == 'all' or it_cat == 'both' or it_cat == t_filter -%}{%- continue -%}{%- endunless -%}
                 <blockquote class="stst-pill">
                   <p class="stst-pill__quote">“{{ it.quote }}”</p>
                   <p class="stst-pill__who"><strong>{{ it.name }}</strong>{% if it.role != blank %} · {{ it.role }}{% endif %}</p>
@@ -94,6 +125,8 @@
               {%- endfor -%}
             {%- else -%}
               {%- for block in section.blocks -%}
+                {%- assign b_cat = block.settings.category | default: 'both' -%}
+                {%- unless t_filter == 'all' or b_cat == 'both' or b_cat == t_filter -%}{%- continue -%}{%- endunless -%}
                 <blockquote class="stst-pill" {{ block.shopify_attributes }}>
                   <p class="stst-pill__quote">“{{ block.settings.quote }}”</p>
                   <p class="stst-pill__who"><strong>{{ block.settings.name }}</strong>{% if block.settings.role != blank %} · {{ block.settings.role }}{% endif %}</p>
@@ -105,11 +138,12 @@
       </div>
 
     {%- else -%}
-      {%- assign count = section.blocks.size -%}
-      {%- if use_app -%}{%- assign count = tcfg.items.size -%}{%- endif -%}
+      {%- assign count = t_count -%}
       <div class="stst-grid{% if count < 3 %} is-few{% endif %}">
         {%- if use_app -%}
           {%- for it in tcfg.items -%}
+            {%- assign it_cat = it.category | default: 'both' -%}
+            {%- unless t_filter == 'all' or it_cat == 'both' or it_cat == t_filter -%}{%- continue -%}{%- endunless -%}
             {%- assign rating = it.rating | default: 5 | plus: 0 -%}
             <figure class="stst-card">
               <div class="stst-quote-mark" aria-hidden="true">“</div>
@@ -123,6 +157,8 @@
           {%- endfor -%}
         {%- else -%}
           {%- for block in section.blocks -%}
+            {%- assign b_cat = block.settings.category | default: 'both' -%}
+            {%- unless t_filter == 'all' or b_cat == 'both' or b_cat == t_filter -%}{%- continue -%}{%- endunless -%}
             {%- assign rating = block.settings.rating | plus: 0 -%}
             <figure class="stst-card" {{ block.shopify_attributes }}>
               <div class="stst-quote-mark" aria-hidden="true">“</div>
@@ -139,6 +175,7 @@
     {%- endif -%}
   </div>
 </section>
+{%- endif -%}
 
 {% schema %}
 {
@@ -157,6 +194,15 @@
       ]
     },
     { "type": "range", "id": "marquee_speed", "min": 20, "max": 90, "step": 5, "unit": "s", "label": "Marquee speed (slower = larger)", "default": 40 },
+    {
+      "type": "select", "id": "category_filter", "label": "Show reviews about", "default": "all",
+      "info": "Reviews marked 'Both' always show. The section hides itself if nothing matches.",
+      "options": [
+        { "value": "all", "label": "Everything" },
+        { "value": "collecting", "label": "Collecting art only" },
+        { "value": "classes", "label": "Classes & workshops only" }
+      ]
+    },
     { "type": "header", "content": "Colours" },
     { "type": "color", "id": "bg_color", "label": "Background", "default": "#eeefeb" },
     { "type": "color", "id": "text_color", "label": "Text", "default": "#1d1c21" },
@@ -171,6 +217,14 @@
         { "type": "text", "id": "name", "label": "Name" },
         { "type": "text", "id": "role", "label": "Role / context", "placeholder": "Collector · Art class client" },
         { "type": "range", "id": "rating", "min": 0, "max": 5, "step": 1, "label": "Star rating (0 = hide)", "default": 5 },
+        {
+          "type": "select", "id": "category", "label": "This review is about", "default": "both",
+          "options": [
+            { "value": "both", "label": "Both (shows everywhere)" },
+            { "value": "collecting", "label": "Collecting art" },
+            { "value": "classes", "label": "Classes & workshops" }
+          ]
+        },
         { "type": "image_picker", "id": "photo", "label": "Photo (optional)" }
       ]
     }
