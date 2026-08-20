@@ -48,15 +48,19 @@
     pointer-events: none;
   }
 
+  /* the comp does not run this column to the full half-width: the script
+     measures ~690px and the body pair ~556px on the 1920 frame */
   #shopify-section-{{ sid }} .rb-founders__heading {
     color: {{ section.settings.heading_color }};
     line-height: 1.28;
+    max-width: 690px;
   }
   #shopify-section-{{ sid }} .rb-founders__cols {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: clamp(20px, 2.71vw, 52px);
     margin-top: clamp(18px, 2.4vw, 46px);
+    max-width: 556px;
   }
   #shopify-section-{{ sid }} .rb-founders__cols .rb-body {
     font-size: var(--rb-fs-body-sm);
@@ -81,6 +85,13 @@
     }
     #shopify-section-{{ sid }} .rb-founders__cols { grid-template-columns: 1fr; }
     #shopify-section-{{ sid }} .rb-founders__cols .rb-body { text-align: left; }
+    /* left:100% pushes the stamp past the viewport once the polaroid is
+       centred and near-full-width; tuck it back onto the image instead */
+    #shopify-section-{{ sid }} .rb-founders__stamp {
+      left: auto;
+      right: -8%;
+      transform: translateY(-50%);
+    }
   }
 </style>
 
@@ -142,11 +153,11 @@
   "settings": [
     { "type": "image_picker", "id": "image", "label": "Polaroid image",
       "info": "The polaroid frame is part of the supplied artwork, not a CSS effect." },
-    { "type": "range", "id": "image_width", "min": 280, "max": 700, "step": 10,
-      "default": 476, "unit": "px", "label": "Polaroid width at 1920px wide" },
+    { "type": "range", "id": "image_width", "min": 280, "max": 700, "step": 5,
+      "default": 475, "unit": "px", "label": "Polaroid width at 1920px wide" },
     { "type": "checkbox", "id": "show_stamp", "default": true, "label": "Show gold protea stamp" },
     { "type": "range", "id": "stamp_width", "min": 80, "max": 320, "step": 5,
-      "default": 177, "unit": "px", "label": "Stamp width at 1920px wide" },
+      "default": 175, "unit": "px", "label": "Stamp width at 1920px wide" },
     { "type": "header", "content": "Text" },
     { "type": "text", "id": "heading",
       "default": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.",

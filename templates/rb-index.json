@@ -69,7 +69,10 @@
           }
         }
       },
-      "block_order": ["buy", "make"],
+      "block_order": [
+        "buy",
+        "make"
+      ],
       "settings": {}
     },
     "collections": {
@@ -80,7 +83,7 @@
           "settings": {
             "collection": "originals",
             "title": "Collection Title",
-            "image": "shopify://shop_images/saf-home-collection-1.jpg",
+            "image": "shopify://shop_images/saf-home-collection-2.jpg",
             "artist": "Artist Name",
             "link": "",
             "button_label": "Browse Collection"
@@ -91,7 +94,7 @@
           "settings": {
             "collection": "limited-editions",
             "title": "Collection Title",
-            "image": "shopify://shop_images/saf-home-collection-2.jpg",
+            "image": "shopify://shop_images/saf-home-collection-1.jpg",
             "artist": "Artist Name",
             "link": "",
             "button_label": "Browse Collection"
@@ -109,7 +112,11 @@
           }
         }
       },
-      "block_order": ["c1", "c2", "c3"],
+      "block_order": [
+        "c1",
+        "c2",
+        "c3"
+      ],
       "settings": {
         "eyebrow": "Our Featured Collections",
         "eyebrow_color": "#bea532",
@@ -121,7 +128,7 @@
       "type": "rb-quiz-banner",
       "settings": {
         "image": "shopify://shop_images/saf-home-quiz.jpg",
-        "band_height": 883,
+        "band_height": 880,
         "min_height": 400,
         "mobile_ratio": "3 / 4",
         "focal_x": 50,
@@ -140,9 +147,9 @@
       "type": "rb-founders",
       "settings": {
         "image": "shopify://shop_images/saf-home-founders.png",
-        "image_width": 476,
+        "image_width": 475,
         "show_stamp": true,
-        "stamp_width": 177,
+        "stamp_width": 175,
         "heading": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.",
         "heading_color": "#b00e3f",
         "column_one": "<p>Tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut eu fugiat nulla pariatur..</p>",
@@ -159,7 +166,7 @@
         "heading_color": "#1e1e1e",
         "heading_accent": "#bea532",
         "map_width": 50,
-        "map_embed": "https://www.google.com/maps?q=SA%20Art%20Fair%2C%20Hout%20Bay%2C%20Cape%20Town&output=embed",
+        "map_embed": "https://maps.google.com/maps?q=SA+Art+Fair+Hout+Bay+Cape+Town&t=&z=13&ie=UTF8&iwloc=&output=embed",
         "map_alt": "Map to the SA Art Fair studio",
         "map_grayscale": 100,
         "form_label": "Get in touch",

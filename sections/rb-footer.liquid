@@ -20,7 +20,7 @@
   #shopify-section-{{ sid }} .rb-footer {
     background: {{ section.settings.background }};
     color: {{ section.settings.text_color }};
-    padding: clamp(56px, 9.38vw, 180px) clamp(16px, 3.65vw, 70px) clamp(32px, 4.17vw, 80px);
+    padding: clamp(48px, 6.77vw, 130px) clamp(16px, 3.65vw, 70px) clamp(32px, 3.33vw, 64px);
   }
   #shopify-section-{{ sid }} .rb-footer__grid {
     display: grid;
@@ -37,7 +37,7 @@
   #shopify-section-{{ sid }} .rb-footer__socials {
     display: flex;
     gap: clamp(8px, 0.73vw, 14px);
-    margin: clamp(18px, 1.98vw, 38px) 0 clamp(14px, 1.46vw, 28px);
+    margin: clamp(16px, 1.72vw, 33px) 0 clamp(8px, 0.63vw, 12px);
   }
   #shopify-section-{{ sid }} .rb-social {
     display: inline-flex;
@@ -209,7 +209,7 @@
   "class": "rb-footer-section",
   "settings": [
     { "type": "range", "id": "wordmark_width", "min": 180, "max": 520, "step": 5,
-      "default": 327, "unit": "px", "label": "Wordmark width" },
+      "default": 325, "unit": "px", "label": "Wordmark width" },
     { "type": "richtext", "id": "blurb",
       "default": "<p>Tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>",
       "label": "Blurb" },
@@ -226,7 +226,7 @@
     { "type": "header", "content": "Mark" },
     { "type": "checkbox", "id": "show_mark", "default": true, "label": "Show protea mark" },
     { "type": "range", "id": "mark_width", "min": 40, "max": 220, "step": 5,
-      "default": 82, "unit": "px", "label": "Protea width" },
+      "default": 80, "unit": "px", "label": "Protea width" },
     { "type": "header", "content": "Colour" },
     { "type": "color", "id": "background", "default": "#ffffff", "label": "Background" },
     { "type": "color", "id": "text_color", "default": "#1e1e1e", "label": "Text" },

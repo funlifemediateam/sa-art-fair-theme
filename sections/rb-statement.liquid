@@ -34,7 +34,8 @@
   #shopify-section-{{ sid }} .rb-statement__heading {
     color: {{ section.settings.heading_color }};
     max-width: {{ section.settings.heading_width }}px;
-    text-wrap: balance;
+    /* deliberately NOT text-wrap:balance — the comp fills each line to the
+       measure, and balancing re-breaks the sentence a word early */
   }
   #shopify-section-{{ sid }} .rb-statement__heading p { margin: 0; }
   #shopify-section-{{ sid }} .rb-statement__heading p + p {

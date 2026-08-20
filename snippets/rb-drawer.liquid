@@ -17,6 +17,9 @@
   #rb-drawer-{{ sid }}.is-open { visibility: visible; pointer-events: auto; }
 
   #rb-drawer-{{ sid }} .rb-drawer__scrim {
+    /* explicit display: Dawn's base.css hides every `div:empty`, and these
+       decorative layers have no children */
+    display: block;
     position: absolute;
     inset: 0;
     background: rgba(30, 30, 30, 0.42);

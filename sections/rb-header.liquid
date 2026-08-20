@@ -16,9 +16,13 @@
 -%}
 
 <style>
+  /* The sticky header is its own stacking context, so the drawer's z-index is
+     only relative to THIS value — not to the page. It has to clear the
+     floating WhatsApp button (55) and the legacy mobile bar (60), while
+     staying under the lead/newsletter popups (9999+). */
   #shopify-section-{{ sid }} {
     position: relative;
-    z-index: 20;
+    z-index: 70;
   }
   {%- if section.settings.sticky -%}
     #shopify-section-{{ sid }} { position: sticky; top: 0; }
@@ -99,8 +103,30 @@
     transform: translateY(-9px) rotate(-45deg);
   }
 
+  /* Mobile path bar. Hanre's export has no mobile frames, so this keeps the
+     two-path shortcut the site already had, restyled to the new brand — the
+     header bar itself has no room for both pills at phone widths. */
+  .rb-mobile-paths { display: none; }
+
   @media screen and (max-width: 749px) {
     #shopify-section-{{ sid }} .rb-header__ctas { display: none; }
+
+    {%- if section.settings.show_mobile_bar -%}
+      .rb-mobile-paths {
+        position: fixed;
+        left: 0; right: 0; bottom: 0;
+        z-index: 50;
+        display: flex;
+        gap: 10px;
+        padding: 10px 14px calc(10px + env(safe-area-inset-bottom));
+        background: {{ section.settings.background }};
+        border-top: 1px solid rgba(30, 30, 30, 0.12);
+      }
+      .rb-mobile-paths .rb-btn { flex: 1 1 0; min-width: 0; }
+      body:has(.rb-mobile-paths) { padding-bottom: 78px; }
+      /* keep the floating WhatsApp button clear of the bar */
+      body:has(.rb-mobile-paths) .saf-whatsapp { bottom: 92px; }
+    {%- endif -%}
   }
 </style>
 
@@ -169,6 +195,23 @@
   </div>
 </header>
 
+{%- if section.settings.show_mobile_bar -%}
+  {%- if section.settings.cta_a_label != blank or section.settings.cta_b_label != blank -%}
+    <nav class="rb-mobile-paths" aria-label="Browse by path">
+      {%- if section.settings.cta_a_label != blank -%}
+        <a href="{{ section.settings.cta_a_url | default: '#' }}" class="rb-btn rb-btn--plain rb-btn--outline">
+          {{- section.settings.cta_a_label | escape -}}
+        </a>
+      {%- endif -%}
+      {%- if section.settings.cta_b_label != blank -%}
+        <a href="{{ section.settings.cta_b_url | default: '#' }}" class="rb-btn rb-btn--plain rb-btn--outline">
+          {{- section.settings.cta_b_label | escape -}}
+        </a>
+      {%- endif -%}
+    </nav>
+  {%- endif -%}
+{%- endif -%}
+
 {%- render 'rb-drawer', sid: sid, menu: menu, section: section -%}
 
 {% schema %}
@@ -189,6 +232,9 @@
     { "type": "url", "id": "cta_a_url", "label": "Button A link" },
     { "type": "text", "id": "cta_b_label", "default": "Create Art", "label": "Button B label" },
     { "type": "url", "id": "cta_b_url", "label": "Button B link" },
+    { "type": "checkbox", "id": "show_mobile_bar", "default": true,
+      "label": "Show path bar on mobile",
+      "info": "The pills do not fit the header bar on phones. Not part of the desktop design — the Figma has no mobile frames." },
     { "type": "header", "content": "Icons",
       "info": "The design shows neither in the bar; the drawer carries the cart link instead." },
     { "type": "checkbox", "id": "show_search", "default": false, "label": "Show search icon" },

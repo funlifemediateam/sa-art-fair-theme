@@ -28,6 +28,9 @@
     object-position: {{ section.settings.focal_x }}% {{ section.settings.focal_y }}%;
   }
   #shopify-section-{{ sid }} .rb-hero__overlay {
+    /* explicit display: Dawn's base.css hides every `div:empty`, and these
+       decorative layers have no children */
+    display: block;
     position: absolute;
     inset: 0;
     background: {{ section.settings.overlay_color }};

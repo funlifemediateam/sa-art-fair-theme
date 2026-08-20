@@ -18,9 +18,12 @@
         "drawer_cart_link": true,
         "drawer_account_link": true,
         "background": "#ffffff",
-        "text_color": "#1e1e1e"
+        "text_color": "#1e1e1e",
+        "show_mobile_bar": true
       }
     }
   },
-  "order": ["rb_header"]
+  "order": [
+    "rb_header"
+  ]
 }

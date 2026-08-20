@@ -42,8 +42,12 @@
   --rb-fs-btn: clamp(14px, 1.094vw, 21px);
   --rb-fs-btn-serif: clamp(16px, 1.146vw, 22px);
 
-  /* --- layout ----------------------------------------------------------- */
-  --rb-container: 1680px;
+  /* --- layout -----------------------------------------------------------
+     --rb-container is the CONTENT width, measured off the comp (cards run
+     x109..x1782 on the 1920 frame). The gutter sits outside it, so the
+     max-width below adds it back — getting this wrong shrinks every grid on
+     the page by 240px.                                                     */
+  --rb-container: 1674px;
   --rb-gutter: clamp(20px, 6.25vw, 120px);
   --rb-header-h: clamp(84px, 8.85vw, 170px);
 }
@@ -53,9 +57,10 @@
    -------------------------------------------------------------------------- */
 .rb-container {
   width: 100%;
-  max-width: var(--rb-container);
+  max-width: calc(var(--rb-container) + var(--rb-gutter) * 2);
   margin-inline: auto;
   padding-inline: var(--rb-gutter);
+  box-sizing: border-box;
 }
 
 .rb-section {
@@ -88,7 +93,7 @@
   font-family: var(--rb-serif);
   font-weight: 400;
   font-size: var(--rb-fs-display);
-  line-height: 1.25;
+  line-height: 1.23; /* comp: 74px leading on a 60px face */
   letter-spacing: -0.005em;
 }
 

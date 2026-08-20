@@ -24,6 +24,10 @@
   }
   #shopify-section-{{ sid }} .rb-path {
     position: relative;
+    /* width must be definite: with only aspect-ratio + min-height, a panel
+       narrower than 420px resolves its width FROM the min-height and bursts
+       out of its grid track (two 421px panels in a 768px row). */
+    width: 100%;
     aspect-ratio: 960 / 957;
     min-height: 420px;
     overflow: hidden;
@@ -38,6 +42,9 @@
     object-fit: cover;
   }
   #shopify-section-{{ sid }} .rb-path__overlay {
+    /* explicit display: Dawn's base.css hides every `div:empty`, and these
+       decorative layers have no children */
+    display: block;
     position: absolute;
     inset: 0;
   }
