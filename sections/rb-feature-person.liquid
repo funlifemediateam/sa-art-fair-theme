@@ -1,0 +1,237 @@
+{% comment %}
+  Rebrand person band — a coloured paper panel introducing one person beside
+  a full-bleed artwork with their black-and-white portrait set into it.
+
+  Two of these in the comps, same anatomy, different palette:
+    Store   — "Featured Artist", sage panel, moss buttons.
+    Classes — "Teacher",         coral panel, cherry buttons.
+
+  The portrait is a hard rectangle laid over the artwork with no radius and no
+  border, positioned as a percentage of the media half so it keeps its place
+  as the band scales.
+{% endcomment %}
+
+{{ 'saf-rebrand.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign sid = section.id
+  assign art = section.settings.image
+  assign portrait = section.settings.portrait
+  assign panel_pct = section.settings.panel_width
+  assign media_pct = 100 | minus: panel_pct
+-%}
+
+<style>
+  #shopify-section-{{ sid }} .rb-fp {
+    display: grid;
+    grid-template-columns: {{ panel_pct }}fr {{ media_pct }}fr;
+    align-items: stretch;
+  }
+
+  #shopify-section-{{ sid }} .rb-fp__panel {
+    background: {{ section.settings.panel_color }};
+    color: {{ section.settings.text_color }};
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-sizing: border-box;
+    padding:
+      clamp(40px, 5.21vw, 100px)
+      clamp(24px, 4.58vw, 88px);
+    --rb-paper-strength: {{ section.settings.texture | divided_by: 100.0 }};
+  }
+  #shopify-section-{{ sid }} .rb-fp__eyebrow {
+    margin: 0 0 clamp(6px, 0.63vw, 12px);
+    font-family: var(--rb-sans);
+    font-size: var(--rb-fs-body-sm);
+    line-height: 1.2;
+    color: {{ section.settings.eyebrow_color }};
+  }
+  #shopify-section-{{ sid }} .rb-fp__name {
+    color: {{ section.settings.text_color }};
+    max-width: 8ch; /* the comp breaks the name after the first word */
+  }
+  #shopify-section-{{ sid }} .rb-fp__body {
+    margin-top: clamp(12px, 1.35vw, 26px);
+    max-width: 34ch;
+    font-size: var(--rb-fs-body-sm);
+    color: {{ section.settings.text_color }};
+  }
+  #shopify-section-{{ sid }} .rb-fp__body p { margin: 0; }
+
+  /* the comp stacks the two CTAs, left aligned, square-ish not stadium */
+  #shopify-section-{{ sid }} .rb-fp__ctas {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: clamp(8px, 0.83vw, 16px);
+    margin-top: clamp(18px, 1.98vw, 38px);
+  }
+  #shopify-section-{{ sid }} .rb-fp__ctas .rb-btn {
+    background: {{ section.settings.button_bg }};
+    color: {{ section.settings.button_text }};
+    border-color: {{ section.settings.button_bg }};
+    border-radius: {{ section.settings.button_radius }}px;
+    min-height: clamp(38px, 2.71vw, 52px);
+    font-size: var(--rb-fs-btn);
+    min-width: min(100%, 320px);
+  }
+  #shopify-section-{{ sid }} .rb-fp__ctas .rb-btn:hover {
+    background: {{ section.settings.button_text }};
+    color: {{ section.settings.button_bg }};
+  }
+
+  #shopify-section-{{ sid }} .rb-fp__media {
+    position: relative;
+    width: 100%;
+    min-height: clamp({{ section.settings.min_height | divided_by: 2 }}px, {{ section.settings.min_height | times: 100.0 | divided_by: 1920.0 }}vw, {{ section.settings.min_height }}px);
+    overflow: hidden;
+    background: #efefef;
+  }
+  #shopify-section-{{ sid }} .rb-fp__media > img,
+  #shopify-section-{{ sid }} .rb-fp__media > svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: {{ section.settings.focal_x }}% {{ section.settings.focal_y }}%;
+  }
+
+  #shopify-section-{{ sid }} .rb-fp__portrait {
+    left: {{ section.settings.portrait_x }}%;
+    top: {{ section.settings.portrait_y }}%;
+    width: {{ section.settings.portrait_w }}%;
+    aspect-ratio: {{ section.settings.portrait_ratio }};
+    transform: translate(-50%, -50%);
+  }
+
+  @media screen and (max-width: 749px) {
+    #shopify-section-{{ sid }} .rb-fp { grid-template-columns: 1fr; }
+    #shopify-section-{{ sid }} .rb-fp__media {
+      min-height: 0;
+      aspect-ratio: 4 / 3;
+    }
+    #shopify-section-{{ sid }} .rb-fp__panel { padding-block: 48px; }
+    #shopify-section-{{ sid }} .rb-fp__name { max-width: none; }
+    #shopify-section-{{ sid }} .rb-fp__ctas .rb-btn { min-width: 0; width: 100%; }
+  }
+</style>
+
+<div class="rb-section rb-bleed">
+  <div class="rb-fp">
+    <div class="rb-fp__panel rb-paper">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="rb-fp__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      {%- endif -%}
+
+      {%- if section.settings.name != blank -%}
+        <h2 class="rb-name rb-fp__name">{{ section.settings.name | escape }}</h2>
+      {%- endif -%}
+
+      {%- if section.settings.body != blank -%}
+        <div class="rb-body rb-fp__body">{{ section.settings.body }}</div>
+      {%- endif -%}
+
+      {%- if section.settings.button_a_label != blank or section.settings.button_b_label != blank -%}
+        <div class="rb-fp__ctas">
+          {%- if section.settings.button_a_label != blank -%}
+            <a href="{{ section.settings.button_a_link | default: '#' }}" class="rb-btn">
+              {{- section.settings.button_a_label | escape -}}
+            </a>
+          {%- endif -%}
+          {%- if section.settings.button_b_label != blank -%}
+            <a href="{{ section.settings.button_b_link | default: '#' }}" class="rb-btn">
+              {{- section.settings.button_b_label | escape -}}
+            </a>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    <div class="rb-fp__media">
+      {%- if art != blank -%}
+        {{
+          art
+          | image_url: width: 1920
+          | image_tag:
+            widths: '480, 700, 960, 1400, 1920',
+            sizes: '(max-width: 749px) 100vw, 50vw',
+            loading: 'lazy',
+            alt: art.alt | default: section.settings.name
+        }}
+      {%- else -%}
+        {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+      {%- endif -%}
+
+      {%- if portrait != blank -%}
+        <div class="rb-inset rb-fp__portrait">
+          {{
+            portrait
+            | image_url: width: 700
+            | image_tag:
+              widths: '240, 360, 520, 700',
+              sizes: '(max-width: 749px) 40vw, 20vw',
+              loading: 'lazy',
+              alt: portrait.alt | default: section.settings.name
+          }}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Rebrand person band",
+  "tag": "section",
+  "class": "rb-section-wrapper",
+  "settings": [
+    { "type": "paragraph",
+      "content": "The Store's 'Featured Artist' band and the class page's 'Teacher' band are the same section — only the palette changes." },
+    { "type": "header", "content": "Panel" },
+    { "type": "text", "id": "eyebrow", "default": "Featured Artist", "label": "Eyebrow" },
+    { "type": "text", "id": "name", "default": "Kerry Sassen", "label": "Name" },
+    { "type": "richtext", "id": "body",
+      "default": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.</p>",
+      "label": "Body" },
+    { "type": "text", "id": "button_a_label", "default": "Browse collection", "label": "Button A label" },
+    { "type": "url", "id": "button_a_link", "label": "Button A link" },
+    { "type": "text", "id": "button_b_label", "default": "See artist page", "label": "Button B label" },
+    { "type": "url", "id": "button_b_link", "label": "Button B link" },
+    { "type": "header", "content": "Colour" },
+    { "type": "color", "id": "panel_color", "default": "#a2ad8e", "label": "Panel colour" },
+    { "type": "color", "id": "text_color", "default": "#ffffff", "label": "Panel text" },
+    { "type": "color", "id": "eyebrow_color", "default": "#505a43", "label": "Eyebrow colour" },
+    { "type": "color", "id": "button_bg", "default": "#505a43", "label": "Button background" },
+    { "type": "color", "id": "button_text", "default": "#ffffff", "label": "Button label" },
+    { "type": "range", "id": "button_radius", "min": 0, "max": 60, "step": 2,
+      "default": 0, "unit": "px", "label": "Button corner radius",
+      "info": "The comp uses square buttons here, unlike the stadium pills elsewhere." },
+    { "type": "range", "id": "texture", "min": 0, "max": 100, "step": 5,
+      "default": 100, "unit": "%", "label": "Crumpled paper texture" },
+    { "type": "header", "content": "Artwork" },
+    { "type": "image_picker", "id": "image", "label": "Artwork" },
+    { "type": "range", "id": "panel_width", "min": 30, "max": 70, "step": 1,
+      "default": 50, "unit": "%", "label": "Panel share of the row" },
+    { "type": "range", "id": "min_height", "min": 260, "max": 900, "step": 10,
+      "default": 520, "unit": "px", "label": "Band height at 1920px wide" },
+    { "type": "range", "id": "focal_x", "min": 0, "max": 100, "step": 1,
+      "default": 50, "unit": "%", "label": "Artwork focal point — horizontal" },
+    { "type": "range", "id": "focal_y", "min": 0, "max": 100, "step": 1,
+      "default": 50, "unit": "%", "label": "Artwork focal point — vertical" },
+    { "type": "header", "content": "Portrait inset" },
+    { "type": "image_picker", "id": "portrait", "label": "Portrait",
+      "info": "Rendered black and white, as in the design." },
+    { "type": "range", "id": "portrait_w", "min": 15, "max": 70, "step": 1,
+      "default": 38, "unit": "%", "label": "Portrait width",
+      "info": "Percentage of the artwork half." },
+    { "type": "text", "id": "portrait_ratio", "default": "1 / 1", "label": "Portrait aspect ratio" },
+    { "type": "range", "id": "portrait_x", "min": 0, "max": 100, "step": 1,
+      "default": 62, "unit": "%", "label": "Portrait centre — horizontal" },
+    { "type": "range", "id": "portrait_y", "min": 0, "max": 100, "step": 1,
+      "default": 50, "unit": "%", "label": "Portrait centre — vertical" }
+  ],
+  "presets": [{ "name": "Rebrand person band" }]
+}
+{% endschema %}

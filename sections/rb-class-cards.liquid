@@ -1,0 +1,321 @@
+{% comment %}
+  Rebrand class cards — "Browse our classes" on the class page and "View
+  classes by <teacher>" on a teacher page are the same row: rounded cards with
+  the artwork on top and a coloured paper panel under it carrying the title,
+  the time, the teacher and a white pill.
+
+  Cards come from a collection of class products rather than from blocks, so
+  the row stays right as the studio's calendar changes. Each card reads the
+  same booking metafields the class page uses.
+
+  The comp runs this grid narrower than the site container and centres it,
+  which is what "Grid max width" is for.
+{% endcomment %}
+
+{{ 'saf-rebrand.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign sid = section.id
+  assign col = collections[section.settings.collection]
+  assign items = col.products
+  assign limit = section.settings.count
+
+  assign teacher_filter = section.settings.teacher_filter | downcase | strip
+
+  assign eyebrow = section.settings.eyebrow
+  if section.settings.eyebrow_name != blank
+    assign eyebrow = eyebrow | replace: '[teacher]', section.settings.eyebrow_name
+  else
+    assign eyebrow = eyebrow | replace: '[teacher]', collection.title
+  endif
+-%}
+
+<style>
+  #shopify-section-{{ sid }} .rb-cc {
+    background: {{ section.settings.background }};
+    padding-block:
+      clamp(48px, 6.25vw, 120px)
+      clamp(48px, 7.29vw, 140px);
+  }
+  #shopify-section-{{ sid }} .rb-cc__head {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(6px, 0.63vw, 12px);
+    text-align: center;
+    margin-bottom: clamp(26px, 3.02vw, 58px);
+  }
+  #shopify-section-{{ sid }} .rb-cc__intro {
+    max-width: 40ch;
+    font-size: var(--rb-fs-body-sm);
+    color: {{ section.settings.intro_color }};
+  }
+  #shopify-section-{{ sid }} .rb-cc__intro p { margin: 0; }
+
+  #shopify-section-{{ sid }} .rb-cc__grid {
+    display: grid;
+    grid-template-columns: repeat({{ section.settings.columns }}, minmax(0, 1fr));
+    gap: clamp(20px, 2.66vw, 51px);
+    max-width: {{ section.settings.grid_width }}px;
+    margin-inline: auto;
+  }
+
+  #shopify-section-{{ sid }} .rb-cc__card {
+    display: flex;
+    flex-direction: column;
+    border-radius: {{ section.settings.radius }}px;
+    overflow: hidden;
+  }
+  #shopify-section-{{ sid }} .rb-cc__media {
+    width: 100%;
+    aspect-ratio: {{ section.settings.image_ratio }};
+  }
+  #shopify-section-{{ sid }} .rb-cc__panel {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    padding: clamp(12px, 1.25vw, 24px) clamp(12px, 1.35vw, 26px) clamp(16px, 1.72vw, 33px);
+    --rb-paper-strength: {{ section.settings.texture | divided_by: 100.0 }};
+  }
+  #shopify-section-{{ sid }} .rb-cc__row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  #shopify-section-{{ sid }} .rb-cc__title {
+    margin: 0;
+    font-family: var(--rb-serif);
+    font-size: clamp(18px, 1.46vw, 28px);
+    line-height: 1.15;
+  }
+  #shopify-section-{{ sid }} .rb-cc__title a { color: inherit; text-decoration: none; }
+  #shopify-section-{{ sid }} .rb-cc__title a:hover { text-decoration: underline; }
+  #shopify-section-{{ sid }} .rb-cc__time {
+    flex: 0 0 auto;
+    font-family: var(--rb-sans);
+    font-size: clamp(9px, 0.63vw, 12px);
+    line-height: 1.2;
+    opacity: 0.9;
+  }
+  #shopify-section-{{ sid }} .rb-cc__by {
+    margin: 2px 0 0;
+    font-family: var(--rb-sans);
+    font-size: var(--rb-fs-meta);
+    line-height: 1.3;
+    text-decoration: underline;
+  }
+  #shopify-section-{{ sid }} .rb-cc__body {
+    margin-top: clamp(6px, 0.63vw, 12px);
+    font-size: var(--rb-fs-meta);
+    line-height: 1.4;
+  }
+  #shopify-section-{{ sid }} .rb-cc__body p { margin: 0; }
+  #shopify-section-{{ sid }} .rb-cc__cta {
+    align-self: center;
+    margin-top: auto;
+    padding-top: clamp(14px, 1.46vw, 28px);
+  }
+  /* a white pill whose label takes the card's own tone, so it reads as a hole
+     punched in the panel rather than a foreign button */
+  #shopify-section-{{ sid }} .rb-cc__btn {
+    min-height: clamp(32px, 2.19vw, 42px);
+    padding-inline: clamp(22px, 2.4vw, 46px);
+    background: #ffffff;
+    border-color: #ffffff;
+  }
+  #shopify-section-{{ sid }} .rb-cc__btn:hover {
+    background: {{ section.settings.background }};
+    border-color: #ffffff;
+  }
+
+  #shopify-section-{{ sid }} .rb-cc__more {
+    display: flex;
+    justify-content: center;
+    margin-top: clamp(24px, 2.71vw, 52px);
+  }
+
+  @media screen and (max-width: 989px) {
+    #shopify-section-{{ sid }} .rb-cc__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media screen and (max-width: 639px) {
+    #shopify-section-{{ sid }} .rb-cc__grid { grid-template-columns: 1fr; }
+  }
+
+  /* card tones: A is the default, B is the accent the comps drop in here and
+     there. "Alternate" flips every other card. */
+  #shopify-section-{{ sid }} .rb-cc__card--a .rb-cc__panel {
+    background: {{ section.settings.tone_a }};
+    color: {{ section.settings.tone_a_text }};
+  }
+  #shopify-section-{{ sid }} .rb-cc__card--a .rb-cc__btn { color: {{ section.settings.tone_a }}; }
+  #shopify-section-{{ sid }} .rb-cc__card--b .rb-cc__panel {
+    background: {{ section.settings.tone_b }};
+    color: {{ section.settings.tone_b_text }};
+  }
+  #shopify-section-{{ sid }} .rb-cc__card--b .rb-cc__btn { color: {{ section.settings.tone_b }}; }
+</style>
+
+<div class="rb-section rb-cc">
+  <div class="rb-container">
+    {%- if section.settings.eyebrow != blank or section.settings.intro != blank -%}
+      <div class="rb-cc__head">
+        {%- if eyebrow != blank -%}
+          <div class="rb-caps">{{ eyebrow }}</div>
+        {%- endif -%}
+        {%- if section.settings.intro != blank -%}
+          <div class="rb-body rb-cc__intro">{{ section.settings.intro }}</div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="rb-cc__grid">
+      {%- assign shown = 0 -%}
+      {%- for item in items -%}
+        {%- liquid
+          assign by = item.metafields.booking.instructor_name
+          assign time = item.metafields.booking.class_time
+        -%}
+
+        {%- comment -%}
+          A teacher page shows only that teacher's classes. Filtering has to
+          happen inside the loop rather than through `limit`, or a filtered-out
+          class still eats one of the slots.
+        {%- endcomment -%}
+        {%- if teacher_filter != blank -%}
+          {%- assign haystack = by | default: '' | downcase -%}
+          {%- unless haystack contains teacher_filter -%}
+            {%- continue -%}
+          {%- endunless -%}
+        {%- endif -%}
+        {%- if shown >= limit -%}
+          {%- break -%}
+        {%- endif -%}
+
+        {%- liquid
+          assign tone = 'a'
+          if section.settings.pattern == 'alternate'
+            assign m = shown | modulo: 2
+            if m == 1
+              assign tone = 'b'
+            endif
+          endif
+          assign shown = shown | plus: 1
+        -%}
+        <article class="rb-cc__card rb-cc__card--{{ tone }}">
+          <a href="{{ item.url }}" class="rb-media rb-cc__media" tabindex="-1" aria-hidden="true">
+            {%- if item.featured_image != blank -%}
+              {{
+                item.featured_image
+                | image_url: width: 900
+                | image_tag:
+                  widths: '260, 400, 600, 900',
+                  sizes: '(max-width: 639px) 90vw, (max-width: 989px) 45vw, 26vw',
+                  loading: 'lazy',
+                  alt: ''
+              }}
+            {%- else -%}
+              {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+            {%- endif -%}
+          </a>
+
+          <div class="rb-cc__panel rb-paper">
+            <div class="rb-cc__row">
+              <h3 class="rb-cc__title"><a href="{{ item.url }}">{{ item.title }}</a></h3>
+              {%- if time != blank -%}
+                <span class="rb-cc__time">{{ time }}</span>
+              {%- endif -%}
+            </div>
+
+            {%- if by != blank -%}
+              <p class="rb-cc__by">{{ section.settings.by_prefix }} {{ by }}</p>
+            {%- endif -%}
+
+            {%- if section.settings.show_excerpt -%}
+              <div class="rb-cc__body">
+                <p>{{ item.description | strip_html | truncatewords: 18 }}</p>
+              </div>
+            {%- endif -%}
+
+            {%- if section.settings.button_label != blank -%}
+              <div class="rb-cc__cta">
+                <a href="{{ item.url }}" class="rb-btn rb-btn--serif rb-cc__btn">
+                  {{- section.settings.button_label | escape -}}
+                </a>
+              </div>
+            {%- endif -%}
+          </div>
+        </article>
+      {%- endfor -%}
+
+      {%- if shown == 0 and request.design_mode -%}
+        <p class="rb-body">
+          No classes matched. Pick a collection of classes, and check the teacher filter.
+        </p>
+      {%- endif -%}
+    </div>
+
+    {%- if section.settings.more_label != blank -%}
+      <div class="rb-cc__more">
+        <a href="{{ section.settings.more_link | default: col.url | default: '#' }}"
+           class="rb-btn rb-btn--serif rb-btn--outline">
+          {{- section.settings.more_label | escape -}}
+        </a>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Rebrand class cards",
+  "tag": "section",
+  "class": "rb-section-wrapper",
+  "settings": [
+    { "type": "collection", "id": "collection", "label": "Classes collection" },
+    { "type": "range", "id": "count", "min": 3, "max": 24, "step": 1,
+      "default": 6, "label": "Classes to show" },
+    { "type": "richtext", "id": "eyebrow", "default": "<p>Browse our classes</p>",
+      "label": "Eyebrow",
+      "info": "Rendered uppercase. Bold runs render cherry, the rest teal. Write [teacher] to drop the teacher's name in." },
+    { "type": "text", "id": "eyebrow_name", "label": "Name for [teacher]",
+      "info": "Blank uses the collection title, which is what a teacher page wants." },
+    { "type": "text", "id": "teacher_filter", "label": "Only show classes by",
+      "info": "Matched against each class's booking.instructor_name. Blank shows every class in the collection." },
+    { "type": "richtext", "id": "intro",
+      "default": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.</p>",
+      "label": "Intro" },
+    { "type": "color", "id": "intro_color", "default": "#1e1e1e", "label": "Intro colour" },
+    { "type": "header", "content": "Cards" },
+    { "type": "text", "id": "by_prefix", "default": "By", "label": "Teacher prefix" },
+    { "type": "checkbox", "id": "show_excerpt", "default": true, "label": "Show a short description" },
+    { "type": "text", "id": "button_label", "default": "View Class", "label": "Card button label" },
+    { "type": "range", "id": "columns", "min": 2, "max": 4, "step": 1,
+      "default": 3, "label": "Columns" },
+    { "type": "range", "id": "grid_width", "min": 800, "max": 1670, "step": 10,
+      "default": 1300, "unit": "px", "label": "Grid max width" },
+    { "type": "text", "id": "image_ratio", "default": "398 / 380", "label": "Card image ratio" },
+    { "type": "range", "id": "radius", "min": 0, "max": 48, "step": 1,
+      "default": 18, "unit": "px", "label": "Card corner radius" },
+    { "type": "header", "content": "Colour" },
+    { "type": "color", "id": "background", "default": "#ffffff", "label": "Background" },
+    { "type": "select", "id": "pattern", "label": "Card colours", "default": "all_a",
+      "options": [
+        { "value": "all_a", "label": "All tone A" },
+        { "value": "alternate", "label": "Alternate A and B" }
+      ] },
+    { "type": "color", "id": "tone_a", "default": "#e07468", "label": "Tone A" },
+    { "type": "color", "id": "tone_a_text", "default": "#ffffff", "label": "Tone A text" },
+    { "type": "color", "id": "tone_b", "default": "#b00e3f", "label": "Tone B" },
+    { "type": "color", "id": "tone_b_text", "default": "#ffffff", "label": "Tone B text" },
+    { "type": "range", "id": "texture", "min": 0, "max": 100, "step": 5,
+      "default": 100, "unit": "%", "label": "Crumpled paper texture" },
+    { "type": "header", "content": "Footer link" },
+    { "type": "text", "id": "more_label", "label": "Button label" },
+    { "type": "url", "id": "more_link", "label": "Button link",
+      "info": "Defaults to the chosen collection." }
+  ],
+  "presets": [{ "name": "Rebrand class cards" }]
+}
+{% endschema %}

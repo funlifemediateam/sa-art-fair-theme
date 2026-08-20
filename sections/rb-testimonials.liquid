@@ -1,0 +1,245 @@
+{% comment %}
+  Rebrand testimonials — a sand-coloured band carrying a rail of rounded
+  cards. Two kinds of card, mixed in the comp: a coloured quote card and a
+  plain artwork card, both with a small attribution line.
+
+  The band's background is the photographed sand-and-branch-shadow sheet from
+  the design package, so it is a real image rather than the crumple overlay
+  the flat panels use.
+
+  The rail is a scroll-snap track: it is a working carousel with the arrows,
+  and still swipes natively with them hidden or JS unavailable.
+{% endcomment %}
+
+{{ 'saf-rebrand.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'saf-rebrand.js' | asset_url }}" defer></script>
+
+{%- assign sid = section.id -%}
+
+<style>
+  #shopify-section-{{ sid }} .rb-tst {
+    position: relative;
+    background-color: {{ section.settings.background }};
+    background-image: var(--rb-sand-src);
+    background-size: cover;
+    background-position: center;
+    padding-block:
+      clamp(40px, 4.06vw, 78px)
+      clamp(44px, 4.79vw, 92px);
+    overflow: hidden;
+  }
+  {%- if section.settings.show_texture == false -%}
+    #shopify-section-{{ sid }} .rb-tst { background-image: none; }
+  {%- endif -%}
+
+  #shopify-section-{{ sid }} .rb-tst__eyebrow {
+    text-align: center;
+    margin-bottom: clamp(20px, 2.19vw, 42px);
+  }
+
+  #shopify-section-{{ sid }} .rb-tst__viewport { position: relative; }
+
+  #shopify-section-{{ sid }} .rb-tst__rail {
+    --rb-rail-gap: clamp(14px, 1.61vw, 31px);
+    /* the comp bleeds the rail past both edges, so cards are cut off rather
+       than sitting inside a container */
+    padding-inline: clamp(20px, 6.25vw, 120px);
+    scroll-padding-inline: clamp(20px, 6.25vw, 120px);
+  }
+
+  #shopify-section-{{ sid }} .rb-tst__card {
+    width: clamp(230px, {{ section.settings.card_width | times: 100.0 | divided_by: 1920.0 }}vw, {{ section.settings.card_width }}px);
+    aspect-ratio: {{ section.settings.card_width }} / {{ section.settings.card_height }};
+    border-radius: {{ section.settings.radius }}px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+  }
+
+  #shopify-section-{{ sid }} .rb-tst__card--quote {
+    justify-content: flex-start;
+    padding: clamp(18px, 1.98vw, 38px) clamp(16px, 1.77vw, 34px);
+    --rb-paper-strength: {{ section.settings.texture | divided_by: 100.0 }};
+  }
+  #shopify-section-{{ sid }} .rb-tst__quote {
+    margin: 0;
+    font-family: var(--rb-serif);
+    font-weight: 400;
+    font-size: var(--rb-fs-quote);
+    line-height: 1.32;
+  }
+  #shopify-section-{{ sid }} .rb-tst__attr {
+    margin: clamp(8px, 0.83vw, 16px) 0 0;
+    font-family: var(--rb-sans);
+    font-size: var(--rb-fs-meta);
+    line-height: 1.3;
+  }
+
+  #shopify-section-{{ sid }} .rb-tst__card--image { position: relative; padding: 0; }
+  #shopify-section-{{ sid }} .rb-tst__card--image img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  /* the attribution sits over the foot of the artwork in the comp */
+  #shopify-section-{{ sid }} .rb-tst__card--image .rb-tst__attr {
+    position: relative;
+    margin-top: auto;
+    padding: clamp(10px, 1.04vw, 20px) clamp(14px, 1.46vw, 28px);
+    text-align: center;
+  }
+
+  #shopify-section-{{ sid }} .rb-tst__nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+  }
+  #shopify-section-{{ sid }} .rb-tst__nav--prev { left: clamp(6px, 0.83vw, 16px); }
+  #shopify-section-{{ sid }} .rb-tst__nav--next { right: clamp(6px, 0.83vw, 16px); }
+
+  @media screen and (max-width: 749px) {
+    #shopify-section-{{ sid }} .rb-tst__rail {
+      padding-inline: 20px;
+      scroll-padding-inline: 20px;
+    }
+    #shopify-section-{{ sid }} .rb-tst__nav { display: none; }
+  }
+
+  {%- for block in section.blocks -%}
+    {%- if block.type == 'quote' -%}
+      #shopify-section-{{ sid }} [data-blk="{{ block.id }}"] {
+        background: {{ block.settings.background }};
+      }
+      #shopify-section-{{ sid }} [data-blk="{{ block.id }}"] .rb-tst__quote {
+        color: {{ block.settings.quote_color }};
+      }
+      #shopify-section-{{ sid }} [data-blk="{{ block.id }}"] .rb-tst__attr {
+        color: {{ block.settings.attr_color }};
+      }
+    {%- else -%}
+      #shopify-section-{{ sid }} [data-blk="{{ block.id }}"] .rb-tst__attr {
+        color: {{ block.settings.attr_color }};
+      }
+    {%- endif -%}
+  {%- endfor -%}
+</style>
+
+<div class="rb-section rb-bleed rb-tst">
+  {%- if section.settings.eyebrow != blank -%}
+    <div class="rb-caps rb-tst__eyebrow">{{ section.settings.eyebrow }}</div>
+  {%- endif -%}
+
+  <div class="rb-tst__viewport" data-rb-carousel>
+    <div class="rb-rail rb-tst__rail" data-rb-carousel-track tabindex="0" role="group" aria-label="{{ section.settings.eyebrow | strip_html | escape | default: 'Testimonials' }}">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'quote' -%}
+          <figure class="rb-tst__card rb-tst__card--quote rb-paper" data-blk="{{ block.id }}" {{ block.shopify_attributes }}>
+            <blockquote class="rb-tst__quote">{{ block.settings.quote }}</blockquote>
+            {%- if block.settings.attribution != blank -%}
+              <figcaption class="rb-tst__attr">{{ block.settings.attribution | escape }}</figcaption>
+            {%- endif -%}
+          </figure>
+        {%- else -%}
+          <figure class="rb-tst__card rb-tst__card--image" data-blk="{{ block.id }}" {{ block.shopify_attributes }}>
+            {%- if block.settings.image != blank -%}
+              {{
+                block.settings.image
+                | image_url: width: 1000
+                | image_tag:
+                  widths: '300, 460, 700, 1000',
+                  sizes: '(max-width: 749px) 70vw, 26vw',
+                  loading: 'lazy',
+                  alt: block.settings.image.alt | default: block.settings.attribution
+              }}
+            {%- endif -%}
+            {%- if block.settings.attribution != blank -%}
+              <figcaption class="rb-tst__attr">{{ block.settings.attribution | escape }}</figcaption>
+            {%- endif -%}
+          </figure>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+
+    {%- if section.settings.show_arrows -%}
+      <button type="button" class="rb-arrow rb-tst__nav rb-tst__nav--prev" data-rb-carousel-prev aria-label="Previous">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+          <path d="M15 4 7 12l8 8"></path>
+        </svg>
+      </button>
+      <button type="button" class="rb-arrow rb-tst__nav rb-tst__nav--next" data-rb-carousel-next aria-label="Next">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+          <path d="M9 4l8 8-8 8"></path>
+        </svg>
+      </button>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Rebrand testimonials",
+  "tag": "section",
+  "class": "rb-section-wrapper",
+  "max_blocks": 12,
+  "settings": [
+    { "type": "richtext", "id": "eyebrow",
+      "default": "<p><strong>Testimonials</strong> and art from our guests and students</p>",
+      "label": "Eyebrow",
+      "info": "Rendered uppercase. Bold runs render cherry, the rest teal." },
+    { "type": "checkbox", "id": "show_arrows", "default": true, "label": "Show arrows" },
+    { "type": "header", "content": "Band" },
+    { "type": "color", "id": "background", "default": "#e6ddc6", "label": "Band colour" },
+    { "type": "checkbox", "id": "show_texture", "default": true,
+      "label": "Show the sand backdrop",
+      "info": "The photographed sheet from the design package. Turn off for a flat band." },
+    { "type": "header", "content": "Cards" },
+    { "type": "range", "id": "card_width", "min": 240, "max": 700, "step": 10,
+      "default": 490, "unit": "px", "label": "Card width at 1920px wide" },
+    { "type": "range", "id": "card_height", "min": 300, "max": 900, "step": 10,
+      "default": 630, "unit": "px", "label": "Card height at 1920px wide" },
+    { "type": "range", "id": "radius", "min": 0, "max": 48, "step": 1,
+      "default": 20, "unit": "px", "label": "Card corner radius" },
+    { "type": "range", "id": "texture", "min": 0, "max": 100, "step": 5,
+      "default": 100, "unit": "%", "label": "Crumpled paper texture on quote cards" }
+  ],
+  "blocks": [
+    {
+      "type": "quote",
+      "name": "Quote card",
+      "settings": [
+        { "type": "richtext", "id": "quote",
+          "default": "<p>“Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt”</p>",
+          "label": "Quote" },
+        { "type": "text", "id": "attribution", "default": "- Name Surname, Studio Student.", "label": "Attribution" },
+        { "type": "color", "id": "background", "default": "#b00e3f", "label": "Card colour" },
+        { "type": "color", "id": "quote_color", "default": "#e6ddc6", "label": "Quote colour" },
+        { "type": "color", "id": "attr_color", "default": "#e6ddc6", "label": "Attribution colour" }
+      ]
+    },
+    {
+      "type": "image",
+      "name": "Artwork card",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Artwork" },
+        { "type": "text", "id": "attribution", "default": "- Name Surname, Studio Student.", "label": "Attribution" },
+        { "type": "color", "id": "attr_color", "default": "#1e1e1e", "label": "Attribution colour" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Rebrand testimonials",
+      "blocks": [
+        { "type": "quote" },
+        { "type": "quote" },
+        { "type": "image" },
+        { "type": "quote" }
+      ]
+    }
+  ]
+}
+{% endschema %}

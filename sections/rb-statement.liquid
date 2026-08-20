@@ -28,6 +28,12 @@
     gap: clamp(16px, 1.98vw, 38px);
     text-align: center;
   }
+  /* comp: 35 x 49 on a 1920 frame, so it is sized off its height */
+  #shopify-section-{{ sid }} .rb-statement__mark {
+    display: block;
+    width: clamp(24px, 1.82vw, 35px);
+    height: auto;
+  }
   #shopify-section-{{ sid }} .rb-statement__eyebrow {
     color: {{ section.settings.eyebrow_color }};
   }
@@ -41,10 +47,26 @@
   #shopify-section-{{ sid }} .rb-statement__heading p + p {
     margin-top: 0.4em;
   }
+  /* the Store page runs the sentence in ink and only the italic run in moss */
+  #shopify-section-{{ sid }} .rb-statement__heading em,
+  #shopify-section-{{ sid }} .rb-statement__heading i {
+    color: {{ section.settings.accent_color }};
+  }
 </style>
 
 <div class="rb-section rb-statement">
   <div class="rb-container rb-statement__inner">
+    {%- if section.settings.show_mark -%}
+      <img
+        src="{{ 'saf-protea-ink.png' | asset_url }}"
+        alt=""
+        width="179"
+        height="243"
+        class="rb-statement__mark"
+        loading="lazy"
+      >
+    {%- endif -%}
+
     {%- if section.settings.eyebrow != blank -%}
       <p class="rb-eyebrow rb-statement__eyebrow">{{ section.settings.eyebrow | escape }}</p>
     {%- endif -%}
@@ -68,6 +90,9 @@
   "tag": "section",
   "class": "rb-section-wrapper",
   "settings": [
+    { "type": "checkbox", "id": "show_mark", "default": false,
+      "label": "Show the small protea mark",
+      "info": "The Store page sets one above the sentence." },
     { "type": "text", "id": "eyebrow", "default": "A Creative Eco-System", "label": "Eyebrow" },
     { "type": "color", "id": "eyebrow_color", "default": "#b00e3f", "label": "Eyebrow colour" },
     { "type": "richtext", "id": "heading",
@@ -75,6 +100,8 @@
       "label": "Statement",
       "info": "Italics inside the sentence are part of the look — wrap words in italic to mix roman and italic like the design." },
     { "type": "color", "id": "heading_color", "default": "#bea532", "label": "Statement colour" },
+    { "type": "color", "id": "accent_color", "default": "#bea532", "label": "Italic run colour",
+      "info": "Leave equal to the statement colour for a single-tone sentence." },
     { "type": "range", "id": "heading_width", "min": 700, "max": 1600, "step": 10,
       "default": 1270, "unit": "px", "label": "Statement max width" },
     { "type": "color", "id": "background", "default": "#ffffff", "label": "Background" },

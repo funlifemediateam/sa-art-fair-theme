@@ -1,0 +1,188 @@
+{% comment %}
+  Rebrand steps — the Studio page's "Picking A Class / Booking A Class / Pick
+  A Package" row: a hand-drawn line icon over a cherry numeral, an IvyPresto
+  title, and a short stack of labelled notes.
+
+  The three icons ship with the theme as knockout PNGs lifted from the design
+  package. A block can also point at any uploaded image instead.
+
+  Bold runs inside the notes render as the small uppercase-weight labels the
+  comp uses ("What To Know", "Experience Level"), so the client writes one
+  richtext per column rather than juggling paired fields.
+{% endcomment %}
+
+{{ 'saf-rebrand.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign sid = section.id
+  assign cols = section.blocks.size | at_least: 1
+-%}
+
+<style>
+  #shopify-section-{{ sid }} .rb-steps {
+    background: {{ section.settings.background }};
+    padding-block:
+      clamp(40px, 4.17vw, 80px)
+      clamp(48px, 6.25vw, 120px);
+  }
+  {%- if section.settings.show_rule -%}
+    #shopify-section-{{ sid }} .rb-steps__rule {
+      display: block;
+      width: clamp(120px, 9.9vw, 190px);
+      height: 1px;
+      margin: 0 auto clamp(32px, 3.85vw, 74px);
+      background: {{ section.settings.rule_color }};
+      border: 0;
+    }
+  {%- endif -%}
+
+  #shopify-section-{{ sid }} .rb-steps__grid {
+    display: grid;
+    grid-template-columns: repeat({{ cols }}, minmax(0, 1fr));
+    gap: clamp(32px, 4.17vw, 80px);
+  }
+  #shopify-section-{{ sid }} .rb-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  #shopify-section-{{ sid }} .rb-step__icon {
+    display: block;
+    width: auto;
+    height: clamp(56px, 4.79vw, 92px);
+    object-fit: contain;
+  }
+  #shopify-section-{{ sid }} .rb-step__num {
+    margin: clamp(10px, 1.04vw, 20px) 0 0;
+    font-family: var(--rb-serif);
+    font-size: clamp(14px, 1.15vw, 22px);
+    line-height: 1;
+    color: {{ section.settings.number_color }};
+  }
+  #shopify-section-{{ sid }} .rb-step__title {
+    margin: clamp(4px, 0.42vw, 8px) 0 0;
+    color: {{ section.settings.title_color }};
+    font-size: clamp(20px, 1.98vw, 38px);
+  }
+
+  /* the notes column is narrower than the step column and left aligned under
+     a centred title, exactly as the comp sets it */
+  #shopify-section-{{ sid }} .rb-step__notes {
+    margin-top: clamp(18px, 2.29vw, 44px);
+    max-width: 300px;
+    text-align: left;
+    font-size: var(--rb-fs-body-sm);
+    color: {{ section.settings.body_color }};
+  }
+  #shopify-section-{{ sid }} .rb-step__notes p { margin: 0 0 1em; }
+  #shopify-section-{{ sid }} .rb-step__notes p:last-child { margin-bottom: 0; }
+  #shopify-section-{{ sid }} .rb-step__notes strong {
+    display: block;
+    font-weight: 700;
+    font-size: 0.85em;
+    letter-spacing: 0.01em;
+    color: {{ section.settings.label_color }};
+  }
+
+  @media screen and (max-width: 749px) {
+    #shopify-section-{{ sid }} .rb-steps__grid { grid-template-columns: 1fr; }
+    #shopify-section-{{ sid }} .rb-step__notes { max-width: none; }
+  }
+</style>
+
+<div class="rb-section rb-steps">
+  <div class="rb-container">
+    {%- if section.settings.show_rule -%}
+      <hr class="rb-steps__rule">
+    {%- endif -%}
+
+    <div class="rb-steps__grid">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          case block.settings.icon
+            when 'easel'
+              assign icon_src = 'saf-icon-easel.png'
+            when 'palette'
+              assign icon_src = 'saf-icon-palette.png'
+            when 'laptop'
+              assign icon_src = 'saf-icon-laptop.png'
+            else
+              assign icon_src = blank
+          endcase
+        -%}
+        <div class="rb-step" {{ block.shopify_attributes }}>
+          {%- if block.settings.icon_image != blank -%}
+            {{
+              block.settings.icon_image
+              | image_url: width: 400
+              | image_tag: class: 'rb-step__icon', widths: '160, 260, 400', loading: 'lazy', alt: ''
+            }}
+          {%- elsif icon_src != blank -%}
+            <img src="{{ icon_src | asset_url }}" alt="" class="rb-step__icon" loading="lazy">
+          {%- endif -%}
+
+          {%- if block.settings.number != blank -%}
+            <p class="rb-step__num">{{ block.settings.number | escape }}</p>
+          {%- endif -%}
+
+          {%- if block.settings.title != blank -%}
+            <h3 class="rb-section-title rb-step__title">{{ block.settings.title | escape }}</h3>
+          {%- endif -%}
+
+          {%- if block.settings.notes != blank -%}
+            <div class="rb-body rb-step__notes">{{ block.settings.notes }}</div>
+          {%- endif -%}
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Rebrand steps",
+  "tag": "section",
+  "class": "rb-section-wrapper",
+  "max_blocks": 4,
+  "settings": [
+    { "type": "checkbox", "id": "show_rule", "default": true, "label": "Show short rule above" },
+    { "type": "color", "id": "rule_color", "default": "#c9c9c9", "label": "Rule colour" },
+    { "type": "header", "content": "Colour" },
+    { "type": "color", "id": "background", "default": "#ffffff", "label": "Background" },
+    { "type": "color", "id": "number_color", "default": "#b00e3f", "label": "Numeral" },
+    { "type": "color", "id": "title_color", "default": "#1e1e1e", "label": "Title" },
+    { "type": "color", "id": "label_color", "default": "#1e1e1e", "label": "Note label" },
+    { "type": "color", "id": "body_color", "default": "#1e1e1e", "label": "Note body" }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Step",
+      "settings": [
+        { "type": "select", "id": "icon", "label": "Icon", "default": "easel",
+          "options": [
+            { "value": "easel", "label": "Easel" },
+            { "value": "palette", "label": "Palette" },
+            { "value": "laptop", "label": "Laptop" },
+            { "value": "none", "label": "None" }
+          ] },
+        { "type": "image_picker", "id": "icon_image", "label": "Custom icon",
+          "info": "Overrides the picker above." },
+        { "type": "text", "id": "number", "default": "1.", "label": "Numeral" },
+        { "type": "text", "id": "title", "default": "Picking A Class", "label": "Title" },
+        { "type": "richtext", "id": "notes",
+          "default": "<p><strong>What To Know</strong>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do.</p><p><strong>Experience Level</strong>Et dolore magna aliqua. Lorem ipsum dolor sit amet.</p>",
+          "label": "Notes",
+          "info": "Bold text becomes the small label above each note." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Rebrand steps",
+      "blocks": [{ "type": "step" }, { "type": "step" }, { "type": "step" }]
+    }
+  ]
+}
+{% endschema %}

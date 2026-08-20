@@ -82,6 +82,19 @@
     padding-inline: clamp(28px, 3.13vw, 60px);
   }
 
+  /* The home page runs this band edge to edge. The Store page insets it into
+     the container and rounds the corners — same band, different framing. */
+  {%- if section.settings.contained -%}
+    #shopify-section-{{ sid }} .rb-quiz-wrap {
+      box-sizing: border-box;
+      width: 100%;
+      max-width: calc(var(--rb-container) + var(--rb-gutter) * 2);
+      margin-inline: auto;
+      padding-inline: var(--rb-gutter);
+    }
+  {%- endif -%}
+  #shopify-section-{{ sid }} .rb-quiz { border-radius: {{ section.settings.radius }}px; }
+
   @media screen and (max-width: 749px) {
     #shopify-section-{{ sid }} .rb-quiz {
       aspect-ratio: {{ section.settings.mobile_ratio }};
@@ -90,7 +103,7 @@
   }
 </style>
 
-<div class="rb-section rb-bleed">
+<div class="rb-section rb-bleed{% if section.settings.contained %} rb-quiz-wrap{% endif %}">
   <div class="rb-quiz">
     {%- if section.settings.image != blank -%}
       {{
@@ -135,6 +148,11 @@
   "tag": "section",
   "class": "rb-section-wrapper",
   "settings": [
+    { "type": "checkbox", "id": "contained", "default": false,
+      "label": "Inset into the container",
+      "info": "The Store page frames this band inside the page; the home page runs it edge to edge." },
+    { "type": "range", "id": "radius", "min": 0, "max": 60, "step": 2,
+      "default": 0, "unit": "px", "label": "Corner radius" },
     { "type": "image_picker", "id": "image", "label": "Background image" },
     { "type": "range", "id": "band_height", "min": 500, "max": 1100, "step": 10,
       "default": 880, "unit": "px", "label": "Band height at 1920px wide" },

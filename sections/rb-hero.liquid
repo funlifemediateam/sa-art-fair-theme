@@ -1,6 +1,12 @@
 {% comment %}
   Rebrand hero — full-bleed photograph with the circled protea centred on it.
   Comp: 1920 x 849 band (2.26:1) directly under a 170px header.
+
+  Two heading treatments. "statement" is the home page's sentence-sized
+  IvyPresto. "page title" is the big letterspaced uppercase lockup the Store
+  and Studio pages wear under the mark — solved off both comps at 120px on a
+  1920 frame with 0.03em tracking. Each of those pages also swaps the protea
+  inside the circle for its own, which is why the mark is a picker.
 {% endcomment %}
 
 {{ 'saf-rebrand.css' | asset_url | stylesheet_tag }}
@@ -8,6 +14,15 @@
 {%- liquid
   assign sid = section.id
   assign img = section.settings.image
+
+  case section.settings.mark
+    when 'store'
+      assign mark_src = 'saf-mark-circle-store.png'
+    when 'studio'
+      assign mark_src = 'saf-mark-circle-studio.png'
+    else
+      assign mark_src = 'saf-mark-circle-white.png'
+  endcase
 -%}
 
 <style>
@@ -17,7 +32,12 @@
     aspect-ratio: 1920 / {{ section.settings.band_height }};
     min-height: {{ section.settings.min_height }}px;
     overflow: hidden;
-    background: var(--rb-ink);
+    {%- if section.settings.fill == 'colour' -%}
+      background: {{ section.settings.background }};
+      --rb-paper-strength: {{ section.settings.texture | divided_by: 100.0 }};
+    {%- else -%}
+      background: var(--rb-ink);
+    {%- endif -%}
   }
   #shopify-section-{{ sid }} .rb-hero__img {
     position: absolute;
@@ -50,7 +70,7 @@
   }
   #shopify-section-{{ sid }} .rb-hero__mark {
     display: block;
-    width: clamp(150px, 17.7vw, 340px);
+    width: clamp({{ section.settings.mark_width | divided_by: 2 }}px, {{ section.settings.mark_width | times: 100.0 | divided_by: 1920.0 }}vw, {{ section.settings.mark_width }}px);
     height: auto;
   }
   #shopify-section-{{ sid }} .rb-hero__heading {
@@ -58,6 +78,12 @@
     max-width: 20ch;
     text-wrap: balance;
   }
+  {%- if section.settings.heading_style == 'page_title' -%}
+    /* the page-title lockup sits tight under the mark, not on the hero's
+       normal 40px rhythm */
+    #shopify-section-{{ sid }} .rb-hero__inner { gap: clamp(6px, 0.63vw, 12px); }
+    #shopify-section-{{ sid }} .rb-hero__heading { max-width: none; }
+  {%- endif -%}
   #shopify-section-{{ sid }} .rb-hero__placeholder {
     position: absolute;
     inset: 0;
@@ -73,8 +99,10 @@
 </style>
 
 <div class="rb-section rb-bleed">
-  <div class="rb-hero">
-    {%- if img != blank -%}
+  <div class="rb-hero{% if section.settings.fill == 'colour' %} rb-paper{% endif %}">
+    {%- if section.settings.fill == 'colour' -%}
+      {%- comment -%} colour band: no photograph, the paper texture carries it {%- endcomment -%}
+    {%- elsif img != blank -%}
       {{
         img
         | image_url: width: 3840
@@ -90,14 +118,14 @@
       {{ 'hero-apparel-1' | placeholder_svg_tag: 'rb-hero__placeholder placeholder-svg' }}
     {%- endif -%}
 
-    {%- if section.settings.overlay_opacity > 0 -%}
+    {%- if section.settings.overlay_opacity > 0 and section.settings.fill != 'colour' -%}
       <div class="rb-hero__overlay" aria-hidden="true"></div>
     {%- endif -%}
 
     <div class="rb-hero__inner">
       {%- if section.settings.show_mark -%}
         <img
-          src="{{ 'saf-mark-circle-white.png' | asset_url }}"
+          src="{{ mark_src | asset_url }}"
           alt=""
           width="398"
           height="398"
@@ -107,7 +135,11 @@
       {%- endif -%}
 
       {%- if section.settings.heading != blank -%}
-        <div class="rb-display rb-hero__heading">{{ section.settings.heading }}</div>
+        {%- if section.settings.heading_style == 'page_title' -%}
+          <h1 class="rb-page-title rb-hero__heading">{{ section.settings.heading }}</h1>
+        {%- else -%}
+          <div class="rb-display rb-hero__heading">{{ section.settings.heading }}</div>
+        {%- endif -%}
       {%- endif -%}
 
       {%- if section.settings.button_label != blank -%}
@@ -126,9 +158,18 @@
   "tag": "section",
   "class": "rb-section-wrapper",
   "settings": [
+    { "type": "select", "id": "fill", "label": "Band fill", "default": "image",
+      "options": [
+        { "value": "image", "label": "Photograph" },
+        { "value": "colour", "label": "Coloured paper (artists page)" }
+      ] },
+    { "type": "color", "id": "background", "default": "#505a43", "label": "Band colour",
+      "info": "Used when the fill is coloured paper." },
+    { "type": "range", "id": "texture", "min": 0, "max": 100, "step": 5,
+      "default": 100, "unit": "%", "label": "Crumpled paper texture" },
     { "type": "image_picker", "id": "image", "label": "Background image",
       "info": "Comp uses a 1920x883 photograph of a paint palette." },
-    { "type": "range", "id": "band_height", "min": 500, "max": 1100, "step": 10,
+    { "type": "range", "id": "band_height", "min": 300, "max": 1100, "step": 10,
       "default": 850, "unit": "px", "label": "Band height at 1920px wide",
       "info": "Sets the aspect ratio, so the band scales with the viewport." },
     { "type": "range", "id": "min_height", "min": 240, "max": 700, "step": 10,
@@ -146,8 +187,21 @@
     { "type": "header", "content": "Content" },
     { "type": "checkbox", "id": "show_mark", "default": true,
       "label": "Show circled protea mark" },
+    { "type": "select", "id": "mark", "label": "Which protea", "default": "saaf",
+      "options": [
+        { "value": "saaf", "label": "SA Art Fair" },
+        { "value": "store", "label": "The Store (sheaf protea)" },
+        { "value": "studio", "label": "The Studio (pom protea)" }
+      ] },
+    { "type": "range", "id": "mark_width", "min": 90, "max": 420, "step": 5,
+      "default": 340, "unit": "px", "label": "Mark width at 1920px wide" },
     { "type": "inline_richtext", "id": "heading", "label": "Heading",
-      "info": "Comp leaves this empty — the mark carries the hero on its own." },
+      "info": "Comp leaves this empty on the home page — the mark carries the hero on its own." },
+    { "type": "select", "id": "heading_style", "label": "Heading style", "default": "statement",
+      "options": [
+        { "value": "statement", "label": "Statement sentence (home page)" },
+        { "value": "page_title", "label": "Page title (THE STORE / THE STUDIO)" }
+      ] },
     { "type": "color", "id": "text_color", "default": "#ffffff", "label": "Heading colour" },
     { "type": "text", "id": "button_label", "label": "Button label" },
     { "type": "url", "id": "button_link", "label": "Button link" }

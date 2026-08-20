@@ -1,0 +1,527 @@
+{
+  "sections": {
+    "hero": {
+      "type": "rb-hero",
+      "settings": {
+        "fill": "colour",
+        "background": "#505a43",
+        "texture": 100,
+        "band_height": 690,
+        "min_height": 260,
+        "mobile_ratio": "4 / 3",
+        "overlay_opacity": 0,
+        "show_mark": true,
+        "mark": "saaf",
+        "mark_width": 130,
+        "heading": "A collection of our local <em>artists and their work</em> curated by our in house team.",
+        "heading_style": "statement",
+        "text_color": "#ffffff"
+      }
+    },
+    "artists": {
+      "type": "rb-artist-cards",
+      "blocks": {
+        "susan": {
+          "type": "artist",
+          "settings": {
+            "collection": "susan-orpen",
+            "name": "",
+            "medium": "Watercolour · Acrylic · Mixed Media",
+            "place": "Hout Bay, Western Cape",
+            "bio": "",
+            "link": "",
+            "button_label": "See Collections",
+            "tone": "auto"
+          }
+        },
+        "kerri": {
+          "type": "artist",
+          "settings": {
+            "collection": "kerri-sassen",
+            "name": "",
+            "medium": "Abstract · Mixed Media · Art Therapy",
+            "place": "Hout Bay, Western Cape",
+            "bio": "",
+            "link": "",
+            "button_label": "See Collections",
+            "tone": "auto"
+          }
+        },
+        "zara": {
+          "type": "artist",
+          "settings": {
+            "collection": "zara-leigh",
+            "name": "",
+            "medium": "Abstract Acrylic · Oil · Large Format",
+            "place": "Hout Bay, Western Cape",
+            "bio": "",
+            "link": "",
+            "button_label": "See Collections",
+            "tone": "auto"
+          }
+        },
+        "amara": {
+          "type": "artist",
+          "settings": {
+            "collection": "amara-dube",
+            "name": "",
+            "medium": "Oil · Figurative · Portrait",
+            "place": "Hout Bay, Western Cape",
+            "bio": "",
+            "link": "",
+            "button_label": "See Collections",
+            "tone": "auto"
+          }
+        },
+        "liesel": {
+          "type": "artist",
+          "settings": {
+            "collection": "liesel-van-der-berg",
+            "name": "",
+            "medium": "Ceramics · Sculpture · Mixed Media",
+            "place": "Hout Bay, Western Cape",
+            "bio": "",
+            "link": "",
+            "button_label": "See Collections",
+            "tone": "auto"
+          }
+        },
+        "natasha": {
+          "type": "artist",
+          "settings": {
+            "collection": "natasha-hendricks",
+            "name": "",
+            "medium": "Printmaking · Photography · Collage",
+            "place": "Hout Bay, Western Cape",
+            "bio": "",
+            "link": "",
+            "button_label": "See Collections",
+            "tone": "auto"
+          }
+        },
+        "artist-1": {
+          "type": "artist",
+          "settings": {
+            "collection": "artist-1",
+            "name": "",
+            "medium": "Artist",
+            "place": "Hout Bay, Western Cape",
+            "bio": "",
+            "link": "",
+            "button_label": "See Collections",
+            "tone": "auto"
+          }
+        },
+        "artist-10": {
+          "type": "artist",
+          "settings": {
+            "collection": "artist-10",
+            "name": "",
+            "medium": "Artist",
+            "place": "Hout Bay, Western Cape",
+            "bio": "",
+            "link": "",
+            "button_label": "See Collections",
+            "tone": "auto"
+          }
+        },
+        "artist-11": {
+          "type": "artist",
+          "settings": {
+            "collection": "artist-11",
+            "name": "",
+            "medium": "Artist",
+            "place": "Hout Bay, Western Cape",
+            "bio": "",
+            "link": "",
+            "button_label": "See Collections",
+            "tone": "auto"
+          }
+        },
+        "artist-12": {
+          "type": "artist",
+          "settings": {
+            "collection": "artist-12",
+            "name": "",
+            "medium": "Artist",
+            "place": "Hout Bay, Western Cape",
+            "bio": "",
+            "link": "",
+            "button_label": "See Collections",
+            "tone": "auto"
+          }
+        },
+        "artist-13": {
+          "type": "artist",
+          "settings": {
+            "collection": "artist-13",
+            "name": "",
+            "medium": "Artist",
+            "place": "Hout Bay, Western Cape",
+            "bio": "",
+            "link": "",
+            "button_label": "See Collections",
+            "tone": "auto"
+          }
+        },
+        "artist-14": {
+          "type": "artist",
+          "settings": {
+            "collection": "artist-14",
+            "name": "",
+            "medium": "Artist",
+            "place": "Hout Bay, Western Cape",
+            "bio": "",
+            "link": "",
+            "button_label": "See Collections",
+            "tone": "auto"
+          }
+        },
+        "artist-15": {
+          "type": "artist",
+          "settings": {
+            "collection": "artist-15",
+            "name": "",
+            "medium": "Artist",
+            "place": "Hout Bay, Western Cape",
+            "bio": "",
+            "link": "",
+            "button_label": "See Collections",
+            "tone": "auto"
+          }
+        },
+        "artist-16": {
+          "type": "artist",
+          "settings": {
+            "collection": "artist-16",
+            "name": "",
+            "medium": "Artist",
+            "place": "Hout Bay, Western Cape",
+            "bio": "",
+            "link": "",
+            "button_label": "See Collections",
+            "tone": "auto"
+          }
+        },
+        "artist-17": {
+          "type": "artist",
+          "settings": {
+            "collection": "artist-17",
+            "name": "",
+            "medium": "Artist",
+            "place": "Hout Bay, Western Cape",
+            "bio": "",
+            "link": "",
+            "button_label": "See Collections",
+            "tone": "auto"
+          }
+        },
+        "artist-18": {
+          "type": "artist",
+          "settings": {
+            "collection": "artist-18",
+            "name": "",
+            "medium": "Artist",
+            "place": "Hout Bay, Western Cape",
+            "bio": "",
+            "link": "",
+            "button_label": "See Collections",
+            "tone": "auto"
+          }
+        },
+        "artist-19": {
+          "type": "artist",
+          "settings": {
+            "collection": "artist-19",
+            "name": "",
+            "medium": "Artist",
+            "place": "Hout Bay, Western Cape",
+            "bio": "",
+            "link": "",
+            "button_label": "See Collections",
+            "tone": "auto"
+          }
+        },
+        "artist-2": {
+          "type": "artist",
+          "settings": {
+            "collection": "artist-2",
+            "name": "",
+            "medium": "Artist",
+            "place": "Hout Bay, Western Cape",
+            "bio": "",
+            "link": "",
+            "button_label": "See Collections",
+            "tone": "auto"
+          }
+        },
+        "artist-20": {
+          "type": "artist",
+          "settings": {
+            "collection": "artist-20",
+            "name": "",
+            "medium": "Artist",
+            "place": "Hout Bay, Western Cape",
+            "bio": "",
+            "link": "",
+            "button_label": "See Collections",
+            "tone": "auto"
+          }
+        },
+        "artist-21": {
+          "type": "artist",
+          "settings": {
+            "collection": "artist-21",
+            "name": "",
+            "medium": "Artist",
+            "place": "Hout Bay, Western Cape",
+            "bio": "",
+            "link": "",
+            "button_label": "See Collections",
+            "tone": "auto"
+          }
+        },
+        "artist-22": {
+          "type": "artist",
+          "settings": {
+            "collection": "artist-22",
+            "name": "",
+            "medium": "Artist",
+            "place": "Hout Bay, Western Cape",
+            "bio": "",
+            "link": "",
+            "button_label": "See Collections",
+            "tone": "auto"
+          }
+        },
+        "artist-23": {
+          "type": "artist",
+          "settings": {
+            "collection": "artist-23",
+            "name": "",
+            "medium": "Artist",
+            "place": "Hout Bay, Western Cape",
+            "bio": "",
+            "link": "",
+            "button_label": "See Collections",
+            "tone": "auto"
+          }
+        },
+        "artist-24": {
+          "type": "artist",
+          "settings": {
+            "collection": "artist-24",
+            "name": "",
+            "medium": "Artist",
+            "place": "Hout Bay, Western Cape",
+            "bio": "",
+            "link": "",
+            "button_label": "See Collections",
+            "tone": "auto"
+          }
+        },
+        "artist-25": {
+          "type": "artist",
+          "settings": {
+            "collection": "artist-25",
+            "name": "",
+            "medium": "Artist",
+            "place": "Hout Bay, Western Cape",
+            "bio": "",
+            "link": "",
+            "button_label": "See Collections",
+            "tone": "auto"
+          }
+        },
+        "artist-3": {
+          "type": "artist",
+          "settings": {
+            "collection": "artist-3",
+            "name": "",
+            "medium": "Artist",
+            "place": "Hout Bay, Western Cape",
+            "bio": "",
+            "link": "",
+            "button_label": "See Collections",
+            "tone": "auto"
+          }
+        },
+        "artist-4": {
+          "type": "artist",
+          "settings": {
+            "collection": "artist-4",
+            "name": "",
+            "medium": "Artist",
+            "place": "Hout Bay, Western Cape",
+            "bio": "",
+            "link": "",
+            "button_label": "See Collections",
+            "tone": "auto"
+          }
+        },
+        "artist-5": {
+          "type": "artist",
+          "settings": {
+            "collection": "artist-5",
+            "name": "",
+            "medium": "Artist",
+            "place": "Hout Bay, Western Cape",
+            "bio": "",
+            "link": "",
+            "button_label": "See Collections",
+            "tone": "auto"
+          }
+        },
+        "artist-6": {
+          "type": "artist",
+          "settings": {
+            "collection": "artist-6",
+            "name": "",
+            "medium": "Artist",
+            "place": "Hout Bay, Western Cape",
+            "bio": "",
+            "link": "",
+            "button_label": "See Collections",
+            "tone": "auto"
+          }
+        },
+        "artist-7": {
+          "type": "artist",
+          "settings": {
+            "collection": "artist-7",
+            "name": "",
+            "medium": "Artist",
+            "place": "Hout Bay, Western Cape",
+            "bio": "",
+            "link": "",
+            "button_label": "See Collections",
+            "tone": "auto"
+          }
+        },
+        "artist-8": {
+          "type": "artist",
+          "settings": {
+            "collection": "artist-8",
+            "name": "",
+            "medium": "Artist",
+            "place": "Hout Bay, Western Cape",
+            "bio": "",
+            "link": "",
+            "button_label": "See Collections",
+            "tone": "auto"
+          }
+        },
+        "artist-9": {
+          "type": "artist",
+          "settings": {
+            "collection": "artist-9",
+            "name": "",
+            "medium": "Artist",
+            "place": "Hout Bay, Western Cape",
+            "bio": "",
+            "link": "",
+            "button_label": "See Collections",
+            "tone": "auto"
+          }
+        },
+        "jacqui-sundelson": {
+          "type": "artist",
+          "settings": {
+            "collection": "jacqui-sundelson",
+            "name": "",
+            "medium": "Artist",
+            "place": "Hout Bay, Western Cape",
+            "bio": "",
+            "link": "",
+            "button_label": "See Collections",
+            "tone": "auto"
+          }
+        },
+        "janice-grant": {
+          "type": "artist",
+          "settings": {
+            "collection": "janice-grant",
+            "name": "",
+            "medium": "Artist",
+            "place": "Hout Bay, Western Cape",
+            "bio": "",
+            "link": "",
+            "button_label": "See Collections",
+            "tone": "auto"
+          }
+        },
+        "shelley-cowling": {
+          "type": "artist",
+          "settings": {
+            "collection": "shelley-cowling",
+            "name": "",
+            "medium": "Artist",
+            "place": "Hout Bay, Western Cape",
+            "bio": "",
+            "link": "",
+            "button_label": "See Collections",
+            "tone": "auto"
+          }
+        }
+      },
+      "block_order": [
+        "susan",
+        "kerri",
+        "zara",
+        "amara",
+        "liesel",
+        "natasha",
+        "artist-1",
+        "artist-10",
+        "artist-11",
+        "artist-12",
+        "artist-13",
+        "artist-14",
+        "artist-15",
+        "artist-16",
+        "artist-17",
+        "artist-18",
+        "artist-19",
+        "artist-2",
+        "artist-20",
+        "artist-21",
+        "artist-22",
+        "artist-23",
+        "artist-24",
+        "artist-25",
+        "artist-3",
+        "artist-4",
+        "artist-5",
+        "artist-6",
+        "artist-7",
+        "artist-8",
+        "artist-9",
+        "jacqui-sundelson",
+        "janice-grant",
+        "shelley-cowling"
+      ],
+      "settings": {
+        "columns": 3,
+        "grid_width": 1760,
+        "image_ratio": "555 / 402",
+        "radius": 20,
+        "portrait_w": 42,
+        "portrait_ratio": "132 / 130",
+        "portrait_x": 49,
+        "portrait_y": 50,
+        "background": "#ffffff",
+        "tone_a": "#9da887",
+        "tone_a_text": "#ffffff",
+        "tone_a_meta": "#f2f4ec",
+        "tone_b": "#505a43",
+        "tone_b_text": "#dfe4d4",
+        "tone_b_meta": "#a5ad93",
+        "texture": 100
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "artists"
+  ]
+}

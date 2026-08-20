@@ -1,0 +1,75 @@
+{
+  "sections": {
+    "hero": {
+      "type": "rb-person-hero",
+      "settings": {
+        "name": "",
+        "script": "",
+        "tags": "Abstract, Watercolour, Photography",
+        "social_url": "",
+        "button_label": "See Portfolio",
+        "button_link": "",
+        "align": "left",
+        "text_width": 40,
+        "background": "#ffffff",
+        "name_color": "#e07468",
+        "script_color": "#1e1e1e",
+        "tag_color": "#0c3642",
+        "image": "shopify://shop_images/saf-class-artwork.jpg",
+        "focal_x": 50,
+        "focal_y": 50,
+        "portrait": "shopify://shop_images/saf-portrait-kerri.jpg",
+        "portrait_w": 40,
+        "portrait_ratio": "382 / 313",
+        "portrait_x": 54,
+        "portrait_y": 46
+      }
+    },
+    "statement": {
+      "type": "rb-script-statement",
+      "settings": {
+        "heading": "<p>Lorem ipsum dolor sit amet, <em>consectetur adipiscing elit.</em></p>",
+        "body": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>",
+        "background": "#ffffff",
+        "heading_color": "#1e1e1e",
+        "accent_color": "#e07468",
+        "body_color": "#1e1e1e",
+        "heading_width": 900,
+        "body_width": 640,
+        "padding_top": 190,
+        "padding_bottom": 210
+      }
+    },
+    "classes": {
+      "type": "rb-class-cards",
+      "settings": {
+        "collection": "classes",
+        "count": 6,
+        "eyebrow": "<p>View classes by [teacher]</p>",
+        "intro": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.</p>",
+        "intro_color": "#1e1e1e",
+        "by_prefix": "By",
+        "show_excerpt": true,
+        "button_label": "View Class",
+        "columns": 3,
+        "grid_width": 1300,
+        "image_ratio": "398 / 380",
+        "radius": 18,
+        "background": "#ffffff",
+        "pattern": "alternate",
+        "tone_a": "#e07468",
+        "tone_a_text": "#ffffff",
+        "tone_b": "#b00e3f",
+        "tone_b_text": "#ffffff",
+        "texture": 100,
+        "eyebrow_name": "Susan",
+        "teacher_filter": "Susan Orpen"
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "statement",
+    "classes"
+  ]
+}

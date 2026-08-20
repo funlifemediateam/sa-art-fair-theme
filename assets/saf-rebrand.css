@@ -20,6 +20,15 @@
   --rb-sage-pale: #e2ead7;
   --rb-coral: #e27b70;
 
+  /* Sampled off the inner-page comps (Store / Studio / Classes / Artists).
+     --rb-teal does double duty: every uppercase section eyebrow on those
+     pages is this colour, and so is the dark testimonial card. --rb-coral-flat
+     is the flat panel fill; --rb-coral above stays as the home page uses it. */
+  --rb-teal: #0c3642;
+  --rb-sand: #e6ddc6;
+  --rb-coral-flat: #e07468;
+  --rb-sage-mid: #9da887;
+
   /* --- families --------------------------------------------------------- */
   --rb-serif: 'IvyPresto Display', 'Playfair Display', 'Times New Roman', serif;
   --rb-sans: 'Afacad', 'Helvetica Neue', Arial, sans-serif;
@@ -41,6 +50,18 @@
   --rb-fs-script: clamp(28px, 2.552vw, 49px);
   --rb-fs-btn: clamp(14px, 1.094vw, 21px);
   --rb-fs-btn-serif: clamp(16px, 1.146vw, 22px);
+
+  /* Inner-page additions. The page title was solved twice off the comp — a
+     width match on "THE STORE"/"THE STUDIO" and a cap-height match — and both
+     land on 120px at 0.03em tracking, so that one is a measurement. The rest
+     were set against the comps and corrected on screenshot diff. */
+  --rb-fs-page-title: clamp(44px, 6.25vw, 120px);
+  --rb-fs-section: clamp(28px, 2.92vw, 56px);   /* "Available Artworks"      */
+  --rb-fs-name: clamp(30px, 3.33vw, 64px);      /* artist / teacher card name */
+  --rb-fs-name-lg: clamp(36px, 4.17vw, 80px);   /* class + person page heroes */
+  --rb-fs-caps: clamp(13px, 1.41vw, 27px);      /* uppercase section eyebrow  */
+  --rb-fs-quote: clamp(17px, 1.67vw, 32px);     /* testimonial quote          */
+  --rb-fs-meta: clamp(12px, 0.94vw, 18px);      /* card meta rows             */
 
   /* --- layout -----------------------------------------------------------
      --rb-container is the CONTENT width, measured off the comp (cards run
@@ -196,6 +217,209 @@
   height: auto;
   aspect-ratio: 253 / 395;
   object-fit: contain;
+}
+
+/* ==========================================================================
+   Inner pages — Store, Studio, Classes, Teachers, Artists
+   Everything below is shared by the rb-* sections those pages are built from.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Crumpled paper
+   Every flat brand panel in the comps is a coloured sheet of crumpled paper,
+   not a flat fill. saf-paper-crumple.jpg is that crumple lifted off the comp
+   and flattened to neutral grey, so ONE texture tints to any brand colour
+   through the blend. Put .rb-paper on the element and set its background
+   colour as usual; --rb-paper-strength dials the texture back per section.
+   -------------------------------------------------------------------------- */
+.rb-paper {
+  position: relative;
+  isolation: isolate;
+}
+
+.rb-paper::before {
+  content: '';
+  display: block; /* Dawn's base.css hides div:empty; ::before needs this too */
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image: var(--rb-paper-src);
+  background-size: cover;
+  background-position: center;
+  mix-blend-mode: soft-light;
+  opacity: var(--rb-paper-strength, 1);
+  pointer-events: none;
+}
+
+/* --------------------------------------------------------------------------
+   Type primitives
+   -------------------------------------------------------------------------- */
+.rb-page-title {
+  margin: 0;
+  font-family: var(--rb-serif);
+  font-weight: 400;
+  font-size: var(--rb-fs-page-title);
+  line-height: 1.02;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+/* Uppercase, letterspaced section eyebrow — teal by default, and the comps
+   often colour a run of words inside it cherry. Wrap those in <strong>. */
+.rb-caps {
+  margin: 0;
+  font-family: var(--rb-sans);
+  font-weight: 600;
+  font-size: var(--rb-fs-caps);
+  line-height: 1.3;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--rb-teal);
+}
+.rb-caps strong,
+.rb-caps em { font-weight: inherit; font-style: normal; color: var(--rb-cherry); }
+
+.rb-section-title {
+  margin: 0;
+  font-family: var(--rb-serif);
+  font-weight: 400;
+  font-size: var(--rb-fs-section);
+  line-height: 1.15;
+  letter-spacing: -0.005em;
+}
+
+.rb-name {
+  margin: 0;
+  font-family: var(--rb-serif);
+  font-weight: 400;
+  font-size: var(--rb-fs-name);
+  line-height: 1.06;
+  letter-spacing: -0.01em;
+}
+.rb-name--lg { font-size: var(--rb-fs-name-lg); }
+
+.rb-meta {
+  margin: 0;
+  font-family: var(--rb-sans);
+  font-weight: 400;
+  font-size: var(--rb-fs-meta);
+  line-height: 1.35;
+}
+
+/* --------------------------------------------------------------------------
+   Extra button fills used by the inner pages
+   -------------------------------------------------------------------------- */
+.rb-btn--coral { background: var(--rb-coral-flat); color: var(--rb-white); }
+.rb-btn--coral:hover { background: var(--rb-cherry); color: var(--rb-white); }
+
+.rb-btn--moss { background: var(--rb-moss); color: var(--rb-white); }
+.rb-btn--moss:hover { background: var(--rb-ink); color: var(--rb-white); }
+
+.rb-btn--sage-solid { background: var(--rb-sage-mid); color: var(--rb-white); }
+.rb-btn--sage-solid:hover { background: var(--rb-moss); color: var(--rb-white); }
+
+.rb-btn--teal { background: var(--rb-teal); color: var(--rb-white); }
+.rb-btn--teal:hover { background: var(--rb-ink); color: var(--rb-white); }
+
+/* white pill on a coloured panel — the card CTAs on class + teacher cards */
+.rb-btn--on-colour { background: var(--rb-white); color: var(--rb-coral-flat); }
+.rb-btn--on-colour:hover { background: var(--rb-ink); color: var(--rb-white); }
+
+/* outline that inherits the panel's own text colour */
+.rb-btn--ghost {
+  background: transparent;
+  color: currentColor;
+  border-color: currentColor;
+}
+.rb-btn--ghost:hover { background: currentColor; }
+
+/* --------------------------------------------------------------------------
+   Framed portrait inset
+   The person bands and cards all place a small black-and-white portrait on
+   top of a large artwork. In the comps it is a hard-edged rectangle with no
+   radius, sitting proud of the artwork with no gap.
+   -------------------------------------------------------------------------- */
+.rb-inset {
+  position: absolute;
+  display: block;
+  overflow: hidden;
+  background: #ddd;
+}
+.rb-inset img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(1);
+}
+
+/* --------------------------------------------------------------------------
+   Media helpers
+   -------------------------------------------------------------------------- */
+.rb-media {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  background: #efefef;
+}
+.rb-media img,
+.rb-media svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Round carousel arrow, white on the band — testimonials use these. */
+.rb-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(30px, 2.19vw, 42px);
+  height: clamp(30px, 2.19vw, 42px);
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--rb-white);
+  color: var(--rb-ink);
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(30, 30, 30, 0.18);
+}
+.rb-arrow svg { width: 45%; height: 45%; }
+.rb-arrow[disabled] { opacity: 0.35; cursor: default; }
+
+/* Horizontal snap rail shared by the carousels. */
+.rb-rail {
+  display: flex;
+  gap: var(--rb-rail-gap, 24px);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.rb-rail::-webkit-scrollbar { display: none; }
+.rb-rail > * { scroll-snap-align: center; flex: 0 0 auto; }
+
+@media (prefers-reduced-motion: reduce) {
+  .rb-rail { scroll-behavior: auto; }
+}
+
+/* --------------------------------------------------------------------------
+   Booking-page interop
+
+   sections/product-booking.liquid hides the first section inside <main> so a
+   booking product does not also show Dawn's default product block:
+
+     html:has(.bk-page) main > .shopify-section:first-child { display: none !important }
+
+   On the rebrand class template the first section is the class hero, which
+   that rule silently swallowed. Rebrand sections are never the default
+   product block, so exempt them. Specificity has to beat (0,3,3) and the
+   !important has to be matched.
+   -------------------------------------------------------------------------- */
+html:has(.bk-page) main > .shopify-section.rb-section-wrapper:first-child {
+  display: block !important;
 }
 
 /* --------------------------------------------------------------------------

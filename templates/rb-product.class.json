@@ -1,0 +1,138 @@
+{
+  "sections": {
+    "hero": {
+      "type": "rb-class-hero",
+      "settings": {
+        "eyebrow": "",
+        "title": "",
+        "teacher_prefix": "With",
+        "teacher": "",
+        "fact_time": "",
+        "fact_level": "",
+        "fact_size": "",
+        "button_label": "Book Now",
+        "button_link": "",
+        "image_a": "shopify://shop_images/saf-class-artwork.jpg",
+        "image_b": "shopify://shop_images/saf-portrait-kerri.jpg",
+        "image_a_width": 62,
+        "text_width": 52,
+        "background": "#ffffff",
+        "title_color": "#e07468",
+        "teacher_color": "#1e1e1e",
+        "fact_color": "#1e1e1e",
+        "strip_teacher": true
+      }
+    },
+    "detail": {
+      "type": "rb-class-detail",
+      "blocks": {
+        "description": {
+          "type": "note",
+          "settings": {
+            "label": "Description:",
+            "body": "",
+            "use_product_description": true
+          }
+        },
+        "costs": {
+          "type": "note",
+          "settings": {
+            "label": "Costs:",
+            "body": "<p>R450 - per session (4x Sessions)</p>",
+            "use_product_description": false
+          }
+        }
+      },
+      "block_order": [
+        "description",
+        "costs"
+      ],
+      "settings": {
+        "heading": "<p>A guided <em>2 hour Watercolour</em> session.</p>",
+        "anchor": "booking",
+        "button_label": "Make a Booking",
+        "button_link": "#book",
+        "heading_width": 46,
+        "show_rule": true,
+        "background": "#ffffff",
+        "heading_color": "#1e1e1e",
+        "accent_color": "#e07468",
+        "label_color": "#1e1e1e",
+        "body_color": "#1e1e1e",
+        "rule_color": "#c9c9c9"
+      }
+    },
+    "booking": {
+      "type": "product-booking",
+      "settings": {
+        "eyebrow": "Reserve A Seat",
+        "heading": "Choose a date",
+        "event_schedule": "",
+        "cta_text": "Book",
+        "hold_minutes": 15
+      }
+    },
+    "teacher": {
+      "type": "rb-feature-person",
+      "settings": {
+        "eyebrow": "Teacher",
+        "name": "Kerri Sassen",
+        "body": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>",
+        "button_a_label": "See Teachers Page",
+        "button_a_link": "shopify://collections/kerri-sassen",
+        "button_b_label": "See Artist Page",
+        "button_b_link": "shopify://collections/kerri-sassen",
+        "panel_color": "#e07468",
+        "text_color": "#ffffff",
+        "eyebrow_color": "#1e1e1e",
+        "button_bg": "#b00e3f",
+        "button_text": "#ffffff",
+        "button_radius": 60,
+        "texture": 100,
+        "image": "shopify://shop_images/saf-teacher-artwork.jpg",
+        "panel_width": 48,
+        "min_height": 560,
+        "focal_x": 50,
+        "focal_y": 60,
+        "portrait": "shopify://shop_images/saf-portrait-kerri.jpg",
+        "portrait_w": 34,
+        "portrait_ratio": "382 / 313",
+        "portrait_x": 46,
+        "portrait_y": 40
+      }
+    },
+    "browse": {
+      "type": "rb-class-cards",
+      "settings": {
+        "collection": "classes",
+        "count": 6,
+        "eyebrow": "<p>Browse our classes</p>",
+        "intro": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.</p>",
+        "intro_color": "#1e1e1e",
+        "by_prefix": "By",
+        "show_excerpt": true,
+        "button_label": "View Class",
+        "columns": 3,
+        "grid_width": 1300,
+        "image_ratio": "398 / 380",
+        "radius": 18,
+        "background": "#ffffff",
+        "pattern": "all_a",
+        "tone_a": "#e07468",
+        "tone_a_text": "#ffffff",
+        "tone_b": "#b00e3f",
+        "tone_b_text": "#ffffff",
+        "texture": 100,
+        "teacher_filter": "",
+        "eyebrow_name": ""
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "detail",
+    "booking",
+    "teacher",
+    "browse"
+  ]
+}

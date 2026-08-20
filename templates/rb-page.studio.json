@@ -1,0 +1,310 @@
+{
+  "sections": {
+    "hero": {
+      "type": "rb-hero",
+      "settings": {
+        "fill": "image",
+        "image": "shopify://shop_images/saf-studio-hero.jpg",
+        "band_height": 860,
+        "min_height": 340,
+        "mobile_ratio": "4 / 5",
+        "focal_x": 50,
+        "focal_y": 50,
+        "overlay_opacity": 0,
+        "show_mark": true,
+        "mark": "studio",
+        "mark_width": 190,
+        "heading": "The Studio",
+        "heading_style": "page_title",
+        "text_color": "#ffffff"
+      }
+    },
+    "creative": {
+      "type": "rb-split-band",
+      "settings": {
+        "heading": "<p>A Creative Space<br><em>For Nurturing<br>Artist Talent</em></p>",
+        "heading_font": "sans",
+        "heading_width": 640,
+        "align": "left",
+        "panel_color": "#e07468",
+        "text_color": "#ffffff",
+        "accent_color": "#b00e3f",
+        "texture": 100,
+        "image": "shopify://shop_images/saf-studio-team.jpg",
+        "media_side": "right",
+        "panel_width": 49,
+        "min_height": 610,
+        "mobile_ratio": "16 / 10"
+      }
+    },
+    "offer": {
+      "type": "rb-media-cards",
+      "blocks": {
+        "workshops": {
+          "type": "card",
+          "settings": {
+            "collection": "workshops",
+            "title": "Studio Workshops",
+            "image": "shopify://shop_images/saf-studio-workshops.jpg",
+            "body": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>",
+            "button_label": "Browse Workshops"
+          }
+        },
+        "classes": {
+          "type": "card",
+          "settings": {
+            "collection": "classes",
+            "title": "Studio Classes",
+            "image": "shopify://shop_images/saf-studio-classes.jpg",
+            "body": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>",
+            "button_label": "Browse Classes"
+          }
+        },
+        "events": {
+          "type": "card",
+          "settings": {
+            "collection": "workshops-classes",
+            "title": "Studio Events",
+            "image": "shopify://shop_images/saf-studio-events.jpg",
+            "body": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>",
+            "button_label": "Browse Events"
+          }
+        }
+      },
+      "block_order": [
+        "workshops",
+        "classes",
+        "events"
+      ],
+      "settings": {
+        "show_mark": true,
+        "eyebrow": "<p>We host an array of <strong>annual classes, workshops</strong> and <strong>events</strong></p>",
+        "image_ratio": "535 / 400",
+        "background": "#ffffff",
+        "title_color": "#1e1e1e",
+        "body_color": "#1e1e1e"
+      }
+    },
+    "steps": {
+      "type": "rb-steps",
+      "blocks": {
+        "pick": {
+          "type": "step",
+          "settings": {
+            "icon": "easel",
+            "number": "1.",
+            "title": "Picking A Class",
+            "notes": "<p><strong>What To Know</strong>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do.</p><p><strong>Experience Level</strong>Et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do.</p>"
+          }
+        },
+        "book": {
+          "type": "step",
+          "settings": {
+            "icon": "palette",
+            "number": "2.",
+            "title": "Booking A Class",
+            "notes": "<p><strong>How To Book Online</strong>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</p><p><strong>What To Bring</strong>Et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>"
+          }
+        },
+        "package": {
+          "type": "step",
+          "settings": {
+            "icon": "laptop",
+            "number": "3.",
+            "title": "Pick A Package",
+            "notes": "<p><strong>Choosing a Payment Package</strong>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p><p><strong>Paying Online</strong>Et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "pick",
+        "book",
+        "package"
+      ],
+      "settings": {
+        "show_rule": true,
+        "rule_color": "#c9c9c9",
+        "background": "#ffffff",
+        "number_color": "#b00e3f",
+        "title_color": "#1e1e1e",
+        "label_color": "#1e1e1e",
+        "body_color": "#1e1e1e"
+      }
+    },
+    "testimonials": {
+      "type": "rb-testimonials",
+      "blocks": {
+        "t1": {
+          "type": "quote",
+          "settings": {
+            "quote": "<p>“Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt”</p>",
+            "attribution": "- Name Surname, Workshop Guest.",
+            "background": "#e07468",
+            "quote_color": "#b00e3f",
+            "attr_color": "#ffffff"
+          }
+        },
+        "t2": {
+          "type": "quote",
+          "settings": {
+            "quote": "<p>“Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt”</p>",
+            "attribution": "- Name Surname, Studio Student.",
+            "background": "#b00e3f",
+            "quote_color": "#e6ddc6",
+            "attr_color": "#e6ddc6"
+          }
+        },
+        "t3": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/saf-class-artwork.jpg",
+            "attribution": "- Name Surname, Studio Student.",
+            "attr_color": "#1e1e1e"
+          }
+        },
+        "t4": {
+          "type": "quote",
+          "settings": {
+            "quote": "<p>“Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt”</p>",
+            "attribution": "- Name Surname, Studio Student.",
+            "background": "#0c3642",
+            "quote_color": "#bea532",
+            "attr_color": "#e07468"
+          }
+        }
+      },
+      "block_order": [
+        "t1",
+        "t2",
+        "t3",
+        "t4"
+      ],
+      "settings": {
+        "eyebrow": "<p><strong>Testimonials</strong> and art from our guests and students</p>",
+        "show_arrows": true,
+        "background": "#e6ddc6",
+        "show_texture": true,
+        "card_width": 490,
+        "card_height": 630,
+        "radius": 20,
+        "texture": 60
+      }
+    },
+    "teachers": {
+      "type": "rb-people-grid",
+      "blocks": {
+        "t0": {
+          "type": "person",
+          "settings": {
+            "collection": "susan-orpen-1",
+            "name": "Susan Orpen",
+            "role": "Art Classes",
+            "button_label": "Learn More",
+            "tone": "auto"
+          }
+        },
+        "t1": {
+          "type": "person",
+          "settings": {
+            "collection": "shelley-cowling-1",
+            "name": "Shelley Cowling",
+            "role": "Art Classes",
+            "button_label": "Learn More",
+            "tone": "auto"
+          }
+        },
+        "t2": {
+          "type": "person",
+          "settings": {
+            "collection": "jacqui-sundelson-1",
+            "name": "Jacqui Sundelson",
+            "role": "Art Classes",
+            "button_label": "Learn More",
+            "tone": "auto"
+          }
+        },
+        "t3": {
+          "type": "person",
+          "settings": {
+            "collection": "janice-grant-1",
+            "name": "Janice Grant",
+            "role": "Art Classes",
+            "button_label": "Learn More",
+            "tone": "auto"
+          }
+        },
+        "t4": {
+          "type": "person",
+          "settings": {
+            "collection": "zara-leigh-farinha-1",
+            "name": "Zara-Leigh Farinha",
+            "role": "Art Classes",
+            "button_label": "Learn More",
+            "tone": "auto"
+          }
+        },
+        "t5": {
+          "type": "person",
+          "settings": {
+            "collection": "teacher-1",
+            "name": "Teacher 1",
+            "role": "Art Classes",
+            "button_label": "Learn More",
+            "tone": "auto"
+          }
+        },
+        "t6": {
+          "type": "person",
+          "settings": {
+            "collection": "teacher-2",
+            "name": "Teacher 2",
+            "role": "Art Classes",
+            "button_label": "Learn More",
+            "tone": "auto"
+          }
+        },
+        "t7": {
+          "type": "person",
+          "settings": {
+            "collection": "teacher-3",
+            "name": "Teacher 3",
+            "role": "Art Classes",
+            "button_label": "Learn More",
+            "tone": "auto"
+          }
+        }
+      },
+      "block_order": [
+        "t0",
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6",
+        "t7"
+      ],
+      "settings": {
+        "eyebrow": "<p>Meet our teachers</p>",
+        "intro": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.</p>",
+        "intro_color": "#1e1e1e",
+        "columns": 4,
+        "image_ratio": "227 / 200",
+        "background": "#ffffff",
+        "tone_a": "#b00e3f",
+        "tone_a_text": "#ffffff",
+        "tone_b": "#e07468",
+        "tone_b_text": "#ffffff",
+        "texture": 100
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "creative",
+    "offer",
+    "steps",
+    "testimonials",
+    "teachers"
+  ]
+}

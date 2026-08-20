@@ -1,0 +1,244 @@
+{% comment %}
+  Rebrand person hero — the head of a teacher page and of an artist page.
+  Same anatomy in both comps: the name in large IvyPresto on the left, a
+  subtitle under it, a social row, and on the right a large artwork running
+  off the right edge with a black-and-white portrait set into it.
+
+  The two differ only in the subtitle and the palette:
+    Teacher — coral name, a row of medium tags, an Instagram round icon and a
+              "See Portfolio" pill.
+    Artist  — moss name, a line of Cedarville script, Instagram only.
+
+  On a collection template the name and artwork default to the collection, so
+  an artist or teacher collection is correct as soon as it gets the template.
+{% endcomment %}
+
+{{ 'saf-rebrand.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign sid = section.id
+  assign name = section.settings.name | default: collection.title
+  assign art = section.settings.image | default: collection.featured_image
+  assign portrait = section.settings.portrait
+  assign tags = section.settings.tags | split: ','
+-%}
+
+<style>
+  #shopify-section-{{ sid }} .rb-ph {
+    background: {{ section.settings.background }};
+    display: grid;
+    grid-template-columns: {{ section.settings.text_width }}fr {{ 100 | minus: section.settings.text_width }}fr;
+    align-items: center;
+    gap: clamp(24px, 3.13vw, 60px);
+    padding-block: clamp(40px, 5.21vw, 100px);
+  }
+  #shopify-section-{{ sid }} .rb-ph__text {
+    box-sizing: border-box;
+    padding-left: var(--rb-gutter);
+    text-align: {{ section.settings.align }};
+    {% if section.settings.align == 'center' %}
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    {% endif %}
+  }
+  #shopify-section-{{ sid }} .rb-ph__name {
+    color: {{ section.settings.name_color }};
+    max-width: 8ch; /* both comps break the name after the first word */
+    {% if section.settings.align == 'center' %}text-align: center;{% endif %}
+  }
+  #shopify-section-{{ sid }} .rb-ph__script {
+    margin-top: clamp(10px, 1.04vw, 20px);
+    color: {{ section.settings.script_color }};
+    font-size: clamp(16px, 1.35vw, 26px);
+    line-height: 1.5;
+  }
+  #shopify-section-{{ sid }} .rb-ph__script p { margin: 0; }
+
+  #shopify-section-{{ sid }} .rb-ph__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(8px, 0.83vw, 16px);
+    margin: clamp(10px, 1.04vw, 20px) 0 0;
+    padding: 0;
+    list-style: none;
+    {% if section.settings.align == 'center' %}justify-content: center;{% endif %}
+  }
+  #shopify-section-{{ sid }} .rb-ph__tag {
+    font-family: var(--rb-sans);
+    font-size: var(--rb-fs-body-sm);
+    line-height: 1.2;
+    color: {{ section.settings.tag_color }};
+  }
+
+  #shopify-section-{{ sid }} .rb-ph__actions {
+    display: flex;
+    align-items: center;
+    gap: clamp(8px, 0.83vw, 16px);
+    margin-top: clamp(14px, 1.46vw, 28px);
+    {% if section.settings.align == 'center' %}justify-content: center;{% endif %}
+  }
+  #shopify-section-{{ sid }} .rb-ph__social {
+    display: inline-flex;
+    width: clamp(30px, 2.08vw, 40px);
+    height: clamp(30px, 2.08vw, 40px);
+  }
+  #shopify-section-{{ sid }} .rb-ph__social img { width: 100%; height: 100%; display: block; }
+
+  #shopify-section-{{ sid }} .rb-ph__media {
+    position: relative;
+    width: 100%;
+    height: clamp(240px, 23.6vw, 453px);
+    overflow: hidden;
+    background: #efefef;
+  }
+  #shopify-section-{{ sid }} .rb-ph__media > img,
+  #shopify-section-{{ sid }} .rb-ph__media > svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: {{ section.settings.focal_x }}% {{ section.settings.focal_y }}%;
+  }
+  #shopify-section-{{ sid }} .rb-ph__portrait {
+    left: {{ section.settings.portrait_x }}%;
+    top: {{ section.settings.portrait_y }}%;
+    width: {{ section.settings.portrait_w }}%;
+    aspect-ratio: {{ section.settings.portrait_ratio }};
+    transform: translate(-50%, -50%);
+  }
+
+  @media screen and (max-width: 749px) {
+    #shopify-section-{{ sid }} .rb-ph {
+      grid-template-columns: 1fr;
+      padding-block: 40px 0;
+    }
+    #shopify-section-{{ sid }} .rb-ph__text { padding-inline: var(--rb-gutter); }
+    #shopify-section-{{ sid }} .rb-ph__name { max-width: none; }
+    #shopify-section-{{ sid }} .rb-ph__media { height: auto; aspect-ratio: 4 / 3; }
+  }
+</style>
+
+<div class="rb-section rb-bleed">
+  <div class="rb-ph">
+    <div class="rb-ph__text">
+      {%- if name != blank -%}
+        <h1 class="rb-name rb-name--lg rb-ph__name">{{ name }}</h1>
+      {%- endif -%}
+
+      {%- if section.settings.script != blank -%}
+        <div class="rb-script rb-ph__script">{{ section.settings.script }}</div>
+      {%- endif -%}
+
+      {%- if tags.size > 0 and section.settings.tags != blank -%}
+        <ul class="rb-ph__tags" role="list">
+          {%- for tag in tags -%}
+            <li class="rb-ph__tag">{{ tag | strip }}</li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+
+      {%- if section.settings.social_url != blank or section.settings.button_label != blank -%}
+        <div class="rb-ph__actions">
+          {%- if section.settings.social_url != blank -%}
+            <a href="{{ section.settings.social_url }}" class="rb-ph__social"
+               target="_blank" rel="noopener" aria-label="{{ name | escape }} on Instagram">
+              <img src="{{ 'saf-icon-instagram.png' | asset_url }}" alt="" width="60" height="60" loading="lazy">
+            </a>
+          {%- endif -%}
+          {%- if section.settings.button_label != blank -%}
+            <a href="{{ section.settings.button_link | default: '#' }}"
+               class="rb-btn rb-btn--plain rb-btn--outline">
+              {{- section.settings.button_label | escape -}}
+            </a>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    <div class="rb-ph__media">
+      {%- if art != blank -%}
+        {{
+          art
+          | image_url: width: 1920
+          | image_tag:
+            widths: '480, 700, 960, 1400, 1920',
+            sizes: '(max-width: 749px) 100vw, 55vw',
+            loading: 'eager',
+            alt: art.alt | default: name
+        }}
+      {%- else -%}
+        {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+      {%- endif -%}
+
+      {%- if portrait != blank -%}
+        <div class="rb-inset rb-ph__portrait">
+          {{
+            portrait
+            | image_url: width: 700
+            | image_tag:
+              widths: '240, 360, 520, 700',
+              sizes: '(max-width: 749px) 40vw, 20vw',
+              loading: 'eager',
+              alt: portrait.alt | default: name
+          }}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Rebrand person hero",
+  "tag": "section",
+  "class": "rb-section-wrapper",
+  "settings": [
+    { "type": "paragraph",
+      "content": "Heads a teacher page or an artist page. On a collection template the name and artwork fill themselves from the collection." },
+    { "type": "text", "id": "name", "label": "Name",
+      "info": "Blank uses the collection title." },
+    { "type": "richtext", "id": "script", "label": "Script line",
+      "info": "Cedarville Cursive, as on the artist page." },
+    { "type": "text", "id": "tags", "label": "Tags",
+      "info": "Comma separated, e.g. Abstract, Watercolour, Photography." },
+    { "type": "header", "content": "Actions" },
+    { "type": "url", "id": "social_url", "label": "Instagram link" },
+    { "type": "text", "id": "button_label", "label": "Button label",
+      "info": "The teacher page uses 'See Portfolio'." },
+    { "type": "url", "id": "button_link", "label": "Button link" },
+    { "type": "header", "content": "Layout" },
+    { "type": "select", "id": "align", "label": "Text alignment", "default": "left",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Centred (artist page)" }
+      ] },
+    { "type": "range", "id": "text_width", "min": 25, "max": 60, "step": 1,
+      "default": 40, "unit": "%", "label": "Text share of the row" },
+    { "type": "header", "content": "Colour" },
+    { "type": "color", "id": "background", "default": "#ffffff", "label": "Background" },
+    { "type": "color", "id": "name_color", "default": "#e07468", "label": "Name" },
+    { "type": "color", "id": "script_color", "default": "#1e1e1e", "label": "Script line" },
+    { "type": "color", "id": "tag_color", "default": "#0c3642", "label": "Tags" },
+    { "type": "header", "content": "Artwork" },
+    { "type": "image_picker", "id": "image", "label": "Artwork",
+      "info": "Blank uses the collection image." },
+    { "type": "range", "id": "focal_x", "min": 0, "max": 100, "step": 1,
+      "default": 50, "unit": "%", "label": "Artwork focal point — horizontal" },
+    { "type": "range", "id": "focal_y", "min": 0, "max": 100, "step": 1,
+      "default": 50, "unit": "%", "label": "Artwork focal point — vertical" },
+    { "type": "header", "content": "Portrait inset" },
+    { "type": "image_picker", "id": "portrait", "label": "Portrait",
+      "info": "Rendered black and white, as in the design." },
+    { "type": "range", "id": "portrait_w", "min": 15, "max": 70, "step": 1,
+      "default": 40, "unit": "%", "label": "Portrait width" },
+    { "type": "text", "id": "portrait_ratio", "default": "1 / 1", "label": "Portrait aspect ratio" },
+    { "type": "range", "id": "portrait_x", "min": 0, "max": 100, "step": 1,
+      "default": 50, "unit": "%", "label": "Portrait centre — horizontal" },
+    { "type": "range", "id": "portrait_y", "min": 0, "max": 100, "step": 1,
+      "default": 48, "unit": "%", "label": "Portrait centre — vertical" }
+  ],
+  "presets": [{ "name": "Rebrand person hero" }]
+}
+{% endschema %}

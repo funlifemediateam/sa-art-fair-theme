@@ -1,4 +1,4 @@
-/* SA Art Fair rebrand — drawer menu.
+/* SA Art Fair rebrand — drawer menu and the scroll-snap carousels.
    Vanilla, no dependencies, matching the rest of this theme's assets.
    Rebinds on shopify:section:load so the theme editor stays live. */
 (function () {
@@ -69,8 +69,56 @@
     });
   }
 
+  /* ── Scroll-snap carousel ───────────────────────────────────────────────
+     Used by the testimonial rail and any other .rb-rail with arrows. The rail
+     scrolls natively; the arrows just page it by one card and then reflect
+     whether there is anywhere left to go.
+
+     Two gotchas this theme has hit before and both apply here:
+       - a native img fires `dragstart` one move into a mouse drag, which
+         cancels the pointer stream, so dragging is disabled explicitly rather
+         than half-working;
+       - pointer capture must not be taken on mousedown or the derived click
+         is retargeted to the track and every link inside a card goes dead.
+     This carousel therefore does not implement drag-to-scroll at all: the
+     rail's own overflow handles trackpads and touch. */
+  function setupCarousel(root) {
+    if (root.dataset.rbCarousel === '1') return;
+    root.dataset.rbCarousel = '1';
+
+    var track = root.querySelector('[data-rb-carousel-track]');
+    var prev = root.querySelector('[data-rb-carousel-prev]');
+    var next = root.querySelector('[data-rb-carousel-next]');
+    if (!track) return;
+
+    track.addEventListener('dragstart', function (e) { e.preventDefault(); });
+
+    function step() {
+      var first = track.firstElementChild;
+      if (!first) return track.clientWidth;
+      var gap = parseFloat(getComputedStyle(track).columnGap) || 0;
+      return first.getBoundingClientRect().width + gap;
+    }
+
+    function reflect() {
+      if (!prev || !next) return;
+      var max = track.scrollWidth - track.clientWidth;
+      prev.disabled = track.scrollLeft <= 1;
+      next.disabled = track.scrollLeft >= max - 1;
+    }
+
+    if (prev) prev.addEventListener('click', function () { track.scrollLeft -= step(); });
+    if (next) next.addEventListener('click', function () { track.scrollLeft += step(); });
+
+    track.addEventListener('scroll', reflect, { passive: true });
+    window.addEventListener('resize', reflect);
+    reflect();
+  }
+
   function init(scope) {
-    (scope || document).querySelectorAll('.rb-header-section').forEach(setup);
+    var root = scope || document;
+    root.querySelectorAll('.rb-header-section').forEach(setup);
+    root.querySelectorAll('[data-rb-carousel]').forEach(setupCarousel);
   }
 
   if (document.readyState === 'loading') {

@@ -1,0 +1,93 @@
+{% comment %}
+  Rebrand script statement — the teacher page's handwritten two-line heading
+  over a narrow centred paragraph.
+
+  The comp sets the first line in ink and the second in coral, so italic runs
+  inside the heading take the accent colour the way every other rebrand
+  section handles a two-tone line.
+{% endcomment %}
+
+{{ 'saf-rebrand.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign sid = section.id
+  assign pt_vw = section.settings.padding_top | times: 100.0 | divided_by: 1920.0
+  assign pb_vw = section.settings.padding_bottom | times: 100.0 | divided_by: 1920.0
+-%}
+
+<style>
+  #shopify-section-{{ sid }} .rb-ss {
+    background: {{ section.settings.background }};
+    padding-block:
+      clamp(40px, {{ pt_vw }}vw, {{ section.settings.padding_top }}px)
+      clamp(40px, {{ pb_vw }}vw, {{ section.settings.padding_bottom }}px);
+  }
+  #shopify-section-{{ sid }} .rb-ss__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(16px, 2.19vw, 42px);
+    text-align: center;
+  }
+  #shopify-section-{{ sid }} .rb-ss__heading {
+    color: {{ section.settings.heading_color }};
+    max-width: {{ section.settings.heading_width }}px;
+    line-height: 1.45; /* the script needs air or the loops collide */
+  }
+  #shopify-section-{{ sid }} .rb-ss__heading p { margin: 0; }
+  #shopify-section-{{ sid }} .rb-ss__heading em,
+  #shopify-section-{{ sid }} .rb-ss__heading i {
+    font-style: normal;
+    color: {{ section.settings.accent_color }};
+  }
+  #shopify-section-{{ sid }} .rb-ss__body {
+    max-width: {{ section.settings.body_width }}px;
+    font-size: var(--rb-fs-body-sm);
+    color: {{ section.settings.body_color }};
+  }
+  #shopify-section-{{ sid }} .rb-ss__body p { margin: 0; }
+</style>
+
+<div class="rb-section rb-ss">
+  <div class="rb-container rb-ss__inner">
+    {%- if section.settings.heading != blank -%}
+      <div class="rb-script rb-ss__heading">{{ section.settings.heading }}</div>
+    {%- endif -%}
+    {%- if section.settings.body != blank -%}
+      <div class="rb-body rb-ss__body">{{ section.settings.body }}</div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Rebrand script statement",
+  "tag": "section",
+  "class": "rb-section-wrapper",
+  "settings": [
+    { "type": "richtext", "id": "heading",
+      "default": "<p>Lorem ipsum dolor sit amet, <em>consectetur adipiscing elit.</em></p>",
+      "label": "Script heading",
+      "info": "Italic runs take the accent colour — that is the design's second line." },
+    { "type": "richtext", "id": "body",
+      "default": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>",
+      "label": "Body" },
+    { "type": "header", "content": "Colour" },
+    { "type": "color", "id": "background", "default": "#ffffff", "label": "Background" },
+    { "type": "color", "id": "heading_color", "default": "#1e1e1e", "label": "Script" },
+    { "type": "color", "id": "accent_color", "default": "#e07468", "label": "Script accent" },
+    { "type": "color", "id": "body_color", "default": "#1e1e1e", "label": "Body" },
+    { "type": "header", "content": "Measure" },
+    { "type": "range", "id": "heading_width", "min": 400, "max": 1400, "step": 10,
+      "default": 900, "unit": "px", "label": "Script max width" },
+    { "type": "range", "id": "body_width", "min": 300, "max": 900, "step": 10,
+      "default": 640, "unit": "px", "label": "Body max width" },
+    { "type": "header", "content": "Spacing" },
+    { "type": "range", "id": "padding_top", "min": 40, "max": 400, "step": 5,
+      "default": 190, "unit": "px", "label": "Top padding at 1920px wide" },
+    { "type": "range", "id": "padding_bottom", "min": 40, "max": 400, "step": 5,
+      "default": 210, "unit": "px", "label": "Bottom padding at 1920px wide" }
+  ],
+  "presets": [{ "name": "Rebrand script statement" }]
+}
+{% endschema %}

@@ -1,0 +1,287 @@
+{% comment %}
+  Rebrand class hero — the head of a single class page: a teal class-type
+  line, the subject in coral IvyPresto italic, "With <teacher>" in roman
+  below it, a row of icon facts and a coral Book Now pill. Two images run off
+  the right edge beside it.
+
+  Everything defaults out of the booking metafields this store already keeps
+  on class products, so a class page is correct the moment it is assigned the
+  template:
+
+    booking.class_type        eyebrow          ("Annual Class")
+    booking.instructor_name   "With <name>"
+    booking.class_time        clock fact       ("10am-12pm")
+    booking.skill_level       level fact       ("Beginner - Intermediate")
+    booking.capacity          group-size fact  ("16 Max")
+
+  Every one of them can still be overridden in the editor, and the section
+  works on a page template too — it just needs the fields filled in by hand.
+{% endcomment %}
+
+{{ 'saf-rebrand.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign sid = section.id
+  assign p = product
+
+  assign eyebrow = section.settings.eyebrow
+  if eyebrow == blank
+    assign eyebrow = p.metafields.booking.class_type
+  endif
+
+  assign teacher = section.settings.teacher
+  if teacher == blank
+    assign teacher = p.metafields.booking.instructor_name
+  endif
+
+  comment
+    The comp splits the class into a subject ("Watercolour") and a teacher line
+    ("With Kerry Sassen"), but this store names class products with both in one
+    string — "WATERCOLOUR WITH KERRI SASSEN". Printing the whole title as the
+    subject says the teacher's name twice, so the trailing "with <teacher>" is
+    trimmed off. Liquid's split is case sensitive and the catalog is not
+    consistent about case, so the separator is normalised first.
+  endcomment
+  assign title = section.settings.title
+  if title == blank
+    assign title = p.title
+    if section.settings.strip_teacher
+      assign normalised = title | replace: ' WITH ', ' with ' | replace: ' With ', ' with '
+      assign title = normalised | split: ' with ' | first
+    endif
+  endif
+
+  assign fact_time = section.settings.fact_time
+  if fact_time == blank
+    assign fact_time = p.metafields.booking.class_time
+  endif
+
+  assign fact_level = section.settings.fact_level
+  if fact_level == blank
+    assign fact_level = p.metafields.booking.skill_level
+  endif
+
+  assign fact_size = section.settings.fact_size
+  if fact_size == blank
+    assign cap = p.metafields.booking.capacity
+    if cap != blank
+      assign fact_size = cap | append: ' Max'
+    endif
+  endif
+
+  assign img_a = section.settings.image_a | default: p.featured_image
+  assign img_b = section.settings.image_b
+-%}
+
+<style>
+  #shopify-section-{{ sid }} .rb-ch {
+    background: {{ section.settings.background }};
+    display: grid;
+    grid-template-columns: {{ section.settings.text_width }}fr {{ 100 | minus: section.settings.text_width }}fr;
+    align-items: center;
+    gap: clamp(24px, 3.13vw, 60px);
+    padding-block: clamp(40px, 5.73vw, 110px);
+  }
+  #shopify-section-{{ sid }} .rb-ch__text {
+    box-sizing: border-box;
+    padding-inline: var(--rb-gutter) 0;
+    /* keep the copy on the same measure as every other container on the site
+       rather than letting it run the full half-width */
+    max-width: calc(var(--rb-container) / 2 + var(--rb-gutter));
+    margin-left: auto;
+  }
+  #shopify-section-{{ sid }} .rb-ch__eyebrow { margin-bottom: clamp(4px, 0.42vw, 8px); }
+  #shopify-section-{{ sid }} .rb-ch__title {
+    color: {{ section.settings.title_color }};
+    font-style: italic;
+    font-weight: 300;
+  }
+  #shopify-section-{{ sid }} .rb-ch__teacher {
+    color: {{ section.settings.teacher_color }};
+    margin-top: -0.06em; /* the two lines nearly touch in the comp */
+  }
+
+  #shopify-section-{{ sid }} .rb-ch__facts {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: clamp(12px, 1.72vw, 33px);
+    margin-top: clamp(10px, 1.15vw, 22px);
+    color: {{ section.settings.fact_color }};
+  }
+  #shopify-section-{{ sid }} .rb-ch__fact {
+    display: inline-flex;
+    align-items: center;
+    gap: clamp(5px, 0.42vw, 8px);
+    font-family: var(--rb-sans);
+    font-size: var(--rb-fs-body-sm);
+    line-height: 1.2;
+  }
+  #shopify-section-{{ sid }} .rb-ch__fact svg {
+    width: clamp(14px, 1.04vw, 20px);
+    height: clamp(14px, 1.04vw, 20px);
+    flex: 0 0 auto;
+  }
+
+  #shopify-section-{{ sid }} .rb-ch__cta {
+    margin-top: clamp(16px, 1.98vw, 38px);
+    min-height: clamp(36px, 2.5vw, 48px);
+  }
+
+  /* the pair of images bleeds off the right edge, cropping the second */
+  #shopify-section-{{ sid }} .rb-ch__media {
+    display: flex;
+    gap: clamp(4px, 0.42vw, 8px);
+    overflow: hidden;
+    height: clamp(220px, 21.2vw, 407px);
+  }
+  #shopify-section-{{ sid }} .rb-ch__media .rb-media {
+    flex: 0 0 {{ section.settings.image_a_width }}%;
+    height: 100%;
+  }
+  #shopify-section-{{ sid }} .rb-ch__media .rb-media--b { flex: 0 0 auto; width: 60%; }
+  #shopify-section-{{ sid }} .rb-ch__media .rb-media--b img { filter: grayscale(1); }
+
+  @media screen and (max-width: 749px) {
+    #shopify-section-{{ sid }} .rb-ch {
+      grid-template-columns: 1fr;
+      padding-block: 40px 0;
+    }
+    #shopify-section-{{ sid }} .rb-ch__text {
+      max-width: none;
+      margin-left: 0;
+      padding-inline: var(--rb-gutter);
+    }
+    #shopify-section-{{ sid }} .rb-ch__media { height: auto; aspect-ratio: 16 / 9; }
+  }
+</style>
+
+<div class="rb-section rb-bleed">
+  <div class="rb-ch">
+    <div class="rb-ch__text">
+      {%- if eyebrow != blank -%}
+        <p class="rb-caps rb-ch__eyebrow">{{ eyebrow }}</p>
+      {%- endif -%}
+
+      {%- if title != blank -%}
+        <h1 class="rb-name rb-name--lg rb-ch__title">{{ title }}</h1>
+      {%- endif -%}
+
+      {%- if teacher != blank -%}
+        <p class="rb-name rb-name--lg rb-ch__teacher">
+          {{- section.settings.teacher_prefix }} {{ teacher -}}
+        </p>
+      {%- endif -%}
+
+      {%- if fact_time != blank or fact_level != blank or fact_size != blank -%}
+        <ul class="rb-ch__facts" role="list">
+          {%- if fact_time != blank -%}
+            <li class="rb-ch__fact">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+                <circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3.5 2"></path>
+              </svg>
+              <span>{{ fact_time }}</span>
+            </li>
+          {%- endif -%}
+          {%- if fact_level != blank -%}
+            <li class="rb-ch__fact">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+                <circle cx="12" cy="12" r="9"></circle><path d="M12 12l4-3"></path><path d="M7.5 15.5h9"></path>
+              </svg>
+              <span>{{ fact_level }}</span>
+            </li>
+          {%- endif -%}
+          {%- if fact_size != blank -%}
+            <li class="rb-ch__fact">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+                <circle cx="12" cy="8" r="3.4"></circle><path d="M5.5 19.5a6.5 6.5 0 0 1 13 0"></path>
+              </svg>
+              <span>{{ fact_size }}</span>
+            </li>
+          {%- endif -%}
+        </ul>
+      {%- endif -%}
+
+      {%- if section.settings.button_label != blank -%}
+        <a
+          href="{{ section.settings.button_link | default: '#booking' }}"
+          class="rb-btn rb-btn--serif rb-btn--coral rb-ch__cta"
+        >{{ section.settings.button_label | escape }}</a>
+      {%- endif -%}
+    </div>
+
+    <div class="rb-ch__media">
+      <div class="rb-media">
+        {%- if img_a != blank -%}
+          {{
+            img_a
+            | image_url: width: 1200
+            | image_tag: widths: '400, 600, 900, 1200', sizes: '(max-width: 749px) 100vw, 30vw',
+              loading: 'eager', alt: img_a.alt | default: title
+          }}
+        {%- else -%}
+          {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+        {%- endif -%}
+      </div>
+      {%- if img_b != blank -%}
+        <div class="rb-media rb-media--b">
+          {{
+            img_b
+            | image_url: width: 900
+            | image_tag: widths: '300, 500, 700, 900', sizes: '(max-width: 749px) 60vw, 22vw',
+              loading: 'eager', alt: img_b.alt | default: teacher
+          }}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Rebrand class hero",
+  "tag": "section",
+  "class": "rb-section-wrapper",
+  "settings": [
+    { "type": "paragraph",
+      "content": "Leave the text fields blank on a class product page and each one fills itself from that product's booking metafields." },
+    { "type": "text", "id": "eyebrow", "label": "Class type",
+      "info": "Blank uses booking.class_type." },
+    { "type": "text", "id": "title", "label": "Subject",
+      "info": "Blank uses the product title." },
+    { "type": "checkbox", "id": "strip_teacher", "default": true,
+      "label": "Trim \"with <teacher>\" off the product title",
+      "info": "Class products here are named \"Watercolour with Kerri Sassen\"; the design shows the subject and the teacher on separate lines." },
+    { "type": "text", "id": "teacher_prefix", "default": "With", "label": "Teacher prefix" },
+    { "type": "text", "id": "teacher", "label": "Teacher",
+      "info": "Blank uses booking.instructor_name." },
+    { "type": "header", "content": "Facts" },
+    { "type": "text", "id": "fact_time", "label": "Time",
+      "info": "Blank uses booking.class_time." },
+    { "type": "text", "id": "fact_level", "label": "Level",
+      "info": "Blank uses booking.skill_level." },
+    { "type": "text", "id": "fact_size", "label": "Group size",
+      "info": "Blank uses booking.capacity." },
+    { "type": "header", "content": "Button" },
+    { "type": "text", "id": "button_label", "default": "Book Now", "label": "Button label" },
+    { "type": "url", "id": "button_link", "label": "Button link",
+      "info": "Defaults to the #booking anchor further down the page." },
+    { "type": "header", "content": "Images" },
+    { "type": "image_picker", "id": "image_a", "label": "Artwork",
+      "info": "Blank uses the product's featured image." },
+    { "type": "image_picker", "id": "image_b", "label": "Teacher portrait",
+      "info": "Rendered black and white, and cropped by the right edge as in the design." },
+    { "type": "range", "id": "image_a_width", "min": 30, "max": 100, "step": 1,
+      "default": 62, "unit": "%", "label": "Artwork share of the image pair" },
+    { "type": "header", "content": "Layout" },
+    { "type": "range", "id": "text_width", "min": 30, "max": 70, "step": 1,
+      "default": 52, "unit": "%", "label": "Text share of the row" },
+    { "type": "header", "content": "Colour" },
+    { "type": "color", "id": "background", "default": "#ffffff", "label": "Background" },
+    { "type": "color", "id": "title_color", "default": "#e07468", "label": "Subject colour" },
+    { "type": "color", "id": "teacher_color", "default": "#1e1e1e", "label": "Teacher line colour" },
+    { "type": "color", "id": "fact_color", "default": "#1e1e1e", "label": "Facts colour" }
+  ],
+  "presets": [{ "name": "Rebrand class hero" }]
+}
+{% endschema %}

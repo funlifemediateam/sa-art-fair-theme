@@ -1,0 +1,309 @@
+{% comment %}
+  Rebrand artist cards — the artists index. Each card is one of the artist's
+  works with their black-and-white portrait set into it, a sage or moss paper
+  panel underneath carrying a medium/place meta row, the name in large
+  IvyPresto and a short bio, then a full-width pill under the card.
+
+  The comp darkens the middle column of every row, so "Auto" tones by column
+  position rather than by a flat alternation — with three columns that gives
+  light / dark / light on every row, which is what the design shows.
+
+  Cards read from collections, which is how artists are modelled in this
+  store, and every field can be overridden per card.
+{% endcomment %}
+
+{{ 'saf-rebrand.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign sid = section.id
+  assign cols = section.settings.columns
+-%}
+
+<style>
+  #shopify-section-{{ sid }} .rb-ac {
+    background: {{ section.settings.background }};
+    padding-block:
+      clamp(40px, 5.21vw, 100px)
+      clamp(48px, 7.29vw, 140px);
+  }
+  /* this grid runs wider than the site container in the comp, so it carries
+     its own measure instead of using .rb-container's */
+  #shopify-section-{{ sid }} .rb-ac__wrap {
+    width: 100%;
+    max-width: calc({{ section.settings.grid_width }}px + var(--rb-gutter) * 2);
+    margin-inline: auto;
+    padding-inline: var(--rb-gutter);
+    box-sizing: border-box;
+  }
+  #shopify-section-{{ sid }} .rb-ac__grid {
+    display: grid;
+    grid-template-columns: repeat({{ cols }}, minmax(0, 1fr));
+    gap: clamp(20px, 2.55vw, 49px);
+  }
+
+  #shopify-section-{{ sid }} .rb-ac__card {
+    display: flex;
+    flex-direction: column;
+  }
+  #shopify-section-{{ sid }} .rb-ac__body {
+    display: flex;
+    flex-direction: column;
+    border-radius: {{ section.settings.radius }}px;
+    overflow: hidden;
+    flex: 1 1 auto;
+  }
+  #shopify-section-{{ sid }} .rb-ac__media {
+    position: relative;
+    width: 100%;
+    aspect-ratio: {{ section.settings.image_ratio }};
+    overflow: hidden;
+    background: #efefef;
+  }
+  #shopify-section-{{ sid }} .rb-ac__media > img,
+  #shopify-section-{{ sid }} .rb-ac__media > svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  #shopify-section-{{ sid }} .rb-ac__portrait {
+    left: {{ section.settings.portrait_x }}%;
+    top: {{ section.settings.portrait_y }}%;
+    width: {{ section.settings.portrait_w }}%;
+    aspect-ratio: {{ section.settings.portrait_ratio }};
+    transform: translate(-50%, -50%);
+  }
+
+  #shopify-section-{{ sid }} .rb-ac__panel {
+    flex: 1 1 auto;
+    box-sizing: border-box;
+    padding: clamp(12px, 1.25vw, 24px) clamp(14px, 1.15vw, 22px) clamp(18px, 1.98vw, 38px);
+    --rb-paper-strength: {{ section.settings.texture | divided_by: 100.0 }};
+  }
+  #shopify-section-{{ sid }} .rb-ac__meta {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 0 0 clamp(8px, 0.83vw, 16px);
+  }
+  #shopify-section-{{ sid }} .rb-ac__name {
+    margin: 0;
+    line-height: 1.02;
+  }
+  #shopify-section-{{ sid }} .rb-ac__name a { color: inherit; text-decoration: none; }
+  #shopify-section-{{ sid }} .rb-ac__name a:hover { text-decoration: underline; }
+  #shopify-section-{{ sid }} .rb-ac__bio {
+    margin-top: clamp(8px, 0.83vw, 16px);
+    font-size: var(--rb-fs-body-sm);
+  }
+  #shopify-section-{{ sid }} .rb-ac__bio p { margin: 0; }
+
+  /* the pill is a separate bar under the card, not inside it */
+  #shopify-section-{{ sid }} .rb-ac__cta {
+    display: flex;
+    width: 100%;
+    margin-top: clamp(6px, 0.63vw, 12px);
+    min-height: clamp(44px, 4.01vw, 77px);
+    border-radius: 999px;
+    font-family: var(--rb-serif);
+    font-size: clamp(16px, 1.35vw, 26px);
+    letter-spacing: 0;
+    text-transform: none;
+    font-weight: 400;
+    --rb-paper-strength: {{ section.settings.texture | divided_by: 100.0 }};
+  }
+
+  @media screen and (max-width: 989px) {
+    #shopify-section-{{ sid }} .rb-ac__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media screen and (max-width: 639px) {
+    #shopify-section-{{ sid }} .rb-ac__grid { grid-template-columns: 1fr; }
+  }
+
+  {%- for block in section.blocks -%}
+    {%- liquid
+      assign tone = block.settings.tone
+      if tone == 'auto'
+        assign pos = forloop.index0 | modulo: cols
+        assign m = pos | modulo: 2
+        if m == 1
+          assign tone = 'b'
+        else
+          assign tone = 'a'
+        endif
+      endif
+      if tone == 'a'
+        assign bg = section.settings.tone_a
+        assign fg = section.settings.tone_a_text
+        assign meta = section.settings.tone_a_meta
+      else
+        assign bg = section.settings.tone_b
+        assign fg = section.settings.tone_b_text
+        assign meta = section.settings.tone_b_meta
+      endif
+    -%}
+    #shopify-section-{{ sid }} [data-blk="{{ block.id }}"] .rb-ac__panel {
+      background: {{ bg }};
+      color: {{ fg }};
+    }
+    #shopify-section-{{ sid }} [data-blk="{{ block.id }}"] .rb-ac__meta { color: {{ meta }}; }
+    #shopify-section-{{ sid }} [data-blk="{{ block.id }}"] .rb-ac__cta {
+      background: {{ bg }};
+      color: {{ fg }};
+      border-color: {{ bg }};
+    }
+    #shopify-section-{{ sid }} [data-blk="{{ block.id }}"] .rb-ac__cta:hover {
+      background: {{ fg }};
+      color: {{ bg }};
+    }
+  {%- endfor -%}
+</style>
+
+<div class="rb-section rb-ac">
+  <div class="rb-ac__wrap">
+    <div class="rb-ac__grid">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign col = collections[block.settings.collection]
+          assign name = block.settings.name | default: col.title
+          assign art = block.settings.image | default: col.featured_image
+          assign url = block.settings.link | default: col.url
+          assign bio = block.settings.bio
+          if bio == blank
+            assign bio = col.description
+          endif
+        -%}
+        <article class="rb-ac__card" data-blk="{{ block.id }}" {{ block.shopify_attributes }}>
+          <div class="rb-ac__body">
+            <div class="rb-ac__media">
+              {%- if art != blank -%}
+                {{
+                  art
+                  | image_url: width: 1200
+                  | image_tag:
+                    widths: '380, 560, 800, 1200',
+                    sizes: '(max-width: 639px) 90vw, (max-width: 989px) 45vw, 30vw',
+                    loading: 'lazy',
+                    alt: ''
+                }}
+              {%- else -%}
+                {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
+              {%- endif -%}
+
+              {%- if block.settings.portrait != blank -%}
+                <div class="rb-inset rb-ac__portrait">
+                  {{
+                    block.settings.portrait
+                    | image_url: width: 600
+                    | image_tag:
+                      widths: '200, 320, 460, 600',
+                      sizes: '(max-width: 639px) 40vw, 14vw',
+                      loading: 'lazy',
+                      alt: name
+                  }}
+                </div>
+              {%- endif -%}
+            </div>
+
+            <div class="rb-ac__panel rb-paper">
+              {%- if block.settings.medium != blank or block.settings.place != blank -%}
+                <p class="rb-meta rb-ac__meta">
+                  <span>{{ block.settings.medium }}</span>
+                  <span>{{ block.settings.place }}</span>
+                </p>
+              {%- endif -%}
+
+              {%- if name != blank -%}
+                <h2 class="rb-name rb-ac__name"><a href="{{ url | default: '#' }}">{{ name }}</a></h2>
+              {%- endif -%}
+
+              {%- if bio != blank -%}
+                <div class="rb-body rb-ac__bio">{{ bio }}</div>
+              {%- endif -%}
+            </div>
+          </div>
+
+          {%- if block.settings.button_label != blank -%}
+            <a href="{{ url | default: '#' }}" class="rb-btn rb-ac__cta rb-paper">
+              {{- block.settings.button_label | escape -}}
+            </a>
+          {%- endif -%}
+        </article>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Rebrand artist cards",
+  "tag": "section",
+  "class": "rb-section-wrapper",
+  "max_blocks": 50,
+  "settings": [
+    { "type": "range", "id": "columns", "min": 2, "max": 4, "step": 1,
+      "default": 3, "label": "Columns" },
+    { "type": "range", "id": "grid_width", "min": 1200, "max": 1800, "step": 10,
+      "default": 1760, "unit": "px", "label": "Grid max width",
+      "info": "The comp runs this grid a little wider than the rest of the site." },
+    { "type": "text", "id": "image_ratio", "default": "555 / 402", "label": "Artwork ratio" },
+    { "type": "range", "id": "radius", "min": 0, "max": 48, "step": 1,
+      "default": 20, "unit": "px", "label": "Card corner radius" },
+    { "type": "header", "content": "Portrait inset" },
+    { "type": "range", "id": "portrait_w", "min": 15, "max": 70, "step": 1,
+      "default": 42, "unit": "%", "label": "Portrait width" },
+    { "type": "text", "id": "portrait_ratio", "default": "132 / 130", "label": "Portrait aspect ratio" },
+    { "type": "range", "id": "portrait_x", "min": 0, "max": 100, "step": 1,
+      "default": 49, "unit": "%", "label": "Portrait centre — horizontal" },
+    { "type": "range", "id": "portrait_y", "min": 0, "max": 100, "step": 1,
+      "default": 50, "unit": "%", "label": "Portrait centre — vertical" },
+    { "type": "header", "content": "Colour" },
+    { "type": "color", "id": "background", "default": "#ffffff", "label": "Background" },
+    { "type": "color", "id": "tone_a", "default": "#9da887", "label": "Tone A panel" },
+    { "type": "color", "id": "tone_a_text", "default": "#ffffff", "label": "Tone A text" },
+    { "type": "color", "id": "tone_a_meta", "default": "#f2f4ec", "label": "Tone A meta row" },
+    { "type": "color", "id": "tone_b", "default": "#505a43", "label": "Tone B panel" },
+    { "type": "color", "id": "tone_b_text", "default": "#dfe4d4", "label": "Tone B text" },
+    { "type": "color", "id": "tone_b_meta", "default": "#a5ad93", "label": "Tone B meta row" },
+    { "type": "range", "id": "texture", "min": 0, "max": 100, "step": 5,
+      "default": 100, "unit": "%", "label": "Crumpled paper texture" }
+  ],
+  "blocks": [
+    {
+      "type": "artist",
+      "name": "Artist",
+      "settings": [
+        { "type": "collection", "id": "collection", "label": "Artist collection",
+          "info": "Supplies the name, artwork, bio and link." },
+        { "type": "text", "id": "name", "label": "Name override" },
+        { "type": "text", "id": "medium", "default": "Watercolour Artist", "label": "Medium" },
+        { "type": "text", "id": "place", "default": "Hout Bay, Western Cape", "label": "Place" },
+        { "type": "richtext", "id": "bio", "label": "Bio override",
+          "info": "Blank uses the collection description." },
+        { "type": "image_picker", "id": "image", "label": "Artwork override" },
+        { "type": "image_picker", "id": "portrait", "label": "Portrait",
+          "info": "Rendered black and white, as in the design." },
+        { "type": "url", "id": "link", "label": "Link override" },
+        { "type": "text", "id": "button_label", "default": "See Collections", "label": "Button label" },
+        { "type": "select", "id": "tone", "label": "Panel colour", "default": "auto",
+          "options": [
+            { "value": "auto", "label": "Auto (darkens the middle column)" },
+            { "value": "a", "label": "Tone A" },
+            { "value": "b", "label": "Tone B" }
+          ] }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Rebrand artist cards",
+      "blocks": [
+        { "type": "artist" }, { "type": "artist" }, { "type": "artist" },
+        { "type": "artist" }, { "type": "artist" }, { "type": "artist" }
+      ]
+    }
+  ]
+}
+{% endschema %}

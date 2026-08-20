@@ -1,0 +1,164 @@
+{% comment %}
+  Rebrand class detail — the band under the class hero: an IvyPresto sentence
+  on the left, a hairline rule, then the labelled notes and a booking pill on
+  the right.
+
+  Italic runs in the sentence render coral, matching the "A guided 2 hour
+  Watercolour session." treatment in the comp.
+
+  Notes are blocks so a class can carry Description and Costs, or more, in the
+  order the client wants. Leaving a block's body blank on a product page falls
+  back to the product description for the block labelled Description.
+{% endcomment %}
+
+{{ 'saf-rebrand.css' | asset_url | stylesheet_tag }}
+
+{%- assign sid = section.id -%}
+
+<style>
+  #shopify-section-{{ sid }} .rb-cd {
+    background: {{ section.settings.background }};
+    padding-block:
+      clamp(40px, 5.21vw, 100px)
+      clamp(48px, 7.29vw, 140px);
+  }
+  #shopify-section-{{ sid }} .rb-cd__grid {
+    display: grid;
+    grid-template-columns: minmax(0, {{ section.settings.heading_width }}fr) minmax(0, {{ 100 | minus: section.settings.heading_width }}fr);
+    gap: clamp(24px, 3.65vw, 70px);
+    align-items: start;
+  }
+  #shopify-section-{{ sid }} .rb-cd__heading {
+    color: {{ section.settings.heading_color }};
+    font-size: var(--rb-fs-name);
+    line-height: 1.12;
+    /* the comp indents the sentence rather than running it to the gutter */
+    padding-left: clamp(0px, 5.2vw, 100px);
+  }
+  #shopify-section-{{ sid }} .rb-cd__heading p { margin: 0; }
+  #shopify-section-{{ sid }} .rb-cd__heading em,
+  #shopify-section-{{ sid }} .rb-cd__heading i {
+    font-style: italic;
+    color: {{ section.settings.accent_color }};
+  }
+
+  #shopify-section-{{ sid }} .rb-cd__notes {
+    box-sizing: border-box;
+    padding-left: clamp(20px, 4.17vw, 80px);
+    {% if section.settings.show_rule %}border-left: 1px solid {{ section.settings.rule_color }};{% endif %}
+    align-self: stretch;
+    min-height: clamp(120px, 10.4vw, 200px);
+  }
+  #shopify-section-{{ sid }} .rb-cd__note + .rb-cd__note { margin-top: clamp(14px, 1.46vw, 28px); }
+  #shopify-section-{{ sid }} .rb-cd__label {
+    margin: 0;
+    font-family: var(--rb-sans);
+    font-size: var(--rb-fs-body-sm);
+    line-height: 1.4;
+    color: {{ section.settings.label_color }};
+  }
+  #shopify-section-{{ sid }} .rb-cd__body {
+    font-size: var(--rb-fs-body-sm);
+    color: {{ section.settings.body_color }};
+  }
+  #shopify-section-{{ sid }} .rb-cd__body p { margin: 0; }
+  #shopify-section-{{ sid }} .rb-cd__cta { margin-top: clamp(16px, 1.72vw, 33px); }
+
+  @media screen and (max-width: 749px) {
+    #shopify-section-{{ sid }} .rb-cd__grid { grid-template-columns: 1fr; }
+    #shopify-section-{{ sid }} .rb-cd__heading { padding-left: 0; }
+    #shopify-section-{{ sid }} .rb-cd__notes {
+      padding-left: 0;
+      border-left: 0;
+      min-height: 0;
+    }
+  }
+</style>
+
+<div class="rb-section rb-cd" id="{{ section.settings.anchor | default: 'booking' | handle }}">
+  <div class="rb-container rb-cd__grid">
+    {%- if section.settings.heading != blank -%}
+      <div class="rb-display rb-cd__heading">{{ section.settings.heading }}</div>
+    {%- else -%}
+      <div></div>
+    {%- endif -%}
+
+    <div class="rb-cd__notes">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign body = block.settings.body
+          if body == blank and block.settings.use_product_description
+            assign body = product.description
+          endif
+        -%}
+        {%- if block.settings.label != blank or body != blank -%}
+          <div class="rb-cd__note" {{ block.shopify_attributes }}>
+            {%- if block.settings.label != blank -%}
+              <p class="rb-cd__label">{{ block.settings.label | escape }}</p>
+            {%- endif -%}
+            {%- if body != blank -%}
+              <div class="rb-body rb-cd__body">{{ body }}</div>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+
+      {%- if section.settings.button_label != blank -%}
+        <a
+          href="{{ section.settings.button_link | default: '#' }}"
+          class="rb-btn rb-btn--serif rb-btn--outline rb-cd__cta"
+        >{{ section.settings.button_label | escape }}</a>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Rebrand class detail",
+  "tag": "section",
+  "class": "rb-section-wrapper",
+  "max_blocks": 6,
+  "settings": [
+    { "type": "richtext", "id": "heading",
+      "default": "<p>A guided <em>2 hour Watercolour</em> session.</p>",
+      "label": "Statement",
+      "info": "Italic runs render coral, as in the design." },
+    { "type": "text", "id": "anchor", "default": "booking", "label": "Anchor id",
+      "info": "The class hero's Book Now button jumps here." },
+    { "type": "header", "content": "Button" },
+    { "type": "text", "id": "button_label", "default": "Make a Booking", "label": "Button label" },
+    { "type": "url", "id": "button_link", "label": "Button link" },
+    { "type": "header", "content": "Layout" },
+    { "type": "range", "id": "heading_width", "min": 30, "max": 70, "step": 1,
+      "default": 46, "unit": "%", "label": "Statement share of the row" },
+    { "type": "checkbox", "id": "show_rule", "default": true, "label": "Show dividing rule" },
+    { "type": "header", "content": "Colour" },
+    { "type": "color", "id": "background", "default": "#ffffff", "label": "Background" },
+    { "type": "color", "id": "heading_color", "default": "#1e1e1e", "label": "Statement" },
+    { "type": "color", "id": "accent_color", "default": "#e07468", "label": "Italic accent" },
+    { "type": "color", "id": "label_color", "default": "#1e1e1e", "label": "Note label" },
+    { "type": "color", "id": "body_color", "default": "#1e1e1e", "label": "Note body" },
+    { "type": "color", "id": "rule_color", "default": "#c9c9c9", "label": "Rule" }
+  ],
+  "blocks": [
+    {
+      "type": "note",
+      "name": "Note",
+      "settings": [
+        { "type": "text", "id": "label", "default": "Description:", "label": "Label" },
+        { "type": "richtext", "id": "body", "label": "Body" },
+        { "type": "checkbox", "id": "use_product_description", "default": false,
+          "label": "Fall back to the product description",
+          "info": "Only useful on a product template." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Rebrand class detail",
+      "blocks": [{ "type": "note" }, { "type": "note" }]
+    }
+  ]
+}
+{% endschema %}

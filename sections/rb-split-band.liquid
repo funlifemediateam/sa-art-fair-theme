@@ -1,0 +1,206 @@
+{% comment %}
+  Rebrand split band — a coloured sheet of crumpled paper beside a photograph,
+  running edge to edge.
+
+  Two of these in the comps:
+    Store  — sage panel, centred IvyPresto sentence, image right.
+    Studio — coral panel, "A Creative Space" in Afacad Bold with the next two
+             lines in cherry IvyPresto italic, image right.
+
+  So the heading is a richtext and the panel picks which family carries it;
+  the italic/roman mix inside a line is done with <em> the way the rest of the
+  rebrand sections do it.
+{% endcomment %}
+
+{{ 'saf-rebrand.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign sid = section.id
+  assign img = section.settings.image
+  assign panel_pct = section.settings.panel_width
+  assign media_pct = 100 | minus: panel_pct
+-%}
+
+<style>
+  #shopify-section-{{ sid }} .rb-split {
+    display: grid;
+    grid-template-columns: {{ panel_pct }}fr {{ media_pct }}fr;
+    align-items: stretch;
+    {% if section.settings.media_side == 'left' %}direction: rtl;{% endif %}
+  }
+  {%- if section.settings.media_side == 'left' -%}
+    /* the grid is flipped with direction, so put the content back to ltr */
+    #shopify-section-{{ sid }} .rb-split > * { direction: ltr; }
+  {%- endif -%}
+
+  #shopify-section-{{ sid }} .rb-split__panel {
+    background: {{ section.settings.panel_color }};
+    color: {{ section.settings.text_color }};
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: {% if section.settings.align == 'center' %}center{% else %}flex-start{% endif %};
+    text-align: {{ section.settings.align }};
+    box-sizing: border-box;
+    padding:
+      clamp(40px, 5.21vw, 100px)
+      clamp(24px, 4.17vw, 80px);
+    --rb-paper-strength: {{ section.settings.texture | divided_by: 100.0 }};
+  }
+  #shopify-section-{{ sid }} .rb-split__heading {
+    max-width: {{ section.settings.heading_width }}px;
+  }
+  #shopify-section-{{ sid }} .rb-split__heading p { margin: 0; }
+  #shopify-section-{{ sid }} .rb-split__heading p + p { margin-top: 0.1em; }
+  #shopify-section-{{ sid }} .rb-split__heading em,
+  #shopify-section-{{ sid }} .rb-split__heading i {
+    font-family: var(--rb-serif);
+    font-style: italic;
+    font-weight: 400;
+    color: {{ section.settings.accent_color }};
+  }
+
+  {%- if section.settings.heading_font == 'sans' -%}
+    #shopify-section-{{ sid }} .rb-split__heading {
+      font-family: var(--rb-sans);
+      font-weight: 700;
+      font-size: var(--rb-fs-name);
+      line-height: 1.12;
+      letter-spacing: -0.01em;
+    }
+    /* the comp sets the italic serif runs a touch larger than the sans line */
+    #shopify-section-{{ sid }} .rb-split__heading em,
+    #shopify-section-{{ sid }} .rb-split__heading i { font-size: 1.16em; }
+  {%- endif -%}
+
+  #shopify-section-{{ sid }} .rb-split__body {
+    max-width: 46ch;
+    margin-top: clamp(14px, 1.46vw, 28px);
+    color: {{ section.settings.text_color }};
+  }
+  #shopify-section-{{ sid }} .rb-split__cta { margin-top: clamp(18px, 1.98vw, 38px); }
+
+  #shopify-section-{{ sid }} .rb-split__media {
+    /* a definite width: aspect-ratio alone would resolve width from height
+       and burst the grid track (see .rb-path in rb-two-paths) */
+    width: 100%;
+    min-height: clamp({{ section.settings.min_height | divided_by: 2 }}px, {{ section.settings.min_height | times: 100.0 | divided_by: 1920.0 }}vw, {{ section.settings.min_height }}px);
+  }
+  #shopify-section-{{ sid }} .rb-split__media img,
+  #shopify-section-{{ sid }} .rb-split__media svg {
+    position: absolute;
+    inset: 0;
+    object-position: {{ section.settings.focal_x }}% {{ section.settings.focal_y }}%;
+  }
+
+  @media screen and (max-width: 749px) {
+    #shopify-section-{{ sid }} .rb-split {
+      grid-template-columns: 1fr;
+      direction: ltr;
+    }
+    #shopify-section-{{ sid }} .rb-split__media {
+      min-height: 0;
+      aspect-ratio: {{ section.settings.mobile_ratio }};
+      {% if section.settings.media_side == 'left' %}grid-row: 1;{% endif %}
+    }
+    #shopify-section-{{ sid }} .rb-split__panel { padding-block: 48px; }
+  }
+</style>
+
+<div class="rb-section rb-bleed">
+  <div class="rb-split">
+    <div class="rb-split__panel rb-paper">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="rb-caps rb-split__eyebrow">{{ section.settings.eyebrow }}</p>
+      {%- endif -%}
+
+      {%- if section.settings.heading != blank -%}
+        <div class="rb-display rb-split__heading">{{ section.settings.heading }}</div>
+      {%- endif -%}
+
+      {%- if section.settings.body != blank -%}
+        <div class="rb-body rb-split__body">{{ section.settings.body }}</div>
+      {%- endif -%}
+
+      {%- if section.settings.button_label != blank -%}
+        <a
+          href="{{ section.settings.button_link | default: '#' }}"
+          class="rb-btn rb-btn--serif rb-btn--ghost rb-split__cta"
+        >{{ section.settings.button_label | escape }}</a>
+      {%- endif -%}
+    </div>
+
+    <div class="rb-media rb-split__media">
+      {%- if img != blank -%}
+        {{
+          img
+          | image_url: width: 1920
+          | image_tag:
+            widths: '480, 700, 960, 1400, 1920',
+            sizes: '(max-width: 749px) 100vw, 50vw',
+            loading: 'lazy',
+            alt: img.alt | default: section.settings.eyebrow
+        }}
+      {%- else -%}
+        {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Rebrand split band",
+  "tag": "section",
+  "class": "rb-section-wrapper",
+  "settings": [
+    { "type": "paragraph",
+      "content": "A coloured paper panel next to a photograph. Used for the Store's sage statement and the Studio's 'A Creative Space' band." },
+    { "type": "header", "content": "Panel" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow",
+      "info": "Uppercase. Wrap words in <strong> to colour them cherry." },
+    { "type": "richtext", "id": "heading",
+      "default": "<p>Lorem ipsum dolor sit amet, consectetur <em>adipiscing elit</em>, sed do eiusmod tempor.</p>",
+      "label": "Heading",
+      "info": "Italic runs render in IvyPresto italic in the accent colour, as in the design." },
+    { "type": "select", "id": "heading_font", "label": "Heading family", "default": "serif",
+      "options": [
+        { "value": "serif", "label": "IvyPresto (Store panel)" },
+        { "value": "sans", "label": "Afacad Bold (Studio panel)" }
+      ] },
+    { "type": "range", "id": "heading_width", "min": 260, "max": 1000, "step": 10,
+      "default": 560, "unit": "px", "label": "Heading max width" },
+    { "type": "richtext", "id": "body", "label": "Body" },
+    { "type": "select", "id": "align", "label": "Panel alignment", "default": "center",
+      "options": [
+        { "value": "center", "label": "Centred (Store)" },
+        { "value": "left", "label": "Left (Studio)" }
+      ] },
+    { "type": "text", "id": "button_label", "label": "Button label" },
+    { "type": "url", "id": "button_link", "label": "Button link" },
+    { "type": "header", "content": "Colour" },
+    { "type": "color", "id": "panel_color", "default": "#a2ad8e", "label": "Panel colour" },
+    { "type": "color", "id": "text_color", "default": "#ffffff", "label": "Panel text" },
+    { "type": "color", "id": "accent_color", "default": "#ffffff", "label": "Italic accent" },
+    { "type": "range", "id": "texture", "min": 0, "max": 100, "step": 5,
+      "default": 100, "unit": "%", "label": "Crumpled paper texture" },
+    { "type": "header", "content": "Image" },
+    { "type": "image_picker", "id": "image", "label": "Image" },
+    { "type": "select", "id": "media_side", "label": "Image side", "default": "right",
+      "options": [
+        { "value": "right", "label": "Right" },
+        { "value": "left", "label": "Left" }
+      ] },
+    { "type": "range", "id": "panel_width", "min": 30, "max": 70, "step": 1,
+      "default": 50, "unit": "%", "label": "Panel share of the row" },
+    { "type": "range", "id": "min_height", "min": 240, "max": 800, "step": 10,
+      "default": 610, "unit": "px", "label": "Band height at 1920px wide" },
+    { "type": "text", "id": "mobile_ratio", "default": "4 / 3", "label": "Image ratio on mobile" },
+    { "type": "range", "id": "focal_x", "min": 0, "max": 100, "step": 1,
+      "default": 50, "unit": "%", "label": "Image focal point — horizontal" },
+    { "type": "range", "id": "focal_y", "min": 0, "max": 100, "step": 1,
+      "default": 50, "unit": "%", "label": "Image focal point — vertical" }
+  ],
+  "presets": [{ "name": "Rebrand split band" }]
+}
+{% endschema %}

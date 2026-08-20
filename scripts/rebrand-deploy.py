@@ -34,8 +34,23 @@ API = f"https://{STORE}/admin/api/2024-10/themes/{THEME}/assets.json"
 RENAMES = {
     "sections/rb-header-group.json": "sections/header-group.json",
     "sections/rb-footer-group.json": "sections/footer-group.json",
-    "templates/rb-index.json": "templates/index.json",
 }
+
+
+def remote_key(path):
+    """Map a repo path to the key it takes on the theme.
+
+    Every rebrand template is kept as templates/rb-<name> in the repo and
+    renamed on the way up, so the repo keeps the LIVE theme's templates
+    untouched while the draft theme gets the rebrand versions at the exact
+    filenames Shopify routes to (templates/index.json, collection.gallery.json,
+    product.class.json and so on).
+    """
+    if path in RENAMES:
+        return RENAMES[path]
+    if path.startswith("templates/rb-"):
+        return "templates/" + path[len("templates/rb-"):]
+    return path
 
 BINARY_EXT = (".png", ".jpg", ".jpeg", ".gif", ".woff", ".woff2", ".ttf", ".otf", ".ico", ".webp")
 
@@ -61,7 +76,7 @@ def tracked():
     for f in out:
         if f in RENAMES:
             keep.append(f)
-        elif f.startswith(("sections/rb-", "snippets/rb-")):
+        elif f.startswith(("sections/rb-", "snippets/rb-", "templates/rb-")):
             keep.append(f)
         elif f.startswith("assets/saf-"):
             keep.append(f)
@@ -75,7 +90,7 @@ def remote_checksums():
 
 
 def push(path):
-    key = RENAMES.get(path, path)
+    key = remote_key(path)
     if path.endswith(BINARY_EXT):
         with open(path, "rb") as f:
             asset = {"key": key, "attachment": base64.b64encode(f.read()).decode()}
@@ -96,7 +111,7 @@ def main():
     remote = remote_checksums()
     todo = []
     for f in files:
-        key = RENAMES.get(f, f)
+        key = remote_key(f)
         with open(f, "rb") as fh:
             digest = hashlib.md5(fh.read()).hexdigest()
         if remote.get(key) != digest:
@@ -126,7 +141,7 @@ def main():
     # verify everything landed
     time.sleep(2)
     after = remote_checksums()
-    bad = [RENAMES.get(f, f) for f in todo if RENAMES.get(f, f) not in after]
+    bad = [remote_key(f) for f in todo if remote_key(f) not in after]
     if bad:
         sys.exit(f"MISSING after push: {bad}")
     print(f"verified {len(todo)} file(s) present on theme {THEME}")

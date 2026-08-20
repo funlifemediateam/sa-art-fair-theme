@@ -1,5 +1,6 @@
 {% comment %}
-  Rebrand webfonts (Hanre / "Art Fair SA Rebrand" Figma, 2026-08).
+  Rebrand webfonts + the handful of global tokens that need an asset_url
+  (Hanre / "Art Fair SA Rebrand" Figma, 2026-08).
 
   Self-hosted because none of the three families are in the Shopify font
   library. Declared inline rather than in a .css asset so the faces can be
@@ -17,6 +18,14 @@
       href="{{ 'saf-afacad-regular.woff2' | asset_url }}">
 
 {% style %}
+  /* The crumpled-paper overlay every coloured panel blends over. It lives
+     here rather than in saf-rebrand.css because a stylesheet asset cannot
+     resolve asset_url. See .rb-paper in saf-rebrand.css. */
+  :root {
+    --rb-paper-src: url('{{ 'saf-paper-crumple.jpg' | asset_url }}');
+    --rb-sand-src: url('{{ 'saf-texture-sand.jpg' | asset_url }}');
+  }
+
   @font-face {
     font-family: 'IvyPresto Display';
     src: url('{{ 'saf-ivypresto-light.woff2' | asset_url }}') format('woff2');
