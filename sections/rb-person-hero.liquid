@@ -18,9 +18,109 @@
 {%- liquid
   assign sid = section.id
   assign name = section.settings.name | default: collection.title
-  assign art = section.settings.image | default: collection.featured_image
+
+  comment
+    The comp shows a row of mediums under a teacher's name. The catalogue
+    already carries them as medium-* product tags, so an empty field reads
+    them off the collection rather than leaving the row blank or, worse,
+    repeating one person's mediums on everyone else's page.
+  endcomment
+  assign tag_source = section.settings.tags
+  if tag_source == blank
+    assign mediums = ''
+    for t in collection.all_tags
+      assign lower = t | downcase
+      if lower contains 'medium-'
+        assign label = lower | remove_first: 'medium-' | replace: '-', ' ' | capitalize
+        unless mediums contains label
+          assign mediums = mediums | append: ',' | append: label
+        endunless
+      endif
+    endfor
+    assign tag_source = mediums | remove_first: ','
+  endif
+  assign tags = tag_source | split: ','
+
+  comment
+    The design pairs one of the person's works, running off the right edge,
+    with their black-and-white portrait set into it. Both come from the
+    collection so that forty person pages are right from one shape:
+
+      portrait — the collection's own image, which in this store is the photo
+                 of the person;
+      artwork  — the first piece in the collection that is not that same photo.
+
+    A collection with nothing but the portrait falls back to showing it large
+    with no inset, because the same picture twice reads as a mistake.
+  endcomment
+  assign art = section.settings.image
   assign portrait = section.settings.portrait
-  assign tags = section.settings.tags | split: ','
+  if portrait == blank
+    assign portrait = collection.image
+  endif
+  if art == blank
+    for item in collection.products limit: 8
+      if item.featured_image != blank and item.featured_image != portrait
+        assign art = item.featured_image
+        break
+      endif
+    endfor
+  endif
+  if art == blank
+    assign art = portrait
+    assign portrait = blank
+  endif
+
+  comment
+    "See Portfolio" on a teacher page belongs on that person's ARTIST
+    collection. Someone who both teaches and exhibits has two collections
+    sharing one title — "Susan Orpen" as susan-orpen-1 (teacher) and
+    susan-orpen (artist).
+
+    Handleizing the title to find the twin looked obvious and was wrong:
+    "Zara-Leigh Farinha" handleizes to zara-leigh-farinha, which is a stale
+    collection, while her real artist page is zara-leigh. So the twin is found
+    through the work instead — the two collections share products, so the
+    first collection on one of this person's pieces that carries the same
+    title under a different handle is the one wanted.
+
+    A teacher who does not exhibit resolves to nothing and the button is
+    dropped rather than left pointing at "#".
+  endcomment
+  assign portfolio_url = section.settings.button_link
+  if portfolio_url == blank and collection != blank
+    for item in collection.products limit: 4
+      for sibling in item.collections
+        if sibling.handle != collection.handle and sibling.title == collection.title
+          assign portfolio_url = sibling.url
+          break
+        endif
+      endfor
+      if portfolio_url != blank
+        break
+      endif
+    endfor
+  endif
+  assign show_portfolio = false
+  if section.settings.button_label != blank and portfolio_url != blank
+    assign show_portfolio = true
+  endif
+
+  comment
+    The store already keeps per-person socials in the booking_app.socials shop
+    metafield, keyed by the handleized display name — the same key
+    snippets/social-links.liquid uses. Reading it here means an artist or
+    teacher page shows the right Instagram without anyone filling in 40
+    templates by hand.
+  endcomment
+  assign social_url = section.settings.social_url
+  if social_url == blank and name != blank
+    assign social_key = name | handleize
+    assign person_socials = shop.metafields.booking_app.socials.value[social_key]
+    if person_socials != blank
+      assign social_url = person_socials.instagram
+    endif
+  endif
 -%}
 
 <style>
@@ -139,17 +239,16 @@
         </ul>
       {%- endif -%}
 
-      {%- if section.settings.social_url != blank or section.settings.button_label != blank -%}
+      {%- if social_url != blank or show_portfolio -%}
         <div class="rb-ph__actions">
-          {%- if section.settings.social_url != blank -%}
-            <a href="{{ section.settings.social_url }}" class="rb-ph__social"
+          {%- if social_url != blank -%}
+            <a href="{{ social_url }}" class="rb-ph__social"
                target="_blank" rel="noopener" aria-label="{{ name | escape }} on Instagram">
               <img src="{{ 'saf-icon-instagram.png' | asset_url }}" alt="" width="60" height="60" loading="lazy">
             </a>
           {%- endif -%}
-          {%- if section.settings.button_label != blank -%}
-            <a href="{{ section.settings.button_link | default: '#' }}"
-               class="rb-btn rb-btn--plain rb-btn--outline">
+          {%- if show_portfolio -%}
+            <a href="{{ portfolio_url }}" class="rb-btn rb-btn--plain rb-btn--outline">
               {{- section.settings.button_label | escape -}}
             </a>
           {%- endif -%}
@@ -202,12 +301,14 @@
     { "type": "richtext", "id": "script", "label": "Script line",
       "info": "Cedarville Cursive, as on the artist page." },
     { "type": "text", "id": "tags", "label": "Tags",
-      "info": "Comma separated, e.g. Abstract, Watercolour, Photography." },
+      "info": "Comma separated, e.g. Abstract, Watercolour, Photography. Blank reads the mediums off this collection's own artwork tags." },
     { "type": "header", "content": "Actions" },
-    { "type": "url", "id": "social_url", "label": "Instagram link" },
+    { "type": "url", "id": "social_url", "label": "Instagram link",
+      "info": "Blank uses the Instagram already saved for this person in the admin app." },
     { "type": "text", "id": "button_label", "label": "Button label",
       "info": "The teacher page uses 'See Portfolio'." },
-    { "type": "url", "id": "button_link", "label": "Button link" },
+    { "type": "url", "id": "button_link", "label": "Button link",
+      "info": "Blank looks for a collection with the same title — a teacher's own artist page. The button is hidden when there is none." },
     { "type": "header", "content": "Layout" },
     { "type": "select", "id": "align", "label": "Text alignment", "default": "left",
       "options": [
@@ -223,14 +324,14 @@
     { "type": "color", "id": "tag_color", "default": "#0c3642", "label": "Tags" },
     { "type": "header", "content": "Artwork" },
     { "type": "image_picker", "id": "image", "label": "Artwork",
-      "info": "Blank uses the collection image." },
+      "info": "Blank uses the first piece in the collection." },
     { "type": "range", "id": "focal_x", "min": 0, "max": 100, "step": 1,
       "default": 50, "unit": "%", "label": "Artwork focal point — horizontal" },
     { "type": "range", "id": "focal_y", "min": 0, "max": 100, "step": 1,
       "default": 50, "unit": "%", "label": "Artwork focal point — vertical" },
     { "type": "header", "content": "Portrait inset" },
     { "type": "image_picker", "id": "portrait", "label": "Portrait",
-      "info": "Rendered black and white, as in the design." },
+      "info": "Blank uses the collection's own image, which is the photo of the person. Rendered black and white, as in the design." },
     { "type": "range", "id": "portrait_w", "min": 15, "max": 70, "step": 1,
       "default": 40, "unit": "%", "label": "Portrait width" },
     { "type": "text", "id": "portrait_ratio", "default": "1 / 1", "label": "Portrait aspect ratio" },

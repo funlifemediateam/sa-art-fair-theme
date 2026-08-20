@@ -60,7 +60,7 @@
             "heading": "Make Art",
             "body": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>",
             "button_label": "Visit our studio",
-            "button_link": "shopify://collections/classes-workshops",
+            "button_link": "/pages/studio",
             "text_color": "#b00e3f",
             "button_bg": "#b00e3f",
             "button_text": "#ffffff",

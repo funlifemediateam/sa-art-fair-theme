@@ -15,6 +15,16 @@
   assign sid = section.id
   assign img = section.settings.image
 
+  comment
+    One template serves every unsuffixed collection, so the page-title lockup
+    has to be able to name the page it is actually on. Off by default: the home
+    page's heading is deliberately empty and the mark carries the hero alone.
+  endcomment
+  assign heading = section.settings.heading
+  if heading == blank and section.settings.auto_heading
+    assign heading = collection.title | default: page.title
+  endif
+
   case section.settings.mark
     when 'store'
       assign mark_src = 'saf-mark-circle-store.png'
@@ -134,11 +144,11 @@
         >
       {%- endif -%}
 
-      {%- if section.settings.heading != blank -%}
+      {%- if heading != blank -%}
         {%- if section.settings.heading_style == 'page_title' -%}
-          <h1 class="rb-page-title rb-hero__heading">{{ section.settings.heading }}</h1>
+          <h1 class="rb-page-title rb-hero__heading">{{ heading }}</h1>
         {%- else -%}
-          <div class="rb-display rb-hero__heading">{{ section.settings.heading }}</div>
+          <div class="rb-display rb-hero__heading">{{ heading }}</div>
         {%- endif -%}
       {%- endif -%}
 
@@ -197,6 +207,9 @@
       "default": 340, "unit": "px", "label": "Mark width at 1920px wide" },
     { "type": "inline_richtext", "id": "heading", "label": "Heading",
       "info": "Comp leaves this empty on the home page — the mark carries the hero on its own." },
+    { "type": "checkbox", "id": "auto_heading", "default": false,
+      "label": "Use the collection or page name when the heading is empty",
+      "info": "For the shared collection template, so each collection titles its own hero." },
     { "type": "select", "id": "heading_style", "label": "Heading style", "default": "statement",
       "options": [
         { "value": "statement", "label": "Statement sentence (home page)" },

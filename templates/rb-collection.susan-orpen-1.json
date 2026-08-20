@@ -5,7 +5,7 @@
       "settings": {
         "name": "",
         "script": "",
-        "tags": "Abstract, Watercolour, Photography",
+        "tags": "",
         "social_url": "",
         "button_label": "See Portfolio",
         "button_link": "",
@@ -15,10 +15,10 @@
         "name_color": "#e07468",
         "script_color": "#1e1e1e",
         "tag_color": "#0c3642",
-        "image": "shopify://shop_images/saf-class-artwork.jpg",
+        "image": "",
         "focal_x": 50,
         "focal_y": 50,
-        "portrait": "shopify://shop_images/saf-portrait-kerri.jpg",
+        "portrait": "",
         "portrait_w": 40,
         "portrait_ratio": "382 / 313",
         "portrait_x": 54,
@@ -28,25 +28,29 @@
     "statement": {
       "type": "rb-script-statement",
       "settings": {
-        "heading": "<p>Lorem ipsum dolor sit amet, <em>consectetur adipiscing elit.</em></p>",
-        "body": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>",
+        "heading": "<p>Teaching is <em>making, together.</em></p>",
+        "body": "",
+        "use_collection_description": true,
         "background": "#ffffff",
         "heading_color": "#1e1e1e",
         "accent_color": "#e07468",
         "body_color": "#1e1e1e",
         "heading_width": 900,
         "body_width": 640,
-        "padding_top": 190,
-        "padding_bottom": 210
+        "padding_top": 150,
+        "padding_bottom": 160
       }
     },
     "classes": {
       "type": "rb-class-cards",
       "settings": {
-        "collection": "classes",
-        "count": 6,
+        "collection": "",
+        "count": 12,
+        "only_classes": true,
         "eyebrow": "<p>View classes by [teacher]</p>",
-        "intro": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.</p>",
+        "eyebrow_name": "",
+        "teacher_filter": "",
+        "intro": "",
         "intro_color": "#1e1e1e",
         "by_prefix": "By",
         "show_excerpt": true,
@@ -62,8 +66,8 @@
         "tone_b": "#b00e3f",
         "tone_b_text": "#ffffff",
         "texture": 100,
-        "eyebrow_name": "Susan",
-        "teacher_filter": "Susan Orpen"
+        "more_label": "Meet our teachers",
+        "more_link": "/pages/the-team"
       }
     }
   },

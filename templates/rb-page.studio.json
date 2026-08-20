@@ -197,7 +197,7 @@
           "type": "person",
           "settings": {
             "collection": "susan-orpen-1",
-            "name": "Susan Orpen",
+            "name": "",
             "role": "Art Classes",
             "button_label": "Learn More",
             "tone": "auto"
@@ -207,7 +207,7 @@
           "type": "person",
           "settings": {
             "collection": "shelley-cowling-1",
-            "name": "Shelley Cowling",
+            "name": "",
             "role": "Art Classes",
             "button_label": "Learn More",
             "tone": "auto"
@@ -217,7 +217,7 @@
           "type": "person",
           "settings": {
             "collection": "jacqui-sundelson-1",
-            "name": "Jacqui Sundelson",
+            "name": "",
             "role": "Art Classes",
             "button_label": "Learn More",
             "tone": "auto"
@@ -227,7 +227,7 @@
           "type": "person",
           "settings": {
             "collection": "janice-grant-1",
-            "name": "Janice Grant",
+            "name": "",
             "role": "Art Classes",
             "button_label": "Learn More",
             "tone": "auto"
@@ -237,7 +237,7 @@
           "type": "person",
           "settings": {
             "collection": "zara-leigh-farinha-1",
-            "name": "Zara-Leigh Farinha",
+            "name": "",
             "role": "Art Classes",
             "button_label": "Learn More",
             "tone": "auto"
@@ -247,7 +247,7 @@
           "type": "person",
           "settings": {
             "collection": "teacher-1",
-            "name": "Teacher 1",
+            "name": "",
             "role": "Art Classes",
             "button_label": "Learn More",
             "tone": "auto"
@@ -257,7 +257,7 @@
           "type": "person",
           "settings": {
             "collection": "teacher-2",
-            "name": "Teacher 2",
+            "name": "",
             "role": "Art Classes",
             "button_label": "Learn More",
             "tone": "auto"
@@ -267,7 +267,7 @@
           "type": "person",
           "settings": {
             "collection": "teacher-3",
-            "name": "Teacher 3",
+            "name": "",
             "role": "Art Classes",
             "button_label": "Learn More",
             "tone": "auto"
@@ -295,7 +295,9 @@
         "tone_a_text": "#ffffff",
         "tone_b": "#e07468",
         "tone_b_text": "#ffffff",
-        "texture": 100
+        "texture": 100,
+        "more_label": "Meet all our teachers",
+        "more_link": "/pages/the-team"
       }
     }
   },

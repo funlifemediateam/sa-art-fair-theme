@@ -13,12 +13,92 @@
 
 {{ 'saf-rebrand.css' | asset_url | stylesheet_tag }}
 
+{%- capture rb_teacher_handle -%}
+  {%- if section.settings.source == 'product_teacher' -%}
+    {%- render 'rb-teacher-handle', product: product -%}
+  {%- endif -%}
+{%- endcapture -%}
+
 {%- liquid
   assign sid = section.id
-  assign art = section.settings.image
-  assign portrait = section.settings.portrait
   assign panel_pct = section.settings.panel_width
   assign media_pct = 100 | minus: panel_pct
+
+  assign name = section.settings.name
+  assign body = section.settings.body
+  assign art = section.settings.image
+  assign portrait = section.settings.portrait
+  assign link_a = section.settings.button_a_link
+  assign link_b = section.settings.button_b_link
+
+  comment
+    "Product teacher" mode is what lets ONE class template serve every class:
+    the band names the teacher of the class being viewed instead of whoever
+    was typed into the template. Anything still filled in on the section wins,
+    so a one-off page can override any single field.
+  endcomment
+  assign teacher_handle = rb_teacher_handle | strip
+  if section.settings.source == 'product_teacher' and name == blank
+    comment
+      Set before the collection lookup: a class whose teacher has no
+      collection of their own still has to name them rather than render a
+      nameless panel.
+    endcomment
+    assign name = product.metafields.booking.instructor_name
+  endif
+
+  if teacher_handle != blank
+    assign teacher_col = collections[teacher_handle]
+
+    if section.settings.name == blank and teacher_col.title != blank
+      assign name = teacher_col.title
+    endif
+    if body == blank
+      assign body = teacher_col.description
+    endif
+    comment
+      The design pairs an artwork background with a portrait inset. The class's
+      own image is the artwork; the teacher collection's image is the person.
+      Never let the same picture fill both — it reads as a mistake.
+    endcomment
+    if portrait == blank
+      assign portrait = teacher_col.image
+    endif
+    if art == blank
+      assign art = product.featured_image
+      if art == portrait
+        assign art = blank
+      endif
+    endif
+    if link_a == blank
+      assign link_a = teacher_col.url
+    endif
+
+    comment
+      Button B is "See Artist Page" — the same person's artist collection.
+      It shares this class product, and shares the teacher collection's title
+      under a different handle. Matching on the shared product rather than on
+      a handleized title: see snippets/rb-teacher-handle.liquid and the same
+      note in rb-person-hero for why the handle guess is not safe here.
+    endcomment
+    if link_b == blank
+      for sibling in product.collections
+        if sibling.handle != teacher_col.handle and sibling.title == teacher_col.title
+          assign link_b = sibling.url
+          break
+        endif
+      endfor
+    endif
+  endif
+
+  assign show_a = false
+  if section.settings.button_a_label != blank and link_a != blank
+    assign show_a = true
+  endif
+  assign show_b = false
+  if section.settings.button_b_label != blank and link_b != blank
+    assign show_b = true
+  endif
 -%}
 
 <style>
@@ -125,23 +205,23 @@
         <p class="rb-fp__eyebrow">{{ section.settings.eyebrow | escape }}</p>
       {%- endif -%}
 
-      {%- if section.settings.name != blank -%}
-        <h2 class="rb-name rb-fp__name">{{ section.settings.name | escape }}</h2>
+      {%- if name != blank -%}
+        <h2 class="rb-name rb-fp__name">{{ name | escape }}</h2>
       {%- endif -%}
 
-      {%- if section.settings.body != blank -%}
-        <div class="rb-body rb-fp__body">{{ section.settings.body }}</div>
+      {%- if body != blank -%}
+        <div class="rb-body rb-fp__body">{{ body }}</div>
       {%- endif -%}
 
-      {%- if section.settings.button_a_label != blank or section.settings.button_b_label != blank -%}
+      {%- if show_a or show_b -%}
         <div class="rb-fp__ctas">
-          {%- if section.settings.button_a_label != blank -%}
-            <a href="{{ section.settings.button_a_link | default: '#' }}" class="rb-btn">
+          {%- if show_a -%}
+            <a href="{{ link_a }}" class="rb-btn">
               {{- section.settings.button_a_label | escape -}}
             </a>
           {%- endif -%}
-          {%- if section.settings.button_b_label != blank -%}
-            <a href="{{ section.settings.button_b_link | default: '#' }}" class="rb-btn">
+          {%- if show_b -%}
+            <a href="{{ link_b }}" class="rb-btn">
               {{- section.settings.button_b_label | escape -}}
             </a>
           {%- endif -%}
@@ -189,6 +269,12 @@
   "settings": [
     { "type": "paragraph",
       "content": "The Store's 'Featured Artist' band and the class page's 'Teacher' band are the same section — only the palette changes." },
+    { "type": "select", "id": "source", "label": "Who this band is about", "default": "manual",
+      "options": [
+        { "value": "manual", "label": "Whoever is set below" },
+        { "value": "product_teacher", "label": "The teacher of the class being viewed" }
+      ],
+      "info": "Pick the teacher option on the shared class template — every field left blank then fills itself from that class's teacher." },
     { "type": "header", "content": "Panel" },
     { "type": "text", "id": "eyebrow", "default": "Featured Artist", "label": "Eyebrow" },
     { "type": "text", "id": "name", "default": "Kerry Sassen", "label": "Name" },
@@ -196,9 +282,11 @@
       "default": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.</p>",
       "label": "Body" },
     { "type": "text", "id": "button_a_label", "default": "Browse collection", "label": "Button A label" },
-    { "type": "url", "id": "button_a_link", "label": "Button A link" },
+    { "type": "url", "id": "button_a_link", "label": "Button A link",
+      "info": "Blank links to the teacher's own page in 'class teacher' mode. The button is hidden when there is nothing to link to." },
     { "type": "text", "id": "button_b_label", "default": "See artist page", "label": "Button B label" },
-    { "type": "url", "id": "button_b_link", "label": "Button B link" },
+    { "type": "url", "id": "button_b_link", "label": "Button B link",
+      "info": "Blank links to that person's artist collection, and hides the button when they do not have one." },
     { "type": "header", "content": "Colour" },
     { "type": "color", "id": "panel_color", "default": "#a2ad8e", "label": "Panel colour" },
     { "type": "color", "id": "text_color", "default": "#ffffff", "label": "Panel text" },

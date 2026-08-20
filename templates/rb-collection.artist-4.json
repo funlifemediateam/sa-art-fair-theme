@@ -4,7 +4,7 @@
       "type": "rb-person-hero",
       "settings": {
         "name": "",
-        "script": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>",
+        "script": "",
         "tags": "",
         "social_url": "",
         "button_label": "",
@@ -18,7 +18,7 @@
         "image": "",
         "focal_x": 50,
         "focal_y": 50,
-        "portrait": "shopify://shop_images/saf-portrait-kerri.jpg",
+        "portrait": "",
         "portrait_w": 40,
         "portrait_ratio": "382 / 313",
         "portrait_x": 50,

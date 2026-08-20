@@ -1,0 +1,81 @@
+{% comment %}
+  Outputs the handle of the collection that represents a class product's
+  teacher, or nothing when there is no match. Capture it and look the
+  collection up in the caller:
+
+    {%- capture th -%}{%- render 'rb-teacher-handle', product: product -%}{%- endcapture -%}
+    {%- assign th = th | strip -%}
+    {%- assign teacher_col = collections[th] -%}
+
+  Why a lookup at all: one class template serves every class, so the teacher
+  band and the hero portrait have to come from the product rather than from a
+  per-page setting.
+
+  This store models a teacher as a collection holding that teacher's classes,
+  so the product already belongs to it. Two passes, in order of confidence:
+
+    1. a collection whose title is the instructor's — matched on the surname
+       rather than the whole string, because the catalogue is not consistent:
+       the class credits "Zara Farinha" while her collections read "Zara-Leigh
+       Farinha", and "Shelly Cowling" is missing an e against "Shelley
+       Cowling". Both still land on the right person by surname;
+    2. failing that, any collection whose handle looks like a teacher's
+       (teacher-1 … teacher-15), excluding the "teachers" index collection
+       itself, which every class also belongs to.
+
+  Someone who both teaches and exhibits has TWO collections under one title —
+  the teacher one and the artist one — and the store's convention is that the
+  teacher's handle carries a "-1" suffix (susan-orpen-1 beside susan-orpen).
+  That suffix decides the tie; without it the first match wins, which is still
+  the same person's page either way.
+
+  Accepts: product.
+{% endcomment %}
+
+{%- liquid
+  assign instr = product.metafields.booking.instructor_name | downcase | strip
+  assign name_parts = instr | split: ' '
+  assign surname = name_parts | last
+
+  assign found = ''
+  assign fallback = ''
+
+  if instr != blank
+    for c in product.collections
+      assign ct = c.title | downcase | strip
+      assign hit = false
+      if ct == instr
+        assign hit = true
+      elsif surname != blank and ct contains surname
+        assign hit = true
+      endif
+
+      if hit
+        assign tail = c.handle | slice: -2, 2
+        if tail == '-1' and found == blank
+          assign found = c.handle
+        elsif fallback == blank
+          assign fallback = c.handle
+        endif
+      endif
+    endfor
+  endif
+
+  if found == blank
+    assign found = fallback
+  endif
+
+  if found == blank
+    for c in product.collections
+      if c.handle == 'teachers'
+        continue
+      endif
+      if c.handle contains 'teacher'
+        assign found = c.handle
+        break
+      endif
+    endfor
+  endif
+
+  echo found
+-%}

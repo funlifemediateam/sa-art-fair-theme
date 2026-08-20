@@ -70,7 +70,22 @@
   endif
 
   assign img_a = section.settings.image_a | default: p.featured_image
+-%}
+
+{%- comment -%}
+  The second image is the teacher's portrait. One template serves every class,
+  so it has to follow the class's own teacher rather than be picked per page.
+  Same lookup the teacher band uses — see snippets/rb-teacher-handle.liquid.
+{%- endcomment -%}
+{%- capture rb_teacher_handle -%}{%- render 'rb-teacher-handle', product: p -%}{%- endcapture -%}
+{%- liquid
   assign img_b = section.settings.image_b
+  if img_b == blank
+    assign teacher_handle = rb_teacher_handle | strip
+    if teacher_handle != blank
+      assign img_b = collections[teacher_handle].image
+    endif
+  endif
 -%}
 
 <style>
@@ -204,7 +219,7 @@
 
       {%- if section.settings.button_label != blank -%}
         <a
-          href="{{ section.settings.button_link | default: '#booking' }}"
+          href="{{ section.settings.button_link | default: '#rb-book' }}"
           class="rb-btn rb-btn--serif rb-btn--coral rb-ch__cta"
         >{{ section.settings.button_label | escape }}</a>
       {%- endif -%}
@@ -265,12 +280,12 @@
     { "type": "header", "content": "Button" },
     { "type": "text", "id": "button_label", "default": "Book Now", "label": "Button label" },
     { "type": "url", "id": "button_link", "label": "Button link",
-      "info": "Defaults to the #booking anchor further down the page." },
+      "info": "Blank jumps to the booking widget further down the page." },
     { "type": "header", "content": "Images" },
     { "type": "image_picker", "id": "image_a", "label": "Artwork",
       "info": "Blank uses the product's featured image." },
     { "type": "image_picker", "id": "image_b", "label": "Teacher portrait",
-      "info": "Rendered black and white, and cropped by the right edge as in the design." },
+      "info": "Blank uses the picture on this class's teacher collection. Rendered black and white, and cropped by the right edge as in the design." },
     { "type": "range", "id": "image_a_width", "min": 30, "max": 100, "step": 1,
       "default": 62, "unit": "%", "label": "Artwork share of the image pair" },
     { "type": "header", "content": "Layout" },

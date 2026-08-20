@@ -13,6 +13,17 @@
   assign sid = section.id
   assign pt_vw = section.settings.padding_top | times: 100.0 | divided_by: 1920.0
   assign pb_vw = section.settings.padding_bottom | times: 100.0 | divided_by: 1920.0
+
+  comment
+    On a teacher or artist page the paragraph under the script line is that
+    person's bio, which the store already keeps as the collection description.
+    Reading it here keeps forty person pages correct from one template and
+    keeps them following the merchant's edits.
+  endcomment
+  assign body = section.settings.body
+  if section.settings.use_collection_description and collection.description != blank
+    assign body = collection.description
+  endif
 -%}
 
 <style>
@@ -53,8 +64,8 @@
     {%- if section.settings.heading != blank -%}
       <div class="rb-script rb-ss__heading">{{ section.settings.heading }}</div>
     {%- endif -%}
-    {%- if section.settings.body != blank -%}
-      <div class="rb-body rb-ss__body">{{ section.settings.body }}</div>
+    {%- if body != blank -%}
+      <div class="rb-body rb-ss__body">{{ body }}</div>
     {%- endif -%}
   </div>
 </div>
@@ -72,6 +83,9 @@
     { "type": "richtext", "id": "body",
       "default": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>",
       "label": "Body" },
+    { "type": "checkbox", "id": "use_collection_description", "default": false,
+      "label": "Use the collection description instead",
+      "info": "On a teacher or artist page that is their bio." },
     { "type": "header", "content": "Colour" },
     { "type": "color", "id": "background", "default": "#ffffff", "label": "Background" },
     { "type": "color", "id": "heading_color", "default": "#1e1e1e", "label": "Script" },

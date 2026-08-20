@@ -13,7 +13,40 @@
 
 {{ 'saf-rebrand.css' | asset_url | stylesheet_tag }}
 
-{%- assign sid = section.id -%}
+{%- liquid
+  assign sid = section.id
+
+  comment
+    One template serves every class, so the sentence and the notes are written
+    once with placeholders and each class fills its own in:
+
+      [class]    the subject, trimmed of "with <teacher>" like the hero does
+      [teacher]  booking.instructor_name
+      [time]     booking.class_time
+      [level]    booking.skill_level
+      [sessions] how many dates booking.session_dates holds
+      [price]    the product price
+
+    Text with no placeholder in it is left exactly as written, so a one-off
+    page can still spell the sentence out by hand.
+  endcomment
+  assign v_teacher = product.metafields.booking.instructor_name
+  assign v_time = product.metafields.booking.class_time
+  assign v_level = product.metafields.booking.skill_level
+  assign v_price = product.price | money
+
+  assign v_class = product.title
+  assign normalised = v_class | replace: ' WITH ', ' with ' | replace: ' With ', ' with '
+  assign v_class = normalised | split: ' with ' | first
+
+  assign v_sessions = ''
+  assign dates = product.metafields.booking.session_dates
+  if dates != blank
+    assign v_sessions = dates | split: ',' | size
+  endif
+
+  assign heading = section.settings.heading | replace: '[class]', v_class | replace: '[teacher]', v_teacher | replace: '[time]', v_time | replace: '[level]', v_level | replace: '[sessions]', v_sessions | replace: '[price]', v_price
+-%}
 
 <style>
   #shopify-section-{{ sid }} .rb-cd {
@@ -77,8 +110,8 @@
 
 <div class="rb-section rb-cd" id="{{ section.settings.anchor | default: 'booking' | handle }}">
   <div class="rb-container rb-cd__grid">
-    {%- if section.settings.heading != blank -%}
-      <div class="rb-display rb-cd__heading">{{ section.settings.heading }}</div>
+    {%- if heading != blank -%}
+      <div class="rb-display rb-cd__heading">{{ heading }}</div>
     {%- else -%}
       <div></div>
     {%- endif -%}
@@ -90,6 +123,7 @@
           if body == blank and block.settings.use_product_description
             assign body = product.description
           endif
+          assign body = body | replace: '[class]', v_class | replace: '[teacher]', v_teacher | replace: '[time]', v_time | replace: '[level]', v_level | replace: '[sessions]', v_sessions | replace: '[price]', v_price
         -%}
         {%- if block.settings.label != blank or body != blank -%}
           <div class="rb-cd__note" {{ block.shopify_attributes }}>
@@ -105,13 +139,23 @@
 
       {%- if section.settings.button_label != blank -%}
         <a
-          href="{{ section.settings.button_link | default: '#' }}"
+          href="{{ section.settings.button_link | default: '#rb-book' }}"
           class="rb-btn rb-btn--serif rb-btn--outline rb-cd__cta"
         >{{ section.settings.button_label | escape }}</a>
       {%- endif -%}
     </div>
   </div>
 </div>
+
+{%- comment -%}
+  The booking widget is a separate section that this theme does not own, so it
+  has no id of its own to link to. This marker sits at the bottom of the detail
+  band — directly above the widget — and gives both "Book Now" and "Make a
+  Booking" a real destination. Explicit display: Dawn's base.css hides empty
+  divs.
+{%- endcomment -%}
+<div id="rb-book" class="rb-anchor" aria-hidden="true"
+     style="display:block;height:0;scroll-margin-top:var(--rb-header-h, 120px)"></div>
 
 {% schema %}
 {
@@ -123,7 +167,7 @@
     { "type": "richtext", "id": "heading",
       "default": "<p>A guided <em>2 hour Watercolour</em> session.</p>",
       "label": "Statement",
-      "info": "Italic runs render coral, as in the design." },
+      "info": "Italic runs render coral, as in the design. Placeholders: [class] [teacher] [time] [level] [sessions] [price]." },
     { "type": "text", "id": "anchor", "default": "booking", "label": "Anchor id",
       "info": "The class hero's Book Now button jumps here." },
     { "type": "header", "content": "Button" },
@@ -147,7 +191,8 @@
       "name": "Note",
       "settings": [
         { "type": "text", "id": "label", "default": "Description:", "label": "Label" },
-        { "type": "richtext", "id": "body", "label": "Body" },
+        { "type": "richtext", "id": "body", "label": "Body",
+          "info": "Placeholders: [class] [teacher] [time] [level] [sessions] [price]." },
         { "type": "checkbox", "id": "use_product_description", "default": false,
           "label": "Fall back to the product description",
           "info": "Only useful on a product template." }

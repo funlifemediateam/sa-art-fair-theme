@@ -16,7 +16,14 @@
 
 {%- liquid
   assign sid = section.id
-  assign col = collections[section.settings.collection]
+
+  comment
+    Blank collection falls back to the page's own collection, so one classes
+    index template serves /collections/classes, /collections/workshops and
+    every teacher collection without a per-page setting.
+  endcomment
+  assign col = collections[section.settings.collection] | default: collection
+
   assign items = col.products
   assign limit = section.settings.count
 
@@ -179,6 +186,30 @@
         -%}
 
         {%- comment -%}
+          A teacher's collection holds their artworks alongside their classes,
+          and so does a combined "Classes & Workshops" collection once artwork
+          creeps in. A card only makes sense for something bookable, so anything
+          without booking data and without a class/workshop product type is
+          skipped rather than rendered as a class with no time and no teacher.
+        {%- endcomment -%}
+        {%- if section.settings.only_classes -%}
+          {%- liquid
+            assign is_class = false
+            if by != blank or time != blank
+              assign is_class = true
+            else
+              assign ptype = item.type | downcase
+              if ptype contains 'class' or ptype contains 'workshop'
+                assign is_class = true
+              endif
+            endif
+          -%}
+          {%- unless is_class -%}
+            {%- continue -%}
+          {%- endunless -%}
+        {%- endif -%}
+
+        {%- comment -%}
           A teacher page shows only that teacher's classes. Filtering has to
           happen inside the loop rather than through `limit`, or a filtered-out
           class still eats one of the slots.
@@ -273,9 +304,13 @@
   "tag": "section",
   "class": "rb-section-wrapper",
   "settings": [
-    { "type": "collection", "id": "collection", "label": "Classes collection" },
-    { "type": "range", "id": "count", "min": 3, "max": 24, "step": 1,
+    { "type": "collection", "id": "collection", "label": "Classes collection",
+      "info": "Blank uses the collection this page is already showing." },
+    { "type": "range", "id": "count", "min": 3, "max": 48, "step": 1,
       "default": 6, "label": "Classes to show" },
+    { "type": "checkbox", "id": "only_classes", "default": true,
+      "label": "Only show bookable classes",
+      "info": "Skips artworks that share the collection with a teacher's classes." },
     { "type": "richtext", "id": "eyebrow", "default": "<p>Browse our classes</p>",
       "label": "Eyebrow",
       "info": "Rendered uppercase. Bold runs render cherry, the rest teal. Write [teacher] to drop the teacher's name in." },

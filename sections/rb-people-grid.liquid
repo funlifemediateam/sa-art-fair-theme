@@ -91,6 +91,12 @@
     font-family: var(--rb-serif);
   }
 
+  #shopify-section-{{ sid }} .rb-pg__more {
+    display: flex;
+    justify-content: center;
+    margin-top: clamp(24px, 2.71vw, 52px);
+  }
+
   @media screen and (max-width: 989px) {
     #shopify-section-{{ sid }} .rb-pg__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
@@ -178,6 +184,20 @@
         </div>
       {%- endfor -%}
     </div>
+
+    {%- comment -%}
+      Blank by default, so the wall matches the comp exactly. The Studio page
+      switches it on because it shows eight of twenty teachers and the other
+      twelve need a way in.
+    {%- endcomment -%}
+    {%- if section.settings.more_label != blank -%}
+      <div class="rb-pg__more">
+        <a href="{{ section.settings.more_link | default: '#' }}"
+           class="rb-btn rb-btn--serif rb-btn--outline">
+          {{- section.settings.more_label | escape -}}
+        </a>
+      </div>
+    {%- endif -%}
   </div>
 </div>
 
@@ -205,7 +225,11 @@
     { "type": "color", "id": "tone_b", "default": "#e07468", "label": "Panel tone B" },
     { "type": "color", "id": "tone_b_text", "default": "#ffffff", "label": "Panel tone B text" },
     { "type": "range", "id": "texture", "min": 0, "max": 100, "step": 5,
-      "default": 100, "unit": "%", "label": "Crumpled paper texture" }
+      "default": 100, "unit": "%", "label": "Crumpled paper texture" },
+    { "type": "header", "content": "Footer link" },
+    { "type": "text", "id": "more_label", "label": "Button label",
+      "info": "Blank shows no button, which is what the design has." },
+    { "type": "url", "id": "more_link", "label": "Button link" }
   ],
   "blocks": [
     {
