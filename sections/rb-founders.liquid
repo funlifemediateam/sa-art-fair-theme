@@ -1,0 +1,167 @@
+{% comment %}
+  Rebrand founders band — polaroid on the left with the gold protea stamp
+  straddling its right edge, script heading + two justified columns + a signed
+  sign-off on the right. Comp: 1920 x 847 content, container 1674.
+
+  The polaroid framing (stacked paper, slight rotation) is baked into the
+  supplied PNG, so swapping the image means supplying a photo already framed
+  that way.
+{% endcomment %}
+
+{{ 'saf-rebrand.css' | asset_url | stylesheet_tag }}
+
+{%- assign sid = section.id -%}
+
+<style>
+  #shopify-section-{{ sid }} .rb-founders {
+    background: {{ section.settings.background }};
+    padding-block:
+      clamp(56px, 15.47vw, 297px)
+      clamp(56px, 10.42vw, 200px);
+  }
+  #shopify-section-{{ sid }} .rb-founders__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(32px, 3.13vw, 60px);
+    align-items: center;
+  }
+  #shopify-section-{{ sid }} .rb-founders__media {
+    position: relative;
+    justify-self: start;
+    width: 100%;
+    max-width: {{ section.settings.image_width }}px;
+  }
+  #shopify-section-{{ sid }} .rb-founders__media img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  #shopify-section-{{ sid }} .rb-founders__stamp {
+    position: absolute;
+    top: 50%;
+    left: 100%;
+    width: {{ section.settings.stamp_width }}px;
+    max-width: 37%;
+    height: auto;
+    /* the stamp starts just inside the polaroid's right edge in the comp */
+    transform: translate(-6%, -50%);
+    pointer-events: none;
+  }
+
+  #shopify-section-{{ sid }} .rb-founders__heading {
+    color: {{ section.settings.heading_color }};
+    line-height: 1.28;
+  }
+  #shopify-section-{{ sid }} .rb-founders__cols {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(20px, 2.71vw, 52px);
+    margin-top: clamp(18px, 2.4vw, 46px);
+  }
+  #shopify-section-{{ sid }} .rb-founders__cols .rb-body {
+    font-size: var(--rb-fs-body-sm);
+    text-align: justify;
+    color: {{ section.settings.body_color }};
+  }
+  #shopify-section-{{ sid }} .rb-founders__cols .rb-body p { margin: 0 0 0.7em; }
+  #shopify-section-{{ sid }} .rb-founders__cols .rb-body p:last-child { margin-bottom: 0; }
+
+  #shopify-section-{{ sid }} .rb-founders__sign {
+    margin-top: clamp(16px, 2.08vw, 40px);
+    font-size: clamp(22px, 1.88vw, 36px);
+    color: {{ section.settings.heading_color }};
+  }
+
+  @media screen and (max-width: 899px) {
+    #shopify-section-{{ sid }} .rb-founders__grid { grid-template-columns: 1fr; }
+    #shopify-section-{{ sid }} .rb-founders__media {
+      justify-self: center;
+      max-width: min(360px, 80%);
+      margin-bottom: 12px;
+    }
+    #shopify-section-{{ sid }} .rb-founders__cols { grid-template-columns: 1fr; }
+    #shopify-section-{{ sid }} .rb-founders__cols .rb-body { text-align: left; }
+  }
+</style>
+
+<div class="rb-section rb-founders">
+  <div class="rb-container rb-founders__grid">
+    <div class="rb-founders__media">
+      {%- if section.settings.image != blank -%}
+        {{
+          section.settings.image
+          | image_url: width: 1200
+          | image_tag:
+            widths: '360, 480, 700, 940, 1200',
+            sizes: '(max-width: 899px) 80vw, 30vw',
+            loading: 'lazy',
+            alt: section.settings.image.alt | default: section.settings.signature
+        }}
+      {%- else -%}
+        {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+      {%- endif -%}
+
+      {%- if section.settings.show_stamp -%}
+        <img
+          src="{{ 'saf-stamp-gold.png' | asset_url }}"
+          alt=""
+          width="329"
+          height="336"
+          class="rb-founders__stamp"
+          loading="lazy"
+        >
+      {%- endif -%}
+    </div>
+
+    <div class="rb-founders__text">
+      {%- if section.settings.heading != blank -%}
+        <h2 class="rb-script rb-founders__heading">{{ section.settings.heading | escape }}</h2>
+      {%- endif -%}
+
+      <div class="rb-founders__cols">
+        {%- if section.settings.column_one != blank -%}
+          <div class="rb-body">{{ section.settings.column_one }}</div>
+        {%- endif -%}
+        {%- if section.settings.column_two != blank -%}
+          <div class="rb-body">{{ section.settings.column_two }}</div>
+        {%- endif -%}
+      </div>
+
+      {%- if section.settings.signature != blank -%}
+        <p class="rb-script rb-founders__sign">{{ section.settings.signature | escape }}</p>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Rebrand founders",
+  "tag": "section",
+  "class": "rb-section-wrapper",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Polaroid image",
+      "info": "The polaroid frame is part of the supplied artwork, not a CSS effect." },
+    { "type": "range", "id": "image_width", "min": 280, "max": 700, "step": 10,
+      "default": 476, "unit": "px", "label": "Polaroid width at 1920px wide" },
+    { "type": "checkbox", "id": "show_stamp", "default": true, "label": "Show gold protea stamp" },
+    { "type": "range", "id": "stamp_width", "min": 80, "max": 320, "step": 5,
+      "default": 177, "unit": "px", "label": "Stamp width at 1920px wide" },
+    { "type": "header", "content": "Text" },
+    { "type": "text", "id": "heading",
+      "default": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.",
+      "label": "Script heading" },
+    { "type": "color", "id": "heading_color", "default": "#b00e3f", "label": "Script colour" },
+    { "type": "richtext", "id": "column_one",
+      "default": "<p>Tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut eu fugiat nulla pariatur..</p>",
+      "label": "Body column 1" },
+    { "type": "richtext", "id": "column_two",
+      "default": "<p>Aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore</p>",
+      "label": "Body column 2" },
+    { "type": "color", "id": "body_color", "default": "#1e1e1e", "label": "Body colour" },
+    { "type": "text", "id": "signature", "default": "– Bianca & Georgina", "label": "Signature" },
+    { "type": "color", "id": "background", "default": "#ffffff", "label": "Background" }
+  ],
+  "presets": [{ "name": "Rebrand founders" }]
+}
+{% endschema %}

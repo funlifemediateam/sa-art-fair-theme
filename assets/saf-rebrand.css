@@ -1,0 +1,201 @@
+/* ==========================================================================
+   SA Art Fair rebrand foundations
+   Hanre's "Art Fair SA Rebrand" Figma, design frame 1920px wide.
+
+   Everything is scoped under .rb-* so these sections keep their own
+   typography instead of inheriting Dawn's. Sizes are px/vw rather than rem
+   on purpose: this theme sets html{font-size:calc(var(--font-body-scale)*
+   62.5%)} with body_scale at 120, so 1rem is not 16px here and rem-based
+   type would silently drift away from the comp.
+   ========================================================================== */
+
+:root {
+  /* --- palette, sampled off the comp ------------------------------------ */
+  --rb-white: #ffffff;
+  --rb-ink: #1e1e1e;
+  --rb-cherry: #b00e3f;
+  --rb-gold: #bea532;
+  --rb-moss: #505a43;
+  --rb-sage: #a5ad93;
+  --rb-sage-pale: #e2ead7;
+  --rb-coral: #e27b70;
+
+  /* --- families --------------------------------------------------------- */
+  --rb-serif: 'IvyPresto Display', 'Playfair Display', 'Times New Roman', serif;
+  --rb-sans: 'Afacad', 'Helvetica Neue', Arial, sans-serif;
+  --rb-script: 'Cedarville Cursive', 'Segoe Script', cursive;
+
+  /* --- fluid type ------------------------------------------------------
+     Max values were solved against the real fonts: each string was rendered
+     at increasing sizes until its width matched the same string measured off
+     the comp. vw values are that size / 1920. Do not "tidy" these numbers —
+     they are measurements, not taste.                                     */
+  --rb-fs-display: clamp(30px, 3.125vw, 60px);   /* statement, contact heading */
+  --rb-fs-display-lg: clamp(34px, 3.542vw, 68px);/* quiz banner heading        */
+  --rb-fs-path: clamp(56px, 7.188vw, 138px);     /* "Buy Art" / "Make Art"     */
+  --rb-fs-eyebrow: clamp(19px, 1.667vw, 32px);
+  --rb-fs-body: clamp(16px, 1.354vw, 26px);
+  --rb-fs-body-sm: clamp(15px, 1.198vw, 23px);
+  --rb-fs-card: clamp(16px, 1.25vw, 24px);
+  --rb-fs-label: clamp(18px, 1.563vw, 30px);     /* form labels, GET IN TOUCH  */
+  --rb-fs-script: clamp(28px, 2.552vw, 49px);
+  --rb-fs-btn: clamp(14px, 1.094vw, 21px);
+  --rb-fs-btn-serif: clamp(16px, 1.146vw, 22px);
+
+  /* --- layout ----------------------------------------------------------- */
+  --rb-container: 1680px;
+  --rb-gutter: clamp(20px, 6.25vw, 120px);
+  --rb-header-h: clamp(84px, 8.85vw, 170px);
+}
+
+/* --------------------------------------------------------------------------
+   Layout primitives
+   -------------------------------------------------------------------------- */
+.rb-container {
+  width: 100%;
+  max-width: var(--rb-container);
+  margin-inline: auto;
+  padding-inline: var(--rb-gutter);
+}
+
+.rb-section {
+  background: var(--rb-white);
+  color: var(--rb-ink);
+  font-family: var(--rb-sans);
+}
+
+/* Full-bleed bands sit edge to edge; Dawn's page wrapper never constrains
+   them because these sections are rendered as top-level section groups. */
+.rb-bleed {
+  position: relative;
+  width: 100%;
+}
+
+/* --------------------------------------------------------------------------
+   Type primitives
+   -------------------------------------------------------------------------- */
+.rb-eyebrow {
+  margin: 0;
+  font-family: var(--rb-sans);
+  font-weight: 500;
+  font-size: var(--rb-fs-eyebrow);
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+}
+
+.rb-display {
+  margin: 0;
+  font-family: var(--rb-serif);
+  font-weight: 400;
+  font-size: var(--rb-fs-display);
+  line-height: 1.25;
+  letter-spacing: -0.005em;
+}
+
+.rb-display em,
+.rb-display i {
+  font-style: italic;
+}
+
+.rb-body {
+  margin: 0;
+  font-family: var(--rb-sans);
+  font-weight: 400;
+  font-size: var(--rb-fs-body);
+  line-height: 1.45;
+}
+
+.rb-script {
+  margin: 0;
+  font-family: var(--rb-script);
+  font-weight: 400;
+  font-size: var(--rb-fs-script);
+  line-height: 1.35;
+  color: var(--rb-cherry);
+}
+
+/* --------------------------------------------------------------------------
+   Buttons — three shapes in the comp:
+     .rb-btn              sans, uppercase, letterspaced (panel + quiz CTAs)
+     .rb-btn--plain       sans, sentence case (header pills)
+     .rb-btn--serif       IvyPresto, sentence case (Browse Collection, Submit)
+   -------------------------------------------------------------------------- */
+.rb-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: clamp(44px, 3.75vw, 72px);
+  padding: 0 clamp(22px, 1.98vw, 38px);
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-family: var(--rb-sans);
+  font-weight: 600;
+  font-size: var(--rb-fs-btn);
+  line-height: 1;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
+
+.rb-btn--plain {
+  min-height: clamp(38px, 3.18vw, 61px);
+  padding: 0 clamp(18px, 1.56vw, 30px);
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.rb-btn--serif {
+  min-height: clamp(36px, 2.66vw, 51px);
+  padding: 0 clamp(24px, 2.4vw, 46px);
+  font-family: var(--rb-serif);
+  font-weight: 400;
+  font-size: var(--rb-fs-btn-serif);
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+/* fills */
+.rb-btn--cherry { background: var(--rb-cherry); color: var(--rb-white); }
+.rb-btn--cherry:hover { background: #8d0b32; color: var(--rb-white); }
+
+.rb-btn--sage { background: var(--rb-sage-pale); color: var(--rb-moss); }
+.rb-btn--sage:hover { background: var(--rb-white); color: var(--rb-moss); }
+
+.rb-btn--white { background: var(--rb-white); color: var(--rb-ink); }
+.rb-btn--white:hover { background: var(--rb-ink); color: var(--rb-white); }
+
+.rb-btn--outline {
+  background: transparent;
+  color: var(--rb-ink);
+  border-color: var(--rb-ink);
+}
+.rb-btn--outline:hover { background: var(--rb-ink); color: var(--rb-white); }
+
+.rb-btn:focus-visible {
+  outline: 2px solid var(--rb-cherry);
+  outline-offset: 3px;
+}
+
+/* --------------------------------------------------------------------------
+   Stadium badge — the white "arch" holding a knocked-out protea. The mark is
+   transparent inside the PNG, so whatever sits behind shows through it; that
+   is exactly how the comp tints the protea to the panel colour.
+   -------------------------------------------------------------------------- */
+.rb-badge {
+  display: block;
+  width: clamp(66px, 5.73vw, 110px);
+  height: auto;
+  aspect-ratio: 253 / 395;
+  object-fit: contain;
+}
+
+/* --------------------------------------------------------------------------
+   Shared motion
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .rb-btn { transition: none; }
+}

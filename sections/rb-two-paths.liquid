@@ -1,0 +1,220 @@
+{% comment %}
+  Rebrand two-path band — "Buy Art" / "Make Art" side by side.
+
+  Comp: 1920 x 957, two 960px squares. Each panel stacks a stadium badge, a
+  huge IvyPresto italic heading, a short centred paragraph and a pill.
+
+  The badge PNGs are knockouts: the protea is transparent, so it takes the
+  colour of whatever sits behind it. That is how the comp tints each protea to
+  its own panel. Do not swap them for flat marks.
+
+  The supplied panel photographs already have their colour wash baked in, so
+  the overlay defaults to 0. Set an overlay if you replace one with an
+  untinted photo.
+{% endcomment %}
+
+{{ 'saf-rebrand.css' | asset_url | stylesheet_tag }}
+
+{%- assign sid = section.id -%}
+
+<style>
+  #shopify-section-{{ sid }} .rb-paths {
+    display: grid;
+    grid-template-columns: repeat({{ section.blocks.size | at_least: 1 }}, minmax(0, 1fr));
+  }
+  #shopify-section-{{ sid }} .rb-path {
+    position: relative;
+    aspect-ratio: 960 / 957;
+    min-height: 420px;
+    overflow: hidden;
+    display: flex;
+  }
+  #shopify-section-{{ sid }} .rb-path__img,
+  #shopify-section-{{ sid }} .rb-path__img img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  #shopify-section-{{ sid }} .rb-path__overlay {
+    position: absolute;
+    inset: 0;
+  }
+  #shopify-section-{{ sid }} .rb-path__inner {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    box-sizing: border-box;
+    /* comp sits the stack slightly above centre: 133 top / 210 bottom */
+    padding: clamp(32px, 6.93vw, 133px) clamp(20px, 3.13vw, 60px) clamp(40px, 10.94vw, 210px);
+  }
+  #shopify-section-{{ sid }} .rb-path__badge {
+    margin-bottom: clamp(14px, 1.82vw, 35px);
+  }
+  #shopify-section-{{ sid }} .rb-path__heading {
+    margin: 0;
+    font-family: var(--rb-serif);
+    font-weight: 300;
+    font-style: italic;
+    font-size: var(--rb-fs-path);
+    line-height: 1.02;
+    letter-spacing: -0.01em;
+  }
+  #shopify-section-{{ sid }} .rb-path__body {
+    margin: clamp(14px, 1.88vw, 36px) 0 0;
+    max-width: 380px;
+  }
+  #shopify-section-{{ sid }} .rb-path__cta {
+    margin-top: clamp(16px, 1.88vw, 36px);
+    min-height: clamp(46px, 3.91vw, 75px);
+  }
+
+  @media screen and (max-width: 749px) {
+    #shopify-section-{{ sid }} .rb-paths { grid-template-columns: 1fr; }
+    #shopify-section-{{ sid }} .rb-path {
+      aspect-ratio: auto;
+      min-height: 0;
+    }
+    #shopify-section-{{ sid }} .rb-path__inner {
+      padding-block: 56px 64px;
+    }
+  }
+
+  {%- for block in section.blocks -%}
+    #shopify-section-{{ sid }} [data-blk="{{ block.id }}"] .rb-path__overlay {
+      background: {{ block.settings.overlay_color }};
+      opacity: {{ block.settings.overlay_opacity | divided_by: 100.0 }};
+    }
+    #shopify-section-{{ sid }} [data-blk="{{ block.id }}"] .rb-path__heading,
+    #shopify-section-{{ sid }} [data-blk="{{ block.id }}"] .rb-path__body {
+      color: {{ block.settings.text_color }};
+    }
+    #shopify-section-{{ sid }} [data-blk="{{ block.id }}"] .rb-path__cta {
+      background: {{ block.settings.button_bg }};
+      color: {{ block.settings.button_text }};
+      border-color: {{ block.settings.button_bg }};
+    }
+    #shopify-section-{{ sid }} [data-blk="{{ block.id }}"] .rb-path__cta:hover {
+      background: {{ block.settings.button_text }};
+      color: {{ block.settings.button_bg }};
+    }
+  {%- endfor -%}
+</style>
+
+<div class="rb-section rb-bleed">
+  <div class="rb-paths">
+    {%- for block in section.blocks -%}
+      {%- liquid
+        assign badge = block.settings.badge
+        case badge
+          when 'store'
+            assign badge_src = 'saf-badge-store.png'
+          when 'studio'
+            assign badge_src = 'saf-badge-studio.png'
+          else
+            assign badge_src = 'saf-badge-saaf.png'
+        endcase
+      -%}
+      <div class="rb-path" data-blk="{{ block.id }}" {{ block.shopify_attributes }}>
+        {%- if block.settings.image != blank -%}
+          <div class="rb-path__img">
+            {{
+              block.settings.image
+              | image_url: width: 1920
+              | image_tag:
+                widths: '480, 700, 960, 1400, 1920',
+                sizes: '(max-width: 749px) 100vw, 50vw',
+                loading: 'lazy',
+                alt: block.settings.image.alt | default: block.settings.heading
+            }}
+          </div>
+        {%- endif -%}
+
+        <div class="rb-path__overlay" aria-hidden="true"></div>
+
+        <div class="rb-path__inner">
+          {%- if badge != 'none' -%}
+            <img
+              src="{{ badge_src | asset_url }}"
+              alt=""
+              width="253"
+              height="395"
+              class="rb-badge rb-path__badge"
+              loading="lazy"
+            >
+          {%- endif -%}
+
+          {%- if block.settings.heading != blank -%}
+            <h2 class="rb-path__heading">{{ block.settings.heading | escape }}</h2>
+          {%- endif -%}
+
+          {%- if block.settings.body != blank -%}
+            <div class="rb-body rb-path__body">{{ block.settings.body }}</div>
+          {%- endif -%}
+
+          {%- if block.settings.button_label != blank -%}
+            <a
+              href="{{ block.settings.button_link | default: '#' }}"
+              class="rb-btn rb-path__cta"
+            >{{ block.settings.button_label | escape }}</a>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endfor -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Rebrand two paths",
+  "tag": "section",
+  "class": "rb-section-wrapper",
+  "max_blocks": 3,
+  "settings": [
+    { "type": "paragraph",
+      "content": "Two panels matches the design. A third is supported if the site ever grows another path." }
+  ],
+  "blocks": [
+    {
+      "type": "path",
+      "name": "Path panel",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Background image" },
+        { "type": "select", "id": "badge", "label": "Badge mark", "default": "store",
+          "options": [
+            { "value": "store", "label": "The Store (sheaf protea)" },
+            { "value": "studio", "label": "The Studio (pom protea)" },
+            { "value": "saaf", "label": "SA Art Fair (three-flower protea)" },
+            { "value": "none", "label": "No badge" }
+          ] },
+        { "type": "text", "id": "heading", "default": "Buy Art", "label": "Heading" },
+        { "type": "richtext", "id": "body",
+          "default": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>",
+          "label": "Body" },
+        { "type": "text", "id": "button_label", "default": "Visit our store", "label": "Button label" },
+        { "type": "url", "id": "button_link", "label": "Button link" },
+        { "type": "header", "content": "Colour" },
+        { "type": "color", "id": "text_color", "default": "#505a43", "label": "Heading + body colour" },
+        { "type": "color", "id": "button_bg", "default": "#e2ead7", "label": "Button background" },
+        { "type": "color", "id": "button_text", "default": "#505a43", "label": "Button label colour" },
+        { "type": "color", "id": "overlay_color", "default": "#a5ad93", "label": "Image overlay colour" },
+        { "type": "range", "id": "overlay_opacity", "min": 0, "max": 100, "step": 5,
+          "default": 0, "unit": "%", "label": "Image overlay opacity",
+          "info": "Supplied artwork is already tinted, so this is 0. Raise it if you swap in an untinted photo." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Rebrand two paths",
+      "blocks": [{ "type": "path" }, { "type": "path" }]
+    }
+  ]
+}
+{% endschema %}

@@ -19,7 +19,9 @@ import time
 import urllib.request
 
 STORE = "b77sng-1n.myshopify.com"
-THEME = "151028203598"
+# Live theme by default. Set SAF_THEME_ID to push to an unpublished theme
+# instead — used for the rebrand build so the live site stays untouched.
+THEME = os.environ.get("SAF_THEME_ID", "151028203598")
 TOKEN = os.environ.get("SHOPIFY_ADMIN_TOKEN", "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")
 API = f"https://{STORE}/admin/api/2024-10/themes/{THEME}/assets.json"
 THEME_DIRS = ("assets/", "config/", "layout/", "locales/", "sections/", "snippets/", "templates/")

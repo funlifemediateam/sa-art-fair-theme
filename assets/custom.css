@@ -370,7 +370,10 @@
 /* ══ Rise Art-style header: transparent over homepage hero ══ */
 /* Header stays position:sticky; hero is pulled up behind it. The banner must be
    the first section on the index template for the overlay to line up. */
-body.template-index #MainContent {
+/* Scoped to the transparent Dawn header that this overlay exists for. The
+   rebrand header (rb-header) is opaque and never transparent, so without this
+   guard the fallback -90px would drag the rebrand hero up under it. */
+body.template-index:has(.header-wrapper--transparent) #MainContent {
   margin-top: calc(-1 * var(--header-height, 90px));
 }
 

@@ -1,0 +1,236 @@
+{% comment %}
+  Rebrand footer — stacked wordmark with round social buttons and a blurb on
+  the left, contact details beside it, protea mark parked bottom right.
+
+  Social URLs come from the existing booking_app.store_socials metafield when
+  it is set, so the footer stays in step with the admin app; section settings
+  are the fallback.
+{% endcomment %}
+
+{{ 'saf-rebrand.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign sid = section.id
+  assign socials = shop.metafields.booking_app.store_socials.value
+  assign ig = socials.instagram | default: section.settings.instagram
+  assign fb = socials.facebook | default: section.settings.facebook
+-%}
+
+<style>
+  #shopify-section-{{ sid }} .rb-footer {
+    background: {{ section.settings.background }};
+    color: {{ section.settings.text_color }};
+    padding: clamp(56px, 9.38vw, 180px) clamp(16px, 3.65vw, 70px) clamp(32px, 4.17vw, 80px);
+  }
+  #shopify-section-{{ sid }} .rb-footer__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(28px, 3.13vw, 60px);
+    align-items: end;
+  }
+  #shopify-section-{{ sid }} .rb-footer__wordmark {
+    display: block;
+    width: {{ section.settings.wordmark_width }}px;
+    max-width: 70%;
+    height: auto;
+  }
+  #shopify-section-{{ sid }} .rb-footer__socials {
+    display: flex;
+    gap: clamp(8px, 0.73vw, 14px);
+    margin: clamp(18px, 1.98vw, 38px) 0 clamp(14px, 1.46vw, 28px);
+  }
+  #shopify-section-{{ sid }} .rb-social {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: clamp(38px, 3.02vw, 58px);
+    height: clamp(38px, 3.02vw, 58px);
+    border-radius: 50%;
+    background: {{ section.settings.social_bg }};
+    color: {{ section.settings.social_icon }};
+    text-decoration: none;
+    transition: background-color 0.25s ease;
+  }
+  #shopify-section-{{ sid }} .rb-social:hover { background: var(--rb-cherry); }
+  #shopify-section-{{ sid }} .rb-social svg { width: 48%; height: 48%; }
+
+  #shopify-section-{{ sid }} .rb-footer__blurb {
+    max-width: 34ch;
+    font-size: var(--rb-fs-body-sm);
+  }
+  #shopify-section-{{ sid }} .rb-footer__contact {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(8px, 0.99vw, 19px);
+  }
+  #shopify-section-{{ sid }} .rb-footer__row {
+    display: inline-flex;
+    align-items: center;
+    gap: clamp(8px, 0.73vw, 14px);
+    font-family: var(--rb-sans);
+    font-size: var(--rb-fs-body-sm);
+    color: inherit;
+    text-decoration: none;
+  }
+  #shopify-section-{{ sid }} .rb-footer__row:hover { color: var(--rb-cherry); }
+  #shopify-section-{{ sid }} .rb-footer__row svg { width: 1.15em; height: 1.15em; flex: 0 0 auto; }
+
+  #shopify-section-{{ sid }} .rb-footer__links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  #shopify-section-{{ sid }} .rb-footer__links a {
+    font-family: var(--rb-sans);
+    font-size: var(--rb-fs-body-sm);
+    color: inherit;
+    text-decoration: none;
+  }
+  #shopify-section-{{ sid }} .rb-footer__links a:hover { color: var(--rb-cherry); }
+
+  #shopify-section-{{ sid }} .rb-footer__mark {
+    justify-self: end;
+    align-self: end;
+    width: {{ section.settings.mark_width }}px;
+    max-width: 28%;
+    height: auto;
+  }
+  #shopify-section-{{ sid }} .rb-footer__legal {
+    margin-top: clamp(28px, 3.13vw, 60px);
+    font-family: var(--rb-sans);
+    font-size: clamp(12px, 0.83vw, 16px);
+    opacity: 0.62;
+  }
+
+  @media screen and (max-width: 899px) {
+    #shopify-section-{{ sid }} .rb-footer__grid {
+      grid-template-columns: 1fr;
+      align-items: start;
+      gap: 32px;
+    }
+    #shopify-section-{{ sid }} .rb-footer__mark { justify-self: start; max-width: 96px; }
+  }
+</style>
+
+<footer class="rb-section rb-footer" role="contentinfo">
+  <div class="rb-footer__grid">
+    <div class="rb-footer__brand">
+      <a href="{{ routes.root_url }}" aria-label="{{ shop.name | escape }} — home">
+        <img
+          src="{{ 'saf-footer-wordmark.png' | asset_url }}"
+          alt="{{ shop.name | escape }}"
+          width="412"
+          height="190"
+          class="rb-footer__wordmark"
+          loading="lazy"
+        >
+      </a>
+
+      {%- if ig != blank or fb != blank -%}
+        <div class="rb-footer__socials">
+          {%- if ig != blank -%}
+            <a href="{{ ig }}" class="rb-social" target="_blank" rel="noopener" aria-label="Instagram">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true">
+                <rect x="3" y="3" width="18" height="18" rx="5"></rect>
+                <circle cx="12" cy="12" r="4"></circle>
+                <circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"></circle>
+              </svg>
+            </a>
+          {%- endif -%}
+          {%- if fb != blank -%}
+            <a href="{{ fb }}" class="rb-social" target="_blank" rel="noopener" aria-label="Facebook">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M13.5 21v-8h2.7l.4-3.1h-3.1V7.9c0-.9.25-1.5 1.55-1.5H16.7V3.6c-.29-.04-1.27-.12-2.41-.12-2.39 0-4.02 1.46-4.02 4.13V9.9H7.5V13h2.77v8h3.23z"></path>
+              </svg>
+            </a>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      {%- if section.settings.blurb != blank -%}
+        <div class="rb-body rb-footer__blurb">{{ section.settings.blurb }}</div>
+      {%- endif -%}
+    </div>
+
+    <div class="rb-footer__contact">
+      {%- if section.settings.email != blank -%}
+        <a href="mailto:{{ section.settings.email }}" class="rb-footer__row">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+            <rect x="2.5" y="5" width="19" height="14" rx="2"></rect>
+            <path d="M3 6.5l9 6.5 9-6.5"></path>
+          </svg>
+          {{ section.settings.email }}
+        </a>
+      {%- endif -%}
+      {%- if section.settings.phone != blank -%}
+        <a href="tel:{{ section.settings.phone | remove: ' ' }}" class="rb-footer__row">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M6.6 3h3l1.5 4-2 1.4a12 12 0 0 0 5.5 5.5l1.4-2 4 1.5v3a2 2 0 0 1-2.2 2A16.5 16.5 0 0 1 4.6 5.2 2 2 0 0 1 6.6 3z"></path>
+          </svg>
+          {{ section.settings.phone }}
+        </a>
+      {%- endif -%}
+
+      {%- if section.settings.menu != blank and linklists[section.settings.menu].links.size > 0 -%}
+        <ul class="rb-footer__links">
+          {%- for link in linklists[section.settings.menu].links -%}
+            <li><a href="{{ link.url }}">{{ link.title | escape }}</a></li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+    </div>
+
+    {%- if section.settings.show_mark -%}
+      <img
+        src="{{ 'saf-mark-black.png' | asset_url }}"
+        alt=""
+        width="295"
+        height="287"
+        class="rb-footer__mark"
+        loading="lazy"
+      >
+    {%- endif -%}
+  </div>
+
+  {%- if section.settings.show_legal -%}
+    <p class="rb-footer__legal">
+      &copy; {{ 'now' | date: '%Y' }} {{ shop.name }}. {{ powered_by_link }}
+    </p>
+  {%- endif -%}
+</footer>
+
+{% schema %}
+{
+  "name": "Rebrand footer",
+  "tag": "section",
+  "class": "rb-footer-section",
+  "settings": [
+    { "type": "range", "id": "wordmark_width", "min": 180, "max": 520, "step": 5,
+      "default": 327, "unit": "px", "label": "Wordmark width" },
+    { "type": "richtext", "id": "blurb",
+      "default": "<p>Tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>",
+      "label": "Blurb" },
+    { "type": "header", "content": "Contact" },
+    { "type": "text", "id": "email", "default": "Info@SAAF.com", "label": "Email" },
+    { "type": "text", "id": "phone", "default": "+27 680 000 00", "label": "Phone" },
+    { "type": "link_list", "id": "menu", "label": "Footer menu" },
+    { "type": "header", "content": "Social",
+      "info": "Pulled from the admin app's store socials when set; these are the fallback." },
+    { "type": "text", "id": "instagram", "label": "Instagram URL" },
+    { "type": "text", "id": "facebook", "label": "Facebook URL" },
+    { "type": "color", "id": "social_bg", "default": "#1e1e1e", "label": "Social button background" },
+    { "type": "color", "id": "social_icon", "default": "#ffffff", "label": "Social icon colour" },
+    { "type": "header", "content": "Mark" },
+    { "type": "checkbox", "id": "show_mark", "default": true, "label": "Show protea mark" },
+    { "type": "range", "id": "mark_width", "min": 40, "max": 220, "step": 5,
+      "default": 82, "unit": "px", "label": "Protea width" },
+    { "type": "header", "content": "Colour" },
+    { "type": "color", "id": "background", "default": "#ffffff", "label": "Background" },
+    { "type": "color", "id": "text_color", "default": "#1e1e1e", "label": "Text" },
+    { "type": "checkbox", "id": "show_legal", "default": true, "label": "Show copyright line" }
+  ]
+}
+{% endschema %}

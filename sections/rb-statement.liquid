@@ -1,0 +1,91 @@
+{% comment %}
+  Rebrand statement band — cherry eyebrow over a large IvyPresto sentence in
+  gold, centred on white. Comp: 1920 x 776, heading 60px/1.25 capped ~1270px.
+
+  Padding settings are given in design pixels at a 1920 frame and converted to
+  vw so the whole band scales the way the comp does, with a floor for phones.
+{% endcomment %}
+
+{{ 'saf-rebrand.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign sid = section.id
+  assign pt_vw = section.settings.padding_top | times: 100.0 | divided_by: 1920.0
+  assign pb_vw = section.settings.padding_bottom | times: 100.0 | divided_by: 1920.0
+-%}
+
+<style>
+  #shopify-section-{{ sid }} .rb-statement {
+    background: {{ section.settings.background }};
+    padding-block:
+      clamp(48px, {{ pt_vw }}vw, {{ section.settings.padding_top }}px)
+      clamp(48px, {{ pb_vw }}vw, {{ section.settings.padding_bottom }}px);
+  }
+  #shopify-section-{{ sid }} .rb-statement__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(16px, 1.98vw, 38px);
+    text-align: center;
+  }
+  #shopify-section-{{ sid }} .rb-statement__eyebrow {
+    color: {{ section.settings.eyebrow_color }};
+  }
+  #shopify-section-{{ sid }} .rb-statement__heading {
+    color: {{ section.settings.heading_color }};
+    max-width: {{ section.settings.heading_width }}px;
+    text-wrap: balance;
+  }
+  #shopify-section-{{ sid }} .rb-statement__heading p { margin: 0; }
+  #shopify-section-{{ sid }} .rb-statement__heading p + p {
+    margin-top: 0.4em;
+  }
+</style>
+
+<div class="rb-section rb-statement">
+  <div class="rb-container rb-statement__inner">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="rb-eyebrow rb-statement__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+    {%- endif -%}
+
+    {%- if section.settings.heading != blank -%}
+      <div class="rb-display rb-statement__heading">{{ section.settings.heading }}</div>
+    {%- endif -%}
+
+    {%- if section.settings.button_label != blank -%}
+      <a
+        href="{{ section.settings.button_link | default: '#' }}"
+        class="rb-btn rb-btn--serif rb-btn--outline"
+      >{{ section.settings.button_label | escape }}</a>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Rebrand statement",
+  "tag": "section",
+  "class": "rb-section-wrapper",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "default": "A Creative Eco-System", "label": "Eyebrow" },
+    { "type": "color", "id": "eyebrow_color", "default": "#b00e3f", "label": "Eyebrow colour" },
+    { "type": "richtext", "id": "heading",
+      "default": "<p>Lorem ipsum dolor sit amet, <em>consectetur adipiscing elit</em>, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>",
+      "label": "Statement",
+      "info": "Italics inside the sentence are part of the look — wrap words in italic to mix roman and italic like the design." },
+    { "type": "color", "id": "heading_color", "default": "#bea532", "label": "Statement colour" },
+    { "type": "range", "id": "heading_width", "min": 700, "max": 1600, "step": 10,
+      "default": 1270, "unit": "px", "label": "Statement max width" },
+    { "type": "color", "id": "background", "default": "#ffffff", "label": "Background" },
+    { "type": "header", "content": "Optional button" },
+    { "type": "text", "id": "button_label", "label": "Button label" },
+    { "type": "url", "id": "button_link", "label": "Button link" },
+    { "type": "header", "content": "Spacing" },
+    { "type": "range", "id": "padding_top", "min": 40, "max": 400, "step": 5,
+      "default": 240, "unit": "px", "label": "Top padding at 1920px wide" },
+    { "type": "range", "id": "padding_bottom", "min": 40, "max": 400, "step": 5,
+      "default": 265, "unit": "px", "label": "Bottom padding at 1920px wide" }
+  ],
+  "presets": [{ "name": "Rebrand statement" }]
+}
+{% endschema %}

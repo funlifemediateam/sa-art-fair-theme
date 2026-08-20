@@ -1,0 +1,26 @@
+{
+  "type": "header",
+  "name": "Header group",
+  "sections": {
+    "rb_header": {
+      "type": "rb-header",
+      "settings": {
+        "logo_width": 275,
+        "menu": "main-menu",
+        "sticky": true,
+        "show_border": false,
+        "cta_a_label": "Buy Art",
+        "cta_a_url": "shopify://collections/gallery",
+        "cta_b_label": "Create Art",
+        "cta_b_url": "shopify://collections/classes-workshops",
+        "show_search": false,
+        "show_cart": false,
+        "drawer_cart_link": true,
+        "drawer_account_link": true,
+        "background": "#ffffff",
+        "text_color": "#1e1e1e"
+      }
+    }
+  },
+  "order": ["rb_header"]
+}

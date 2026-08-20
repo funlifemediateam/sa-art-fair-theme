@@ -1,0 +1,245 @@
+{% comment %}
+  Rebrand contact band — map bleeding off the left edge, serif heading with a
+  gold italic lead-in, and an underline-only contact form on the right.
+
+  Comp: map 969 x 614 (50.5% of the 1920 frame), form column 614 wide sitting
+  140px clear of the map with a 197px right margin.
+
+  The map is an embed by default so it stays sharp and interactive; supply an
+  image instead if a static, styled map is preferred.
+{% endcomment %}
+
+{{ 'saf-rebrand.css' | asset_url | stylesheet_tag }}
+
+{%- assign sid = section.id -%}
+
+<style>
+  #shopify-section-{{ sid }} .rb-contact {
+    background: {{ section.settings.background }};
+    display: grid;
+    grid-template-columns: {{ section.settings.map_width }}% minmax(0, 1fr);
+    align-items: start;
+    padding-block: clamp(48px, 6.25vw, 120px);
+  }
+  #shopify-section-{{ sid }} .rb-contact__map {
+    position: relative;
+    aspect-ratio: 969 / 614;
+    overflow: hidden;
+    background: #ededed;
+  }
+  #shopify-section-{{ sid }} .rb-contact__map iframe,
+  #shopify-section-{{ sid }} .rb-contact__map img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    object-fit: cover;
+    filter: grayscale({{ section.settings.map_grayscale }}%);
+  }
+  #shopify-section-{{ sid }} .rb-contact__col {
+    padding-left: clamp(20px, 7.29vw, 140px);
+    padding-right: clamp(20px, 10.26vw, 197px);
+  }
+  #shopify-section-{{ sid }} .rb-contact__heading {
+    color: {{ section.settings.heading_color }};
+    text-wrap: balance;
+  }
+  #shopify-section-{{ sid }} .rb-contact__heading em,
+  #shopify-section-{{ sid }} .rb-contact__heading i {
+    color: {{ section.settings.heading_accent }};
+    font-style: italic;
+  }
+  #shopify-section-{{ sid }} .rb-contact__label {
+    margin: clamp(24px, 3.02vw, 58px) 0 clamp(14px, 1.56vw, 30px);
+    font-family: var(--rb-sans);
+    font-weight: 700;
+    font-size: var(--rb-fs-label);
+    line-height: 1.2;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: {{ section.settings.text_color }};
+  }
+
+  #shopify-section-{{ sid }} .rb-field { margin-bottom: clamp(14px, 1.35vw, 26px); }
+  #shopify-section-{{ sid }} .rb-field input,
+  #shopify-section-{{ sid }} .rb-field textarea {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    padding: clamp(6px, 0.63vw, 12px) 0;
+    border: 0;
+    border-bottom: 1px solid {{ section.settings.rule_color }};
+    border-radius: 0;
+    background: transparent;
+    font-family: var(--rb-sans);
+    font-size: var(--rb-fs-label);
+    line-height: 1.35;
+    color: {{ section.settings.text_color }};
+    appearance: none;
+  }
+  #shopify-section-{{ sid }} .rb-field textarea { resize: vertical; min-height: 3.2em; }
+  #shopify-section-{{ sid }} .rb-field input::placeholder,
+  #shopify-section-{{ sid }} .rb-field textarea::placeholder {
+    color: {{ section.settings.text_color }};
+    opacity: 1;
+  }
+  #shopify-section-{{ sid }} .rb-field input:focus,
+  #shopify-section-{{ sid }} .rb-field textarea:focus {
+    outline: 0;
+    border-bottom-color: {{ section.settings.heading_accent }};
+  }
+  /* the visible placeholder is the label, so keep a real one for assistive tech */
+  #shopify-section-{{ sid }} .rb-field label {
+    position: absolute;
+    width: 1px; height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+  #shopify-section-{{ sid }} .rb-contact__submit { margin-top: clamp(18px, 2.08vw, 40px); }
+  #shopify-section-{{ sid }} .rb-contact__msg {
+    margin: 0 0 16px;
+    font-family: var(--rb-sans);
+    font-size: var(--rb-fs-body-sm);
+  }
+  #shopify-section-{{ sid }} .rb-contact__msg--ok { color: var(--rb-moss); }
+  #shopify-section-{{ sid }} .rb-contact__msg--err { color: var(--rb-cherry); }
+
+  @media screen and (max-width: 899px) {
+    #shopify-section-{{ sid }} .rb-contact {
+      grid-template-columns: 1fr;
+      gap: 36px;
+    }
+    #shopify-section-{{ sid }} .rb-contact__map { aspect-ratio: 4 / 3; }
+    #shopify-section-{{ sid }} .rb-contact__col {
+      padding-inline: var(--rb-gutter);
+    }
+  }
+</style>
+
+<div class="rb-section rb-contact">
+  <div class="rb-contact__map">
+    {%- if section.settings.map_image != blank -%}
+      {{
+        section.settings.map_image
+        | image_url: width: 1940
+        | image_tag:
+          widths: '600, 900, 1200, 1600, 1940',
+          sizes: '(max-width: 899px) 100vw, 50vw',
+          loading: 'lazy',
+          alt: section.settings.map_alt
+      }}
+    {%- elsif section.settings.map_embed != blank -%}
+      <iframe
+        src="{{ section.settings.map_embed }}"
+        title="{{ section.settings.map_alt | escape }}"
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        allowfullscreen
+      ></iframe>
+    {%- endif -%}
+  </div>
+
+  <div class="rb-contact__col">
+    {%- if section.settings.heading != blank -%}
+      <div class="rb-display rb-contact__heading">{{ section.settings.heading }}</div>
+    {%- endif -%}
+
+    {%- if section.settings.form_label != blank -%}
+      <p class="rb-contact__label">{{ section.settings.form_label | escape }}</p>
+    {%- endif -%}
+
+    {%- form 'contact', id: 'rb-contact-form' -%}
+      {%- if form.posted_successfully? -%}
+        <p class="rb-contact__msg rb-contact__msg--ok">
+          {{ section.settings.success_message | default: 'Thanks — we will be in touch shortly.' }}
+        </p>
+      {%- elsif form.errors -%}
+        <p class="rb-contact__msg rb-contact__msg--err">
+          {{ form.errors | default_errors }}
+        </p>
+      {%- endif -%}
+
+      <div class="rb-field">
+        <label for="rb-name-{{ sid }}">{{ section.settings.name_label }}</label>
+        <input
+          type="text"
+          id="rb-name-{{ sid }}"
+          name="contact[name]"
+          placeholder="{{ section.settings.name_label | escape }}"
+          value="{{ form.name }}"
+          autocomplete="name"
+        >
+      </div>
+
+      <div class="rb-field">
+        <label for="rb-email-{{ sid }}">{{ section.settings.email_label }}</label>
+        <input
+          type="email"
+          id="rb-email-{{ sid }}"
+          name="contact[email]"
+          placeholder="{{ section.settings.email_label | escape }}"
+          value="{{ form.email }}"
+          autocomplete="email"
+          required
+        >
+      </div>
+
+      <div class="rb-field">
+        <label for="rb-body-{{ sid }}">{{ section.settings.message_label }}</label>
+        <textarea
+          id="rb-body-{{ sid }}"
+          name="contact[body]"
+          rows="2"
+          placeholder="{{ section.settings.message_label | escape }}"
+        >{{ form.body }}</textarea>
+      </div>
+
+      <button type="submit" class="rb-btn rb-btn--serif rb-btn--outline rb-contact__submit">
+        {{- section.settings.submit_label | escape -}}
+      </button>
+    {%- endform -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Rebrand contact",
+  "tag": "section",
+  "class": "rb-section-wrapper",
+  "settings": [
+    { "type": "richtext", "id": "heading",
+      "default": "<p><em>Established</em> in the valley of the Cape Peninsula.</p>",
+      "label": "Heading",
+      "info": "Italic words take the gold accent colour." },
+    { "type": "color", "id": "heading_color", "default": "#1e1e1e", "label": "Heading colour" },
+    { "type": "color", "id": "heading_accent", "default": "#bea532", "label": "Heading italic colour" },
+    { "type": "header", "content": "Map" },
+    { "type": "range", "id": "map_width", "min": 30, "max": 65, "step": 1,
+      "default": 50, "unit": "%", "label": "Map column width" },
+    { "type": "text", "id": "map_embed",
+      "default": "https://www.google.com/maps?q=SA%20Art%20Fair%2C%20Hout%20Bay%2C%20Cape%20Town&output=embed",
+      "label": "Map embed URL",
+      "info": "Confirm the pin is on the studio — this default is a place-name search, not an exact location." },
+    { "type": "image_picker", "id": "map_image", "label": "Map image",
+      "info": "Overrides the embed when set." },
+    { "type": "text", "id": "map_alt", "default": "Map to the SA Art Fair studio", "label": "Map description" },
+    { "type": "range", "id": "map_grayscale", "min": 0, "max": 100, "step": 5,
+      "default": 100, "unit": "%", "label": "Map desaturation" },
+    { "type": "header", "content": "Form" },
+    { "type": "text", "id": "form_label", "default": "Get in touch", "label": "Form heading" },
+    { "type": "text", "id": "name_label", "default": "Name + Surname", "label": "Name field label" },
+    { "type": "text", "id": "email_label", "default": "Email Address", "label": "Email field label" },
+    { "type": "text", "id": "message_label", "default": "Message", "label": "Message field label" },
+    { "type": "text", "id": "submit_label", "default": "Submit", "label": "Submit button label" },
+    { "type": "text", "id": "success_message",
+      "default": "Thanks — we will be in touch shortly.", "label": "Success message" },
+    { "type": "header", "content": "Colour" },
+    { "type": "color", "id": "text_color", "default": "#1e1e1e", "label": "Form text colour" },
+    { "type": "color", "id": "rule_color", "default": "#1e1e1e", "label": "Field underline colour" },
+    { "type": "color", "id": "background", "default": "#ffffff", "label": "Background" }
+  ],
+  "presets": [{ "name": "Rebrand contact" }]
+}
+{% endschema %}

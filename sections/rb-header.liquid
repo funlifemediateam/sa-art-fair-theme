@@ -1,0 +1,204 @@
+{% comment %}
+  Rebrand header — logo lockup left, two path pills and a burger right, on
+  white. Comp: 1920 x 170, pills 61px tall, burger 48px wide.
+
+  The comp shows no cart or search in the bar, so those are off by default and
+  the cart lives in the drawer instead; a store still needs a route to it.
+  Turn the header icons on if the client wants them in the bar.
+{% endcomment %}
+
+{{ 'saf-rebrand.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'saf-rebrand.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign sid = section.id
+  assign menu = section.settings.menu
+-%}
+
+<style>
+  #shopify-section-{{ sid }} {
+    position: relative;
+    z-index: 20;
+  }
+  {%- if section.settings.sticky -%}
+    #shopify-section-{{ sid }} { position: sticky; top: 0; }
+  {%- endif -%}
+
+  #shopify-section-{{ sid }} .rb-header {
+    background: {{ section.settings.background }};
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    min-height: var(--rb-header-h);
+    padding-inline: clamp(16px, 3.65vw, 70px);
+    {% if section.settings.show_border %}border-bottom: 1px solid rgba(30, 30, 30, 0.12);{% endif %}
+  }
+  #shopify-section-{{ sid }} .rb-header__logo { display: block; flex: 0 0 auto; }
+  #shopify-section-{{ sid }} .rb-header__logo img {
+    display: block;
+    width: {{ section.settings.logo_width }}px;
+    max-width: 46vw;
+    height: auto;
+  }
+  #shopify-section-{{ sid }} .rb-header__right {
+    display: flex;
+    align-items: center;
+    gap: clamp(10px, 1.41vw, 27px);
+  }
+  #shopify-section-{{ sid }} .rb-header__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    color: {{ section.settings.text_color }};
+    text-decoration: none;
+    position: relative;
+  }
+  #shopify-section-{{ sid }} .rb-header__icon svg { width: 22px; height: 22px; }
+  #shopify-section-{{ sid }} .rb-header__count {
+    position: absolute;
+    top: 4px; right: 2px;
+    min-width: 17px;
+    padding: 0 4px;
+    border-radius: 999px;
+    background: var(--rb-cherry);
+    color: #fff;
+    font-family: var(--rb-sans);
+    font-size: 11px;
+    line-height: 17px;
+    text-align: center;
+  }
+
+  /* burger */
+  #shopify-section-{{ sid }} .rb-burger {
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 7px;
+    width: clamp(34px, 2.5vw, 48px);
+    height: 44px;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+  }
+  #shopify-section-{{ sid }} .rb-burger span {
+    display: block;
+    height: 2px;
+    width: 100%;
+    background: {{ section.settings.text_color }};
+    transition: transform 0.3s ease, opacity 0.2s ease;
+  }
+  #shopify-section-{{ sid }} .rb-burger[aria-expanded='true'] span:nth-child(1) {
+    transform: translateY(9px) rotate(45deg);
+  }
+  #shopify-section-{{ sid }} .rb-burger[aria-expanded='true'] span:nth-child(2) { opacity: 0; }
+  #shopify-section-{{ sid }} .rb-burger[aria-expanded='true'] span:nth-child(3) {
+    transform: translateY(-9px) rotate(-45deg);
+  }
+
+  @media screen and (max-width: 749px) {
+    #shopify-section-{{ sid }} .rb-header__ctas { display: none; }
+  }
+</style>
+
+<header class="rb-section rb-header" role="banner">
+  <a href="{{ routes.root_url }}" class="rb-header__logo" aria-label="{{ shop.name | escape }} — home">
+    {%- if section.settings.logo != blank -%}
+      {{
+        section.settings.logo
+        | image_url: width: 900
+        | image_tag: widths: '220, 330, 440, 660, 900', alt: shop.name, loading: 'eager'
+      }}
+    {%- else -%}
+      <img
+        src="{{ 'saf-logo-lockup.png' | asset_url }}"
+        alt="{{ shop.name | escape }}"
+        width="330"
+        height="99"
+        loading="eager"
+      >
+    {%- endif -%}
+  </a>
+
+  <div class="rb-header__right">
+    <div class="rb-header__ctas rb-header__right">
+      {%- if section.settings.cta_a_label != blank -%}
+        <a href="{{ section.settings.cta_a_url | default: '#' }}" class="rb-btn rb-btn--plain rb-btn--outline">
+          {{- section.settings.cta_a_label | escape -}}
+        </a>
+      {%- endif -%}
+      {%- if section.settings.cta_b_label != blank -%}
+        <a href="{{ section.settings.cta_b_url | default: '#' }}" class="rb-btn rb-btn--plain rb-btn--outline">
+          {{- section.settings.cta_b_label | escape -}}
+        </a>
+      {%- endif -%}
+    </div>
+
+    {%- if section.settings.show_search -%}
+      <a href="{{ routes.search_url }}" class="rb-header__icon" aria-label="Search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+          <circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path>
+        </svg>
+      </a>
+    {%- endif -%}
+
+    {%- if section.settings.show_cart -%}
+      <a href="{{ routes.cart_url }}" class="rb-header__icon" aria-label="Cart ({{ cart.item_count }})">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+          <path d="M6 8h12l-1 12H7L6 8z"></path><path d="M9 8V6a3 3 0 0 1 6 0v2"></path>
+        </svg>
+        {%- if cart.item_count > 0 -%}
+          <span class="rb-header__count">{{ cart.item_count }}</span>
+        {%- endif -%}
+      </a>
+    {%- endif -%}
+
+    <button
+      type="button"
+      class="rb-burger"
+      aria-expanded="false"
+      aria-controls="rb-drawer-{{ sid }}"
+      aria-label="Open menu"
+      data-rb-drawer-open
+    >
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+{%- render 'rb-drawer', sid: sid, menu: menu, section: section -%}
+
+{% schema %}
+{
+  "name": "Rebrand header",
+  "tag": "section",
+  "class": "rb-header-section",
+  "settings": [
+    { "type": "image_picker", "id": "logo", "label": "Logo",
+      "info": "Leave blank to use the supplied SA Art Fair lockup." },
+    { "type": "range", "id": "logo_width", "min": 140, "max": 420, "step": 5,
+      "default": 275, "unit": "px", "label": "Logo width" },
+    { "type": "link_list", "id": "menu", "default": "main-menu", "label": "Drawer menu" },
+    { "type": "checkbox", "id": "sticky", "default": true, "label": "Stick to top on scroll" },
+    { "type": "checkbox", "id": "show_border", "default": false, "label": "Show bottom border" },
+    { "type": "header", "content": "Path buttons" },
+    { "type": "text", "id": "cta_a_label", "default": "Buy Art", "label": "Button A label" },
+    { "type": "url", "id": "cta_a_url", "label": "Button A link" },
+    { "type": "text", "id": "cta_b_label", "default": "Create Art", "label": "Button B label" },
+    { "type": "url", "id": "cta_b_url", "label": "Button B link" },
+    { "type": "header", "content": "Icons",
+      "info": "The design shows neither in the bar; the drawer carries the cart link instead." },
+    { "type": "checkbox", "id": "show_search", "default": false, "label": "Show search icon" },
+    { "type": "checkbox", "id": "show_cart", "default": false, "label": "Show cart icon" },
+    { "type": "header", "content": "Drawer" },
+    { "type": "checkbox", "id": "drawer_cart_link", "default": true, "label": "Show cart link in drawer" },
+    { "type": "checkbox", "id": "drawer_account_link", "default": true, "label": "Show account link in drawer" },
+    { "type": "header", "content": "Colour" },
+    { "type": "color", "id": "background", "default": "#ffffff", "label": "Background" },
+    { "type": "color", "id": "text_color", "default": "#1e1e1e", "label": "Text + icons" }
+  ]
+}
+{% endschema %}

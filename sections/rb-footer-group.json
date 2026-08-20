@@ -1,0 +1,23 @@
+{
+  "type": "footer",
+  "name": "Footer group",
+  "sections": {
+    "rb_footer": {
+      "type": "rb-footer",
+      "settings": {
+        "wordmark_width": 327,
+        "blurb": "<p>Tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>",
+        "email": "Info@SAAF.com",
+        "phone": "+27 680 000 00",
+        "social_bg": "#1e1e1e",
+        "social_icon": "#ffffff",
+        "show_mark": true,
+        "mark_width": 82,
+        "background": "#ffffff",
+        "text_color": "#1e1e1e",
+        "show_legal": true
+      }
+    }
+  },
+  "order": ["rb_footer"]
+}

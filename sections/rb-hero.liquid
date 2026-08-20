@@ -1,0 +1,154 @@
+{% comment %}
+  Rebrand hero — full-bleed photograph with the circled protea centred on it.
+  Comp: 1920 x 849 band (2.26:1) directly under a 170px header.
+{% endcomment %}
+
+{{ 'saf-rebrand.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign sid = section.id
+  assign img = section.settings.image
+-%}
+
+<style>
+  #shopify-section-{{ sid }} .rb-hero {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1920 / {{ section.settings.band_height }};
+    min-height: {{ section.settings.min_height }}px;
+    overflow: hidden;
+    background: var(--rb-ink);
+  }
+  #shopify-section-{{ sid }} .rb-hero__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: {{ section.settings.focal_x }}% {{ section.settings.focal_y }}%;
+  }
+  #shopify-section-{{ sid }} .rb-hero__overlay {
+    position: absolute;
+    inset: 0;
+    background: {{ section.settings.overlay_color }};
+    opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
+  }
+  #shopify-section-{{ sid }} .rb-hero__inner {
+    position: relative;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(20px, 2.08vw, 40px);
+    text-align: center;
+    padding: var(--rb-gutter);
+    box-sizing: border-box;
+  }
+  #shopify-section-{{ sid }} .rb-hero__mark {
+    display: block;
+    width: clamp(150px, 17.7vw, 340px);
+    height: auto;
+  }
+  #shopify-section-{{ sid }} .rb-hero__heading {
+    color: {{ section.settings.text_color }};
+    max-width: 20ch;
+    text-wrap: balance;
+  }
+  #shopify-section-{{ sid }} .rb-hero__placeholder {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  @media screen and (max-width: 749px) {
+    #shopify-section-{{ sid }} .rb-hero {
+      aspect-ratio: {{ section.settings.mobile_ratio }};
+    }
+  }
+</style>
+
+<div class="rb-section rb-bleed">
+  <div class="rb-hero">
+    {%- if img != blank -%}
+      {{
+        img
+        | image_url: width: 3840
+        | image_tag:
+          class: 'rb-hero__img',
+          widths: '750, 1100, 1500, 1920, 2400, 3000, 3840',
+          sizes: '100vw',
+          loading: 'eager',
+          fetchpriority: 'high',
+          alt: img.alt | default: shop.name
+      }}
+    {%- else -%}
+      {{ 'hero-apparel-1' | placeholder_svg_tag: 'rb-hero__placeholder placeholder-svg' }}
+    {%- endif -%}
+
+    {%- if section.settings.overlay_opacity > 0 -%}
+      <div class="rb-hero__overlay" aria-hidden="true"></div>
+    {%- endif -%}
+
+    <div class="rb-hero__inner">
+      {%- if section.settings.show_mark -%}
+        <img
+          src="{{ 'saf-mark-circle-white.png' | asset_url }}"
+          alt=""
+          width="398"
+          height="398"
+          class="rb-hero__mark"
+          loading="eager"
+        >
+      {%- endif -%}
+
+      {%- if section.settings.heading != blank -%}
+        <div class="rb-display rb-hero__heading">{{ section.settings.heading }}</div>
+      {%- endif -%}
+
+      {%- if section.settings.button_label != blank -%}
+        <a
+          href="{{ section.settings.button_link | default: '#' }}"
+          class="rb-btn rb-btn--white"
+        >{{ section.settings.button_label | escape }}</a>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Rebrand hero",
+  "tag": "section",
+  "class": "rb-section-wrapper",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Background image",
+      "info": "Comp uses a 1920x883 photograph of a paint palette." },
+    { "type": "range", "id": "band_height", "min": 500, "max": 1100, "step": 10,
+      "default": 850, "unit": "px", "label": "Band height at 1920px wide",
+      "info": "Sets the aspect ratio, so the band scales with the viewport." },
+    { "type": "range", "id": "min_height", "min": 240, "max": 700, "step": 10,
+      "default": 380, "unit": "px", "label": "Minimum height" },
+    { "type": "text", "id": "mobile_ratio", "default": "4 / 5",
+      "label": "Mobile aspect ratio", "info": "CSS aspect-ratio, e.g. 4 / 5." },
+    { "type": "range", "id": "focal_x", "min": 0, "max": 100, "step": 1,
+      "default": 50, "unit": "%", "label": "Image focal point — horizontal" },
+    { "type": "range", "id": "focal_y", "min": 0, "max": 100, "step": 1,
+      "default": 50, "unit": "%", "label": "Image focal point — vertical" },
+    { "type": "header", "content": "Overlay" },
+    { "type": "color", "id": "overlay_color", "default": "#1e1e1e", "label": "Overlay colour" },
+    { "type": "range", "id": "overlay_opacity", "min": 0, "max": 80, "step": 5,
+      "default": 0, "unit": "%", "label": "Overlay opacity" },
+    { "type": "header", "content": "Content" },
+    { "type": "checkbox", "id": "show_mark", "default": true,
+      "label": "Show circled protea mark" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading",
+      "info": "Comp leaves this empty — the mark carries the hero on its own." },
+    { "type": "color", "id": "text_color", "default": "#ffffff", "label": "Heading colour" },
+    { "type": "text", "id": "button_label", "label": "Button label" },
+    { "type": "url", "id": "button_link", "label": "Button link" }
+  ],
+  "presets": [{ "name": "Rebrand hero" }]
+}
+{% endschema %}

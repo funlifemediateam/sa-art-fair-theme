@@ -1,0 +1,158 @@
+{% comment %}
+  Slide-in menu behind the rebrand header's burger.
+
+  Accepts: sid (section id), menu (link_list), section (for settings).
+  One level of children is supported — deeper nesting is flattened, which the
+  brand's flat two-path IA does not need.
+{% endcomment %}
+
+<style>
+  #rb-drawer-{{ sid }} {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    visibility: hidden;
+    pointer-events: none;
+  }
+  #rb-drawer-{{ sid }}.is-open { visibility: visible; pointer-events: auto; }
+
+  #rb-drawer-{{ sid }} .rb-drawer__scrim {
+    position: absolute;
+    inset: 0;
+    background: rgba(30, 30, 30, 0.42);
+    opacity: 0;
+    transition: opacity 0.35s ease;
+  }
+  #rb-drawer-{{ sid }}.is-open .rb-drawer__scrim { opacity: 1; }
+
+  #rb-drawer-{{ sid }} .rb-drawer__panel {
+    position: absolute;
+    top: 0; right: 0; bottom: 0;
+    width: min(460px, 88vw);
+    background: {{ section.settings.background | default: '#ffffff' }};
+    display: flex;
+    flex-direction: column;
+    padding: clamp(20px, 2.6vw, 44px);
+    box-sizing: border-box;
+    overflow-y: auto;
+    transform: translateX(100%);
+    transition: transform 0.38s cubic-bezier(0.32, 0.72, 0, 1);
+  }
+  #rb-drawer-{{ sid }}.is-open .rb-drawer__panel { transform: none; }
+
+  #rb-drawer-{{ sid }} .rb-drawer__close {
+    align-self: flex-end;
+    width: 44px; height: 44px;
+    border: 0;
+    background: none;
+    color: {{ section.settings.text_color | default: '#1e1e1e' }};
+    cursor: pointer;
+    font-size: 26px;
+    line-height: 1;
+  }
+  #rb-drawer-{{ sid }} .rb-drawer__nav {
+    list-style: none;
+    margin: clamp(12px, 1.5vw, 26px) 0 0;
+    padding: 0;
+  }
+  #rb-drawer-{{ sid }} .rb-drawer__nav > li { margin-bottom: clamp(10px, 0.9vw, 16px); }
+  #rb-drawer-{{ sid }} .rb-drawer__link {
+    display: block;
+    font-family: var(--rb-serif);
+    font-size: clamp(24px, 1.88vw, 36px);
+    font-weight: 400;
+    line-height: 1.25;
+    color: {{ section.settings.text_color | default: '#1e1e1e' }};
+    text-decoration: none;
+  }
+  #rb-drawer-{{ sid }} .rb-drawer__link:hover { color: var(--rb-cherry); }
+  #rb-drawer-{{ sid }} .rb-drawer__sub {
+    list-style: none;
+    margin: 6px 0 0;
+    padding: 0 0 0 14px;
+  }
+  #rb-drawer-{{ sid }} .rb-drawer__sub a {
+    display: block;
+    padding: 3px 0;
+    font-family: var(--rb-sans);
+    font-size: var(--rb-fs-body-sm);
+    color: {{ section.settings.text_color | default: '#1e1e1e' }};
+    text-decoration: none;
+  }
+  #rb-drawer-{{ sid }} .rb-drawer__sub a:hover { color: var(--rb-cherry); }
+
+  #rb-drawer-{{ sid }} .rb-drawer__foot {
+    margin-top: auto;
+    padding-top: 28px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 18px;
+  }
+  #rb-drawer-{{ sid }} .rb-drawer__foot a {
+    font-family: var(--rb-sans);
+    font-size: var(--rb-fs-body-sm);
+    color: {{ section.settings.text_color | default: '#1e1e1e' }};
+    text-decoration: none;
+  }
+  #rb-drawer-{{ sid }} .rb-drawer__ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #rb-drawer-{{ sid }} .rb-drawer__panel,
+    #rb-drawer-{{ sid }} .rb-drawer__scrim { transition: none; }
+  }
+</style>
+
+<div id="rb-drawer-{{ sid }}" class="rb-drawer" data-rb-drawer>
+  <div class="rb-drawer__scrim" data-rb-drawer-close></div>
+
+  <div class="rb-drawer__panel" role="dialog" aria-modal="true" aria-label="Menu">
+    <button type="button" class="rb-drawer__close" data-rb-drawer-close aria-label="Close menu">&times;</button>
+
+    {%- if linklists[menu].links.size > 0 -%}
+      <ul class="rb-drawer__nav">
+        {%- for link in linklists[menu].links -%}
+          <li>
+            <a href="{{ link.url }}" class="rb-drawer__link">{{ link.title | escape }}</a>
+            {%- if link.links.size > 0 -%}
+              <ul class="rb-drawer__sub">
+                {%- for child in link.links -%}
+                  <li><a href="{{ child.url }}">{{ child.title | escape }}</a></li>
+                {%- endfor -%}
+              </ul>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+
+    <div class="rb-drawer__ctas">
+      {%- if section.settings.cta_a_label != blank -%}
+        <a href="{{ section.settings.cta_a_url | default: '#' }}" class="rb-btn rb-btn--plain rb-btn--outline">
+          {{- section.settings.cta_a_label | escape -}}
+        </a>
+      {%- endif -%}
+      {%- if section.settings.cta_b_label != blank -%}
+        <a href="{{ section.settings.cta_b_url | default: '#' }}" class="rb-btn rb-btn--plain rb-btn--outline">
+          {{- section.settings.cta_b_label | escape -}}
+        </a>
+      {%- endif -%}
+    </div>
+
+    <div class="rb-drawer__foot">
+      {%- if section.settings.drawer_cart_link -%}
+        <a href="{{ routes.cart_url }}">Cart ({{ cart.item_count }})</a>
+      {%- endif -%}
+      {%- if section.settings.drawer_account_link and shop.customer_accounts_enabled -%}
+        <a href="{{ routes.account_url }}">
+          {%- if customer %}Account{% else %}Log in{% endif -%}
+        </a>
+      {%- endif -%}
+      <a href="{{ routes.search_url }}">Search</a>
+    </div>
+  </div>
+</div>
