@@ -133,14 +133,20 @@
       </ul>
     {%- endif -%}
 
+    {%- comment -%}
+      The pills carry whatever fill the header is set to, so a coloured header
+      does not open a drawer wearing the old outline pair.
+    {%- endcomment -%}
+    {%- assign fill_a = section.settings.cta_a_fill | default: 'outline' -%}
+    {%- assign fill_b = section.settings.cta_b_fill | default: 'outline' -%}
     <div class="rb-drawer__ctas">
       {%- if section.settings.cta_a_label != blank -%}
-        <a href="{{ section.settings.cta_a_url | default: '#' }}" class="rb-btn rb-btn--plain rb-btn--outline">
+        <a href="{{ section.settings.cta_a_url | default: '#' }}" class="rb-btn rb-btn--plain rb-btn--{{ fill_a }}">
           {{- section.settings.cta_a_label | escape -}}
         </a>
       {%- endif -%}
       {%- if section.settings.cta_b_label != blank -%}
-        <a href="{{ section.settings.cta_b_url | default: '#' }}" class="rb-btn rb-btn--plain rb-btn--outline">
+        <a href="{{ section.settings.cta_b_url | default: '#' }}" class="rb-btn rb-btn--plain rb-btn--{{ fill_b }}">
           {{- section.settings.cta_b_label | escape -}}
         </a>
       {%- endif -%}

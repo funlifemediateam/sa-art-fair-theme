@@ -13,6 +13,39 @@
 {%- liquid
   assign sid = section.id
   assign menu = section.settings.menu
+
+  comment
+    Optional dropdowns under the two path buttons, for the variant Bianca is
+    being shown. A section may only carry ONE link_list setting, so the two
+    menus arrive as blocks instead — the same workaround the pre-rebrand header
+    used.
+
+    The button itself stays a link. The old site had a label that only opened a
+    menu and went nowhere; that dead end is the thing being fixed, not
+    repeated.
+  endcomment
+  assign drop_a = ''
+  assign drop_b = ''
+  for block in section.blocks
+    if block.type == 'path_menu'
+      if block.settings.which == 'b'
+        assign drop_b = block.settings.menu
+      else
+        assign drop_a = block.settings.menu
+      endif
+    endif
+  endfor
+
+  assign has_drop_a = false
+  assign has_drop_b = false
+  if section.settings.enable_dropdowns
+    if linklists[drop_a].links.size > 0
+      assign has_drop_a = true
+    endif
+    if linklists[drop_b].links.size > 0
+      assign has_drop_b = true
+    endif
+  endif
 -%}
 
 <style>
@@ -73,6 +106,66 @@
     font-size: 11px;
     line-height: 17px;
     text-align: center;
+  }
+
+  /* Dropdowns under the path buttons. Desktop only — a phone has no hover, so
+     below 750px the pills drop out of the bar entirely and the burger drawer
+     plus the bottom path bar carry the navigation, as they already do. */
+  #shopify-section-{{ sid }} .rb-header__drop {
+    position: relative;
+    display: inline-flex;
+  }
+  /* bridges the gap between pill and panel so crossing it does not close the
+     panel; explicit display because Dawn's base.css hides empty boxes */
+  #shopify-section-{{ sid }} .rb-header__drop::after {
+    content: '';
+    display: block;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    height: 14px;
+  }
+  #shopify-section-{{ sid }} .rb-header__drop-panel {
+    position: absolute;
+    z-index: 5;
+    top: calc(100% + 12px);
+    left: 0;
+    min-width: 224px;
+    margin: 0;
+    padding: 14px 20px;
+    border: 1px solid rgba(30, 30, 30, 0.14);
+    border-radius: 12px;
+    background: {{ section.settings.background }};
+    box-shadow: 0 8px 26px rgba(30, 30, 30, 0.12);
+    list-style: none;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-6px);
+    transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s;
+  }
+  #shopify-section-{{ sid }} .rb-header__drop:hover .rb-header__drop-panel,
+  #shopify-section-{{ sid }} .rb-header__drop:focus-within .rb-header__drop-panel {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+  }
+  #shopify-section-{{ sid }} .rb-header__drop-panel a {
+    display: block;
+    padding: 5px 0;
+    font-family: var(--rb-sans);
+    font-size: var(--rb-fs-body-sm);
+    line-height: 1.35;
+    color: {{ section.settings.text_color }};
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  #shopify-section-{{ sid }} .rb-header__drop-panel a:hover,
+  #shopify-section-{{ sid }} .rb-header__drop-panel a:focus-visible {
+    color: var(--rb-cherry);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #shopify-section-{{ sid }} .rb-header__drop-panel { transition: none; }
   }
 
   /* burger */
@@ -152,14 +245,45 @@
   <div class="rb-header__right">
     <div class="rb-header__ctas rb-header__right">
       {%- if section.settings.cta_a_label != blank -%}
-        <a href="{{ section.settings.cta_a_url | default: '#' }}" class="rb-btn rb-btn--plain rb-btn--outline">
-          {{- section.settings.cta_a_label | escape -}}
-        </a>
+        {%- capture pill_a -%}
+          <a href="{{ section.settings.cta_a_url | default: '#' }}"
+             class="rb-btn rb-btn--plain rb-btn--{{ section.settings.cta_a_fill }}">
+            {{- section.settings.cta_a_label | escape -}}
+          </a>
+        {%- endcapture -%}
+        {%- if has_drop_a -%}
+          <div class="rb-header__drop">
+            {{ pill_a }}
+            <ul class="rb-header__drop-panel">
+              {%- for link in linklists[drop_a].links -%}
+                <li><a href="{{ link.url }}">{{ link.title | escape }}</a></li>
+              {%- endfor -%}
+            </ul>
+          </div>
+        {%- else -%}
+          {{ pill_a }}
+        {%- endif -%}
       {%- endif -%}
+
       {%- if section.settings.cta_b_label != blank -%}
-        <a href="{{ section.settings.cta_b_url | default: '#' }}" class="rb-btn rb-btn--plain rb-btn--outline">
-          {{- section.settings.cta_b_label | escape -}}
-        </a>
+        {%- capture pill_b -%}
+          <a href="{{ section.settings.cta_b_url | default: '#' }}"
+             class="rb-btn rb-btn--plain rb-btn--{{ section.settings.cta_b_fill }}">
+            {{- section.settings.cta_b_label | escape -}}
+          </a>
+        {%- endcapture -%}
+        {%- if has_drop_b -%}
+          <div class="rb-header__drop">
+            {{ pill_b }}
+            <ul class="rb-header__drop-panel">
+              {%- for link in linklists[drop_b].links -%}
+                <li><a href="{{ link.url }}">{{ link.title | escape }}</a></li>
+              {%- endfor -%}
+            </ul>
+          </div>
+        {%- else -%}
+          {{ pill_b }}
+        {%- endif -%}
       {%- endif -%}
     </div>
 
@@ -198,13 +322,21 @@
 {%- if section.settings.show_mobile_bar -%}
   {%- if section.settings.cta_a_label != blank or section.settings.cta_b_label != blank -%}
     <nav class="rb-mobile-paths" aria-label="Browse by path">
+      {%- comment -%}
+        Same fills as the desktop pills. The header pills are hidden at this
+        width, so this bar IS the two-path control on a phone — leaving it
+        outline while the desktop pair is coloured would read as two different
+        designs on one site.
+      {%- endcomment -%}
       {%- if section.settings.cta_a_label != blank -%}
-        <a href="{{ section.settings.cta_a_url | default: '#' }}" class="rb-btn rb-btn--plain rb-btn--outline">
+        <a href="{{ section.settings.cta_a_url | default: '#' }}"
+           class="rb-btn rb-btn--plain rb-btn--{{ section.settings.cta_a_fill }}">
           {{- section.settings.cta_a_label | escape -}}
         </a>
       {%- endif -%}
       {%- if section.settings.cta_b_label != blank -%}
-        <a href="{{ section.settings.cta_b_url | default: '#' }}" class="rb-btn rb-btn--plain rb-btn--outline">
+        <a href="{{ section.settings.cta_b_url | default: '#' }}"
+           class="rb-btn rb-btn--plain rb-btn--{{ section.settings.cta_b_fill }}">
           {{- section.settings.cta_b_label | escape -}}
         </a>
       {%- endif -%}
@@ -230,8 +362,28 @@
     { "type": "header", "content": "Path buttons" },
     { "type": "text", "id": "cta_a_label", "default": "Buy Art", "label": "Button A label" },
     { "type": "url", "id": "cta_a_url", "label": "Button A link" },
+    { "type": "select", "id": "cta_a_fill", "label": "Button A style", "default": "outline",
+      "info": "Outline is the design as drawn. The colours are the Store and Studio halves of the palette.",
+      "options": [
+        { "value": "outline", "label": "Outline (as designed)" },
+        { "value": "cherry", "label": "Cherry" },
+        { "value": "moss", "label": "Moss" },
+        { "value": "teal", "label": "Teal" },
+        { "value": "sage-solid", "label": "Sage" }
+      ] },
     { "type": "text", "id": "cta_b_label", "default": "Create Art", "label": "Button B label" },
     { "type": "url", "id": "cta_b_url", "label": "Button B link" },
+    { "type": "select", "id": "cta_b_fill", "label": "Button B style", "default": "outline",
+      "options": [
+        { "value": "outline", "label": "Outline (as designed)" },
+        { "value": "cherry", "label": "Cherry" },
+        { "value": "moss", "label": "Moss" },
+        { "value": "teal", "label": "Teal" },
+        { "value": "sage-solid", "label": "Sage" }
+      ] },
+    { "type": "checkbox", "id": "enable_dropdowns", "default": false,
+      "label": "Open a dropdown under each button",
+      "info": "Desktop only — phones have no hover, so there the two pills and the burger are unchanged. Add one 'Button dropdown' block per button and pick its menu. The buttons stay clickable links either way." },
     { "type": "checkbox", "id": "show_mobile_bar", "default": true,
       "label": "Show path bar on mobile",
       "info": "The pills do not fit the header bar on phones. Not part of the desktop design — the Figma has no mobile frames." },
@@ -245,6 +397,22 @@
     { "type": "header", "content": "Colour" },
     { "type": "color", "id": "background", "default": "#ffffff", "label": "Background" },
     { "type": "color", "id": "text_color", "default": "#1e1e1e", "label": "Text + icons" }
+  ],
+  "max_blocks": 2,
+  "blocks": [
+    {
+      "type": "path_menu",
+      "name": "Button dropdown",
+      "settings": [
+        { "type": "select", "id": "which", "label": "Which button", "default": "a",
+          "options": [
+            { "value": "a", "label": "Button A" },
+            { "value": "b", "label": "Button B" }
+          ] },
+        { "type": "link_list", "id": "menu", "label": "Menu",
+          "info": "A section may only hold one menu picker of its own, so the dropdown menus live in blocks." }
+      ]
+    }
   ]
 }
 {% endschema %}
