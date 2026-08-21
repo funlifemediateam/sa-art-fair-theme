@@ -37,6 +37,26 @@
     object-fit: cover;
     filter: grayscale({{ section.settings.map_grayscale }}%);
   }
+  {%- comment -%}
+    On the home page the two columns are close in height and the map keeps the
+    comp's 969x614. A contact PAGE adds address, hours and contact rows to the
+    right column, which leaves the map short and a large void under it — so
+    that page lets the map run the full height of the row instead. Off by
+    default, which is what keeps the home page exactly as drawn.
+  {%- endcomment -%}
+  {%- if section.settings.stretch_map -%}
+    #shopify-section-{{ sid }} .rb-contact { align-items: stretch; }
+    #shopify-section-{{ sid }} .rb-contact__map {
+      /* width: 100% is load-bearing. Under the mobile rule below the box has
+         BOTH an aspect-ratio and this min-height, and with an auto width the
+         browser resolves the width from the height (320 x 4/3 = 427px) and
+         bursts the grid track. */
+      width: 100%;
+      aspect-ratio: auto;
+      min-height: clamp(320px, 31.98vw, 614px);
+    }
+  {%- endif -%}
+
   #shopify-section-{{ sid }} .rb-contact__col {
     padding-left: clamp(20px, 7.29vw, 140px);
     padding-right: clamp(20px, 10.26vw, 197px);
@@ -59,6 +79,43 @@
     letter-spacing: 0.02em;
     text-transform: uppercase;
     color: {{ section.settings.text_color }};
+  }
+
+  /* Optional detail rows — address, hours, phone. The home page instance
+     carries no blocks, so none of this renders there. */
+  #shopify-section-{{ sid }} .rb-contact__details {
+    margin: clamp(24px, 3.02vw, 58px) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  #shopify-section-{{ sid }} .rb-contact__detail + .rb-contact__detail {
+    margin-top: clamp(12px, 1.25vw, 24px);
+  }
+  #shopify-section-{{ sid }} .rb-contact__detail-label {
+    margin: 0 0 4px;
+    font-family: var(--rb-sans);
+    font-weight: 600;
+    font-size: var(--rb-fs-meta);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--rb-teal);
+  }
+  #shopify-section-{{ sid }} .rb-contact__detail-value {
+    margin: 0;
+    font-family: var(--rb-sans);
+    font-size: var(--rb-fs-body-sm);
+    line-height: 1.45;
+    color: {{ section.settings.text_color }};
+  }
+  #shopify-section-{{ sid }} .rb-contact__detail-value a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
+  }
+  #shopify-section-{{ sid }} .rb-contact__detail-value a:hover { color: {{ section.settings.heading_accent }}; }
+  /* the form heading already carries the gap above it when details are absent */
+  #shopify-section-{{ sid }} .rb-contact__details + .rb-contact__label {
+    margin-top: clamp(24px, 3.02vw, 58px);
   }
 
   #shopify-section-{{ sid }} .rb-field { margin-bottom: clamp(14px, 1.35vw, 26px); }
@@ -146,6 +203,21 @@
       <div class="rb-display rb-contact__heading">{{ section.settings.heading }}</div>
     {%- endif -%}
 
+    {%- if section.blocks.size > 0 -%}
+      <ul class="rb-contact__details" role="list">
+        {%- for block in section.blocks -%}
+          {%- if block.settings.value != blank -%}
+            <li class="rb-contact__detail" {{ block.shopify_attributes }}>
+              {%- if block.settings.label != blank -%}
+                <p class="rb-contact__detail-label">{{ block.settings.label | escape }}</p>
+              {%- endif -%}
+              <div class="rb-contact__detail-value">{{ block.settings.value }}</div>
+            </li>
+          {%- endif -%}
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+
     {%- if section.settings.form_label != blank -%}
       <p class="rb-contact__label">{{ section.settings.form_label | escape }}</p>
     {%- endif -%}
@@ -224,6 +296,9 @@
       "info": "Must be a frameable URL. www.google.com/maps?...&output=embed is NOT — it redirects to a page sending X-Frame-Options: SAMEORIGIN and renders blank. Use the maps.google.com/maps?...&output=embed form. Confirm the pin is on the studio; this default is a place-name search." },
     { "type": "image_picker", "id": "map_image", "label": "Map image",
       "info": "Overrides the embed when set." },
+    { "type": "checkbox", "id": "stretch_map", "default": false,
+      "label": "Let the map fill the row height",
+      "info": "For the contact page, where the right column is taller. The home page keeps the comp's fixed 969x614 map." },
     { "type": "text", "id": "map_alt", "default": "Map to the SA Art Fair studio", "label": "Map description" },
     { "type": "range", "id": "map_grayscale", "min": 0, "max": 100, "step": 5,
       "default": 100, "unit": "%", "label": "Map desaturation" },
@@ -240,6 +315,18 @@
     { "type": "color", "id": "rule_color", "default": "#1e1e1e", "label": "Field underline colour" },
     { "type": "color", "id": "background", "default": "#ffffff", "label": "Background" }
   ],
+  "blocks": [
+    {
+      "type": "detail",
+      "name": "Detail",
+      "settings": [
+        { "type": "text", "id": "label", "default": "Studio", "label": "Label" },
+        { "type": "richtext", "id": "value", "label": "Value",
+          "info": "Address, opening hours, a phone number. Links are allowed." }
+      ]
+    }
+  ],
+  "max_blocks": 6,
   "presets": [{ "name": "Rebrand contact" }]
 }
 {% endschema %}

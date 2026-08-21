@@ -1,0 +1,279 @@
+{% comment %}
+  Rebrand art personality quiz — the /collections/art-quiz landing.
+
+  This is sections/art-quiz.liquid restyled, NOT rewritten. The quiz itself is
+  driven entirely by assets/quiz.js, which needs exactly three things from the
+  page and nothing else:
+
+      #sa-quiz-start-btn   the button it binds the opener to
+      #sa-quiz-overlay     the empty div it renders every screen into
+      window.__saQuizApiUrl (+ the two social app ids)
+
+  All three are reproduced verbatim below, so the fourteen-question flow, the
+  lead capture and the result screen behave exactly as they do today. What
+  changed is only the panel around them: it is now the same band as
+  rb-quiz-banner — blurred photograph, gold-filled stadium protea, italic
+  IvyPresto heading, white pill — so the quiz stops being the one page still
+  wearing the old design.
+
+  The overlay quiz.js draws is styled inline inside that file, which the live
+  theme also uses. Rather than fork 550 lines, the block at the end of this
+  stylesheet lends the overlay the brand fonts and recolours the two choice
+  states it exposes as classes. Its remaining hardcoded colours are near
+  neutral (#1d1c21 ink on white); recolouring those means editing quiz.js,
+  which is deliberately left alone this round.
+{% endcomment %}
+
+{{ 'saf-rebrand.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign sid = section.id
+  assign quiz_api_url = section.settings.api_url | default: 'https://sa-art-fair-admin.vercel.app'
+-%}
+
+<style>
+  #shopify-section-{{ sid }} .rb-quiz {
+    position: relative;
+    width: 100%;
+    min-height: {{ section.settings.min_height }}px;
+    overflow: hidden;
+    background: var(--rb-ink);
+    display: flex;
+  }
+  /* The banner on the home page can use aspect-ratio outright because it holds
+     a heading and one pill. This panel also carries an eyebrow, a subheading
+     and a meta line, and a hard ratio would clip them at narrow widths. A
+     zero-width spacer gives the band the same proportions as a FLOOR that
+     content is free to push past. */
+  #shopify-section-{{ sid }} .rb-quiz::before {
+    content: '';
+    display: block;
+    flex: 0 0 0;
+    width: 0;
+    padding-top: calc(100% * {{ section.settings.band_height }} / 1920);
+  }
+  #shopify-section-{{ sid }} .rb-quiz__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: {{ section.settings.focal_x }}% {{ section.settings.focal_y }}%;
+  }
+  #shopify-section-{{ sid }} .rb-quiz__overlay {
+    /* explicit display: Dawn's base.css hides every `div:empty` */
+    display: block;
+    position: absolute;
+    inset: 0;
+    background: {{ section.settings.overlay_color }};
+    opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
+  }
+  #shopify-section-{{ sid }} .rb-quiz__inner {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    box-sizing: border-box;
+    padding: clamp(40px, 7.29vw, 140px) var(--rb-gutter) clamp(48px, 8.33vw, 160px);
+  }
+  #shopify-section-{{ sid }} .rb-quiz__badge {
+    display: block;
+    /* a flex item shrinks by default, and in a column of six children the
+       stadium was being squashed to a lozenge */
+    flex: 0 0 auto;
+    width: clamp(66px, 5.73vw, 110px);
+    aspect-ratio: 253 / 395;
+    border-radius: 999px;
+    overflow: hidden;
+    background: {{ section.settings.badge_color }};
+    margin-bottom: clamp(16px, 1.98vw, 38px);
+  }
+  #shopify-section-{{ sid }} .rb-quiz__badge img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  #shopify-section-{{ sid }} .rb-quiz__eyebrow {
+    margin: 0 0 clamp(10px, 1.04vw, 20px);
+    color: {{ section.settings.eyebrow_color }};
+  }
+  #shopify-section-{{ sid }} .rb-quiz__heading {
+    margin: 0;
+    font-family: var(--rb-serif);
+    font-weight: 300;
+    font-style: italic;
+    font-size: var(--rb-fs-display-lg);
+    line-height: 1.2;
+    color: {{ section.settings.text_color }};
+    max-width: 22ch;
+    text-wrap: balance;
+  }
+  #shopify-section-{{ sid }} .rb-quiz__sub {
+    margin: clamp(12px, 1.25vw, 24px) 0 0;
+    max-width: 46ch;
+    color: {{ section.settings.text_color }};
+    opacity: 0.82;
+  }
+  #shopify-section-{{ sid }} .rb-quiz__cta {
+    margin-top: clamp(20px, 2.4vw, 46px);
+    min-height: clamp(48px, 4.22vw, 81px);
+    padding-inline: clamp(28px, 3.13vw, 60px);
+    border: 0;
+  }
+  #shopify-section-{{ sid }} .rb-quiz__meta {
+    margin: clamp(12px, 1.04vw, 20px) 0 0;
+    font-family: var(--rb-sans);
+    font-size: var(--rb-fs-meta);
+    letter-spacing: 0.04em;
+    color: {{ section.settings.text_color }};
+    opacity: 0.66;
+  }
+
+  @media screen and (max-width: 749px) {
+    #shopify-section-{{ sid }} .rb-quiz::before {
+      padding-top: calc(100% * {{ section.settings.mobile_ratio | split: '/' | last | strip }} / {{ section.settings.mobile_ratio | split: '/' | first | strip }});
+    }
+    #shopify-section-{{ sid }} .rb-quiz__inner { padding-block: 56px 64px; }
+  }
+
+  /* ---- overlay, drawn by quiz.js --------------------------------------
+     Inline styles win on the properties they name, so this only claims what
+     they leave alone. font-family is the big one: nothing in quiz.js sets it,
+     so it inherits and the whole flow picks up the brand faces. */
+  #sa-quiz-overlay {
+    font-family: var(--rb-sans);
+    color: var(--rb-ink);
+  }
+  #sa-quiz-overlay h1,
+  #sa-quiz-overlay h2,
+  #sa-quiz-overlay h3 {
+    font-family: var(--rb-serif);
+    font-weight: 400;
+    letter-spacing: 0;
+  }
+  /* the two states quiz.js exposes as classes rather than inline styles */
+  #sa-quiz-overlay .sa-text-choice.sa-chosen,
+  #sa-quiz-overlay .sa-choice.sa-chosen {
+    border-color: var(--rb-cherry);
+    background: #fdf6f8;
+  }
+  #sa-quiz-overlay .sa-text-choice:hover {
+    border-color: var(--rb-ink);
+  }
+</style>
+
+<div class="rb-section rb-bleed">
+  <div class="rb-quiz">
+    {%- if section.settings.image != blank -%}
+      {{
+        section.settings.image
+        | image_url: width: 3840
+        | image_tag:
+          class: 'rb-quiz__img',
+          widths: '750, 1100, 1500, 1920, 2400, 3840',
+          sizes: '100vw',
+          loading: 'eager',
+          alt: section.settings.image.alt | default: ''
+      }}
+    {%- endif -%}
+
+    {%- if section.settings.overlay_opacity > 0 -%}
+      <div class="rb-quiz__overlay" aria-hidden="true"></div>
+    {%- endif -%}
+
+    <div class="rb-quiz__inner">
+      {%- if section.settings.show_badge -%}
+        <span class="rb-quiz__badge">
+          <img src="{{ 'saf-badge-saaf.png' | asset_url }}" alt="" width="253" height="395" loading="eager">
+        </span>
+      {%- endif -%}
+
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="rb-caps rb-quiz__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      {%- endif -%}
+
+      {%- if section.settings.heading != blank -%}
+        <h1 class="rb-quiz__heading">{{ section.settings.heading | escape }}</h1>
+      {%- endif -%}
+
+      {%- if section.settings.subheading != blank -%}
+        <p class="rb-body rb-quiz__sub">{{ section.settings.subheading | escape }}</p>
+      {%- endif -%}
+
+      {%- comment -%}
+        Must stay a <button> with this exact id — quiz.js binds the opener to
+        it and does nothing at all if it is missing.
+      {%- endcomment -%}
+      <button type="button" id="sa-quiz-start-btn" class="rb-btn rb-btn--white rb-quiz__cta">
+        {{- section.settings.cta_text | escape -}}
+      </button>
+
+      {%- if section.settings.meta_text != blank -%}
+        <p class="rb-quiz__meta">{{ section.settings.meta_text | escape }}</p>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{%- comment -%}
+  quiz.js renders every screen into this div and toggles its display. Keep the
+  inline style: it must start hidden before the script runs.
+{%- endcomment -%}
+<div id="sa-quiz-overlay" style="display:none;position:fixed;inset:0;z-index:10000;background:#fff;overflow-y:auto"></div>
+
+<script>
+  window.__saQuizApiUrl     = {{ quiz_api_url | json }};
+  window.__saGoogleClientId = {{ shop.metafields.booking_app.google_client_id | default: '' | json }};
+  window.__saFbAppId        = {{ shop.metafields.booking_app.facebook_app_id  | default: '' | json }};
+</script>
+<script src="{{ 'quiz.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "Rebrand art quiz",
+  "tag": "section",
+  "class": "rb-section-wrapper",
+  "settings": [
+    { "type": "paragraph",
+      "content": "The quiz flow itself is unchanged — this section only restyles the panel that opens it." },
+    { "type": "text", "id": "eyebrow", "default": "Art Personality", "label": "Eyebrow" },
+    { "type": "text", "id": "heading", "default": "What's Your Art Personality?", "label": "Heading" },
+    { "type": "text", "id": "subheading",
+      "default": "See how your personality can shape your journey as a collector.",
+      "label": "Subheading" },
+    { "type": "text", "id": "cta_text", "default": "Take the Test", "label": "Button label" },
+    { "type": "text", "id": "meta_text", "default": "14 questions · 3 minutes",
+      "label": "Small text under the button",
+      "info": "Update this if the number of questions changes in the admin app." },
+    { "type": "header", "content": "Band" },
+    { "type": "image_picker", "id": "image", "label": "Background image" },
+    { "type": "range", "id": "band_height", "min": 500, "max": 1100, "step": 10,
+      "default": 820, "unit": "px", "label": "Band height at 1920px wide" },
+    { "type": "range", "id": "min_height", "min": 240, "max": 700, "step": 10,
+      "default": 420, "unit": "px", "label": "Minimum height" },
+    { "type": "text", "id": "mobile_ratio", "default": "3 / 4", "label": "Mobile aspect ratio" },
+    { "type": "range", "id": "focal_x", "min": 0, "max": 100, "step": 1, "default": 50,
+      "unit": "%", "label": "Image focal point — horizontal" },
+    { "type": "range", "id": "focal_y", "min": 0, "max": 100, "step": 1, "default": 50,
+      "unit": "%", "label": "Image focal point — vertical" },
+    { "type": "color", "id": "overlay_color", "default": "#1e1e1e", "label": "Overlay colour" },
+    { "type": "range", "id": "overlay_opacity", "min": 0, "max": 80, "step": 5, "default": 30,
+      "unit": "%", "label": "Overlay opacity" },
+    { "type": "header", "content": "Content colour" },
+    { "type": "checkbox", "id": "show_badge", "default": true, "label": "Show protea badge" },
+    { "type": "color", "id": "badge_color", "default": "#bea532", "label": "Badge protea colour" },
+    { "type": "color", "id": "eyebrow_color", "default": "#ffffff", "label": "Eyebrow" },
+    { "type": "color", "id": "text_color", "default": "#ffffff", "label": "Heading and body" },
+    { "type": "header", "content": "Advanced" },
+    { "type": "text", "id": "api_url", "default": "https://sa-art-fair-admin.vercel.app",
+      "label": "Admin API URL",
+      "info": "Leave as default unless the admin app URL has changed." }
+  ],
+  "presets": [{ "name": "Rebrand art quiz" }]
+}
+{% endschema %}

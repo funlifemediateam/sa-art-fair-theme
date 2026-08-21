@@ -1,0 +1,30 @@
+{
+  "sections": {
+    "quiz": {
+      "type": "rb-art-quiz",
+      "settings": {
+        "eyebrow": "Art Personality",
+        "heading": "What's Your Art Personality?",
+        "subheading": "See how your personality can shape your journey as a collector.",
+        "cta_text": "Take the Test",
+        "meta_text": "14 questions · 3 minutes",
+        "image": "shopify://shop_images/saf-home-quiz.jpg",
+        "band_height": 820,
+        "min_height": 420,
+        "mobile_ratio": "3 / 4",
+        "focal_x": 50,
+        "focal_y": 50,
+        "overlay_color": "#1e1e1e",
+        "overlay_opacity": 30,
+        "show_badge": true,
+        "badge_color": "#bea532",
+        "eyebrow_color": "#ffffff",
+        "text_color": "#ffffff",
+        "api_url": "https://sa-art-fair-admin.vercel.app"
+      }
+    }
+  },
+  "order": [
+    "quiz"
+  ]
+}

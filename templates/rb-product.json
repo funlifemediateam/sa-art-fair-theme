@@ -1,0 +1,40 @@
+{
+  "sections": {
+    "artwork": {
+      "type": "rb-product",
+      "settings": {
+        "back_label": "← Back to the Store",
+        "back_link": "shopify://collections/gallery",
+        "eyebrow": "Original Artwork",
+        "sold_label": "Sold",
+        "tax_note": "",
+        "button_label": "Add to Cart",
+        "button_fill": "moss",
+        "variant_label": "Option",
+        "show_quantity": false,
+        "quantity_label": "Quantity",
+        "artist_link_label": "See [artist]'s page",
+        "rail_heading": "More by [artist]",
+        "rail_link_label": "View all",
+        "rail_count": 4,
+        "rail_min": 2,
+        "fallback_collection": "gallery",
+        "fallback_heading": "More from the Store",
+        "rail_columns": 4,
+        "media_width": 55,
+        "show_rule": true,
+        "background": "#ffffff",
+        "stage_color": "#f4f4f1",
+        "title_color": "#1e1e1e",
+        "artist_color": "#505a43",
+        "accent_color": "#b00e3f",
+        "body_color": "#1e1e1e",
+        "rule_color": "#c9c9c9",
+        "rail_title_color": "#505a43"
+      }
+    }
+  },
+  "order": [
+    "artwork"
+  ]
+}

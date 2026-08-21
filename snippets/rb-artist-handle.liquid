@@ -1,0 +1,96 @@
+{% comment %}
+  Outputs the handle of the collection that represents an ARTWORK product's
+  artist, or nothing when there is no match. Capture it and look the collection
+  up in the caller:
+
+    {%- capture ah -%}{%- render 'rb-artist-handle', product: product -%}{%- endcapture -%}
+    {%- assign ah = ah | strip -%}
+    {%- assign artist_col = collections[ah] -%}
+
+  The sibling of snippets/rb-teacher-handle.liquid, and it exists for the same
+  reason: one product template serves every artwork, so the link through to the
+  artist's page has to be resolved from the product rather than from a
+  per-page setting.
+
+  This store models an artist as a collection holding that artist's works, so
+  the product already belongs to it. The artist's NAME is the product vendor.
+
+  Never handleize the vendor to guess the URL. "Zara-Leigh Farinha" handleizes
+  to zara-leigh-farinha, which is a stale collection — her real artist page is
+  zara-leigh. The catalogue is inconsistent in the other direction too
+  ("Shelly" vs "Shelley" Cowling), so the match is made through a collection
+  the product is actually in, comparing titles, and falling back to the
+  surname the way the teacher lookup does.
+
+  Two collections can share one title: a person who both teaches and exhibits
+  has the teacher one under a "-1" handle beside the artist one. Here the
+  artist page is wanted, so "-1" is the LAST resort rather than the tie-break —
+  the exact inverse of rb-teacher-handle.
+
+  Collections that are catalogue machinery rather than people are skipped, or
+  "gallery" would win on nearly every artwork.
+
+  Accepts: product.
+{% endcomment %}
+
+{%- liquid
+  assign vendor = product.vendor | downcase | strip
+  assign name_parts = vendor | split: ' '
+  assign surname = name_parts | last
+
+  comment
+    Smart and system collections every artwork also belongs to. Kept as one
+    comma-joined string so a single `contains` test covers the lot; each entry
+    is comma-wrapped so "artists" never matches inside another handle.
+  endcomment
+  assign skip = ',gallery,all,frontpage,art-under,art-quiz,wishlist,warm-tones,cool-tones,neutral-tones,originals,limited-editions,artists,teachers,classes,workshops,workshops-classes,classes-workshops,workshops-and-classes,'
+
+  assign found = ''
+  assign twin = ''
+  assign fallback = ''
+
+  for c in product.collections
+    assign probe = ',' | append: c.handle | append: ','
+    if skip contains probe
+      continue
+    endif
+
+    assign ct = c.title | downcase | strip
+    assign hit = false
+    if vendor != blank
+      if ct == vendor
+        assign hit = true
+      elsif surname != blank and ct contains surname
+        assign hit = true
+      endif
+    endif
+
+    assign tail = c.handle | slice: -2, 2
+
+    if hit
+      if tail == '-1'
+        if twin == blank
+          assign twin = c.handle
+        endif
+      elsif found == blank
+        assign found = c.handle
+      endif
+    elsif fallback == blank
+      assign fallback = c.handle
+    endif
+  endfor
+
+  comment
+    Order of confidence: a title match on a non-teacher handle, then the
+    teacher twin (still the right person), then any collection the piece is in
+    that is not catalogue machinery.
+  endcomment
+  if found == blank
+    assign found = twin
+  endif
+  if found == blank
+    assign found = fallback
+  endif
+
+  echo found
+-%}

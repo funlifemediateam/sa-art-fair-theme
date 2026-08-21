@@ -1,0 +1,571 @@
+{% comment %}
+  Rebrand search results.
+
+  No comp exists for this page, so it borrows the Store page's own furniture:
+  the pill toolbar strip from rb-artworks, the same artwork card, the teal
+  uppercase labels and the serif section title. Nothing new in the palette.
+
+  What it must not lose from Dawn's main-search: the store has BOTH filtering
+  and sorting switched on for search. Both are kept, driven by one GET form so
+  they work with JavaScript off; saf-rb-search.js only upgrades them to
+  apply-on-change and hides the Apply button when it can.
+
+  Results mix products, pages and articles, which is what search returns here.
+  A product gets the artwork card; the other two get a text row, because a
+  page has no image worth cropping to a square.
+{% endcomment %}
+
+{{ 'saf-rebrand.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'saf-rb-search.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign sid = section.id
+  assign terms = search.terms
+-%}
+
+<style>
+  #shopify-section-{{ sid }} .rb-sr {
+    background: {{ section.settings.background }};
+    padding-block:
+      clamp(32px, 4.17vw, 80px)
+      clamp(48px, 6.25vw, 120px);
+  }
+  #shopify-section-{{ sid }} .rb-sr__title {
+    color: {{ section.settings.heading_color }};
+    margin-bottom: clamp(14px, 1.46vw, 28px);
+  }
+  #shopify-section-{{ sid }} .rb-sr__count {
+    margin: 0 0 clamp(20px, 2.4vw, 46px);
+    font-family: var(--rb-sans);
+    font-size: var(--rb-fs-body-sm);
+    color: var(--rb-teal);
+  }
+
+  /* ---- search field ---------------------------------------------------- */
+  #shopify-section-{{ sid }} .rb-sr__seek {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    max-width: 620px;
+    min-height: clamp(42px, 3.02vw, 58px);
+    margin-bottom: clamp(18px, 2.08vw, 40px);
+    padding-inline: clamp(14px, 1.25vw, 24px);
+    border: 1px solid rgba(30, 30, 30, 0.2);
+    border-radius: 999px;
+    background: #fff;
+  }
+  #shopify-section-{{ sid }} .rb-sr__seek svg { width: 18px; height: 18px; flex: 0 0 auto; opacity: 0.55; }
+  #shopify-section-{{ sid }} .rb-sr__seek input {
+    flex: 1 1 auto;
+    min-width: 0;
+    border: 0;
+    background: none;
+    font-family: var(--rb-sans);
+    font-size: var(--rb-fs-body-sm);
+    color: var(--rb-ink);
+  }
+  #shopify-section-{{ sid }} .rb-sr__seek input:focus { outline: none; }
+  #shopify-section-{{ sid }} .rb-sr__seek button {
+    flex: 0 0 auto;
+    border: 0;
+    background: none;
+    padding: 0 0 0 6px;
+    font-family: var(--rb-sans);
+    font-size: var(--rb-fs-body-sm);
+    color: var(--rb-teal);
+    cursor: pointer;
+  }
+
+  /* ---- toolbar --------------------------------------------------------- */
+  #shopify-section-{{ sid }} .rb-sr__bar {
+    background: {{ section.settings.bar_color }};
+    padding-block: clamp(10px, 0.94vw, 18px);
+    margin-bottom: clamp(24px, 3.13vw, 60px);
+  }
+  #shopify-section-{{ sid }} .rb-sr__bar-inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: clamp(8px, 0.83vw, 16px);
+  }
+  #shopify-section-{{ sid }} .rb-sr__control,
+  #shopify-section-{{ sid }} .rb-sr__dd > summary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    box-sizing: border-box;
+    min-height: clamp(34px, 2.4vw, 46px);
+    padding-inline: clamp(12px, 1.04vw, 20px);
+    border: 1px solid rgba(30, 30, 30, 0.16);
+    border-radius: 999px;
+    background: #fff;
+    font-family: var(--rb-sans);
+    font-size: var(--rb-fs-body-sm);
+    line-height: 1;
+    color: var(--rb-ink);
+    cursor: pointer;
+    list-style: none;
+  }
+  #shopify-section-{{ sid }} .rb-sr__dd > summary::-webkit-details-marker { display: none; }
+  #shopify-section-{{ sid }} .rb-sr__control {
+    appearance: none;
+    padding-right: clamp(28px, 2.19vw, 42px);
+  }
+  #shopify-section-{{ sid }} .rb-sr__select-wrap { position: relative; display: inline-flex; }
+  #shopify-section-{{ sid }} .rb-sr__select-wrap svg {
+    position: absolute;
+    right: clamp(10px, 0.83vw, 16px);
+    top: 50%;
+    transform: translateY(-50%);
+    width: 12px; height: 12px;
+    pointer-events: none;
+    opacity: 0.6;
+  }
+  #shopify-section-{{ sid }} .rb-sr__dd { position: relative; }
+  #shopify-section-{{ sid }} .rb-sr__dd-panel {
+    position: absolute;
+    z-index: 5;
+    top: calc(100% + 6px);
+    left: 0;
+    min-width: 220px;
+    max-height: 320px;
+    overflow-y: auto;
+    padding: 12px 14px;
+    border: 1px solid rgba(30, 30, 30, 0.14);
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 8px 26px rgba(30, 30, 30, 0.12);
+  }
+  #shopify-section-{{ sid }} .rb-sr__opt {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 0;
+    font-family: var(--rb-sans);
+    font-size: var(--rb-fs-body-sm);
+    cursor: pointer;
+  }
+  #shopify-section-{{ sid }} .rb-sr__price-range {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-top: 4px;
+  }
+  #shopify-section-{{ sid }} .rb-sr__price-range input {
+    width: 84px;
+    box-sizing: border-box;
+    min-height: 34px;
+    padding-inline: 10px;
+    border: 1px solid rgba(30, 30, 30, 0.18);
+    border-radius: 999px;
+    font-family: var(--rb-sans);
+    font-size: var(--rb-fs-body-sm);
+  }
+  #shopify-section-{{ sid }} .rb-sr__apply {
+    min-height: clamp(34px, 2.4vw, 46px);
+    padding-inline: clamp(16px, 1.25vw, 24px);
+  }
+  #shopify-section-{{ sid }} .rb-sr__clear {
+    font-family: var(--rb-sans);
+    font-size: var(--rb-fs-body-sm);
+    color: var(--rb-teal);
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
+  }
+
+  /* ---- results --------------------------------------------------------- */
+  #shopify-section-{{ sid }} .rb-sr__grid {
+    display: grid;
+    grid-template-columns: repeat({{ section.settings.columns }}, minmax(0, 1fr));
+    gap: clamp(24px, 3.44vw, 66px) clamp(20px, 3.13vw, 60px);
+  }
+  #shopify-section-{{ sid }} .rb-sr__card { display: flex; flex-direction: column; }
+  #shopify-section-{{ sid }} .rb-sr__media {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+  }
+  #shopify-section-{{ sid }} .rb-sr__card-title {
+    margin: clamp(8px, 0.83vw, 16px) 0 0;
+    font-family: var(--rb-serif);
+    font-weight: 400;
+    font-size: clamp(17px, 1.35vw, 26px);
+    line-height: 1.2;
+    color: {{ section.settings.card_title_color }};
+  }
+  #shopify-section-{{ sid }} .rb-sr__card-title a { color: inherit; text-decoration: none; }
+  #shopify-section-{{ sid }} .rb-sr__card-title a:hover { text-decoration: underline; }
+  #shopify-section-{{ sid }} .rb-sr__card-artist {
+    margin: 2px 0 0;
+    font-family: var(--rb-sans);
+    font-size: var(--rb-fs-meta);
+    text-decoration: underline;
+    color: {{ section.settings.card_meta_color }};
+  }
+  #shopify-section-{{ sid }} .rb-sr__card-price {
+    margin: clamp(8px, 0.73vw, 14px) 0 0;
+    font-family: var(--rb-sans);
+    font-size: var(--rb-fs-meta);
+    color: {{ section.settings.card_meta_color }};
+  }
+  #shopify-section-{{ sid }} .rb-sr__sold { opacity: 0.6; }
+
+  #shopify-section-{{ sid }} .rb-sr__pages {
+    grid-column: 1 / -1;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid {{ section.settings.rule_color }};
+  }
+  #shopify-section-{{ sid }} .rb-sr__page-row {
+    padding-block: clamp(14px, 1.46vw, 28px);
+    border-bottom: 1px solid {{ section.settings.rule_color }};
+  }
+  #shopify-section-{{ sid }} .rb-sr__kind {
+    margin: 0 0 6px;
+    font-family: var(--rb-sans);
+    font-weight: 600;
+    font-size: var(--rb-fs-meta);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--rb-teal);
+  }
+  #shopify-section-{{ sid }} .rb-sr__page-title {
+    margin: 0;
+    font-family: var(--rb-serif);
+    font-weight: 400;
+    font-size: clamp(19px, 1.56vw, 30px);
+    line-height: 1.2;
+  }
+  #shopify-section-{{ sid }} .rb-sr__page-title a { color: {{ section.settings.card_title_color }}; text-decoration: none; }
+  #shopify-section-{{ sid }} .rb-sr__page-title a:hover { text-decoration: underline; }
+  #shopify-section-{{ sid }} .rb-sr__excerpt {
+    margin: 6px 0 0;
+    max-width: 70ch;
+    font-family: var(--rb-sans);
+    font-size: var(--rb-fs-body-sm);
+    line-height: 1.5;
+    color: {{ section.settings.card_meta_color }};
+  }
+
+  #shopify-section-{{ sid }} .rb-sr__empty { max-width: 52ch; }
+  #shopify-section-{{ sid }} .rb-sr__empty-ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(10px, 0.83vw, 16px);
+    margin-top: clamp(18px, 2.08vw, 40px);
+  }
+
+  #shopify-section-{{ sid }} .rb-sr__pager {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(6px, 0.63vw, 12px);
+    margin-top: clamp(28px, 3.13vw, 60px);
+  }
+  #shopify-section-{{ sid }} .rb-sr__pager a,
+  #shopify-section-{{ sid }} .rb-sr__pager span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: clamp(34px, 2.4vw, 46px);
+    min-height: clamp(34px, 2.4vw, 46px);
+    padding-inline: 10px;
+    border: 1px solid rgba(30, 30, 30, 0.16);
+    border-radius: 999px;
+    font-family: var(--rb-sans);
+    font-size: var(--rb-fs-body-sm);
+    color: var(--rb-ink);
+    text-decoration: none;
+  }
+  #shopify-section-{{ sid }} .rb-sr__pager .rb-sr__here {
+    background: var(--rb-ink);
+    border-color: var(--rb-ink);
+    color: #fff;
+  }
+
+  @media screen and (max-width: 989px) {
+    #shopify-section-{{ sid }} .rb-sr__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media screen and (max-width: 639px) {
+    #shopify-section-{{ sid }} .rb-sr__grid { grid-template-columns: 1fr; }
+  }
+</style>
+
+{%- capture chevron -%}
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 9l7 7 7-7"></path></svg>
+{%- endcapture -%}
+
+<div class="rb-section rb-sr">
+  <div class="rb-container">
+    <h1 class="rb-section-title rb-sr__title">
+      {%- if terms != blank -%}
+        {{ section.settings.heading | replace: '[terms]', terms }}
+      {%- else -%}
+        {{ section.settings.blank_heading | escape }}
+      {%- endif -%}
+    </h1>
+
+    <form action="{{ routes.search_url }}" method="get" role="search" class="rb-sr__seek">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+        <circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path>
+      </svg>
+      <label class="visually-hidden" for="rb-sr-q-{{ sid }}">{{ section.settings.field_label | escape }}</label>
+      <input
+        id="rb-sr-q-{{ sid }}"
+        type="search"
+        name="q"
+        value="{{ terms | escape }}"
+        placeholder="{{ section.settings.field_label | escape }}"
+      >
+      <input type="hidden" name="options[prefix]" value="last">
+      <button type="submit">{{ section.settings.field_button | escape }}</button>
+    </form>
+
+    {%- if search.performed -%}
+      <p class="rb-sr__count">
+        {{- search.results_count }}
+        {% if search.results_count == 1 %}result{% else %}results{% endif -%}
+      </p>
+    {%- endif -%}
+  </div>
+
+  {%- if search.performed and search.results_count > 0 -%}
+    {%- comment -%}
+      One GET form carries the terms, the sort and every filter, so a submit
+      with no JavaScript applies the lot. saf-rb-search.js upgrades it to
+      submit on change and hides the Apply button.
+    {%- endcomment -%}
+    <div class="rb-sr__bar">
+      <form action="{{ routes.search_url }}" method="get" class="rb-container rb-sr__bar-inner" data-rbs-form>
+        <input type="hidden" name="q" value="{{ terms | escape }}">
+        <input type="hidden" name="options[prefix]" value="last">
+
+        {%- for filter in search.filters -%}
+          {%- case filter.type -%}
+            {%- when 'list' -%}
+              <details class="rb-sr__dd">
+                <summary>
+                  {{- filter.label | escape }}
+                  {%- if filter.active_values.size > 0 %} ({{ filter.active_values.size }}){% endif %}
+                  {{ chevron -}}
+                </summary>
+                <div class="rb-sr__dd-panel">
+                  {%- for value in filter.values -%}
+                    <label class="rb-sr__opt">
+                      <input
+                        type="checkbox"
+                        name="{{ value.param_name }}"
+                        value="{{ value.value | escape }}"
+                        {% if value.active %}checked{% endif %}
+                        {% if value.count == 0 and value.active == false %}disabled{% endif %}
+                      >
+                      {{ value.label | escape }} ({{ value.count }})
+                    </label>
+                  {%- endfor -%}
+                </div>
+              </details>
+
+            {%- when 'price_range' -%}
+              <details class="rb-sr__dd">
+                <summary>{{ filter.label | escape }} {{ chevron }}</summary>
+                <div class="rb-sr__dd-panel">
+                  <div class="rb-sr__price-range">
+                    <label class="visually-hidden" for="rb-sr-min-{{ sid }}">Minimum</label>
+                    <input
+                      id="rb-sr-min-{{ sid }}"
+                      type="number"
+                      name="{{ filter.min_value.param_name }}"
+                      value="{{ filter.min_value.value }}"
+                      placeholder="{{ 0 | money_without_currency | escape }}"
+                      min="0"
+                      max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                    >
+                    <span aria-hidden="true">–</span>
+                    <label class="visually-hidden" for="rb-sr-max-{{ sid }}">Maximum</label>
+                    <input
+                      id="rb-sr-max-{{ sid }}"
+                      type="number"
+                      name="{{ filter.max_value.param_name }}"
+                      value="{{ filter.max_value.value }}"
+                      placeholder="{{ filter.range_max | money_without_currency | escape }}"
+                      min="0"
+                      max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                    >
+                  </div>
+                </div>
+              </details>
+          {%- endcase -%}
+        {%- endfor -%}
+
+        {%- if section.settings.enable_sorting and search.sort_options.size > 0 -%}
+          {%- assign chosen_sort = search.sort_by | default: search.default_sort_by -%}
+          <span class="rb-sr__select-wrap">
+            <label class="visually-hidden" for="rb-sr-sort-{{ sid }}">{{ section.settings.sort_label | escape }}</label>
+            <select class="rb-sr__control" id="rb-sr-sort-{{ sid }}" name="sort_by">
+              {%- for option in search.sort_options -%}
+                <option value="{{ option.value }}" {% if option.value == chosen_sort %}selected{% endif %}>
+                  {{- option.name | escape -}}
+                </option>
+              {%- endfor -%}
+            </select>
+            {{ chevron }}
+          </span>
+        {%- endif -%}
+
+        <button type="submit" class="rb-btn rb-btn--plain rb-btn--outline rb-sr__apply" data-rbs-apply>
+          {{- section.settings.apply_label | escape -}}
+        </button>
+
+        <a href="{{ routes.search_url }}?q={{ terms | url_encode }}&options%5Bprefix%5D=last" class="rb-sr__clear">
+          {{- section.settings.clear_label | escape -}}
+        </a>
+      </form>
+    </div>
+
+    <div class="rb-container">
+      {%- paginate search.results by section.settings.per_page -%}
+        <div class="rb-sr__grid">
+          {%- for item in search.results -%}
+            {%- if item.object_type == 'product' -%}
+              <article class="rb-sr__card">
+                <a href="{{ item.url }}" class="rb-media rb-sr__media">
+                  {%- if item.featured_image != blank -%}
+                    {{
+                      item.featured_image
+                      | image_url: width: 900
+                      | image_tag:
+                        widths: '280, 420, 620, 900',
+                        sizes: '(max-width: 639px) 90vw, (max-width: 989px) 45vw, 24vw',
+                        loading: 'lazy',
+                        alt: item.featured_image.alt | default: item.title
+                    }}
+                  {%- else -%}
+                    {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                  {%- endif -%}
+                </a>
+                <h2 class="rb-sr__card-title"><a href="{{ item.url }}">{{ item.title }}</a></h2>
+                {%- if item.vendor != blank -%}
+                  <p class="rb-sr__card-artist">{{ item.vendor }}</p>
+                {%- endif -%}
+                <p class="rb-sr__card-price">
+                  {{- item.price | money -}}
+                  {%- unless item.available %} <span class="rb-sr__sold">{{ section.settings.sold_label }}</span>{% endunless -%}
+                </p>
+              </article>
+            {%- endif -%}
+          {%- endfor -%}
+
+          {%- capture text_rows -%}
+            {%- for item in search.results -%}
+              {%- if item.object_type != 'product' -%}
+                <li class="rb-sr__page-row">
+                  <p class="rb-sr__kind">
+                    {%- if item.object_type == 'article' -%}Journal{%- else -%}Page{%- endif -%}
+                  </p>
+                  <h2 class="rb-sr__page-title"><a href="{{ item.url }}">{{ item.title }}</a></h2>
+                  {%- assign excerpt = item.content | default: item.excerpt | strip_html | truncatewords: 30 -%}
+                  {%- if excerpt != blank -%}
+                    <p class="rb-sr__excerpt">{{ excerpt }}</p>
+                  {%- endif -%}
+                </li>
+              {%- endif -%}
+            {%- endfor -%}
+          {%- endcapture -%}
+          {%- assign text_rows_trimmed = text_rows | strip -%}
+          {%- if text_rows_trimmed != blank -%}
+            <ul class="rb-sr__pages" role="list">{{ text_rows }}</ul>
+          {%- endif -%}
+        </div>
+
+        {%- if paginate.pages > 1 -%}
+          <nav class="rb-sr__pager" aria-label="Pagination">
+            {%- if paginate.previous -%}
+              <a href="{{ paginate.previous.url }}" aria-label="Previous page">←</a>
+            {%- endif -%}
+            {%- for part in paginate.parts -%}
+              {%- if part.is_link -%}
+                <a href="{{ part.url }}">{{ part.title }}</a>
+              {%- elsif part.title == paginate.current_page -%}
+                <span class="rb-sr__here" aria-current="page">{{ part.title }}</span>
+              {%- else -%}
+                <span>{{ part.title }}</span>
+              {%- endif -%}
+            {%- endfor -%}
+            {%- if paginate.next -%}
+              <a href="{{ paginate.next.url }}" aria-label="Next page">→</a>
+            {%- endif -%}
+          </nav>
+        {%- endif -%}
+      {%- endpaginate -%}
+    </div>
+
+  {%- elsif search.performed -%}
+    <div class="rb-container">
+      <div class="rb-body rb-sr__empty">{{ section.settings.no_results }}</div>
+      <div class="rb-sr__empty-ctas">
+        {%- if section.settings.empty_a_label != blank -%}
+          <a href="{{ section.settings.empty_a_link | default: routes.root_url }}"
+             class="rb-btn rb-btn--plain rb-btn--outline">
+            {{- section.settings.empty_a_label | escape -}}
+          </a>
+        {%- endif -%}
+        {%- if section.settings.empty_b_label != blank -%}
+          <a href="{{ section.settings.empty_b_link | default: routes.root_url }}"
+             class="rb-btn rb-btn--plain rb-btn--outline">
+            {{- section.settings.empty_b_label | escape -}}
+          </a>
+        {%- endif -%}
+      </div>
+    </div>
+
+  {%- else -%}
+    <div class="rb-container">
+      <div class="rb-body rb-sr__empty">{{ section.settings.prompt_text }}</div>
+    </div>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Rebrand search",
+  "tag": "section",
+  "class": "rb-section-wrapper",
+  "settings": [
+    { "type": "text", "id": "heading", "default": "Results for “[terms]”", "label": "Heading",
+      "info": "[terms] is replaced with what was searched for." },
+    { "type": "text", "id": "blank_heading", "default": "Search", "label": "Heading before a search" },
+    { "type": "text", "id": "field_label", "default": "Search artworks, artists, classes…", "label": "Field label" },
+    { "type": "text", "id": "field_button", "default": "Search", "label": "Field button" },
+    { "type": "richtext", "id": "prompt_text",
+      "default": "<p>Look for an artwork, an artist, a class or a page.</p>",
+      "label": "Text before a search" },
+    { "type": "richtext", "id": "no_results",
+      "default": "<p>Nothing matched that search. Try a different spelling, an artist's surname, or browse the Store and the Studio.</p>",
+      "label": "No results text" },
+    { "type": "text", "id": "empty_a_label", "default": "Buy Art", "label": "No results button A" },
+    { "type": "url", "id": "empty_a_link", "label": "Button A link" },
+    { "type": "text", "id": "empty_b_label", "default": "Create Art", "label": "No results button B" },
+    { "type": "url", "id": "empty_b_link", "label": "Button B link" },
+    { "type": "header", "content": "Results" },
+    { "type": "range", "id": "per_page", "min": 6, "max": 48, "step": 3, "default": 12,
+      "label": "Results per page" },
+    { "type": "range", "id": "columns", "min": 2, "max": 4, "step": 1, "default": 4, "label": "Columns" },
+    { "type": "text", "id": "sold_label", "default": "Sold", "label": "Sold label" },
+    { "type": "header", "content": "Toolbar" },
+    { "type": "checkbox", "id": "enable_sorting", "default": true, "label": "Show sorting" },
+    { "type": "text", "id": "sort_label", "default": "Sort by", "label": "Sort label" },
+    { "type": "text", "id": "apply_label", "default": "Apply", "label": "Apply button",
+      "info": "Only seen when JavaScript is off; otherwise filters apply as they change." },
+    { "type": "text", "id": "clear_label", "default": "Clear filters", "label": "Clear link" },
+    { "type": "color", "id": "bar_color", "default": "#f4f4f1", "label": "Toolbar strip colour" },
+    { "type": "header", "content": "Colour" },
+    { "type": "color", "id": "background", "default": "#ffffff", "label": "Background" },
+    { "type": "color", "id": "heading_color", "default": "#505a43", "label": "Heading" },
+    { "type": "color", "id": "card_title_color", "default": "#1e1e1e", "label": "Result title" },
+    { "type": "color", "id": "card_meta_color", "default": "#1e1e1e", "label": "Result meta" },
+    { "type": "color", "id": "rule_color", "default": "#d9d9d9", "label": "Rules" }
+  ]
+}
+{% endschema %}

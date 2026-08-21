@@ -1,0 +1,498 @@
+{% comment %}
+  Rebrand cart.
+
+  No Figma frame exists for this page either, so it is built from the same
+  vocabulary as the rest: rb-container, the IvyPresto section title, the
+  hairline rules of the class detail band, the teal uppercase labels, and pill
+  buttons. Nothing new was added to the palette.
+
+  It works with JavaScript off, on purpose. The store's cart type is
+  "notification", not a drawer, and the rebrand header carries no cart icon —
+  the cart link lives in the burger drawer. So this page is the cart, and it
+  must not depend on Dawn's cart custom elements, which the rebrand templates
+  do not render.
+
+    quantity  native number inputs named updates[], applied by the Update button
+    remove    item.url_to_remove, a plain link
+    checkout  the cart form's own checkout submit
+
+  Class bookings sit in the same cart as artworks. Their line item properties
+  (class time, attendee, booking group) are shown so a buyer can tell two
+  sessions of the same class apart; the underscore-prefixed ones the booking
+  app uses internally stay hidden, as Shopify intends.
+{% endcomment %}
+
+{{ 'saf-rebrand.css' | asset_url | stylesheet_tag }}
+
+{%- assign sid = section.id -%}
+
+<style>
+  #shopify-section-{{ sid }} .rb-cart {
+    background: {{ section.settings.background }};
+    padding-block:
+      clamp(32px, 4.17vw, 80px)
+      clamp(48px, 6.25vw, 120px);
+  }
+  #shopify-section-{{ sid }} .rb-cart__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: clamp(20px, 2.4vw, 46px);
+  }
+  #shopify-section-{{ sid }} .rb-cart__title { color: {{ section.settings.heading_color }}; }
+  #shopify-section-{{ sid }} .rb-cart__count {
+    font-family: var(--rb-sans);
+    font-size: var(--rb-fs-body-sm);
+    color: var(--rb-teal);
+    white-space: nowrap;
+  }
+
+  /* ---- empty --------------------------------------------------------- */
+  #shopify-section-{{ sid }} .rb-cart__empty {
+    padding-block: clamp(28px, 3.65vw, 70px);
+    border-top: 1px solid {{ section.settings.rule_color }};
+  }
+  #shopify-section-{{ sid }} .rb-cart__empty-body {
+    max-width: 46ch;
+    margin-bottom: clamp(18px, 2.08vw, 40px);
+    color: {{ section.settings.text_color }};
+  }
+  #shopify-section-{{ sid }} .rb-cart__empty-ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(10px, 0.83vw, 16px);
+  }
+
+  /* ---- line items ----------------------------------------------------- */
+  #shopify-section-{{ sid }} .rb-cart__labels,
+  #shopify-section-{{ sid }} .rb-cart__row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 130px 150px;
+    gap: clamp(16px, 1.67vw, 32px);
+    align-items: start;
+  }
+  #shopify-section-{{ sid }} .rb-cart__labels {
+    padding-bottom: clamp(8px, 0.83vw, 16px);
+    border-bottom: 1px solid {{ section.settings.rule_color }};
+  }
+  #shopify-section-{{ sid }} .rb-cart__label {
+    margin: 0;
+    font-family: var(--rb-sans);
+    font-weight: 600;
+    font-size: var(--rb-fs-meta);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--rb-teal);
+  }
+  #shopify-section-{{ sid }} .rb-cart__label--right { text-align: right; }
+
+  #shopify-section-{{ sid }} .rb-cart__row {
+    padding-block: clamp(18px, 2.08vw, 40px);
+    border-bottom: 1px solid {{ section.settings.rule_color }};
+  }
+  #shopify-section-{{ sid }} .rb-cart__item {
+    display: flex;
+    gap: clamp(14px, 1.46vw, 28px);
+    align-items: flex-start;
+  }
+  #shopify-section-{{ sid }} .rb-cart__thumb {
+    flex: 0 0 auto;
+    width: clamp(84px, 8.33vw, 160px);
+    aspect-ratio: 1 / 1;
+    background: {{ section.settings.thumb_color }};
+  }
+  #shopify-section-{{ sid }} .rb-cart__thumb img,
+  #shopify-section-{{ sid }} .rb-cart__thumb svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  #shopify-section-{{ sid }} .rb-cart__name {
+    margin: 0;
+    font-family: var(--rb-serif);
+    font-weight: 400;
+    font-size: clamp(18px, 1.46vw, 28px);
+    line-height: 1.2;
+    color: {{ section.settings.text_color }};
+  }
+  #shopify-section-{{ sid }} .rb-cart__name a { color: inherit; text-decoration: none; }
+  #shopify-section-{{ sid }} .rb-cart__name a:hover { text-decoration: underline; }
+  #shopify-section-{{ sid }} .rb-cart__vendor {
+    margin: 4px 0 0;
+    font-family: var(--rb-sans);
+    font-size: var(--rb-fs-meta);
+    color: {{ section.settings.muted_color }};
+  }
+  #shopify-section-{{ sid }} .rb-cart__props {
+    margin: clamp(8px, 0.63vw, 12px) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  #shopify-section-{{ sid }} .rb-cart__props li {
+    font-family: var(--rb-sans);
+    font-size: var(--rb-fs-meta);
+    line-height: 1.5;
+    color: {{ section.settings.muted_color }};
+  }
+  #shopify-section-{{ sid }} .rb-cart__props dfn {
+    font-style: normal;
+    font-weight: 600;
+  }
+  #shopify-section-{{ sid }} .rb-cart__unit {
+    margin: clamp(8px, 0.63vw, 12px) 0 0;
+    font-family: var(--rb-sans);
+    font-size: var(--rb-fs-body-sm);
+    color: {{ section.settings.text_color }};
+  }
+  #shopify-section-{{ sid }} .rb-cart__was {
+    margin-left: 8px;
+    opacity: 0.55;
+    text-decoration: line-through;
+  }
+  #shopify-section-{{ sid }} .rb-cart__discount {
+    margin: 4px 0 0;
+    font-family: var(--rb-sans);
+    font-size: var(--rb-fs-meta);
+    color: var(--rb-cherry);
+  }
+
+  #shopify-section-{{ sid }} .rb-cart__qty-field {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 110px;
+    min-height: clamp(38px, 2.71vw, 52px);
+    padding-inline: clamp(10px, 0.83vw, 16px);
+    border: 1px solid rgba(30, 30, 30, 0.24);
+    border-radius: 999px;
+    background: #fff;
+    font-family: var(--rb-sans);
+    font-size: var(--rb-fs-body-sm);
+    color: var(--rb-ink);
+  }
+  #shopify-section-{{ sid }} .rb-cart__remove {
+    display: inline-block;
+    margin-top: clamp(8px, 0.63vw, 12px);
+    font-family: var(--rb-sans);
+    font-size: var(--rb-fs-meta);
+    color: {{ section.settings.muted_color }};
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
+  }
+  #shopify-section-{{ sid }} .rb-cart__remove:hover { color: var(--rb-cherry); }
+  #shopify-section-{{ sid }} .rb-cart__total {
+    font-family: var(--rb-sans);
+    font-size: var(--rb-fs-body-sm);
+    text-align: right;
+    color: {{ section.settings.text_color }};
+  }
+
+  /* ---- footer --------------------------------------------------------- */
+  #shopify-section-{{ sid }} .rb-cart__foot {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 420px);
+    gap: clamp(24px, 3.13vw, 60px);
+    align-items: start;
+    margin-top: clamp(24px, 3.13vw, 60px);
+  }
+  /* Pinned to the second column on purpose. Dawn's base.css carries
+     `div:empty { display: none }`, so with the order note switched off the
+     note column vanishes and the summary would slide into the wide first
+     column instead of sitting right. */
+  #shopify-section-{{ sid }} .rb-cart__summary { grid-column: 2; }
+  #shopify-section-{{ sid }} .rb-cart__note label {
+    display: block;
+    margin-bottom: 8px;
+    font-family: var(--rb-sans);
+    font-weight: 600;
+    font-size: var(--rb-fs-meta);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--rb-teal);
+  }
+  #shopify-section-{{ sid }} .rb-cart__note textarea {
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 7em;
+    padding: clamp(10px, 0.83vw, 16px);
+    border: 1px solid {{ section.settings.rule_color }};
+    border-radius: 0;
+    background: #fff;
+    font-family: var(--rb-sans);
+    font-size: var(--rb-fs-body-sm);
+    color: var(--rb-ink);
+    resize: vertical;
+  }
+  #shopify-section-{{ sid }} .rb-cart__sum-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    padding-bottom: clamp(10px, 0.83vw, 16px);
+    margin-bottom: clamp(10px, 0.83vw, 16px);
+    border-bottom: 1px solid {{ section.settings.rule_color }};
+    font-family: var(--rb-sans);
+    font-size: var(--rb-fs-label);
+    color: {{ section.settings.text_color }};
+  }
+  #shopify-section-{{ sid }} .rb-cart__sum-row--minor {
+    font-size: var(--rb-fs-body-sm);
+    border-bottom: 0;
+    padding-bottom: 0;
+    margin-bottom: clamp(6px, 0.42vw, 8px);
+    color: var(--rb-cherry);
+  }
+  #shopify-section-{{ sid }} .rb-cart__fine {
+    margin: 0 0 clamp(14px, 1.25vw, 24px);
+    font-family: var(--rb-sans);
+    font-size: var(--rb-fs-meta);
+    line-height: 1.5;
+    color: {{ section.settings.muted_color }};
+  }
+  #shopify-section-{{ sid }} .rb-cart__actions {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(10px, 0.83vw, 16px);
+  }
+  #shopify-section-{{ sid }} .rb-cart__actions .rb-btn { width: 100%; }
+  #shopify-section-{{ sid }} .rb-cart__continue {
+    align-self: center;
+    font-family: var(--rb-sans);
+    font-size: var(--rb-fs-body-sm);
+    color: {{ section.settings.muted_color }};
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
+  }
+
+  @media screen and (max-width: 989px) {
+    #shopify-section-{{ sid }} .rb-cart__foot { grid-template-columns: 1fr; }
+    #shopify-section-{{ sid }} .rb-cart__summary { grid-column: 1; }
+  }
+  @media screen and (max-width: 749px) {
+    #shopify-section-{{ sid }} .rb-cart__labels { display: none; }
+    #shopify-section-{{ sid }} .rb-cart__row {
+      grid-template-columns: 1fr auto;
+      gap: clamp(10px, 1.04vw, 20px);
+    }
+    #shopify-section-{{ sid }} .rb-cart__item { grid-column: 1 / -1; }
+    #shopify-section-{{ sid }} .rb-cart__total { text-align: right; }
+  }
+</style>
+
+<div class="rb-section rb-cart">
+  <div class="rb-container">
+    <div class="rb-cart__head">
+      <h1 class="rb-section-title rb-cart__title">{{ section.settings.heading | escape }}</h1>
+      {%- if cart.item_count > 0 -%}
+        <p class="rb-cart__count">
+          {{- cart.item_count }} {% if cart.item_count == 1 %}item{% else %}items{% endif -%}
+        </p>
+      {%- endif -%}
+    </div>
+
+    {%- if cart.item_count == 0 -%}
+      <div class="rb-cart__empty">
+        <div class="rb-body rb-cart__empty-body">{{ section.settings.empty_text }}</div>
+        <div class="rb-cart__empty-ctas">
+          {%- if section.settings.empty_a_label != blank -%}
+            <a href="{{ section.settings.empty_a_link | default: routes.root_url }}"
+               class="rb-btn rb-btn--plain rb-btn--outline">
+              {{- section.settings.empty_a_label | escape -}}
+            </a>
+          {%- endif -%}
+          {%- if section.settings.empty_b_label != blank -%}
+            <a href="{{ section.settings.empty_b_link | default: routes.root_url }}"
+               class="rb-btn rb-btn--plain rb-btn--outline">
+              {{- section.settings.empty_b_label | escape -}}
+            </a>
+          {%- endif -%}
+        </div>
+      </div>
+
+    {%- else -%}
+      {%- form 'cart', cart -%}
+        <div class="rb-cart__labels">
+          <p class="rb-cart__label">{{ section.settings.col_item | escape }}</p>
+          <p class="rb-cart__label">{{ section.settings.col_qty | escape }}</p>
+          <p class="rb-cart__label rb-cart__label--right">{{ section.settings.col_total | escape }}</p>
+        </div>
+
+        {%- for item in cart.items -%}
+          <div class="rb-cart__row">
+            <div class="rb-cart__item">
+              <a href="{{ item.url }}" class="rb-cart__thumb" aria-hidden="true" tabindex="-1">
+                {%- if item.image != blank -%}
+                  {{
+                    item.image
+                    | image_url: width: 320
+                    | image_tag:
+                      widths: '160, 240, 320',
+                      sizes: '160px',
+                      loading: 'lazy',
+                      alt: item.image.alt | default: item.product.title
+                  }}
+                {%- else -%}
+                  {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                {%- endif -%}
+              </a>
+
+              <div>
+                <h2 class="rb-cart__name"><a href="{{ item.url }}">{{ item.product.title }}</a></h2>
+
+                {%- comment -%}
+                  Artworks carry the artist as the vendor, which is worth
+                  showing. Class products carry the shop's own name, which is
+                  not — every line would read "SA Art Fair".
+                {%- endcomment -%}
+                {%- if item.product.vendor != blank and item.product.vendor != shop.name -%}
+                  <p class="rb-cart__vendor">{{ item.product.vendor }}</p>
+                {%- endif -%}
+
+                {%- unless item.variant.title contains 'Default' -%}
+                  <p class="rb-cart__vendor">{{ item.variant.title }}</p>
+                {%- endunless -%}
+
+                {%- assign shown_props = 0 -%}
+                {%- for p in item.properties -%}
+                  {%- if p.last == blank -%}{%- continue -%}{%- endif -%}
+                  {%- assign lead = p.first | slice: 0 -%}
+                  {%- if lead == '_' -%}{%- continue -%}{%- endif -%}
+                  {%- if shown_props == 0 -%}<ul class="rb-cart__props" role="list">{%- endif -%}
+                  {%- assign shown_props = shown_props | plus: 1 -%}
+                  <li><dfn>{{ p.first | escape }}:</dfn> {{ p.last | escape }}</li>
+                {%- endfor -%}
+                {%- if shown_props > 0 -%}</ul>{%- endif -%}
+
+                <p class="rb-cart__unit">
+                  {{- item.final_price | money -}}
+                  {%- if item.original_price > item.final_price -%}
+                    <span class="rb-cart__was">{{ item.original_price | money }}</span>
+                  {%- endif -%}
+                  {{- ' ' }}each
+                </p>
+
+                {%- for allocation in item.line_level_discount_allocations -%}
+                  <p class="rb-cart__discount">
+                    {{ allocation.discount_application.title }} (−{{ allocation.amount | money }})
+                  </p>
+                {%- endfor -%}
+              </div>
+            </div>
+
+            <div>
+              <label class="visually-hidden" for="rb-cart-qty-{{ forloop.index }}">
+                {{- section.settings.col_qty | escape }} — {{ item.product.title | escape -}}
+              </label>
+              <input
+                class="rb-cart__qty-field"
+                id="rb-cart-qty-{{ forloop.index }}"
+                type="number"
+                name="updates[]"
+                value="{{ item.quantity }}"
+                min="0"
+                step="1"
+              >
+              <a href="{{ item.url_to_remove }}" class="rb-cart__remove">
+                {{- section.settings.remove_label | escape -}}
+              </a>
+            </div>
+
+            <div class="rb-cart__total">{{ item.final_line_price | money }}</div>
+          </div>
+        {%- endfor -%}
+
+        <div class="rb-cart__foot">
+          {%- if section.settings.show_note -%}
+            <div class="rb-cart__note">
+              <label for="rb-cart-note-{{ sid }}">{{ section.settings.note_label | escape }}</label>
+              <textarea id="rb-cart-note-{{ sid }}" name="note" rows="3">{{ cart.note }}</textarea>
+            </div>
+          {%- endif -%}
+
+          <div class="rb-cart__summary">
+            {%- for discount in cart.cart_level_discount_applications -%}
+              <div class="rb-cart__sum-row rb-cart__sum-row--minor">
+                <span>{{ discount.title }}</span>
+                <span>−{{ discount.total_allocated_amount | money }}</span>
+              </div>
+            {%- endfor -%}
+
+            <div class="rb-cart__sum-row">
+              <span>{{ section.settings.subtotal_label | escape }}</span>
+              <span>{{ cart.total_price | money }}</span>
+            </div>
+
+            {%- if section.settings.fine_print != blank -%}
+              <p class="rb-cart__fine">{{ section.settings.fine_print }}</p>
+            {%- endif -%}
+
+            <div class="rb-cart__actions">
+              <button type="submit" name="checkout" class="rb-btn rb-btn--{{ section.settings.checkout_fill }}">
+                {{- section.settings.checkout_label | escape -}}
+              </button>
+              <button type="submit" name="update" class="rb-btn rb-btn--plain rb-btn--outline">
+                {{- section.settings.update_label | escape -}}
+              </button>
+              {%- if section.settings.continue_label != blank -%}
+                <a href="{{ section.settings.continue_link | default: routes.root_url }}" class="rb-cart__continue">
+                  {{- section.settings.continue_label | escape -}}
+                </a>
+              {%- endif -%}
+            </div>
+          </div>
+        </div>
+      {%- endform -%}
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Rebrand cart",
+  "tag": "section",
+  "class": "rb-section-wrapper",
+  "settings": [
+    { "type": "text", "id": "heading", "default": "Your Cart", "label": "Heading" },
+    { "type": "header", "content": "Empty cart" },
+    { "type": "richtext", "id": "empty_text",
+      "default": "<p>Nothing here yet. Browse the works in the Store, or find a class in the Studio.</p>",
+      "label": "Empty cart message" },
+    { "type": "text", "id": "empty_a_label", "default": "Buy Art", "label": "Empty cart button A" },
+    { "type": "url", "id": "empty_a_link", "label": "Button A link" },
+    { "type": "text", "id": "empty_b_label", "default": "Create Art", "label": "Empty cart button B" },
+    { "type": "url", "id": "empty_b_link", "label": "Button B link" },
+    { "type": "header", "content": "Column labels" },
+    { "type": "text", "id": "col_item", "default": "Item", "label": "Item column" },
+    { "type": "text", "id": "col_qty", "default": "Quantity", "label": "Quantity column" },
+    { "type": "text", "id": "col_total", "default": "Total", "label": "Total column" },
+    { "type": "text", "id": "remove_label", "default": "Remove", "label": "Remove link" },
+    { "type": "header", "content": "Summary" },
+    { "type": "text", "id": "subtotal_label", "default": "Subtotal", "label": "Subtotal label" },
+    { "type": "richtext", "id": "fine_print",
+      "default": "<p>Taxes included. Delivery is calculated at checkout.</p>",
+      "label": "Note under the subtotal" },
+    { "type": "text", "id": "checkout_label", "default": "Checkout", "label": "Checkout button" },
+    { "type": "select", "id": "checkout_fill", "label": "Checkout button colour", "default": "cherry",
+      "options": [
+        { "value": "cherry", "label": "Cherry" },
+        { "value": "moss", "label": "Moss" },
+        { "value": "teal", "label": "Teal" },
+        { "value": "outline", "label": "Outline" }
+      ] },
+    { "type": "text", "id": "update_label", "default": "Update cart", "label": "Update button" },
+    { "type": "text", "id": "continue_label", "default": "Continue browsing", "label": "Continue link" },
+    { "type": "url", "id": "continue_link", "label": "Continue link URL" },
+    { "type": "checkbox", "id": "show_note", "default": false, "label": "Show an order note field",
+      "info": "Off to match the store's current cart setting." },
+    { "type": "text", "id": "note_label", "default": "Order note", "label": "Order note label" },
+    { "type": "header", "content": "Colour" },
+    { "type": "color", "id": "background", "default": "#ffffff", "label": "Background" },
+    { "type": "color", "id": "heading_color", "default": "#505a43", "label": "Heading" },
+    { "type": "color", "id": "text_color", "default": "#1e1e1e", "label": "Text" },
+    { "type": "color", "id": "muted_color", "default": "#6d6d6d", "label": "Secondary text" },
+    { "type": "color", "id": "rule_color", "default": "#d9d9d9", "label": "Rules" },
+    { "type": "color", "id": "thumb_color", "default": "#f4f4f1", "label": "Behind thumbnails" }
+  ]
+}
+{% endschema %}

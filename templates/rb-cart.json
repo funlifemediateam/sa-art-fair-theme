@@ -1,0 +1,37 @@
+{
+  "sections": {
+    "cart": {
+      "type": "rb-cart",
+      "settings": {
+        "heading": "Your Cart",
+        "empty_text": "<p>Nothing here yet. Browse the works in the Store, or find a class in the Studio.</p>",
+        "empty_a_label": "Buy Art",
+        "empty_a_link": "shopify://collections/gallery",
+        "empty_b_label": "Create Art",
+        "empty_b_link": "/pages/studio",
+        "col_item": "Item",
+        "col_qty": "Quantity",
+        "col_total": "Total",
+        "remove_label": "Remove",
+        "subtotal_label": "Subtotal",
+        "fine_print": "<p>Taxes included. Delivery is calculated at checkout.</p>",
+        "checkout_label": "Checkout",
+        "checkout_fill": "cherry",
+        "update_label": "Update cart",
+        "continue_label": "Continue browsing",
+        "continue_link": "shopify://collections/gallery",
+        "show_note": false,
+        "note_label": "Order note",
+        "background": "#ffffff",
+        "heading_color": "#505a43",
+        "text_color": "#1e1e1e",
+        "muted_color": "#6d6d6d",
+        "rule_color": "#d9d9d9",
+        "thumb_color": "#f4f4f1"
+      }
+    }
+  },
+  "order": [
+    "cart"
+  ]
+}

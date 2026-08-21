@@ -1,0 +1,668 @@
+{% comment %}
+  Rebrand artwork product page.
+
+  There is no Figma frame for this page — Hanre's export covers the Store but
+  stops at the grid, and "View Artwork" on those cards is a primary CTA. So
+  this is assembled from the vocabulary the Store page already uses rather than
+  invented: the container and gutter of every rb-* band, the IvyPresto name off
+  the artist card, the teal uppercase eyebrow, the hairline rule that separates
+  the two columns of the class detail band, and the moss/sage palette that runs
+  through the Buy Art half of the site (the Studio half is the cherry one).
+
+  Two deliberate departures from the Store grid, both because this page is the
+  piece itself rather than a card of it:
+
+    - the shot is CONTAINED, not cropped to a square. A card can crop; the page
+      a buyer decides on cannot.
+    - the gallery swaps with radio inputs and CSS, so it needs no JavaScript
+      and cannot break the add-to-cart form under it.
+
+  The artist link is resolved through a collection the piece is actually in —
+  see snippets/rb-artist-handle.liquid for why handleizing the vendor is wrong
+  on this catalogue.
+{% endcomment %}
+
+{{ 'saf-rebrand.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign sid = section.id
+  assign v = product.selected_or_first_available_variant
+
+  capture artist_handle
+    render 'rb-artist-handle', product: product
+  endcapture
+  assign artist_handle = artist_handle | strip
+  assign artist_col = collections[artist_handle]
+
+  comment
+    The vendor is the artist's name on this catalogue. The collection title is
+    preferred when one was found, because it is the spelling the artist's own
+    page uses and the two are not always consistent.
+  endcomment
+  assign artist_name = product.vendor
+  if artist_col != blank and artist_col.title != blank
+    assign artist_name = artist_col.title
+  endif
+
+  comment
+    Mediums are already carried as medium-* product tags across the whole
+    catalogue (nine canonical slugs). Reading them here means the spec row is
+    right on all forty works without anyone filling in a field.
+  endcomment
+  assign mediums = ''
+  for t in product.tags
+    assign lower = t | downcase
+    if lower contains 'medium-'
+      assign label = lower | remove_first: 'medium-' | replace: '-', ' ' | capitalize
+      unless mediums contains label
+        assign mediums = mediums | append: ',' | append: label
+      endunless
+    endif
+  endfor
+  assign medium_list = mediums | remove_first: ',' | split: ','
+
+  comment
+    "More by this artist" is the artist's own collection minus the piece being
+    looked at — and minus their CLASSES. A person who teaches has both in one
+    collection, and a class listing under "More by" on an artwork page sends a
+    buyer somewhere they did not ask to go.
+
+    Several artists only have one or two works in the catalogue right now, so
+    the row would render nearly empty. Below the minimum it falls back to the
+    Store collection under its own heading, which keeps the page from ending
+    in a dead stop.
+  endcomment
+  assign skip_types = ',class,workshop,gift card,'
+  assign artist_more = 0
+  if artist_col != blank
+    for item in artist_col.products limit: 32
+      if item.id == product.id
+        continue
+      endif
+      assign probe_type = ',' | append: item.type | downcase | append: ','
+      if skip_types contains probe_type
+        continue
+      endif
+      assign artist_more = artist_more | plus: 1
+    endfor
+  endif
+
+  assign rail_col = nil
+  assign rail_heading = ''
+  if artist_more >= section.settings.rail_min
+    assign rail_col = artist_col
+    assign rail_heading = section.settings.rail_heading | replace: '[artist]', artist_name
+  elsif section.settings.fallback_collection != blank
+    assign rail_col = collections[section.settings.fallback_collection]
+    assign rail_heading = section.settings.fallback_heading
+  endif
+-%}
+
+<style>
+  #shopify-section-{{ sid }} .rb-pd {
+    background: {{ section.settings.background }};
+    padding-block:
+      clamp(32px, 4.17vw, 80px)
+      clamp(48px, 6.25vw, 120px);
+  }
+  #shopify-section-{{ sid }} .rb-pd__grid {
+    display: grid;
+    grid-template-columns: minmax(0, {{ section.settings.media_width }}fr) minmax(0, {{ 100 | minus: section.settings.media_width }}fr);
+    gap: clamp(28px, 4.17vw, 80px);
+    align-items: start;
+  }
+
+  /* ---- gallery --------------------------------------------------------- */
+  #shopify-section-{{ sid }} .rb-pd__radio {
+    position: absolute;
+    width: 1px; height: 1px;
+    opacity: 0;
+    pointer-events: none;
+  }
+  #shopify-section-{{ sid }} .rb-pd__stage {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    /* the whole piece has to be visible, so the box is a stage the artwork
+       sits inside rather than a crop of it */
+    min-height: clamp(300px, 34.9vw, 670px);
+    background: {{ section.settings.stage_color }};
+  }
+  #shopify-section-{{ sid }} .rb-pd__shot {
+    display: block;
+    max-width: 100%;
+    max-height: clamp(300px, 34.9vw, 670px);
+    width: auto;
+    height: auto;
+    object-fit: contain;
+  }
+  {%- if product.media.size > 1 -%}
+    #shopify-section-{{ sid }} .rb-pd__shot {
+      position: absolute;
+      inset: 0;
+      margin: auto;
+      opacity: 0;
+      transition: opacity 0.25s ease;
+    }
+    {%- for media in product.media -%}
+      #shopify-section-{{ sid }} .rb-pd__radio:nth-of-type({{ forloop.index }}):checked ~ .rb-pd__stage .rb-pd__shot:nth-of-type({{ forloop.index }}) {
+        opacity: 1;
+      }
+      #shopify-section-{{ sid }} .rb-pd__radio:nth-of-type({{ forloop.index }}):checked ~ .rb-pd__thumbs .rb-pd__thumb:nth-of-type({{ forloop.index }}) {
+        border-color: {{ section.settings.accent_color }};
+      }
+    {%- endfor -%}
+    @media (prefers-reduced-motion: reduce) {
+      #shopify-section-{{ sid }} .rb-pd__shot { transition: none; }
+    }
+  {%- endif -%}
+
+  #shopify-section-{{ sid }} .rb-pd__thumbs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(8px, 0.63vw, 12px);
+    margin-top: clamp(10px, 0.83vw, 16px);
+  }
+  #shopify-section-{{ sid }} .rb-pd__thumb {
+    display: block;
+    width: clamp(56px, 4.69vw, 90px);
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    border: 1px solid rgba(30, 30, 30, 0.16);
+    background: {{ section.settings.stage_color }};
+    cursor: pointer;
+  }
+  #shopify-section-{{ sid }} .rb-pd__thumb img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  #shopify-section-{{ sid }} .rb-pd__radio:focus-visible ~ .rb-pd__thumbs .rb-pd__thumb {
+    outline: 2px solid {{ section.settings.accent_color }};
+    outline-offset: 2px;
+  }
+
+  /* ---- detail column --------------------------------------------------- */
+  #shopify-section-{{ sid }} .rb-pd__info {
+    box-sizing: border-box;
+    padding-left: clamp(0px, 3.13vw, 60px);
+    {% if section.settings.show_rule %}border-left: 1px solid {{ section.settings.rule_color }};{% endif %}
+    align-self: stretch;
+  }
+  /* A way back to the grid. The header carries no breadcrumb and this page is
+     reached from a card, so without it the only route back is the browser. */
+  #shopify-section-{{ sid }} .rb-pd__back {
+    display: inline-block;
+    margin-bottom: clamp(12px, 1.25vw, 24px);
+    font-family: var(--rb-sans);
+    font-size: var(--rb-fs-meta);
+    letter-spacing: 0.04em;
+    color: {{ section.settings.artist_color }};
+    text-decoration: none;
+  }
+  #shopify-section-{{ sid }} .rb-pd__back:hover { text-decoration: underline; }
+  #shopify-section-{{ sid }} .rb-pd__eyebrow { margin-bottom: clamp(10px, 1.04vw, 20px); }
+  #shopify-section-{{ sid }} .rb-pd__title {
+    color: {{ section.settings.title_color }};
+    text-wrap: balance;
+  }
+  #shopify-section-{{ sid }} .rb-pd__artist {
+    display: inline-block;
+    margin-top: clamp(8px, 0.83vw, 16px);
+    font-family: var(--rb-sans);
+    font-size: var(--rb-fs-body);
+    line-height: 1.3;
+    color: {{ section.settings.artist_color }};
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
+  }
+  #shopify-section-{{ sid }} .rb-pd__artist:hover { color: {{ section.settings.accent_color }}; }
+  #shopify-section-{{ sid }} .rb-pd__artist--plain { text-decoration: none; }
+
+  #shopify-section-{{ sid }} .rb-pd__price {
+    margin: clamp(14px, 1.46vw, 28px) 0 0;
+    font-family: var(--rb-sans);
+    font-size: var(--rb-fs-label);
+    line-height: 1.2;
+    color: {{ section.settings.title_color }};
+  }
+  #shopify-section-{{ sid }} .rb-pd__was {
+    margin-left: 10px;
+    opacity: 0.55;
+    text-decoration: line-through;
+  }
+  #shopify-section-{{ sid }} .rb-pd__sold {
+    margin-left: 10px;
+    color: {{ section.settings.accent_color }};
+  }
+  #shopify-section-{{ sid }} .rb-pd__tax {
+    margin: 4px 0 0;
+    font-family: var(--rb-sans);
+    font-size: var(--rb-fs-meta);
+    opacity: 0.7;
+  }
+
+  #shopify-section-{{ sid }} .rb-pd__specs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(8px, 0.83vw, 16px);
+    margin: clamp(12px, 1.25vw, 24px) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  #shopify-section-{{ sid }} .rb-pd__spec {
+    font-family: var(--rb-sans);
+    font-size: var(--rb-fs-body-sm);
+    line-height: 1.2;
+    color: var(--rb-teal);
+  }
+  #shopify-section-{{ sid }} .rb-pd__spec + .rb-pd__spec::before {
+    content: '·';
+    margin-right: clamp(8px, 0.83vw, 16px);
+    opacity: 0.5;
+  }
+
+  #shopify-section-{{ sid }} .rb-pd__form { margin-top: clamp(18px, 2.08vw, 40px); }
+  #shopify-section-{{ sid }} .rb-pd__variant {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 360px;
+    min-height: clamp(40px, 2.92vw, 56px);
+    margin-bottom: clamp(10px, 0.83vw, 16px);
+    padding-inline: clamp(12px, 1.04vw, 20px);
+    border: 1px solid rgba(30, 30, 30, 0.24);
+    border-radius: 999px;
+    background: #fff;
+    font-family: var(--rb-sans);
+    font-size: var(--rb-fs-body-sm);
+    color: var(--rb-ink);
+  }
+  #shopify-section-{{ sid }} .rb-pd__qty {
+    box-sizing: border-box;
+    width: 88px;
+    min-height: clamp(40px, 2.92vw, 56px);
+    margin-bottom: clamp(10px, 0.83vw, 16px);
+    padding-inline: clamp(10px, 0.83vw, 16px);
+    border: 1px solid rgba(30, 30, 30, 0.24);
+    border-radius: 999px;
+    background: #fff;
+    font-family: var(--rb-sans);
+    font-size: var(--rb-fs-body-sm);
+    color: var(--rb-ink);
+  }
+  #shopify-section-{{ sid }} .rb-pd__qty-label {
+    display: block;
+    margin-bottom: 6px;
+    font-family: var(--rb-sans);
+    font-size: var(--rb-fs-meta);
+    color: var(--rb-ink);
+  }
+  #shopify-section-{{ sid }} .rb-pd__add { min-width: min(100%, 260px); }
+  #shopify-section-{{ sid }} .rb-pd__add[disabled] {
+    background: #cfcfcf;
+    color: #ffffff;
+    cursor: default;
+  }
+
+  #shopify-section-{{ sid }} .rb-pd__desc {
+    margin-top: clamp(20px, 2.29vw, 44px);
+    color: {{ section.settings.body_color }};
+  }
+  #shopify-section-{{ sid }} .rb-pd__desc > * { margin: 0 0 0.7em; }
+  #shopify-section-{{ sid }} .rb-pd__desc > *:last-child { margin-bottom: 0; }
+  #shopify-section-{{ sid }} .rb-pd__desc a { color: {{ section.settings.accent_color }}; }
+  #shopify-section-{{ sid }} .rb-pd__more-link { margin-top: clamp(18px, 1.98vw, 38px); }
+
+  /* ---- more by this artist --------------------------------------------- */
+  #shopify-section-{{ sid }} .rb-pd__rail-wrap {
+    margin-top: clamp(48px, 6.25vw, 120px);
+  }
+  #shopify-section-{{ sid }} .rb-pd__rail-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: clamp(16px, 1.72vw, 33px);
+  }
+  #shopify-section-{{ sid }} .rb-pd__rail-title { color: {{ section.settings.rail_title_color }}; }
+  #shopify-section-{{ sid }} .rb-pd__rail-all {
+    font-family: var(--rb-sans);
+    font-size: var(--rb-fs-body-sm);
+    color: {{ section.settings.artist_color }};
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
+    white-space: nowrap;
+  }
+  #shopify-section-{{ sid }} .rb-pd__cards {
+    display: grid;
+    grid-template-columns: repeat({{ section.settings.rail_columns }}, minmax(0, 1fr));
+    gap: clamp(20px, 2.5vw, 48px) clamp(16px, 2.08vw, 40px);
+  }
+  #shopify-section-{{ sid }} .rb-pd__card { display: flex; flex-direction: column; }
+  #shopify-section-{{ sid }} .rb-pd__card-media {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+  }
+  #shopify-section-{{ sid }} .rb-pd__card-title {
+    margin: clamp(8px, 0.83vw, 16px) 0 0;
+    font-family: var(--rb-serif);
+    font-weight: 400;
+    font-size: clamp(17px, 1.35vw, 26px);
+    line-height: 1.2;
+    color: {{ section.settings.title_color }};
+  }
+  #shopify-section-{{ sid }} .rb-pd__card-price {
+    margin: 4px 0 0;
+    font-family: var(--rb-sans);
+    font-size: var(--rb-fs-meta);
+    color: {{ section.settings.body_color }};
+  }
+  #shopify-section-{{ sid }} .rb-pd__card a { text-decoration: none; color: inherit; }
+  #shopify-section-{{ sid }} .rb-pd__card a:hover .rb-pd__card-title { text-decoration: underline; }
+
+  @media screen and (max-width: 989px) {
+    #shopify-section-{{ sid }} .rb-pd__cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media screen and (max-width: 749px) {
+    #shopify-section-{{ sid }} .rb-pd__grid { grid-template-columns: 1fr; }
+    #shopify-section-{{ sid }} .rb-pd__info {
+      padding-left: 0;
+      border-left: 0;
+    }
+    #shopify-section-{{ sid }} .rb-pd__add { min-width: 100%; }
+  }
+</style>
+
+<div class="rb-section rb-pd">
+  <div class="rb-container rb-pd__grid">
+    <div class="rb-pd__gallery">
+      {%- if product.media.size > 0 -%}
+        {%- if product.media.size > 1 -%}
+          {%- for media in product.media -%}
+            <input
+              class="rb-pd__radio"
+              type="radio"
+              name="rb-pd-{{ sid }}"
+              id="rb-pd-{{ sid }}-{{ forloop.index0 }}"
+              {% if forloop.first %}checked{% endif %}
+            >
+          {%- endfor -%}
+        {%- endif -%}
+
+        <div class="rb-pd__stage">
+          {%- for media in product.media -%}
+            {{
+              media.preview_image
+              | image_url: width: 1600
+              | image_tag:
+                class: 'rb-pd__shot',
+                widths: '400, 600, 900, 1200, 1600',
+                sizes: '(max-width: 749px) 92vw, 52vw',
+                loading: 'eager',
+                alt: media.preview_image.alt | default: product.title
+            }}
+          {%- endfor -%}
+        </div>
+
+        {%- if product.media.size > 1 -%}
+          <div class="rb-pd__thumbs">
+            {%- for media in product.media -%}
+              <label class="rb-pd__thumb" for="rb-pd-{{ sid }}-{{ forloop.index0 }}">
+                {{
+                  media.preview_image
+                  | image_url: width: 220
+                  | image_tag:
+                    widths: '110, 220',
+                    sizes: '90px',
+                    loading: 'lazy',
+                    alt: 'View image ' | append: forloop.index
+                }}
+              </label>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+      {%- else -%}
+        <div class="rb-pd__stage">
+          {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg rb-pd__shot' }}
+        </div>
+      {%- endif -%}
+    </div>
+
+    <div class="rb-pd__info">
+      {%- if section.settings.back_label != blank -%}
+        <a href="{{ section.settings.back_link | default: routes.root_url }}" class="rb-pd__back">
+          {{- section.settings.back_label | escape -}}
+        </a>
+      {%- endif -%}
+
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="rb-caps rb-pd__eyebrow">{{ section.settings.eyebrow }}</p>
+      {%- endif -%}
+
+      <h1 class="rb-name rb-pd__title">{{ product.title }}</h1>
+
+      {%- if artist_name != blank -%}
+        {%- if artist_col != blank -%}
+          <a href="{{ artist_col.url }}" class="rb-pd__artist">{{ artist_name }}</a>
+        {%- else -%}
+          <span class="rb-pd__artist rb-pd__artist--plain">{{ artist_name }}</span>
+        {%- endif -%}
+      {%- endif -%}
+
+      <p class="rb-pd__price">
+        {{- v.price | money -}}
+        {%- if v.compare_at_price > v.price -%}
+          <span class="rb-pd__was">{{ v.compare_at_price | money }}</span>
+        {%- endif -%}
+        {%- unless product.available -%}
+          <span class="rb-pd__sold">{{ section.settings.sold_label | escape }}</span>
+        {%- endunless -%}
+      </p>
+      {%- if section.settings.tax_note != blank -%}
+        <p class="rb-pd__tax">{{ section.settings.tax_note | escape }}</p>
+      {%- endif -%}
+
+      {%- if medium_list.size > 0 -%}
+        <ul class="rb-pd__specs" role="list">
+          {%- for m in medium_list -%}
+            <li class="rb-pd__spec">{{ m | strip }}</li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+
+      {%- comment -%}
+        A plain form post rather than Dawn's <product-form> custom element:
+        the rebrand header carries no cart icon and Dawn's cart drawer is not
+        part of this design, so there is nothing for an AJAX add to open. The
+        post lands on the rebranded cart page, which is where the buyer is
+        going next anyway, and it works with JavaScript off.
+      {%- endcomment -%}
+      <form
+        action="{{ routes.cart_add_url }}"
+        method="post"
+        enctype="multipart/form-data"
+        class="rb-pd__form"
+      >
+        {%- if product.variants.size > 1 -%}
+          <label class="rb-pd__qty-label" for="rb-pd-variant-{{ sid }}">
+            {{- section.settings.variant_label | escape -}}
+          </label>
+          <select class="rb-pd__variant" id="rb-pd-variant-{{ sid }}" name="id">
+            {%- for variant in product.variants -%}
+              <option
+                value="{{ variant.id }}"
+                {% if variant == v %}selected{% endif %}
+                {% unless variant.available %}disabled{% endunless %}
+              >
+                {{ variant.title }} — {{ variant.price | money }}
+                {%- unless variant.available %} ({{ section.settings.sold_label }}){% endunless -%}
+              </option>
+            {%- endfor -%}
+          </select>
+        {%- else -%}
+          <input type="hidden" name="id" value="{{ v.id }}">
+        {%- endif -%}
+
+        {%- if section.settings.show_quantity -%}
+          <label class="rb-pd__qty-label" for="rb-pd-qty-{{ sid }}">
+            {{- section.settings.quantity_label | escape -}}
+          </label>
+          <input
+            class="rb-pd__qty"
+            id="rb-pd-qty-{{ sid }}"
+            type="number"
+            name="quantity"
+            value="1"
+            min="1"
+            step="1"
+          >
+        {%- else -%}
+          <input type="hidden" name="quantity" value="1">
+        {%- endif -%}
+
+        <input type="hidden" name="return_to" value="{{ routes.cart_url }}">
+
+        <button
+          type="submit"
+          class="rb-btn rb-btn--{{ section.settings.button_fill }} rb-pd__add"
+          {% unless product.available %}disabled{% endunless %}
+        >
+          {%- if product.available -%}
+            {{ section.settings.button_label | escape }}
+          {%- else -%}
+            {{ section.settings.sold_label | escape }}
+          {%- endif -%}
+        </button>
+      </form>
+
+      {%- if product.description != blank -%}
+        <div class="rb-body rb-pd__desc">{{ product.description }}</div>
+      {%- endif -%}
+
+      {%- if artist_col != blank and section.settings.artist_link_label != blank -%}
+        <div class="rb-pd__more-link">
+          <a href="{{ artist_col.url }}" class="rb-btn rb-btn--serif rb-btn--outline">
+            {{- section.settings.artist_link_label | replace: '[artist]', artist_name | escape -}}
+          </a>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+
+  {%- if rail_col != nil and rail_heading != blank -%}
+    <div class="rb-container rb-pd__rail-wrap">
+      <div class="rb-pd__rail-head">
+        <h2 class="rb-section-title rb-pd__rail-title">{{ rail_heading | escape }}</h2>
+        <a href="{{ rail_col.url }}" class="rb-pd__rail-all">
+          {{- section.settings.rail_link_label | escape -}}
+        </a>
+      </div>
+
+      <div class="rb-pd__cards">
+        {%- assign shown = 0 -%}
+        {%- for item in rail_col.products -%}
+          {%- if item.id == product.id -%}{%- continue -%}{%- endif -%}
+          {%- assign probe_type = ',' | append: item.type | downcase | append: ',' -%}
+          {%- if skip_types contains probe_type -%}{%- continue -%}{%- endif -%}
+          {%- if shown >= section.settings.rail_count -%}{%- break -%}{%- endif -%}
+          {%- assign shown = shown | plus: 1 -%}
+          <article class="rb-pd__card">
+            <a href="{{ item.url }}">
+              <span class="rb-media rb-pd__card-media">
+                {%- if item.featured_image != blank -%}
+                  {{
+                    item.featured_image
+                    | image_url: width: 700
+                    | image_tag:
+                      widths: '220, 340, 520, 700',
+                      sizes: '(max-width: 749px) 45vw, 22vw',
+                      loading: 'lazy',
+                      alt: item.featured_image.alt | default: item.title
+                  }}
+                {%- else -%}
+                  {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                {%- endif -%}
+              </span>
+              <h3 class="rb-pd__card-title">{{ item.title }}</h3>
+              <p class="rb-pd__card-price">
+                {{- item.price | money -}}
+                {%- unless item.available %} · {{ section.settings.sold_label }}{% endunless -%}
+              </p>
+            </a>
+          </article>
+        {%- endfor -%}
+      </div>
+    </div>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Rebrand artwork",
+  "tag": "section",
+  "class": "rb-section-wrapper",
+  "settings": [
+    { "type": "paragraph",
+      "content": "The artwork product page. The artist name, link, mediums and 'more by' row all resolve from the product, so one template serves every piece." },
+    { "type": "text", "id": "back_label", "default": "← Back to the Store", "label": "Back link label",
+      "info": "Blank hides it. The header has no breadcrumb, so this is the only route back to the grid." },
+    { "type": "url", "id": "back_link", "label": "Back link" },
+    { "type": "inline_richtext", "id": "eyebrow", "default": "Original Artwork", "label": "Eyebrow",
+      "info": "Uppercase teal line above the title. Words wrapped in <strong> render cherry." },
+    { "type": "text", "id": "sold_label", "default": "Sold", "label": "Sold label" },
+    { "type": "text", "id": "tax_note", "label": "Note under the price",
+      "info": "For example: Excludes delivery. Leave blank to hide." },
+    { "type": "header", "content": "Buying" },
+    { "type": "text", "id": "button_label", "default": "Add to Cart", "label": "Add to cart label" },
+    { "type": "select", "id": "button_fill", "label": "Add to cart colour", "default": "moss",
+      "info": "Moss is the Buy Art half of the site; cherry belongs to the Studio half.",
+      "options": [
+        { "value": "moss", "label": "Moss" },
+        { "value": "cherry", "label": "Cherry" },
+        { "value": "teal", "label": "Teal" },
+        { "value": "sage-solid", "label": "Sage" },
+        { "value": "outline", "label": "Outline" }
+      ] },
+    { "type": "text", "id": "variant_label", "default": "Option", "label": "Variant field label" },
+    { "type": "checkbox", "id": "show_quantity", "default": false, "label": "Show a quantity field",
+      "info": "Off by design — originals are one of a kind. Turn on if prints are ever sold here." },
+    { "type": "text", "id": "quantity_label", "default": "Quantity", "label": "Quantity field label" },
+    { "type": "header", "content": "Artist" },
+    { "type": "text", "id": "artist_link_label", "default": "See [artist]'s page", "label": "Artist button label",
+      "info": "[artist] is replaced with the name. Blank hides the button." },
+    { "type": "header", "content": "More by this artist" },
+    { "type": "text", "id": "rail_heading", "default": "More by [artist]", "label": "Row heading",
+      "info": "Blank hides the whole row." },
+    { "type": "text", "id": "rail_link_label", "default": "View all", "label": "Row link label" },
+    { "type": "range", "id": "rail_count", "min": 2, "max": 8, "step": 1, "default": 4,
+      "label": "How many works" },
+    { "type": "range", "id": "rail_min", "min": 1, "max": 4, "step": 1, "default": 2,
+      "label": "Minimum before falling back",
+      "info": "An artist with fewer other works than this shows the fallback collection instead of a near-empty row." },
+    { "type": "collection", "id": "fallback_collection", "label": "Fallback collection",
+      "info": "Shown when the artist has too few other works. Blank hides the row instead." },
+    { "type": "text", "id": "fallback_heading", "default": "More from the Store",
+      "label": "Fallback heading" },
+    { "type": "range", "id": "rail_columns", "min": 2, "max": 4, "step": 1, "default": 4,
+      "label": "Columns" },
+    { "type": "header", "content": "Layout" },
+    { "type": "range", "id": "media_width", "min": 40, "max": 65, "step": 1,
+      "default": 55, "unit": "%", "label": "Artwork share of the row" },
+    { "type": "checkbox", "id": "show_rule", "default": true, "label": "Show dividing rule" },
+    { "type": "header", "content": "Colour" },
+    { "type": "color", "id": "background", "default": "#ffffff", "label": "Background" },
+    { "type": "color", "id": "stage_color", "default": "#f4f4f1", "label": "Behind the artwork" },
+    { "type": "color", "id": "title_color", "default": "#1e1e1e", "label": "Title" },
+    { "type": "color", "id": "artist_color", "default": "#505a43", "label": "Artist name" },
+    { "type": "color", "id": "accent_color", "default": "#b00e3f", "label": "Accent" },
+    { "type": "color", "id": "body_color", "default": "#1e1e1e", "label": "Description" },
+    { "type": "color", "id": "rule_color", "default": "#c9c9c9", "label": "Rule" },
+    { "type": "color", "id": "rail_title_color", "default": "#505a43", "label": "More-by heading" }
+  ],
+  "presets": [{ "name": "Rebrand artwork" }]
+}
+{% endschema %}

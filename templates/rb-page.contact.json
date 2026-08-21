@@ -1,0 +1,84 @@
+{
+  "sections": {
+    "hero": {
+      "type": "rb-hero",
+      "settings": {
+        "fill": "colour",
+        "background": "#505a43",
+        "texture": 100,
+        "band_height": 560,
+        "min_height": 240,
+        "mobile_ratio": "4 / 3",
+        "overlay_opacity": 0,
+        "show_mark": true,
+        "mark": "saaf",
+        "mark_width": 130,
+        "heading": "Contact",
+        "heading_style": "page_title",
+        "text_color": "#ffffff"
+      }
+    },
+    "contact": {
+      "type": "rb-contact",
+      "blocks": {
+        "studio": {
+          "type": "detail",
+          "settings": {
+            "label": "The Studio",
+            "value": "<p>217 Hout Bay Main Road<br>Hout Bay, Cape Town</p>"
+          }
+        },
+        "hours": {
+          "type": "detail",
+          "settings": {
+            "label": "Opening hours",
+            "value": "<p>Opening hours to be confirmed.</p>"
+          }
+        },
+        "phone": {
+          "type": "detail",
+          "settings": {
+            "label": "WhatsApp",
+            "value": "<p><a href=\"https://wa.me/27724778807\">+27 72 477 8807</a></p>"
+          }
+        },
+        "email": {
+          "type": "detail",
+          "settings": {
+            "label": "Email",
+            "value": "<p>Email address to be confirmed.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "studio",
+        "hours",
+        "phone",
+        "email"
+      ],
+      "settings": {
+        "heading": "<p><em>Established</em> in the valley of the Cape Peninsula.</p>",
+        "heading_color": "#1e1e1e",
+        "heading_accent": "#bea532",
+        "map_width": 50,
+        "map_embed": "https://maps.google.com/maps?q=SA+Art+Fair+Hout+Bay+Cape+Town&t=&z=13&ie=UTF8&iwloc=&output=embed",
+        "map_alt": "Map to the SA Art Fair studio",
+        "map_grayscale": 100,
+        "stretch_map": true,
+        "form_label": "Get in touch",
+        "name_label": "Name + Surname",
+        "email_label": "Email Address",
+        "message_label": "Message",
+        "submit_label": "Submit",
+        "success_message": "Thanks — we will be in touch shortly.",
+        "text_color": "#1e1e1e",
+        "rule_color": "#1e1e1e",
+        "background": "#ffffff"
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "contact"
+  ]
+}
