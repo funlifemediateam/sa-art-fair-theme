@@ -47,6 +47,15 @@
   #shopify-section-{{ sid }} .rb-statement__heading p + p {
     margin-top: 0.4em;
   }
+  /* Optional supporting paragraph. Not in the comp — the band there is one
+     display sentence. It only renders when the client supplies copy that has
+     nowhere else to sit, at body size so it never competes with the sentence. */
+  #shopify-section-{{ sid }} .rb-statement__body {
+    color: {{ section.settings.body_color }};
+    max-width: {{ section.settings.body_width }}px;
+  }
+  #shopify-section-{{ sid }} .rb-statement__body p { margin: 0; }
+  #shopify-section-{{ sid }} .rb-statement__body p + p { margin-top: 0.7em; }
   /* the Store page runs the sentence in ink and only the italic run in moss */
   #shopify-section-{{ sid }} .rb-statement__heading em,
   #shopify-section-{{ sid }} .rb-statement__heading i {
@@ -73,6 +82,10 @@
 
     {%- if section.settings.heading != blank -%}
       <div class="rb-display rb-statement__heading">{{ section.settings.heading }}</div>
+    {%- endif -%}
+
+    {%- if section.settings.body != blank -%}
+      <div class="rb-body rb-statement__body">{{ section.settings.body }}</div>
     {%- endif -%}
 
     {%- if section.settings.button_label != blank -%}
@@ -104,6 +117,11 @@
       "info": "Leave equal to the statement colour for a single-tone sentence." },
     { "type": "range", "id": "heading_width", "min": 700, "max": 1600, "step": 10,
       "default": 1270, "unit": "px", "label": "Statement max width" },
+    { "type": "richtext", "id": "body", "label": "Supporting paragraph",
+      "info": "Optional, and not part of the original design — leave blank to keep the band as a single sentence." },
+    { "type": "color", "id": "body_color", "default": "#1e1e1e", "label": "Supporting paragraph colour" },
+    { "type": "range", "id": "body_width", "min": 500, "max": 1400, "step": 20,
+      "default": 900, "unit": "px", "label": "Supporting paragraph max width" },
     { "type": "color", "id": "background", "default": "#ffffff", "label": "Background" },
     { "type": "header", "content": "Optional button" },
     { "type": "text", "id": "button_label", "label": "Button label" },

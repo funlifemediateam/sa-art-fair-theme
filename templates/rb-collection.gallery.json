@@ -107,7 +107,8 @@
         "min_height": 340,
         "mobile_ratio": "3 / 4",
         "show_badge": false,
-        "heading": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+        "heading": "What’s your art personality?",
+        "subheading": "See how your personality can shape your journey as a collector.",
         "text_color": "#ffffff",
         "button_label": "Take The Quiz",
         "button_link": "shopify://collections/art-quiz"

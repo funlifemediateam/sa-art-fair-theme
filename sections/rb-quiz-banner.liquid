@@ -76,6 +76,14 @@
     max-width: 22ch;
     text-wrap: balance;
   }
+  /* Optional line under the heading. Not in the comp — the band there is badge,
+     sentence, pill. It renders only when copy is supplied, at body size. */
+  #shopify-section-{{ sid }} .rb-quiz__sub {
+    margin: clamp(12px, 1.15vw, 22px) 0 0;
+    color: {{ section.settings.text_color }};
+    max-width: 46ch;
+    text-wrap: balance;
+  }
   #shopify-section-{{ sid }} .rb-quiz__cta {
     margin-top: clamp(20px, 2.4vw, 46px);
     min-height: clamp(48px, 4.22vw, 81px);
@@ -133,6 +141,10 @@
         <h2 class="rb-quiz__heading">{{ section.settings.heading | escape }}</h2>
       {%- endif -%}
 
+      {%- if section.settings.subheading != blank -%}
+        <p class="rb-body rb-quiz__sub">{{ section.settings.subheading | escape }}</p>
+      {%- endif -%}
+
       {%- if section.settings.button_label != blank -%}
         <a href="{{ section.settings.button_link | default: '#' }}" class="rb-btn rb-btn--white rb-quiz__cta">
           {{- section.settings.button_label | escape -}}
@@ -171,6 +183,8 @@
     { "type": "color", "id": "badge_color", "default": "#bea532", "label": "Badge protea colour" },
     { "type": "text", "id": "heading",
       "default": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", "label": "Heading" },
+    { "type": "text", "id": "subheading", "label": "Line under the heading",
+      "info": "Optional, and not part of the original design — leave blank for the comp's badge / sentence / button stack." },
     { "type": "color", "id": "text_color", "default": "#ffffff", "label": "Heading colour" },
     { "type": "text", "id": "button_label", "default": "Take the quiz", "label": "Button label" },
     { "type": "url", "id": "button_link", "label": "Button link" }

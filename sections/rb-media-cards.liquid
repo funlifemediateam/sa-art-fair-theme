@@ -65,6 +65,8 @@
     color: {{ section.settings.body_color }};
   }
   #shopify-section-{{ sid }} .rb-mc__body p { margin: 0; }
+  /* a card whose copy runs to two paragraphs needs the break to read as one */
+  #shopify-section-{{ sid }} .rb-mc__body p + p { margin-top: 0.7em; }
 
   /* the pill is centred under the card and pinned to the bottom so a longer
      paragraph in one card does not lift its button out of line */
