@@ -4,8 +4,15 @@
   plain artwork card, both with a small attribution line.
 
   The band's background is the photographed sand-and-branch-shadow sheet from
-  the design package, so it is a real image rather than the crumple overlay
-  the flat panels use.
+  the design package (The Studio Page/10.png, an empty plate), so it is a real
+  image rather than the crumple overlay the flat panels use. It must stay an
+  EMPTY plate — an earlier build used a flat crop of the comp here, which put a
+  picture of the cards behind the real cards.
+
+  Every measurement below is taken off the Figma comp at 1920 and scaled by vw:
+  card 490x642, radius 42, rail gap 40, quote 35/48.6, attribution 19.5,
+  eyebrow 21 (smaller than the page's other eyebrows), band padding 92/110,
+  card top padding 90, card side padding 44.
 
   The rail is a scroll-snap track: it is a working carousel with the arrows,
   and still swipes natively with them hidden or JS unavailable.
@@ -24,23 +31,30 @@
     background-size: cover;
     background-position: center;
     padding-block:
-      clamp(40px, 4.06vw, 78px)
-      clamp(44px, 4.79vw, 92px);
+      clamp(44px, 4.79vw, 92px)
+      clamp(48px, 5.73vw, 110px);
     overflow: hidden;
   }
   {%- if section.settings.show_texture == false -%}
     #shopify-section-{{ sid }} .rb-tst { background-image: none; }
   {%- endif -%}
 
+  /* this band's eyebrow is set smaller than the page's others in the comp */
   #shopify-section-{{ sid }} .rb-tst__eyebrow {
     text-align: center;
-    margin-bottom: clamp(20px, 2.19vw, 42px);
+    font-size: clamp(13px, 1.11vw, 21px);
+    margin-bottom: clamp(28px, 3.91vw, 75px);
+  }
+  /* richtext settings arrive wrapped in a <p> that carries a 1em margin */
+  #shopify-section-{{ sid }} .rb-tst__eyebrow > *,
+  #shopify-section-{{ sid }} .rb-tst__quote > * {
+    margin: 0;
   }
 
   #shopify-section-{{ sid }} .rb-tst__viewport { position: relative; }
 
   #shopify-section-{{ sid }} .rb-tst__rail {
-    --rb-rail-gap: clamp(14px, 1.61vw, 31px);
+    --rb-rail-gap: clamp(16px, 2.08vw, 40px);
     /* the comp bleeds the rail past both edges, so cards are cut off rather
        than sitting inside a container */
     padding-inline: clamp(20px, 6.25vw, 120px);
@@ -48,6 +62,9 @@
   }
 
   #shopify-section-{{ sid }} .rb-tst__card {
+    /* a <figure> carries a UA margin of 1em 40px — left in, it pushed the
+       cards 80px apart and added 19px of dead height to the band */
+    margin: 0;
     width: clamp(230px, {{ section.settings.card_width | times: 100.0 | divided_by: 1920.0 }}vw, {{ section.settings.card_width }}px);
     aspect-ratio: {{ section.settings.card_width }} / {{ section.settings.card_height }};
     border-radius: {{ section.settings.radius }}px;
@@ -59,20 +76,31 @@
 
   #shopify-section-{{ sid }} .rb-tst__card--quote {
     justify-content: flex-start;
-    padding: clamp(18px, 1.98vw, 38px) clamp(16px, 1.77vw, 34px);
+    /* the comp's text frame is narrower than the card and sits left of centre,
+       which is what breaks the quote after "dolor" rather than after "sit" */
+    padding:
+      clamp(26px, 4.90vw, 94px)
+      clamp(18px, 6.25vw, 120px)
+      clamp(22px, 2.50vw, 48px)
+      clamp(18px, 2.29vw, 44px);
     --rb-paper-strength: {{ section.settings.texture | divided_by: 100.0 }};
   }
   #shopify-section-{{ sid }} .rb-tst__quote {
+    /* Dawn styles every blockquote with an italic face, a left rule and left
+       padding — the comp has none of them */
     margin: 0;
+    border: 0;
+    padding: 0;
     font-family: var(--rb-serif);
+    font-style: normal;
     font-weight: 400;
     font-size: var(--rb-fs-quote);
-    line-height: 1.32;
+    line-height: 1.43;
   }
   #shopify-section-{{ sid }} .rb-tst__attr {
-    margin: clamp(8px, 0.83vw, 16px) 0 0;
+    margin: clamp(8px, 0.73vw, 14px) 0 0;
     font-family: var(--rb-sans);
-    font-size: var(--rb-fs-meta);
+    font-size: clamp(12px, 0.96vw, 18px);
     line-height: 1.3;
   }
 
@@ -88,7 +116,10 @@
   #shopify-section-{{ sid }} .rb-tst__card--image .rb-tst__attr {
     position: relative;
     margin-top: auto;
-    padding: clamp(10px, 1.04vw, 20px) clamp(14px, 1.46vw, 28px);
+    padding:
+      clamp(10px, 1.04vw, 20px)
+      clamp(14px, 1.46vw, 28px)
+      clamp(16px, 1.77vw, 34px);
     text-align: center;
   }
 
@@ -100,6 +131,15 @@
   }
   #shopify-section-{{ sid }} .rb-tst__nav--prev { left: clamp(6px, 0.83vw, 16px); }
   #shopify-section-{{ sid }} .rb-tst__nav--next { right: clamp(6px, 0.83vw, 16px); }
+
+  /* the card stops shrinking at 230px but the type stops at its own floor, so
+     below that point the comp's wide right gutter no longer leaves a readable
+     measure — go symmetric instead */
+  @media screen and (max-width: 900px) {
+    #shopify-section-{{ sid }} .rb-tst__card--quote {
+      padding-right: clamp(18px, 2.29vw, 44px);
+    }
+  }
 
   @media screen and (max-width: 749px) {
     #shopify-section-{{ sid }} .rb-tst__rail {
@@ -200,9 +240,9 @@
     { "type": "range", "id": "card_width", "min": 240, "max": 700, "step": 10,
       "default": 490, "unit": "px", "label": "Card width at 1920px wide" },
     { "type": "range", "id": "card_height", "min": 300, "max": 900, "step": 10,
-      "default": 630, "unit": "px", "label": "Card height at 1920px wide" },
-    { "type": "range", "id": "radius", "min": 0, "max": 48, "step": 1,
-      "default": 20, "unit": "px", "label": "Card corner radius" },
+      "default": 640, "unit": "px", "label": "Card height at 1920px wide" },
+    { "type": "range", "id": "radius", "min": 0, "max": 60, "step": 2,
+      "default": 42, "unit": "px", "label": "Card corner radius" },
     { "type": "range", "id": "texture", "min": 0, "max": 100, "step": 5,
       "default": 100, "unit": "%", "label": "Crumpled paper texture on quote cards" }
   ],
@@ -216,8 +256,8 @@
           "label": "Quote" },
         { "type": "text", "id": "attribution", "default": "- Name Surname, Studio Student.", "label": "Attribution" },
         { "type": "color", "id": "background", "default": "#b00e3f", "label": "Card colour" },
-        { "type": "color", "id": "quote_color", "default": "#e6ddc6", "label": "Quote colour" },
-        { "type": "color", "id": "attr_color", "default": "#e6ddc6", "label": "Attribution colour" }
+        { "type": "color", "id": "quote_color", "default": "#e07468", "label": "Quote colour" },
+        { "type": "color", "id": "attr_color", "default": "#e07468", "label": "Attribution colour" }
       ]
     },
     {
@@ -226,7 +266,7 @@
       "settings": [
         { "type": "image_picker", "id": "image", "label": "Artwork" },
         { "type": "text", "id": "attribution", "default": "- Name Surname, Studio Student.", "label": "Attribution" },
-        { "type": "color", "id": "attr_color", "default": "#1e1e1e", "label": "Attribution colour" }
+        { "type": "color", "id": "attr_color", "default": "#0c3642", "label": "Attribution colour" }
       ]
     }
   ],

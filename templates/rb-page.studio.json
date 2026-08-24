@@ -140,8 +140,8 @@
             "quote": "<p>“Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt”</p>",
             "attribution": "- Name Surname, Workshop Guest.",
             "background": "#e07468",
-            "quote_color": "#b00e3f",
-            "attr_color": "#ffffff"
+            "quote_color": "#0c3642",
+            "attr_color": "#0c3642"
           }
         },
         "t2": {
@@ -150,8 +150,8 @@
             "quote": "<p>“Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt”</p>",
             "attribution": "- Name Surname, Studio Student.",
             "background": "#b00e3f",
-            "quote_color": "#e6ddc6",
-            "attr_color": "#e6ddc6"
+            "quote_color": "#e07468",
+            "attr_color": "#e07468"
           }
         },
         "t3": {
@@ -159,7 +159,7 @@
           "settings": {
             "image": "shopify://shop_images/saf-class-artwork.jpg",
             "attribution": "- Name Surname, Studio Student.",
-            "attr_color": "#1e1e1e"
+            "attr_color": "#0c3642"
           }
         },
         "t4": {
@@ -168,7 +168,7 @@
             "quote": "<p>“Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt”</p>",
             "attribution": "- Name Surname, Studio Student.",
             "background": "#0c3642",
-            "quote_color": "#bea532",
+            "quote_color": "#e07468",
             "attr_color": "#e07468"
           }
         }
@@ -185,8 +185,8 @@
         "background": "#e6ddc6",
         "show_texture": true,
         "card_width": 490,
-        "card_height": 630,
-        "radius": 20,
+        "card_height": 640,
+        "radius": 42,
         "texture": 60
       }
     },

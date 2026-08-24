@@ -60,7 +60,7 @@
   --rb-fs-name: clamp(30px, 3.33vw, 64px);      /* artist / teacher card name */
   --rb-fs-name-lg: clamp(36px, 4.17vw, 80px);   /* class + person page heroes */
   --rb-fs-caps: clamp(13px, 1.41vw, 27px);      /* uppercase section eyebrow  */
-  --rb-fs-quote: clamp(17px, 1.67vw, 32px);     /* testimonial quote          */
+  --rb-fs-quote: clamp(18px, 1.77vw, 34px);     /* testimonial quote          */
   --rb-fs-meta: clamp(12px, 0.94vw, 18px);      /* card meta rows             */
 
   /* --- layout -----------------------------------------------------------
