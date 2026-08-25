@@ -1,35 +1,154 @@
 {
   "sections": {
-    "main": {
-      "type": "main-page",
-      "settings": { "padding_top": 40, "padding_bottom": 8 }
+    "hero": {
+      "type": "rb-hero",
+      "settings": {
+        "fill": "colour",
+        "background": "#505a43",
+        "texture": 100,
+        "band_height": 460,
+        "min_height": 240,
+        "mobile_ratio": "4 / 3",
+        "overlay_opacity": 0,
+        "show_mark": true,
+        "mark": "studio",
+        "mark_width": 130,
+        "heading": "Questions",
+        "heading_style": "page_title",
+        "text_color": "#ffffff",
+        "button_label": "",
+        "button_link": ""
+      }
+    },
+    "pagenav": {
+      "type": "rb-page-nav",
+      "blocks": {
+        "classes": { "type": "link", "settings": { "label": "Classes", "link": "shopify://collections/classes" } },
+        "workshops": { "type": "link", "settings": { "label": "Workshops", "link": "shopify://collections/workshops" } },
+        "teachers": { "type": "link", "settings": { "label": "Meet the Teachers", "link": "/pages/the-team" } },
+        "faq": { "type": "link", "settings": { "label": "FAQ", "link": "/pages/faq" } },
+        "contact": { "type": "link", "settings": { "label": "Contact", "link": "/pages/contact" } }
+      },
+      "block_order": ["classes", "workshops", "teachers", "faq", "contact"],
+      "settings": {
+        "aria_label": "Studio navigation",
+        "align": "center",
+        "background": "#ffffff",
+        "text_color": "#1e1e1e",
+        "accent_color": "#b00e3f",
+        "rule_color": "#e0e0e0"
+      }
     },
     "faq": {
-      "type": "collapsible-content",
+      "type": "rb-faq",
       "blocks": {
-        "q1": { "type": "collapsible_row", "settings": { "heading": "Where are you based?", "row_content": "<p>We're in Hout Bay, Cape Town. You're welcome to visit the studio to view art in person or join a class — see our Contact page for directions.</p>" } },
-        "q2": { "type": "collapsible_row", "settings": { "heading": "Do I need experience to join a class?", "row_content": "<p>Not at all. Our classes and workshops run from complete-beginner level through to masterclasses, and our teachers meet you exactly where you are.</p>" } },
-        "q3": { "type": "collapsible_row", "settings": { "heading": "How do I book a class or workshop?", "row_content": "<p>Everything is booked online. Open any class, choose your session or the full term, and check out. You'll receive a confirmation by email.</p>" } },
-        "q4": { "type": "collapsible_row", "settings": { "heading": "Can I pay in instalments?", "row_content": "<p>For selected classes you can pay in two — a deposit now and the balance later. Where it's available, you'll see the option on the booking page.</p>" } },
-        "q5": { "type": "collapsible_row", "settings": { "heading": "Do you sell original art online?", "row_content": "<p>Yes. Browse and buy original works and limited-edition prints directly from our resident artists in the gallery.</p>" } },
-        "q6": { "type": "collapsible_row", "settings": { "heading": "Do you ship artworks?", "row_content": "<p>We ship nationwide, and internationally on request. Get in touch if you'd like a shipping quote before you buy.</p>" } },
-        "q7": { "type": "collapsible_row", "settings": { "heading": "Can I see the art in person before buying?", "row_content": "<p>Absolutely. Many works are on show at the studio — contact us to arrange a viewing.</p>" } },
-        "q8": { "type": "collapsible_row", "settings": { "heading": "Can I hire the studio?", "row_content": "<p>Yes — our space is available for creative hire. See the Studio Hire page or send us an enquiry.</p>" } }
+        "expect": {
+          "type": "qa",
+          "settings": {
+            "question": "What can I expect from a class?",
+            "answer": "<p>Our classes vary by medium, teacher and experience level, with options for both adults and children. Most classes meet weekly for around two hours, with up to 10 classes each term.</p>"
+          }
+        },
+        "materials": {
+          "type": "qa",
+          "settings": {
+            "question": "What materials do I need?",
+            "answer": "<p>Your teacher will share a materials list before your class, helping you gather everything you need to get creative — and keep creating at home.</p>"
+          }
+        },
+        "booking": {
+          "type": "qa",
+          "settings": {
+            "question": "How do I book a class?",
+            "answer": "<p>Find the class that feels right for you, choose your preferred day and time, and book your place online. Most classes welcome new students throughout the term, so you don’t always have to wait for the next one to begin.</p>"
+          }
+        },
+        "missed": {
+          "type": "qa",
+          "settings": {
+            "question": "What happens if I miss a class?",
+            "answer": "<p>Life happens. If you miss a class, you can make it up by joining another suitable class — giving you a little more flexibility in your creative week.</p>"
+          }
+        },
+        "packages": {
+          "type": "qa",
+          "settings": {
+            "question": "What payment options do I have?",
+            "answer": "<p>Depending on the class, you can choose to drop in, pay monthly or book for the full term. Pick the option that suits your schedule and how you want to create.</p>"
+          }
+        },
+        "paying": {
+          "type": "qa",
+          "settings": {
+            "question": "How do I pay?",
+            "answer": "<p>Everything is handled online, making it simple to book your place, choose your payment option and get straight to the creative part.</p>"
+          }
+        },
+        "workshops_vs_classes": {
+          "type": "qa",
+          "settings": {
+            "question": "What is the difference between a class and a workshop?",
+            "answer": "<p>Our termly classes are designed to make creativity part of your week — you meet with the same small group each week and work with one teacher over the term.</p><p>Our workshops are your chance to try something new without committing to a full term: relaxed, hands-on sessions exploring different mediums, techniques and creative ideas.</p>"
+          }
+        },
+        "beginner": {
+          "type": "qa",
+          "settings": {
+            "question": "Do I need any experience?",
+            "answer": "<p>No. We run everything from beginners classes to masterclasses, and you don’t need to be an expert or an artist to belong here. Just bring your curiosity.</p>"
+          }
+        }
       },
-      "block_order": ["q1", "q2", "q3", "q4", "q5", "q6", "q7", "q8"],
+      "block_order": [
+        "expect",
+        "materials",
+        "booking",
+        "missed",
+        "packages",
+        "paying",
+        "workshops_vs_classes",
+        "beginner"
+      ],
       "settings": {
-        "caption": "Good to know",
-        "heading": "Frequently asked questions",
-        "heading_size": "h1",
-        "heading_alignment": "center",
-        "layout": "row",
-        "container_color_scheme": "scheme-2",
-        "color_scheme": "scheme-1",
-        "open_first_collapsible_row": false,
-        "padding_top": 28,
-        "padding_bottom": 52
+        "eyebrow": "Frequently asked",
+        "intro": "<p>Everything you need to know before you join a class or a workshop at the studio. Can’t find your answer? Send us a message below.</p>",
+        "open_first": false,
+        "one_at_a_time": true,
+        "width": 1100,
+        "background": "#ffffff",
+        "eyebrow_color": "#bea532",
+        "question_color": "#1e1e1e",
+        "text_color": "#1e1e1e",
+        "accent_color": "#b00e3f",
+        "rule_color": "#d8d8d8"
+      }
+    },
+    "contact": {
+      "type": "rb-contact",
+      "settings": {
+        "heading": "<p><em>Still</em> have a question?</p>",
+        "heading_color": "#1e1e1e",
+        "heading_accent": "#bea532",
+        "map_width": 50,
+        "map_embed": "https://maps.google.com/maps?q=SA+Art+Fair+Hout+Bay+Cape+Town&t=&z=13&ie=UTF8&iwloc=&output=embed",
+        "map_alt": "Map to the SA Art Fair studio",
+        "map_grayscale": 100,
+        "form_label": "Get in touch",
+        "name_label": "Name + Surname",
+        "email_label": "Email Address",
+        "message_label": "Message",
+        "submit_label": "Submit",
+        "success_message": "Thanks — we will be in touch shortly.",
+        "text_color": "#1e1e1e",
+        "rule_color": "#1e1e1e",
+        "background": "#ffffff"
       }
     }
   },
-  "order": ["main", "faq"]
+  "order": [
+    "hero",
+    "pagenav",
+    "faq",
+    "contact"
+  ]
 }

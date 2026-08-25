@@ -1,0 +1,181 @@
+{% comment %}
+  Rebrand FAQ — question rows that open one answer at a time.
+
+  Bianca's Tab 1 IA lists a FAQ under Create Art. There is no Figma comp for
+  one, so this borrows the page's existing furniture rather than inventing a
+  look: the sans caps eyebrow, IvyPresto for the question, the hairline rules
+  from rb-steps, and the cherry accent for the open row.
+
+  Built on <details>/<summary>, so it opens, closes, is keyboard reachable and
+  is findable by the browser's own in-page search with no JavaScript at all.
+  The only script here closes the OTHER rows when one opens, and that is
+  optional.
+{% endcomment %}
+
+{{ 'saf-rebrand.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign sid = section.id
+-%}
+
+<style>
+  #shopify-section-{{ sid }} .rb-faq {
+    background: {{ section.settings.background }};
+    padding-block: clamp(48px, 6.25vw, 120px);
+  }
+  #shopify-section-{{ sid }} .rb-faq__wrap {
+    width: 100%;
+    max-width: calc({{ section.settings.width }}px + var(--rb-gutter) * 2);
+    margin-inline: auto;
+    padding-inline: var(--rb-gutter);
+    box-sizing: border-box;
+  }
+  #shopify-section-{{ sid }} .rb-faq__eyebrow {
+    color: {{ section.settings.eyebrow_color }};
+    text-align: center;
+    margin: 0 0 clamp(10px, 1vw, 18px);
+  }
+  #shopify-section-{{ sid }} .rb-faq__intro {
+    color: {{ section.settings.text_color }};
+    text-align: center;
+    max-width: 780px;
+    margin: 0 auto clamp(28px, 3.2vw, 62px);
+  }
+  #shopify-section-{{ sid }} .rb-faq__intro p { margin: 0; }
+
+  #shopify-section-{{ sid }} .rb-faq__item {
+    border-top: 1px solid {{ section.settings.rule_color }};
+  }
+  #shopify-section-{{ sid }} .rb-faq__item:last-child {
+    border-bottom: 1px solid {{ section.settings.rule_color }};
+  }
+
+  #shopify-section-{{ sid }} .rb-faq__q {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    width: 100%;
+    padding: clamp(18px, 1.77vw, 34px) 0;
+    cursor: pointer;
+    list-style: none;
+    color: {{ section.settings.question_color }};
+    font-family: var(--rb-serif);
+    font-size: clamp(19px, 1.72vw, 33px);
+    line-height: 1.25;
+  }
+  /* Safari draws its own triangle unless both of these are cleared */
+  #shopify-section-{{ sid }} .rb-faq__q::-webkit-details-marker { display: none; }
+  #shopify-section-{{ sid }} .rb-faq__q::marker { content: ''; }
+  #shopify-section-{{ sid }} .rb-faq__q:hover { color: {{ section.settings.accent_color }}; }
+  #shopify-section-{{ sid }} details[open] > .rb-faq__q { color: {{ section.settings.accent_color }}; }
+
+  /* the +/− is drawn from two bars so it needs no icon font and stays crisp */
+  #shopify-section-{{ sid }} .rb-faq__sign {
+    position: relative;
+    flex: 0 0 auto;
+    width: 18px;
+    height: 18px;
+  }
+  #shopify-section-{{ sid }} .rb-faq__sign::before,
+  #shopify-section-{{ sid }} .rb-faq__sign::after {
+    content: '';
+    position: absolute;
+    inset: 50% 0 auto 0;
+    height: 1.5px;
+    background: currentColor;
+    transition: transform 0.25s ease;
+  }
+  #shopify-section-{{ sid }} .rb-faq__sign::after { transform: rotate(90deg); }
+  #shopify-section-{{ sid }} details[open] .rb-faq__sign::after { transform: rotate(0deg); }
+
+  #shopify-section-{{ sid }} .rb-faq__a {
+    color: {{ section.settings.text_color }};
+    max-width: 900px;
+    padding-bottom: clamp(18px, 1.77vw, 34px);
+  }
+  #shopify-section-{{ sid }} .rb-faq__a p { margin: 0 0 0.85em; }
+  #shopify-section-{{ sid }} .rb-faq__a p:last-child { margin-bottom: 0; }
+
+  @media (prefers-reduced-motion: reduce) {
+    #shopify-section-{{ sid }} .rb-faq__sign::before,
+    #shopify-section-{{ sid }} .rb-faq__sign::after { transition: none; }
+  }
+</style>
+
+<div class="rb-section rb-faq">
+  <div class="rb-faq__wrap">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="rb-caps rb-faq__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+    {%- endif -%}
+
+    {%- if section.settings.intro != blank -%}
+      <div class="rb-body rb-faq__intro">{{ section.settings.intro }}</div>
+    {%- endif -%}
+
+    {%- for block in section.blocks -%}
+      {%- if block.settings.question != blank -%}
+        <details class="rb-faq__item" {{ block.shopify_attributes }}
+          {% if section.settings.open_first and forloop.first %}open{% endif %}>
+          <summary class="rb-faq__q">
+            <span>{{ block.settings.question | escape }}</span>
+            <span class="rb-faq__sign" aria-hidden="true"></span>
+          </summary>
+          <div class="rb-body rb-faq__a">{{ block.settings.answer }}</div>
+        </details>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+</div>
+
+{%- if section.settings.one_at_a_time -%}
+  <script>
+    (function () {
+      var root = document.getElementById('shopify-section-{{ sid }}');
+      if (!root) return;
+      var items = Array.prototype.slice.call(root.querySelectorAll('details.rb-faq__item'));
+      items.forEach(function (d) {
+        d.addEventListener('toggle', function () {
+          if (!d.open) return;
+          items.forEach(function (o) { if (o !== d) o.open = false; });
+        });
+      });
+    })();
+  </script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Rebrand FAQ",
+  "tag": "section",
+  "class": "rb-section-wrapper",
+  "max_blocks": 30,
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Frequently asked" },
+    { "type": "richtext", "id": "intro", "label": "Intro" },
+    { "type": "checkbox", "id": "open_first", "default": false, "label": "Open the first question on load" },
+    { "type": "checkbox", "id": "one_at_a_time", "default": true, "label": "Close the others when one opens" },
+    { "type": "range", "id": "width", "min": 700, "max": 1400, "step": 20, "default": 1100, "unit": "px", "label": "Content width" },
+    { "type": "header", "content": "Colour" },
+    { "type": "color", "id": "background", "default": "#ffffff", "label": "Background" },
+    { "type": "color", "id": "eyebrow_color", "default": "#bea532", "label": "Eyebrow" },
+    { "type": "color", "id": "question_color", "default": "#1e1e1e", "label": "Question" },
+    { "type": "color", "id": "text_color", "default": "#1e1e1e", "label": "Answer" },
+    { "type": "color", "id": "accent_color", "default": "#b00e3f", "label": "Open + hover" },
+    { "type": "color", "id": "rule_color", "default": "#d8d8d8", "label": "Rules" }
+  ],
+  "blocks": [
+    {
+      "type": "qa",
+      "name": "Question",
+      "settings": [
+        { "type": "text", "id": "question", "label": "Question" },
+        { "type": "richtext", "id": "answer", "label": "Answer" }
+      ]
+    }
+  ],
+  "presets": [
+    { "name": "Rebrand FAQ", "blocks": [{ "type": "qa" }, { "type": "qa" }, { "type": "qa" }] }
+  ]
+}
+{% endschema %}
