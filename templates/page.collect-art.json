@@ -1,276 +1,248 @@
 {
   "sections": {
+    "hero": {
+      "type": "rb-hero",
+      "settings": {
+        "fill": "image",
+        "image": "shopify://shop_images/saf-store-hero.jpg",
+        "band_height": 720,
+        "min_height": 340,
+        "mobile_ratio": "4 / 5",
+        "focal_x": 50,
+        "focal_y": 50,
+        "overlay_color": "#1e1e1e",
+        "overlay_opacity": 0,
+        "show_mark": true,
+        "mark": "store",
+        "mark_width": 190,
+        "heading": "Collect Art",
+        "heading_style": "page_title",
+        "text_color": "#ffffff",
+        "button_label": "",
+        "button_link": ""
+      }
+    },
     "intro": {
-      "type": "rich-text",
-      "blocks": {
-        "intro_caption": {
-          "type": "caption",
-          "settings": {
-            "caption": "Original Artworks",
-            "text_style": "caption-with-letter-spacing",
-            "text_size": "medium"
-          }
-        },
-        "intro_heading": {
-          "type": "heading",
-          "settings": {
-            "heading": "Collect Art",
-            "heading_size": "h1"
-          }
-        },
-        "intro_text": {
-          "type": "text",
-          "settings": {
-            "text": "<p>Every piece here is made by an artist you could meet in our Hout Bay studio. Browse originals and limited editions, discover the people behind them, and find work that belongs on your wall.</p>"
-          }
-        }
-      },
-      "block_order": [
-        "intro_caption",
-        "intro_heading",
-        "intro_text"
-      ],
+      "type": "rb-statement",
       "settings": {
-        "desktop_content_position": "center",
-        "content_alignment": "center",
-        "color_scheme": "scheme-1",
-        "full_width": true,
-        "padding_top": 64,
-        "padding_bottom": 56
+        "show_mark": false,
+        "eyebrow": "The Store",
+        "eyebrow_color": "#bea532",
+        "heading": "<p>Buy from the artists <em>who create.</em></p>",
+        "heading_color": "#505a43",
+        "accent_color": "#bea532",
+        "heading_width": 1100,
+        "body": "<p>Discover and collect original artworks from our local artists. Every piece here is made by someone in our community, and every sale goes back to the person who made it.</p>",
+        "body_color": "#1e1e1e",
+        "body_width": 860,
+        "background": "#ffffff",
+        "button_label": "Browse all art",
+        "button_link": "shopify://collections/gallery",
+        "padding_top": 150,
+        "padding_bottom": 120
       }
     },
-    "latest_works": {
-      "type": "home-gallery-preview",
+    "latest": {
+      "type": "rb-artworks",
       "settings": {
-        "eyebrow": "NEW IN",
-        "heading": "Latest works",
-        "collection_handle": "gallery",
-        "product_limit": 4,
-        "view_all": "Browse all art"
+        "heading": "Latest Works",
+        "collection": "gallery",
+        "layout": "grid",
+        "per_page": 6,
+        "columns": 3,
+        "image_ratio": "555 / 402",
+        "hover_label": "View Artwork",
+        "card_button": "View Artwork",
+        "more_label": "See all artworks",
+        "more_link": "shopify://collections/gallery",
+        "background": "#ffffff",
+        "heading_color": "#1e1e1e",
+        "card_title_color": "#1e1e1e",
+        "card_meta_color": "#7d7d7d"
       }
     },
-    "featured_artist": {
-      "type": "featured-artist",
-      "settings": {
-        "scheme": "light",
-        "products_per_view": 2,
-        "show_prices": true,
-        "show_badge": true,
-        "show_hearts": true,
-        "padding_top": 56,
-        "padding_bottom": 64
-      }
-    },
-    "artists_preview": {
-      "type": "home-artists",
+    "featured_artists": {
+      "type": "rb-artist-cards",
       "blocks": {
         "susan": {
           "type": "artist",
           "settings": {
-            "collection_handle": "susan-orpen",
-            "name": "Susan Orpen",
-            "role": "Watercolour \u00b7 Acrylic \u00b7 Mixed Media",
-            "bio": "Susan has been practising and teaching art in Hout Bay for over a decade. Her work spans watercolour landscapes to bold acrylic abstracts \u2014 and her teaching style makes even the most uncertain beginner feel at ease."
+            "collection": "susan-orpen",
+            "name": "",
+            "medium": "Watercolour · Acrylic · Mixed Media",
+            "place": "Hout Bay, Western Cape",
+            "bio": "",
+            "link": "",
+            "button_label": "See Collections",
+            "tone": "auto"
           }
         },
         "kerri": {
           "type": "artist",
           "settings": {
-            "collection_handle": "kerri-sassen",
-            "name": "Kerri Sassen",
-            "role": "Abstract \u00b7 Mixed Media \u00b7 Art Therapy",
-            "bio": "Kerri brings warmth and expertise to every class. A qualified occupational art therapist, she creates a space where people explore abstraction freely \u2014 no experience needed, just an open mind."
+            "collection": "kerri-sassen",
+            "name": "",
+            "medium": "Abstract · Mixed Media · Art Therapy",
+            "place": "Hout Bay, Western Cape",
+            "bio": "",
+            "link": "",
+            "button_label": "See Collections",
+            "tone": "auto"
           }
         },
         "zara": {
           "type": "artist",
           "settings": {
-            "collection_handle": "zara-leigh",
-            "name": "Zara-Leigh Farinha",
-            "role": "Abstract Acrylic \u00b7 Oil \u00b7 Large Format",
-            "bio": "Zara-Leigh's energy is contagious. Known for large-format abstract works in acrylic and oil, her Friday 'Permission to Play' class is exactly what it sounds like \u2014 joyful, free, and surprising."
+            "collection": "zara-leigh",
+            "name": "",
+            "medium": "Abstract Acrylic · Oil · Large Format",
+            "place": "Hout Bay, Western Cape",
+            "bio": "",
+            "link": "",
+            "button_label": "See Collections",
+            "tone": "auto"
           }
         }
       },
-      "block_order": [
-        "susan",
-        "kerri",
-        "zara"
-      ],
+      "block_order": ["susan", "kerri", "zara"],
       "settings": {
-        "eyebrow": "REPRESENTED",
-        "heading": "Our artists",
-        "team_page": "/pages/artists"
+        "columns": 3,
+        "grid_width": 1760,
+        "image_ratio": "555 / 402",
+        "radius": 20,
+        "portrait_w": 42,
+        "portrait_ratio": "132 / 130",
+        "portrait_x": 49,
+        "portrait_y": 50,
+        "background": "#ffffff",
+        "tone_a": "#9da887",
+        "tone_a_text": "#ffffff",
+        "tone_a_meta": "#f2f4ec",
+        "tone_b": "#505a43",
+        "tone_b_text": "#dfe4d4",
+        "tone_b_meta": "#a5ad93",
+        "texture": 100
       }
     },
     "shop_by_colour": {
-      "type": "shop-by-colour",
+      "type": "rb-collections",
       "blocks": {
-        "sbc_warm": {
-          "type": "colour",
+        "warm": {
+          "type": "collection",
           "settings": {
             "collection": "warm-tones",
-            "title": "Warm",
-            "swatch": "#c96a4a"
+            "title": "Warm Tones",
+            "image": "shopify://shop_images/saf-home-collection-1.jpg",
+            "artist": "Reds, ochres and golds",
+            "link": "",
+            "button_label": "Browse Collection"
           }
         },
-        "sbc_cool": {
-          "type": "colour",
+        "cool": {
+          "type": "collection",
           "settings": {
             "collection": "cool-tones",
-            "title": "Cool",
-            "swatch": "#18727d"
+            "title": "Cool Tones",
+            "image": "shopify://shop_images/saf-home-collection-2.jpg",
+            "artist": "Blues, greens and greys",
+            "link": "",
+            "button_label": "Browse Collection"
           }
         },
-        "sbc_neutral": {
-          "type": "colour",
+        "neutral": {
+          "type": "collection",
           "settings": {
             "collection": "neutral-tones",
-            "title": "Neutral",
-            "swatch": "#b7ab99"
+            "title": "Neutral Tones",
+            "image": "shopify://shop_images/saf-home-collection-3.jpg",
+            "artist": "Sand, stone and linen",
+            "link": "",
+            "button_label": "Browse Collection"
           }
         }
       },
-      "block_order": [
-        "sbc_warm",
-        "sbc_cool",
-        "sbc_neutral"
-      ],
+      "block_order": ["warm", "cool", "neutral"],
       "settings": {
-        "eyebrow": "ART FOR YOUR SPACE",
-        "heading": "Shop by Colour",
-        "image_position": "left",
-        "background": "#eeefeb"
+        "eyebrow": "Shop by Colour",
+        "eyebrow_color": "#bea532",
+        "caption_color": "#7d7d7d",
+        "background": "#ffffff"
       }
     },
-    "reviews": {
-      "type": "testimonials",
+    "quiz": {
+      "type": "rb-quiz-banner",
+      "settings": {
+        "image": "shopify://shop_images/saf-home-quiz.jpg",
+        "band_height": 760,
+        "min_height": 380,
+        "mobile_ratio": "3 / 4",
+        "focal_x": 50,
+        "focal_y": 50,
+        "overlay_color": "#1e1e1e",
+        "overlay_opacity": 0,
+        "show_badge": true,
+        "badge_color": "#bea532",
+        "heading": "What’s your art personality?",
+        "subheading": "See how your personality can shape your journey as a collector.",
+        "text_color": "#ffffff",
+        "button_label": "Take the quiz",
+        "button_link": "shopify://collections/art-quiz"
+      }
+    },
+    "testimonials": {
+      "type": "rb-testimonials",
       "blocks": {
-        "r0": {
-          "type": "review",
+        "q1": {
+          "type": "quote",
           "settings": {
-            "quote": "The whole process was seamless and the piece is even more beautiful in person. I'll definitely collect again.",
-            "name": "Megan",
-            "role": "Collector",
-            "rating": 5,
-            "category": "collecting"
+            "quote": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.</p>",
+            "attribution": "Name Surname",
+            "background": "#e07468",
+            "quote_color": "#ffffff",
+            "attr_color": "#ffffff"
           }
         },
-        "r1": {
-          "type": "review",
+        "q2": {
+          "type": "quote",
           "settings": {
-            "quote": "I love that I could buy directly from the artist \u2014 it makes the work feel so much more personal.",
-            "name": "Thabo",
-            "role": "Collector",
-            "rating": 5,
-            "category": "collecting"
+            "quote": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.</p>",
+            "attribution": "Name Surname",
+            "background": "#505a43",
+            "quote_color": "#ffffff",
+            "attr_color": "#dfe4d4"
           }
         },
-        "r2": {
-          "type": "review",
+        "q3": {
+          "type": "quote",
           "settings": {
-            "quote": "Beautifully packaged and delivered on time. A genuinely lovely way to buy original art.",
-            "name": "Claire",
-            "role": "Collector",
-            "rating": 5,
-            "category": "collecting"
+            "quote": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.</p>",
+            "attribution": "Name Surname",
+            "background": "#b00e3f",
+            "quote_color": "#ffffff",
+            "attr_color": "#ffffff"
           }
         }
       },
-      "block_order": [
-        "r0",
-        "r1",
-        "r2"
-      ],
+      "block_order": ["q1", "q2", "q3"],
       "settings": {
-        "layout": "grid",
-        "eyebrow": "What collectors say",
-        "heading": "Loved by our collectors",
-        "bg_color": "#f5ece6",
-        "text_color": "#1d1c21",
-        "accent_color": "#0f4a52",
-        "marquee_speed": 40,
-        "category_filter": "collecting"
-      }
-    },
-    "art_quiz_teaser": {
-      "type": "art-quiz",
-      "settings": {
-        "teaser_mode": true,
-        "quiz_page": "/collections/art-quiz",
-        "heading": "What's Your Art Personality?",
-        "cta_text": "Take the Test",
-        "accent_color": "#f26b52",
-        "api_url": "https://sa-art-fair-admin.vercel.app",
-        "meta_text": "14 questions \u00b7 3 minutes"
-      }
-    },
-    "testimonials_strip": {
-      "type": "testimonials",
-      "blocks": {
-        "r0": {
-          "type": "review",
-          "settings": {
-            "quote": "A beautiful piece and a beautiful experience.",
-            "name": "Nadia",
-            "role": "Collector",
-            "category": "collecting"
-          }
-        },
-        "r1": {
-          "type": "review",
-          "settings": {
-            "quote": "Supporting local artists has never felt this easy.",
-            "name": "James",
-            "role": "Collector",
-            "category": "collecting"
-          }
-        },
-        "r2": {
-          "type": "review",
-          "settings": {
-            "quote": "My new favourite gallery \u2014 online or off.",
-            "name": "Priya",
-            "role": "Collector",
-            "category": "collecting"
-          }
-        },
-        "r3": {
-          "type": "review",
-          "settings": {
-            "quote": "The art arrived perfectly and looks stunning at home.",
-            "name": "Sipho",
-            "role": "Collector",
-            "category": "collecting"
-          }
-        }
-      },
-      "block_order": [
-        "r0",
-        "r1",
-        "r2",
-        "r3"
-      ],
-      "settings": {
-        "layout": "marquee",
-        "eyebrow": "",
-        "heading": "",
-        "bg_color": "#eeefeb",
-        "text_color": "#1d1c21",
-        "accent_color": "#f26b52",
-        "marquee_speed": 45,
-        "category_filter": "collecting"
+        "eyebrow": "<p>What our <strong>collectors</strong> say</p>",
+        "show_arrows": true,
+        "background": "#e6ddc6",
+        "show_texture": true,
+        "card_width": 490,
+        "card_height": 560,
+        "radius": 42,
+        "texture": 60
       }
     }
   },
   "order": [
+    "hero",
     "intro",
-    "latest_works",
-    "featured_artist",
-    "artists_preview",
+    "latest",
+    "featured_artists",
     "shop_by_colour",
-    "reviews",
-    "art_quiz_teaser",
-    "testimonials_strip"
+    "quiz",
+    "testimonials"
   ]
 }

@@ -1,132 +1,200 @@
 {
   "sections": {
+    "hero": {
+      "type": "rb-hero",
+      "settings": {
+        "fill": "image",
+        "image": "shopify://shop_images/saf-studio-hero.jpg",
+        "band_height": 720,
+        "min_height": 340,
+        "mobile_ratio": "4 / 5",
+        "focal_x": 50,
+        "focal_y": 50,
+        "overlay_color": "#1e1e1e",
+        "overlay_opacity": 0,
+        "show_mark": true,
+        "mark": "studio",
+        "mark_width": 190,
+        "heading": "Create Art",
+        "heading_style": "page_title",
+        "text_color": "#ffffff",
+        "button_label": "",
+        "button_link": ""
+      }
+    },
     "intro": {
-      "type": "rich-text",
+      "type": "rb-statement",
+      "settings": {
+        "show_mark": false,
+        "eyebrow": "The Studio",
+        "eyebrow_color": "#b00e3f",
+        "heading": "<p>Pick up a brush and <em>try something new.</em></p>",
+        "heading_color": "#b00e3f",
+        "accent_color": "#e07468",
+        "heading_width": 1100,
+        "body": "<p>Hands-on art classes and workshops for all levels, from beginners classes to masterclasses. You don’t need to be an expert or an artist to belong here. Just bring your curiosity.</p>",
+        "body_color": "#1e1e1e",
+        "body_width": 860,
+        "background": "#ffffff",
+        "button_label": "Visit the studio",
+        "button_link": "/pages/studio",
+        "padding_top": 150,
+        "padding_bottom": 120
+      }
+    },
+    "classes": {
+      "type": "rb-class-cards",
+      "settings": {
+        "collection": "classes",
+        "count": 6,
+        "only_classes": true,
+        "eyebrow": "<p>Our termly <strong>classes</strong></p>",
+        "eyebrow_name": "",
+        "teacher_filter": "",
+        "intro": "<p>Meet with the same small group each week, learn from experienced artists, and explore a wide variety of mediums.</p>",
+        "intro_color": "#1e1e1e",
+        "by_prefix": "By",
+        "show_excerpt": true,
+        "show_schedule": true,
+        "show_price": true,
+        "session_word": "a session",
+        "month_word": "a month",
+        "term_word": "the term",
+        "show_deposit": true,
+        "deposit_label": "Or hold your seat for",
+        "show_spaces": true,
+        "spaces_threshold": 8,
+        "spaces_label": "Only [n] spaces left",
+        "book_label": "Book Now",
+        "button_label": "View Class",
+        "columns": 3,
+        "grid_width": 1300,
+        "image_ratio": "398 / 380",
+        "radius": 18,
+        "background": "#ffffff",
+        "pattern": "alternate",
+        "tone_a": "#e07468",
+        "tone_a_text": "#ffffff",
+        "tone_b": "#b00e3f",
+        "tone_b_text": "#ffffff",
+        "texture": 100,
+        "more_label": "See all classes",
+        "more_link": "shopify://collections/classes"
+      }
+    },
+    "quiz": {
+      "type": "rb-quiz-banner",
+      "settings": {
+        "image": "shopify://shop_images/saf-home-quiz.jpg",
+        "band_height": 760,
+        "min_height": 380,
+        "mobile_ratio": "3 / 4",
+        "focal_x": 50,
+        "focal_y": 50,
+        "overlay_color": "#1e1e1e",
+        "overlay_opacity": 0,
+        "show_badge": true,
+        "badge_color": "#bea532",
+        "heading": "What’s your art personality?",
+        "subheading": "See how your personality can shape your journey as a maker.",
+        "text_color": "#ffffff",
+        "button_label": "Take the quiz",
+        "button_link": "shopify://collections/art-quiz"
+      }
+    },
+    "workshops": {
+      "type": "rb-class-cards",
+      "settings": {
+        "collection": "workshops",
+        "count": 6,
+        "only_classes": false,
+        "eyebrow": "<p>One-off <strong>workshops</strong></p>",
+        "eyebrow_name": "",
+        "teacher_filter": "",
+        "intro": "<p>Try something new without committing to a full term. Relaxed, hands-on sessions led by talented artists and makers.</p>",
+        "intro_color": "#1e1e1e",
+        "by_prefix": "By",
+        "show_excerpt": true,
+        "show_schedule": true,
+        "show_price": true,
+        "session_word": "a session",
+        "month_word": "a month",
+        "term_word": "the term",
+        "show_deposit": false,
+        "deposit_label": "Or hold your seat for",
+        "show_spaces": true,
+        "spaces_threshold": 8,
+        "spaces_label": "Only [n] spaces left",
+        "book_label": "Book Now",
+        "button_label": "View Workshop",
+        "columns": 3,
+        "grid_width": 1300,
+        "image_ratio": "398 / 380",
+        "radius": 18,
+        "background": "#ffffff",
+        "pattern": "alternate",
+        "tone_a": "#9da887",
+        "tone_a_text": "#ffffff",
+        "tone_b": "#505a43",
+        "tone_b_text": "#ffffff",
+        "texture": 100,
+        "more_label": "See all workshops",
+        "more_link": "shopify://collections/workshops"
+      }
+    },
+    "testimonials": {
+      "type": "rb-testimonials",
       "blocks": {
-        "intro_caption": {
-          "type": "caption",
+        "q1": {
+          "type": "quote",
           "settings": {
-            "caption": "Hout Bay Studio",
-            "text_style": "caption-with-letter-spacing",
-            "text_size": "medium"
+            "quote": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.</p>",
+            "attribution": "Name Surname",
+            "background": "#e07468",
+            "quote_color": "#ffffff",
+            "attr_color": "#ffffff"
           }
         },
-        "intro_heading": {
-          "type": "heading",
+        "q2": {
+          "type": "quote",
           "settings": {
-            "heading": "Create Art",
-            "heading_size": "h1"
+            "quote": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.</p>",
+            "attribution": "Name Surname",
+            "background": "#b00e3f",
+            "quote_color": "#ffffff",
+            "attr_color": "#ffffff"
           }
         },
-        "intro_text": {
-          "type": "text",
+        "q3": {
+          "type": "quote",
           "settings": {
-            "text": "<p>Small classes, generous teachers and a studio with a view. Whether you have never held a brush or you have been painting for years, there is a seat here for you.</p>"
+            "quote": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.</p>",
+            "attribution": "Name Surname",
+            "background": "#505a43",
+            "quote_color": "#ffffff",
+            "attr_color": "#dfe4d4"
           }
         }
       },
-      "block_order": [
-        "intro_caption",
-        "intro_heading",
-        "intro_text"
-      ],
+      "block_order": ["q1", "q2", "q3"],
       "settings": {
-        "desktop_content_position": "center",
-        "content_alignment": "center",
-        "color_scheme": "scheme-1",
-        "full_width": true,
-        "padding_top": 64,
-        "padding_bottom": 56
-      }
-    },
-    "classes_carousel": {
-      "type": "home-workshops-preview",
-      "settings": {
-        "eyebrow": "STUDIO CALENDAR",
-        "heading": "Classes",
-        "featured_collection": "classes",
-        "product_limit": 4,
-        "view_all": "All classes"
-      }
-    },
-    "art_quiz_teaser": {
-      "type": "art-quiz",
-      "settings": {
-        "teaser_mode": true,
-        "quiz_page": "/collections/art-quiz",
-        "heading": "What's Your Art Personality?",
-        "cta_text": "Take the Test",
-        "accent_color": "#f26b52",
-        "api_url": "https://sa-art-fair-admin.vercel.app",
-        "meta_text": "14 questions \u00b7 3 minutes"
-      }
-    },
-    "workshops_carousel": {
-      "type": "home-workshops-preview",
-      "settings": {
-        "eyebrow": "ONE-OFF SESSIONS",
-        "heading": "Workshops",
-        "featured_collection": "workshops",
-        "product_limit": 4,
-        "view_all": "All workshops"
-      }
-    },
-    "reviews": {
-      "type": "testimonials",
-      "blocks": {
-        "r0": {
-          "type": "review",
-          "settings": {
-            "quote": "The teachers are patient, warm and endlessly encouraging. I leave every session inspired.",
-            "name": "Lauren",
-            "role": "Art class",
-            "rating": 5,
-            "category": "classes"
-          }
-        },
-        "r1": {
-          "type": "review",
-          "settings": {
-            "quote": "I hadn't picked up a brush in twenty years \u2014 now it's the highlight of my week.",
-            "name": "David",
-            "role": "Workshop attendee",
-            "rating": 5,
-            "category": "classes"
-          }
-        },
-        "r2": {
-          "type": "review",
-          "settings": {
-            "quote": "A calm, creative space with genuinely brilliant instruction. Highly recommend.",
-            "name": "Aisha",
-            "role": "Art class",
-            "rating": 5,
-            "category": "classes"
-          }
-        }
-      },
-      "block_order": [
-        "r0",
-        "r1",
-        "r2"
-      ],
-      "settings": {
-        "layout": "grid",
-        "eyebrow": "What our students say",
-        "heading": "From our studio community",
-        "bg_color": "#f5ece6",
-        "text_color": "#1d1c21",
-        "accent_color": "#0f4a52",
-        "marquee_speed": 40,
-        "category_filter": "classes"
+        "eyebrow": "<p>What our <strong>students</strong> say</p>",
+        "show_arrows": true,
+        "background": "#e6ddc6",
+        "show_texture": true,
+        "card_width": 490,
+        "card_height": 560,
+        "radius": 42,
+        "texture": 60
       }
     }
   },
   "order": [
+    "hero",
     "intro",
-    "classes_carousel",
-    "art_quiz_teaser",
-    "workshops_carousel",
-    "reviews"
+    "classes",
+    "quiz",
+    "workshops",
+    "testimonials"
   ]
 }
