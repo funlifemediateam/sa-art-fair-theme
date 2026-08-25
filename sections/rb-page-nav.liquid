@@ -1,0 +1,139 @@
+{% comment %}
+  Rebrand page nav — a slim bar of sibling links.
+
+  Bianca's brief: "When we click into a workshop or class, can we have the
+  navigation bar showing options (class / workshops / Meet the teachers /
+  contact)". A class page is a dead end otherwise: you arrive from an ad or a
+  share link and the only way sideways is the burger.
+
+  Not in the Figma, so it is built to disappear into it — hairline rules,
+  the sans caps eyebrow size already used for section labels, no fill. Any
+  link that matches the page you are on marks itself current instead of
+  pretending to go somewhere.
+
+  Scrolls horizontally on a phone rather than wrapping to two ragged rows.
+{% endcomment %}
+
+{{ 'saf-rebrand.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign sid = section.id
+  assign here = request.path | downcase
+-%}
+
+<style>
+  #shopify-section-{{ sid }} .rb-pnav {
+    background: {{ section.settings.background }};
+    border-top: 1px solid {{ section.settings.rule_color }};
+    border-bottom: 1px solid {{ section.settings.rule_color }};
+  }
+  #shopify-section-{{ sid }} .rb-pnav__scroll {
+    /* a phone gets a swipeable row; the page body must never scroll sideways */
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  #shopify-section-{{ sid }} .rb-pnav__scroll::-webkit-scrollbar { display: none; }
+
+  #shopify-section-{{ sid }} .rb-pnav__list {
+    list-style: none;
+    margin: 0 auto;
+    padding: clamp(12px, 1.15vw, 22px) var(--rb-gutter);
+    display: flex;
+    align-items: center;
+    justify-content: {{ section.settings.align }};
+    gap: clamp(18px, 2.4vw, 46px);
+    width: max-content;
+    min-width: 100%;
+    box-sizing: border-box;
+  }
+  #shopify-section-{{ sid }} .rb-pnav__list a {
+    display: block;
+    white-space: nowrap;
+    color: {{ section.settings.text_color }};
+    font-family: var(--rb-sans);
+    font-size: var(--rb-fs-caps);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding-bottom: 3px;
+    border-bottom: 2px solid transparent;
+  }
+  #shopify-section-{{ sid }} .rb-pnav__list a:hover,
+  #shopify-section-{{ sid }} .rb-pnav__list a:focus-visible {
+    color: {{ section.settings.accent_color }};
+    border-bottom-color: currentColor;
+  }
+  #shopify-section-{{ sid }} .rb-pnav__list a[aria-current] {
+    color: {{ section.settings.accent_color }};
+    border-bottom-color: currentColor;
+  }
+</style>
+
+<nav class="rb-section rb-pnav" aria-label="{{ section.settings.aria_label | default: 'Section navigation' | escape }}">
+  <div class="rb-pnav__scroll">
+    <ul class="rb-pnav__list" role="list">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign to = block.settings.link | default: '#'
+          assign to_path = to | split: '?' | first | downcase
+          assign is_here = false
+          if to_path != '' and to_path != '#' and here == to_path
+            assign is_here = true
+          endif
+        -%}
+        {%- if block.settings.label != blank -%}
+          <li {{ block.shopify_attributes }}>
+            <a href="{{ to }}" {% if is_here %}aria-current="page"{% endif %}>
+              {{- block.settings.label | escape -}}
+            </a>
+          </li>
+        {%- endif -%}
+      {%- endfor -%}
+    </ul>
+  </div>
+</nav>
+
+{% schema %}
+{
+  "name": "Rebrand page nav",
+  "tag": "section",
+  "class": "rb-section-wrapper",
+  "max_blocks": 8,
+  "settings": [
+    { "type": "paragraph", "content": "A slim bar of sibling links. Add one block per link; the one matching the current page marks itself." },
+    { "type": "text", "id": "aria_label", "label": "Screen-reader name for this bar", "default": "Studio navigation" },
+    { "type": "select", "id": "align", "label": "Alignment", "default": "center",
+      "options": [
+        { "value": "center", "label": "Centred" },
+        { "value": "flex-start", "label": "Left" },
+        { "value": "space-between", "label": "Spread" }
+      ] },
+    { "type": "color", "id": "background", "default": "#ffffff", "label": "Background" },
+    { "type": "color", "id": "text_color", "default": "#1e1e1e", "label": "Text" },
+    { "type": "color", "id": "accent_color", "default": "#b00e3f", "label": "Hover + current" },
+    { "type": "color", "id": "rule_color", "default": "#e0e0e0", "label": "Rules" }
+  ],
+  "blocks": [
+    {
+      "type": "link",
+      "name": "Link",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Label" },
+        { "type": "url", "id": "link", "label": "Link" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Rebrand page nav",
+      "blocks": [
+        { "type": "link", "settings": { "label": "Classes", "link": "shopify://collections/classes" } },
+        { "type": "link", "settings": { "label": "Workshops", "link": "shopify://collections/workshops" } },
+        { "type": "link", "settings": { "label": "Meet the Teachers", "link": "/pages/the-team" } },
+        { "type": "link", "settings": { "label": "Contact", "link": "/pages/contact" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
