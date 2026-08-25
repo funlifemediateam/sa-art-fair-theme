@@ -35,6 +35,83 @@
     padding-inline: var(--rb-gutter);
     box-sizing: border-box;
   }
+  /* Artist finder — search box plus the full list of names. */
+  #shopify-section-{{ sid }} .rb-ac__finder {
+    margin: 0 auto clamp(28px, 3vw, 58px);
+    text-align: center;
+  }
+  #shopify-section-{{ sid }} .rb-ac__finder-label {
+    color: {{ section.settings.finder_accent }};
+    margin: 0 0 14px;
+  }
+  #shopify-section-{{ sid }} .rb-ac__search {
+    display: block;
+    width: min(420px, 100%);
+    margin: 0 auto;
+    box-sizing: border-box;
+    min-height: clamp(40px, 3.18vw, 56px);
+    padding: 0 22px;
+    border: 1px solid rgba(30, 30, 30, 0.22);
+    border-radius: 999px;
+    background: transparent;
+    color: {{ section.settings.finder_text_color }};
+    font-family: var(--rb-sans);
+    font-size: var(--rb-fs-btn);
+    line-height: 1;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  #shopify-section-{{ sid }} .rb-ac__search::placeholder { color: rgba(30, 30, 30, 0.5); }
+  #shopify-section-{{ sid }} .rb-ac__search:focus {
+    outline: none;
+    border-color: {{ section.settings.finder_accent }};
+  }
+
+  #shopify-section-{{ sid }} .rb-ac__names {
+    list-style: none;
+    margin: clamp(16px, 1.6vw, 26px) auto 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px 0;
+  }
+  #shopify-section-{{ sid }} .rb-ac__names li { display: inline-flex; align-items: center; }
+  /* a dot between names, never a trailing one */
+  #shopify-section-{{ sid }} .rb-ac__names li + li::before {
+    content: '';
+    display: block;
+    width: 3px;
+    height: 3px;
+    margin: 0 12px;
+    border-radius: 50%;
+    background: {{ section.settings.finder_accent }};
+    opacity: 0.55;
+  }
+  #shopify-section-{{ sid }} .rb-ac__names a {
+    color: {{ section.settings.finder_text_color }};
+    font-family: var(--rb-sans);
+    font-size: var(--rb-fs-body-sm);
+    line-height: 1.35;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+  }
+  #shopify-section-{{ sid }} .rb-ac__names a:hover,
+  #shopify-section-{{ sid }} .rb-ac__names a:focus-visible {
+    color: {{ section.settings.finder_accent }};
+    border-bottom-color: currentColor;
+  }
+  #shopify-section-{{ sid }} .rb-ac__names li[hidden] { display: none; }
+  /* the separator belongs to the item before it, so a hidden neighbour must
+     not leave an orphan dot at the start of a filtered row */
+  #shopify-section-{{ sid }} .rb-ac__names li[hidden] + li::before { display: none; }
+
+  #shopify-section-{{ sid }} .rb-ac__empty {
+    margin: clamp(20px, 2vw, 34px) 0 0;
+    color: {{ section.settings.finder_text_color }};
+  }
+  #shopify-section-{{ sid }} .rb-ac__card[hidden] { display: none; }
+
   #shopify-section-{{ sid }} .rb-ac__grid {
     display: grid;
     grid-template-columns: repeat({{ cols }}, minmax(0, 1fr));
@@ -163,6 +240,56 @@
 
 <div class="rb-section rb-ac">
   <div class="rb-ac__wrap">
+    {%- comment -%}
+      Bianca's ask on the wording doc: "Can we have a list or search function
+      underneath here somehow that shows all the artists names?"
+
+      Off by default, so a page that just wants Hanre's wall of cards gets the
+      comp untouched. When on, it is a search box plus every artist's name as a
+      link — the names ARE the list she asked for, and clicking one jumps
+      straight to that artist rather than only filtering the wall.
+
+      Progressive enhancement: with no JS the input hides itself and the name
+      list still works, because the names are real links, not filter triggers.
+    {%- endcomment -%}
+    {%- if section.settings.show_finder and section.blocks.size > 1 -%}
+      <div class="rb-ac__finder" data-rb-ac-finder>
+        {%- if section.settings.finder_label != blank -%}
+          <p class="rb-caps rb-ac__finder-label">{{ section.settings.finder_label | escape }}</p>
+        {%- endif -%}
+
+        <input
+          type="search"
+          class="rb-ac__search"
+          placeholder="{{ section.settings.search_placeholder | default: 'Search artists' | escape }}"
+          aria-label="{{ section.settings.search_placeholder | default: 'Search artists' | escape }}"
+          autocomplete="off"
+          hidden
+          data-rb-ac-search
+        >
+
+        {%- if section.settings.show_name_list -%}
+          <ul class="rb-ac__names" role="list">
+            {%- assign sorted = section.blocks | sort: 'settings.name' -%}
+            {%- for block in sorted -%}
+              {%- liquid
+                assign col = collections[block.settings.collection]
+                assign nm = block.settings.name | default: col.title
+                assign nurl = block.settings.link | default: col.url
+              -%}
+              {%- if nm != blank -%}
+                <li><a href="{{ nurl | default: '#' }}" data-rb-ac-name>{{ nm }}</a></li>
+              {%- endif -%}
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+
+        <p class="rb-body rb-ac__empty" hidden data-rb-ac-empty>
+          {{ section.settings.empty_text | default: 'No artists match that search.' | escape }}
+        </p>
+      </div>
+    {%- endif -%}
+
     <div class="rb-ac__grid">
       {%- for block in section.blocks -%}
         {%- liquid
@@ -175,7 +302,12 @@
             assign bio = col.description
           endif
         -%}
-        <article class="rb-ac__card" data-blk="{{ block.id }}" {{ block.shopify_attributes }}>
+        <article
+          class="rb-ac__card"
+          data-blk="{{ block.id }}"
+          data-search="{{ name | append: ' ' | append: block.settings.medium | append: ' ' | append: block.settings.place | downcase | escape }}"
+          {{ block.shopify_attributes }}
+        >
           <div class="rb-ac__body">
             <div class="rb-ac__media">
               {%- if art != blank -%}
@@ -236,6 +368,61 @@
   </div>
 </div>
 
+{%- if section.settings.show_finder and section.blocks.size > 1 -%}
+  <script>
+    (function () {
+      var root = document.getElementById('shopify-section-{{ sid }}');
+      if (!root) return;
+      var finder = root.querySelector('[data-rb-ac-finder]');
+      var input = root.querySelector('[data-rb-ac-search]');
+      var empty = root.querySelector('[data-rb-ac-empty]');
+      if (!finder || !input) return;
+
+      /* The box is hidden in the markup and revealed here, so a visitor with
+         no JS is never shown a search field that cannot search. The name list
+         needs no such guard — those are ordinary links. */
+      input.hidden = false;
+
+      var cards = Array.prototype.slice.call(root.querySelectorAll('.rb-ac__card'));
+      var names = Array.prototype.slice.call(finder.querySelectorAll('.rb-ac__names li'));
+
+      function norm(s) {
+        /* fold accents so "Zara-Leigh Farinha" is found by "farinha" and a
+           name like "Liesel van der Bérg" by "berg" */
+        return (s || '')
+          .toLowerCase()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .replace(/[^a-z0-9]+/g, ' ')
+          .trim();
+      }
+
+      function apply() {
+        var q = norm(input.value);
+        var shown = 0;
+
+        cards.forEach(function (card) {
+          var hit = !q || norm(card.getAttribute('data-search')).indexOf(q) !== -1;
+          card.hidden = !hit;
+          if (hit) shown++;
+        });
+
+        names.forEach(function (li) {
+          var a = li.querySelector('a');
+          li.hidden = !!q && norm(a && a.textContent).indexOf(q) === -1;
+        });
+
+        if (empty) empty.hidden = shown !== 0;
+      }
+
+      input.addEventListener('input', apply);
+      /* a browser-restored value (back button, bfcache) must not leave the
+         grid and the box disagreeing */
+      if (input.value) apply();
+    })();
+  </script>
+{%- endif -%}
+
 {% schema %}
 {
   "name": "Rebrand artist cards",
@@ -243,6 +430,22 @@
   "class": "rb-section-wrapper",
   "max_blocks": 50,
   "settings": [
+    { "type": "header", "content": "Find an artist",
+      "info": "Not part of the Figma comp — leave off and the wall of cards is the design exactly." },
+    { "type": "checkbox", "id": "show_finder", "default": false,
+      "label": "Show search and name list above the cards" },
+    { "type": "text", "id": "finder_label", "label": "Label above the search box",
+      "default": "Find an artist" },
+    { "type": "text", "id": "search_placeholder", "label": "Search box placeholder",
+      "default": "Search by name or medium" },
+    { "type": "checkbox", "id": "show_name_list", "default": true,
+      "label": "List every artist's name",
+      "info": "Each name links to that artist's page. The list stays usable without JavaScript." },
+    { "type": "text", "id": "empty_text", "label": "No-results message",
+      "default": "No artists match that search." },
+    { "type": "color", "id": "finder_text_color", "default": "#1e1e1e", "label": "Finder text" },
+    { "type": "color", "id": "finder_accent", "default": "#b00e3f", "label": "Finder accent" },
+    { "type": "header", "content": "Grid" },
     { "type": "range", "id": "columns", "min": 2, "max": 4, "step": 1,
       "default": 3, "label": "Columns" },
     { "type": "range", "id": "grid_width", "min": 1200, "max": 1800, "step": 10,
