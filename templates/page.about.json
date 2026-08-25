@@ -1,45 +1,129 @@
 {
   "sections": {
-    "intro": {
-      "type": "rich-text",
-      "blocks": {
-        "caption": { "type": "caption", "settings": { "caption": "Learn. Create. Exhibit. Collect.", "text_style": "caption-with-letter-spacing", "text_size": "medium" } },
-        "heading": { "type": "heading", "settings": { "heading": "Your Creative Ecosystem", "heading_size": "h1" } },
-        "text": { "type": "text", "settings": { "text": "<p>SA Art Fair is a working art ecosystem in Hout Bay — a studio where artists learn and make, an online gallery where they exhibit and sell, and a home for collectors who want to buy from the artists who create. Whichever door you come in through — creator, collector, artist or teacher — you're part of the same creative circle.</p>" } }
-      },
-      "block_order": ["caption", "heading", "text"],
-      "settings": { "desktop_content_position": "center", "content_alignment": "center", "color_scheme": "scheme-1", "full_width": true, "padding_top": 56, "padding_bottom": 40 }
+    "hero": {
+      "type": "rb-hero",
+      "settings": {
+        "fill": "image",
+        "image": "shopify://shop_images/saf-home-hero.jpg",
+        "band_height": 640,
+        "min_height": 320,
+        "mobile_ratio": "4 / 5",
+        "focal_x": 50,
+        "focal_y": 50,
+        "overlay_color": "#1e1e1e",
+        "overlay_opacity": 0,
+        "show_mark": true,
+        "mark": "saaf",
+        "mark_width": 170,
+        "heading": "About Us",
+        "heading_style": "page_title",
+        "text_color": "#ffffff",
+        "button_label": "",
+        "button_link": ""
+      }
     },
-    "studio": {
-      "type": "image-with-text",
-      "blocks": {
-        "caption": { "type": "caption", "settings": { "caption": "The studio", "text_style": "caption-with-letter-spacing", "text_size": "medium" } },
-        "heading": { "type": "heading", "settings": { "heading": "Made and shown in Hout Bay", "heading_size": "h2" } },
-        "text": { "type": "text", "settings": { "text": "<p>Our light-filled studio is where classes happen, where our resident artists work, and where much of the art you see online is created. It's a space built for making — and for the community that gathers around it.</p>", "text_style": "body" } }
-      },
-      "block_order": ["caption", "heading", "text"],
-      "settings": { "height": "large", "desktop_image_width": "medium", "layout": "text_first", "content_layout": "no-overlap", "desktop_content_position": "middle", "desktop_content_alignment": "left", "color_scheme": "scheme-2", "section_color_scheme": "scheme-1", "padding_top": 24, "padding_bottom": 24 }
+    "statement": {
+      "type": "rb-statement",
+      "settings": {
+        "show_mark": false,
+        "eyebrow": "Your Creative Ecosystem",
+        "eyebrow_color": "#b00e3f",
+        "heading": "<p><em>Learn. Create. Exhibit. Collect.</em></p>",
+        "heading_color": "#bea532",
+        "accent_color": "#bea532",
+        "heading_width": 1270,
+        "body": "<p>SA Art Fair is a working art ecosystem in Hout Bay. A studio where artists learn and make, and an online gallery where artists exhibit and sell, and a home for collectors who want to buy from the artists who create. Whichever door you come in through, creator, collector, artist or teacher; you’re part of our same creative circle.</p>",
+        "body_color": "#1e1e1e",
+        "body_width": 900,
+        "background": "#ffffff",
+        "button_label": "",
+        "button_link": "",
+        "padding_top": 190,
+        "padding_bottom": 150
+      }
     },
-    "pillars": {
-      "type": "multicolumn",
-      "blocks": {
-        "c1": { "type": "column", "settings": { "title": "Learn", "text": "<p>Hands-on classes and workshops for every level, led by working artists.</p>", "link_label": "Explore Create Art", "link": "shopify://collections/workshops-classes" } },
-        "c2": { "type": "column", "settings": { "title": "Create", "text": "<p>A studio built for making — the same space our resident artists work in.</p>" } },
-        "c3": { "type": "column", "settings": { "title": "Exhibit", "text": "<p>A curated online gallery where our artists show their latest work.</p>" } },
-        "c4": { "type": "column", "settings": { "title": "Collect", "text": "<p>Buy original art and limited editions directly from the makers.</p>", "link_label": "Explore Collect Art", "link": "shopify://collections/gallery" } }
-      },
-      "block_order": ["c1", "c2", "c3", "c4"],
-      "settings": { "title": "One creative circle", "heading_size": "h2", "image_width": "full", "image_ratio": "adapt", "columns_desktop": 4, "column_alignment": "center", "background_style": "none", "color_scheme": "scheme-5", "columns_mobile": "1", "swipe_on_mobile": true, "padding_top": 48, "padding_bottom": 48 }
+    "founders": {
+      "type": "rb-founders",
+      "settings": {
+        "image": "shopify://shop_images/saf-home-founders.png",
+        "image_width": 475,
+        "show_stamp": true,
+        "stamp_width": 175,
+        "heading": "SA Art Fair began with two friends, a love of art, and a simple belief: art is better when it is shared.",
+        "heading_color": "#b00e3f",
+        "column_one": "<p>What started as a local art fair has grown into a welcoming space to discover, collect, learn and create. An eco-system that brings artists and art lovers together in one community.</p><p>In The Store, discover and collect work from South African artists. In The Studio, pick up a brush, try something new and create alongside others.</p>",
+        "column_two": "<p>You don’t need to be an expert or an artist to belong here. Just bring your curiosity.</p><p>Come and discover. Come and create. Come and be part of it.</p>",
+        "body_color": "#1e1e1e",
+        "signature": "– Bianca & Georgina xx",
+        "background": "#ffffff"
+      }
     },
-    "cta": {
-      "type": "rich-text",
+    "two_paths": {
+      "type": "rb-two-paths",
       "blocks": {
-        "heading": { "type": "heading", "settings": { "heading": "Come in through any door", "heading_size": "h2" } },
-        "button": { "type": "button", "settings": { "button_label": "Collect Art", "button_link": "shopify://collections/gallery", "button_style_secondary": false, "button_label_2": "Create Art", "button_link_2": "shopify://collections/workshops-classes", "button_style_secondary_2": true } }
+        "buy": {
+          "type": "path",
+          "settings": {
+            "image": "shopify://shop_images/saf-home-path-collect.jpg",
+            "badge": "store",
+            "heading": "Buy Art",
+            "body": "<p>Discover and collect original artworks from our local artists.</p>",
+            "button_label": "Visit our store",
+            "button_link": "shopify://collections/gallery",
+            "text_color": "#505a43",
+            "button_bg": "#e2ead7",
+            "button_text": "#505a43",
+            "overlay_color": "#a5ad93",
+            "overlay_opacity": 0
+          }
+        },
+        "make": {
+          "type": "path",
+          "settings": {
+            "image": "shopify://shop_images/saf-home-path-create.jpg",
+            "badge": "studio",
+            "heading": "Make Art",
+            "body": "<p>Hands-on art classes &amp; workshops for all levels: from beginners classes to masterclasses.</p>",
+            "button_label": "Visit our studio",
+            "button_link": "/pages/studio",
+            "text_color": "#b00e3f",
+            "button_bg": "#b00e3f",
+            "button_text": "#ffffff",
+            "overlay_color": "#e27b70",
+            "overlay_opacity": 0
+          }
+        }
       },
-      "block_order": ["heading", "button"],
-      "settings": { "desktop_content_position": "center", "content_alignment": "center", "color_scheme": "scheme-1", "full_width": true, "padding_top": 40, "padding_bottom": 56 }
+      "block_order": ["buy", "make"],
+      "settings": {}
+    },
+    "contact": {
+      "type": "rb-contact",
+      "settings": {
+        "heading": "<p><em>Established</em> in the valley of the Cape Peninsula.</p>",
+        "heading_color": "#1e1e1e",
+        "heading_accent": "#bea532",
+        "map_width": 50,
+        "map_embed": "https://maps.google.com/maps?q=SA+Art+Fair+Hout+Bay+Cape+Town&t=&z=13&ie=UTF8&iwloc=&output=embed",
+        "map_alt": "Map to the SA Art Fair studio",
+        "map_grayscale": 100,
+        "form_label": "Get in touch",
+        "name_label": "Name + Surname",
+        "email_label": "Email Address",
+        "message_label": "Message",
+        "submit_label": "Submit",
+        "success_message": "Thanks — we will be in touch shortly.",
+        "text_color": "#1e1e1e",
+        "rule_color": "#1e1e1e",
+        "background": "#ffffff"
+      }
     }
   },
-  "order": ["intro", "studio", "pillars", "cta"]
+  "order": [
+    "hero",
+    "statement",
+    "founders",
+    "two_paths",
+    "contact"
+  ]
 }

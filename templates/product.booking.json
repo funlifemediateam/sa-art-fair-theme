@@ -1,50 +1,199 @@
 {
   "sections": {
-    "main": {
-      "type": "main-product",
+    "hero": {
+      "type": "rb-class-hero",
+      "settings": {
+        "eyebrow": "",
+        "title": "",
+        "strip_teacher": true,
+        "teacher_prefix": "With",
+        "teacher": "",
+        "fact_time": "",
+        "fact_level": "",
+        "fact_size": "",
+        "button_label": "Book Now",
+        "button_link": "",
+        "image_a": "",
+        "image_b": "",
+        "image_a_width": 62,
+        "text_width": 52,
+        "background": "#ffffff",
+        "title_color": "#e07468",
+        "teacher_color": "#1e1e1e",
+        "fact_color": "#1e1e1e"
+      }
+    },
+    "detail": {
+      "type": "rb-class-detail",
+      "blocks": {
+        "description": {
+          "type": "note",
+          "settings": {
+            "label": "Description:",
+            "body": "",
+            "use_product_description": true
+          }
+        },
+        "costs": {
+          "type": "note",
+          "settings": {
+            "label": "Costs:",
+            "body": "<p>From [price] — [sessions] sessions<\/p>",
+            "use_product_description": false
+          }
+        }
+      },
+      "block_order": [
+        "description",
+        "costs"
+      ],
+      "settings": {
+        "heading": "<p>A guided <em>[class]<\/em> session.<\/p>",
+        "anchor": "booking",
+        "button_label": "Make a Booking",
+        "button_link": "",
+        "heading_width": 46,
+        "show_rule": true,
+        "background": "#ffffff",
+        "heading_color": "#1e1e1e",
+        "accent_color": "#e07468",
+        "label_color": "#1e1e1e",
+        "body_color": "#1e1e1e",
+        "rule_color": "#c9c9c9"
+      }
+    },
+    "booking": {
+      "type": "apps",
       "blocks": {
         "booking_widget": {
-          "type": "shopify://apps/sa-booking-admin/blocks/booking-widget/019effec-1823-75cb-82db-853f80a4249c",
+          "type": "shopify:\/\/apps\/sa-booking-admin\/blocks\/booking-widget\/019effec-1823-75cb-82db-853f80a4249c",
           "settings": {
             "class_product": "",
             "eyebrow": "Book Your Spot",
             "hold_minutes": 15
           }
-        },
-        "title":       { "type": "title",       "disabled": true, "settings": {} },
-        "price":       { "type": "price",       "disabled": true, "settings": {} },
-        "description": { "type": "description", "disabled": true, "settings": {} },
-        "share":       { "type": "share",       "disabled": true, "settings": { "share_label": "Share" } }
+        }
       },
-      "block_order": ["booking_widget", "title", "price", "description", "share"],
+      "block_order": [
+        "booking_widget"
+      ],
       "settings": {
-        "enable_sticky_info": false,
-        "color_scheme": "scheme-1",
-        "media_size": "large",
-        "constrain_to_viewport": true,
-        "media_fit": "contain",
-        "gallery_layout": "stacked",
-        "mobile_thumbnails": "hide",
-        "media_position": "left",
-        "image_zoom": "lightbox",
-        "hide_variants": true,
-        "enable_video_looping": false,
-        "padding_top": 0,
-        "padding_bottom": 0
+        "include_margins": true
       }
     },
-    "class-details": {
-      "type": "class-details",
-      "settings": { "padding_top": 48, "padding_bottom": 48 }
+    "teacher": {
+      "type": "rb-feature-person",
+      "settings": {
+        "source": "product_teacher",
+        "eyebrow": "Teacher",
+        "name": "",
+        "body": "",
+        "button_a_label": "See Teachers Page",
+        "button_a_link": "",
+        "button_b_label": "See Artist Page",
+        "button_b_link": "",
+        "panel_color": "#e07468",
+        "text_color": "#ffffff",
+        "eyebrow_color": "#1e1e1e",
+        "button_bg": "#b00e3f",
+        "button_text": "#ffffff",
+        "button_radius": 60,
+        "texture": 100,
+        "image": "",
+        "panel_width": 48,
+        "min_height": 560,
+        "focal_x": 50,
+        "focal_y": 60,
+        "portrait": "",
+        "portrait_w": 34,
+        "portrait_ratio": "382 \/ 313",
+        "portrait_x": 46,
+        "portrait_y": 40
+      }
     },
-    "class-info": {
-      "type": "class-info",
-      "settings": { "padding_top": 48, "padding_bottom": 48 }
+    "browse": {
+      "type": "rb-class-cards",
+      "settings": {
+        "collection": "classes",
+        "count": 6,
+        "only_classes": true,
+        "eyebrow": "<p>Browse our classes<\/p>",
+        "eyebrow_name": "",
+        "teacher_filter": "",
+        "intro": "<p>More from the studio calendar.<\/p>",
+        "intro_color": "#1e1e1e",
+        "by_prefix": "By",
+        "show_excerpt": true,
+        "button_label": "View Class",
+        "columns": 3,
+        "grid_width": 1300,
+        "image_ratio": "398 \/ 380",
+        "radius": 18,
+        "background": "#ffffff",
+        "pattern": "all_a",
+        "tone_a": "#e07468",
+        "tone_a_text": "#ffffff",
+        "tone_b": "#b00e3f",
+        "tone_b_text": "#ffffff",
+        "texture": 100,
+        "more_label": "See all classes",
+        "more_link": "\/collections\/classes"
+      }
     },
-    "disclosures": {
-      "type": "disclosures",
-      "settings": { "padding_top": 36, "padding_bottom": 0 }
+    "pagenav": {
+      "type": "rb-page-nav",
+      "blocks": {
+        "classes": {
+          "type": "link",
+          "settings": {
+            "label": "Classes",
+            "link": "shopify:\/\/collections\/classes"
+          }
+        },
+        "workshops": {
+          "type": "link",
+          "settings": {
+            "label": "Workshops",
+            "link": "shopify:\/\/collections\/workshops"
+          }
+        },
+        "teachers": {
+          "type": "link",
+          "settings": {
+            "label": "Meet the Teachers",
+            "link": "\/pages\/the-team"
+          }
+        },
+        "contact": {
+          "type": "link",
+          "settings": {
+            "label": "Contact",
+            "link": "\/pages\/contact"
+          }
+        }
+      },
+      "block_order": [
+        "classes",
+        "workshops",
+        "teachers",
+        "contact"
+      ],
+      "settings": {
+        "aria_label": "Studio navigation",
+        "align": "center",
+        "background": "#ffffff",
+        "text_color": "#1e1e1e",
+        "accent_color": "#b00e3f",
+        "rule_color": "#e0e0e0"
+      }
     }
   },
-  "order": ["main", "class-details", "class-info", "disclosures"]
+  "order": [
+    "hero",
+    "pagenav",
+    "detail",
+    "booking",
+    "teacher",
+    "browse"
+  ]
 }
