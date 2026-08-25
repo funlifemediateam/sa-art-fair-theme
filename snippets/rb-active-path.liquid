@@ -17,12 +17,15 @@
 
   1. The pill's own URL matches the current path exactly.
   2. A product's type — Class and Workshop are the Create side, every other
-     product is an artwork and so the Collect side. This is the only signal
-     that is right for all 25 named-person collections without a hand-kept
-     list: a teacher collection holds classes, an artist collection holds
-     artworks, and the SAME PERSON can own one of each (susan-orpen /
-     susan-orpen-1), so matching a person by name cannot tell the two apart.
-  3. The same test on a collection's first product.
+     product is an artwork and so the Collect side.
+  3. A person collection's handle. The catalogue's naming convention is the
+     ONLY thing that separates the two person pages: a teacher is `teacher-N`
+     or `<name>-1`, an artist is `artist-N` or plain `<name>`, and the same
+     person can own one of each (susan-orpen the artist, susan-orpen-1 the
+     teacher). `artist-` is tested first because `artist-1` also ends in -1.
+     Do NOT switch this to "what is the first product in it" — those two
+     collections BOTH hold Susan's class and her paintings, so contents
+     cannot tell them apart.
   4. A comma-separated path-fragment list, editable in the theme editor, for
      the pages that hold no products (/pages/artists, /pages/studio, ...).
 {% endcomment %}
@@ -38,17 +41,22 @@
     assign side = 'b'
   endif
 
-  if side == ''
-    assign ptype = ''
-    if template.name == 'product'
-      assign ptype = product.type | downcase | strip
-    elsif template.name == 'collection'
-      assign ptype = collection.products.first.type | downcase | strip
-    endif
+  if side == '' and template.name == 'product'
+    assign ptype = product.type | downcase | strip
     if ptype == 'class' or ptype == 'workshop'
       assign side = 'b'
     elsif ptype != ''
       assign side = 'a'
+    endif
+  endif
+
+  if side == '' and template.name == 'collection'
+    assign ch = collection.handle | downcase
+    assign tail = ch | slice: -2, 2
+    if ch contains 'artist-'
+      assign side = 'a'
+    elsif ch contains 'teacher-' or tail == '-1'
+      assign side = 'b'
     endif
   endif
 
@@ -70,6 +78,16 @@
         break
       endif
     endfor
+  endif
+
+  comment
+    Anything still unresolved on a collection page is a collection of
+    artworks — classes, workshops and teachers were all claimed above — so it
+    is the Collect side. This is what catches the named artist pages
+    (amara-dube, kerri-sassen, zara-leigh...) without listing all 34.
+  endcomment
+  if side == '' and template.name == 'collection'
+    assign side = 'a'
   endif
 
   echo side

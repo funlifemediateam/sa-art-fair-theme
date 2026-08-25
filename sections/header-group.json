@@ -1,76 +1,44 @@
 {
-  "name": "t:sections.header.name",
   "type": "header",
+  "name": "Header group",
   "sections": {
-    "announcement-bar": {
-      "type": "announcement-bar",
-      "blocks": {
-        "pill-artworks": {
-          "type": "announcement",
-          "settings": {
-            "text": "Original artworks",
-            "link": "shopify:\/\/collections\/all"
-          }
-        },
-        "pill-workshops": {
-          "type": "announcement",
-          "settings": {
-            "text": "Studio workshops",
-            "link": "shopify:\/\/collections\/workshops"
-          }
-        },
-        "pill-location": {
-          "type": "announcement",
-          "settings": {
-            "text": "Hout Bay, Cape Town",
-            "link": "https:\/\/www.google.com\/maps\/search\/SA+Art+Fair+Hout+Bay+Cape+Town+South+Africa"
-          }
-        }
-      },
-      "block_order": [
-        "pill-artworks",
-        "pill-workshops",
-        "pill-location"
-      ],
+    "rb_header": {
+      "type": "rb-header",
       "settings": {
-        "color_scheme": "scheme-4"
-      }
-    },
-    "header": {
-      "type": "header",
-      "settings": {
-        "logo_position": "middle-left",
-        "mobile_logo_position": "center",
-        "menu": "main-menu",
-        "menu_type_desktop": "dropdown",
-        "sticky_header_type": "always",
-        "show_line_separator": true,
-        "color_scheme": "scheme-1",
-        "menu_color_scheme": "scheme-1",
-        "enable_country_selector": true,
-        "enable_language_selector": true,
-        "enable_customer_avatar": true,
-        "margin_bottom": 0,
-        "padding_top": 20,
-        "padding_bottom": 20,
-        "enable_path_nav": true,
-        "path_a_label": "Collect Art",
-        "path_a_url": "\/collections\/gallery",
-        "path_b_label": "Create Art",
-        "path_b_url": "\/collections\/workshops-classes",
-        "show_wishlist_icon": true,
-        "show_currency_selector": true,
-        "show_gift_card_icon": true,
-        "show_contact_icon": true,
-        "contact_url": "\/pages\/contact",
-        "show_instagram_icon": true,
-        "show_location_icon": true,
-        "location_url": "https:\/\/maps.google.com\/?q=SA+Art+Fair+Hout+Bay"
+        "logo_width": 275,
+        "menu": "rebrand-drawer",
+        "sticky": true,
+        "show_border": false,
+        "cta_a_label": "Buy Art",
+        "cta_a_url": "shopify://collections/gallery",
+        "cta_a_fill": "outline",
+        "cta_b_label": "Create Art",
+        "cta_b_url": "/pages/studio",
+        "cta_b_fill": "outline",
+        "enable_dropdowns": false,
+        "highlight_active": true,
+        "active_a_color": "#505a43",
+        "active_b_color": "#e07468",
+        "active_text_color": "#ffffff",
+        "cta_a_paths": "/pages/collect-art, /pages/artists, /collections/gallery, /collections/wishlist, /collections/warm-tones, /collections/cool-tones, /collections/neutral-tones, /collections/originals, /collections/limited-editions, /collections/art-under, /collections/artist-",
+        "cta_b_paths": "/pages/create-art, /pages/studio, /pages/the-team, /pages/term-4, /pages/classes-workshops, /collections/classes, /collections/workshops, /collections/workshops-classes, /collections/teachers, /collections/teacher-",
+        "show_contact": true,
+        "contact_label": "Contact",
+        "contact_url": "/pages/contact",
+        "show_instagram": true,
+        "instagram_url": "https://www.instagram.com/saartfair",
+        "icon_hover_color": "#b00e3f",
+        "show_search": false,
+        "show_cart": false,
+        "drawer_cart_link": true,
+        "drawer_account_link": true,
+        "background": "#ffffff",
+        "text_color": "#1e1e1e",
+        "show_mobile_bar": true
       }
     }
   },
   "order": [
-    "announcement-bar",
-    "header"
+    "rb_header"
   ]
 }
