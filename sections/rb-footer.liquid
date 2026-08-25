@@ -174,6 +174,28 @@
         </a>
       {%- endif -%}
 
+      {%- comment -%}
+        The studio address. Bianca's brief: "When you click on the location
+        button can you make that an external link so clients don't leave our
+        website" — so the map opens in its OWN tab and the site stays put
+        behind it. The contact page keeps its embedded map for anyone who
+        just wants to look without leaving at all.
+      {%- endcomment -%}
+      {%- if section.settings.address != blank -%}
+        {%- assign map_href = section.settings.address_link -%}
+        {%- if map_href == blank -%}
+          {%- assign map_href = section.settings.address | strip_newlines | url_encode | prepend: 'https://www.google.com/maps/search/?api=1&query=' -%}
+        {%- endif -%}
+        <a href="{{ map_href }}" class="rb-footer__row" target="_blank" rel="noopener"
+           aria-label="{{ section.settings.address | strip_newlines | escape }} (opens Google Maps in a new tab)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+            <path d="M12 21s7-5.5 7-11a7 7 0 1 0-14 0c0 5.5 7 11 7 11z"></path>
+            <circle cx="12" cy="10" r="2.6"></circle>
+          </svg>
+          {{ section.settings.address }}
+        </a>
+      {%- endif -%}
+
       {%- if section.settings.menu != blank and linklists[section.settings.menu].links.size > 0 -%}
         <ul class="rb-footer__links">
           {%- for link in linklists[section.settings.menu].links -%}
@@ -216,6 +238,10 @@
     { "type": "header", "content": "Contact" },
     { "type": "text", "id": "email", "default": "Info@SAAF.com", "label": "Email" },
     { "type": "text", "id": "phone", "default": "+27 680 000 00", "label": "Phone" },
+    { "type": "text", "id": "address", "label": "Address",
+      "info": "Shown as a location row that opens Google Maps in a new tab, so the site stays open behind it. Leave blank to hide the row." },
+    { "type": "url", "id": "address_link", "label": "Map link",
+      "info": "Optional. Leave blank and the address above is searched on Google Maps." },
     { "type": "link_list", "id": "menu", "label": "Footer menu" },
     { "type": "header", "content": "Social",
       "info": "Pulled from the admin app's store socials when set; these are the fallback." },

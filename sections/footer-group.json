@@ -1,35 +1,27 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
-  "name": "t:sections.footer.name",
   "type": "footer",
+  "name": "Footer group",
   "sections": {
-    "footer": {
-      "type": "footer",
+    "rb_footer": {
+      "type": "rb-footer",
       "settings": {
-        "color_scheme": "scheme-1",
-        "newsletter_enable": true,
-        "newsletter_heading": "Subscribe to our emails",
-        "enable_follow_on_shop": true,
-        "show_social": true,
-        "enable_country_selector": true,
-        "enable_language_selector": true,
-        "payment_enable": true,
-        "show_policy": true,
-        "margin_top": 0,
-        "padding_top": 36,
-        "padding_bottom": 36
+        "wordmark_width": 325,
+        "blurb": "",
+        "email": "studio@saartfair.co.za",
+        "phone": "+27 72 477 8807",
+        "address": "Hout Bay, Cape Town",
+        "address_link": "https://www.google.com/maps/search/?api=1&query=SA+Art+Fair+Hout+Bay+Cape+Town",
+        "social_bg": "#1e1e1e",
+        "social_icon": "#ffffff",
+        "show_mark": true,
+        "mark_width": 95,
+        "background": "#ffffff",
+        "text_color": "#1e1e1e",
+        "show_legal": false
       }
     }
   },
   "order": [
-    "footer"
+    "rb_footer"
   ]
 }
