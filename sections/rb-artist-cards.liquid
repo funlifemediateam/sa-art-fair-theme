@@ -269,16 +269,31 @@
         >
 
         {%- if section.settings.show_name_list -%}
-          <ul class="rb-ac__names" role="list">
-            {%- assign sorted = section.blocks | sort: 'settings.name' -%}
-            {%- for block in sorted -%}
+          {%- comment -%}
+            Alphabetical, which `sort: 'settings.name'` cannot do here: almost
+            every block leaves `name` blank and inherits the collection's
+            title, so sorting the blocks sorts a column of empty strings.
+            Resolve each name FIRST, pack it with its url, then sort the
+            resolved rows. `sort_natural` so "van der Berg" files with the v's
+            rather than ahead of every lowercase-shy name.
+          {%- endcomment -%}
+          {%- capture rb_ac_rows -%}
+            {%- for block in section.blocks -%}
               {%- liquid
                 assign col = collections[block.settings.collection]
                 assign nm = block.settings.name | default: col.title
                 assign nurl = block.settings.link | default: col.url
               -%}
-              {%- if nm != blank -%}
-                <li><a href="{{ nurl | default: '#' }}" data-rb-ac-name>{{ nm }}</a></li>
+              {%- if nm != blank -%}{{ nm | strip }}~{{ nurl | default: '#' }}|{%- endif -%}
+            {%- endfor -%}
+          {%- endcapture -%}
+          {%- assign rb_ac_list = rb_ac_rows | strip | split: '|' | sort_natural -%}
+
+          <ul class="rb-ac__names" role="list">
+            {%- for row in rb_ac_list -%}
+              {%- assign parts = row | strip | split: '~' -%}
+              {%- if parts.size == 2 -%}
+                <li><a href="{{ parts[1] }}" data-rb-ac-name>{{ parts[0] }}</a></li>
               {%- endif -%}
             {%- endfor -%}
           </ul>
