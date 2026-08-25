@@ -1490,6 +1490,25 @@
     ]
   },
   {
+    "name": "Reading text size",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Scales the body copy, card text, quotes, labels and buttons across the whole site. Headings and page titles are NOT scaled — those sizes were measured off the design and changing them would redraw it. 100% is the design exactly."
+      },
+      {
+        "type": "range",
+        "id": "saf_body_scale",
+        "min": 90,
+        "max": 130,
+        "step": 5,
+        "unit": "%",
+        "default": 100,
+        "label": "Reading text size"
+      }
+    ]
+  },
+  {
     "name": "WhatsApp button",
     "settings": [
       {

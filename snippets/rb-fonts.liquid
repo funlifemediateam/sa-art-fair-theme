@@ -79,3 +79,39 @@
     font-weight: 400; font-style: normal; font-display: swap;
   }
 {% endstyle %}
+
+{%- comment -%}
+  Reading-text size, per Bianca's brief: "can we increase the font size on all
+  pages".
+
+  Only the READING tokens are scaled — body, small body, card, meta, quote,
+  labels, buttons and the caps eyebrow. The display sizes are deliberately
+  untouched: saf-rebrand.css records that they were solved by measuring
+  Hanre's comp ("Do not tidy these numbers — they are measurements, not
+  taste"), so scaling them would redraw the design rather than make it easier
+  to read.
+
+  Defaults to 100, which reproduces saf-rebrand.css exactly, so this snippet
+  emits nothing at all until someone turns the dial in Theme settings →
+  SA Art Fair. That keeps the comp the baseline and makes the change one
+  slider to undo.
+{%- endcomment -%}
+{%- liquid
+  assign body_scale = settings.saf_body_scale | default: 100
+  assign s = body_scale | divided_by: 100.0
+-%}
+{%- if body_scale != 100 -%}
+  <style>
+    :root {
+      --rb-fs-body: clamp({{ 16 | times: s | round: 2 }}px, {{ 1.354 | times: s | round: 3 }}vw, {{ 26 | times: s | round: 2 }}px);
+      --rb-fs-body-sm: clamp({{ 15 | times: s | round: 2 }}px, {{ 1.198 | times: s | round: 3 }}vw, {{ 23 | times: s | round: 2 }}px);
+      --rb-fs-card: clamp({{ 16 | times: s | round: 2 }}px, {{ 1.25 | times: s | round: 3 }}vw, {{ 24 | times: s | round: 2 }}px);
+      --rb-fs-meta: clamp({{ 12 | times: s | round: 2 }}px, {{ 0.94 | times: s | round: 3 }}vw, {{ 18 | times: s | round: 2 }}px);
+      --rb-fs-quote: clamp({{ 18 | times: s | round: 2 }}px, {{ 1.77 | times: s | round: 3 }}vw, {{ 34 | times: s | round: 2 }}px);
+      --rb-fs-label: clamp({{ 18 | times: s | round: 2 }}px, {{ 1.563 | times: s | round: 3 }}vw, {{ 30 | times: s | round: 2 }}px);
+      --rb-fs-btn: clamp({{ 14 | times: s | round: 2 }}px, {{ 1.094 | times: s | round: 3 }}vw, {{ 21 | times: s | round: 2 }}px);
+      --rb-fs-btn-serif: clamp({{ 16 | times: s | round: 2 }}px, {{ 1.146 | times: s | round: 3 }}vw, {{ 22 | times: s | round: 2 }}px);
+      --rb-fs-caps: clamp({{ 13 | times: s | round: 2 }}px, {{ 1.41 | times: s | round: 3 }}vw, {{ 27 | times: s | round: 2 }}px);
+    }
+  </style>
+{%- endif -%}
