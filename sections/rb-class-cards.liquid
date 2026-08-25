@@ -29,6 +29,15 @@
 
   assign teacher_filter = section.settings.teacher_filter | downcase | strip
 
+  comment
+    Reading variants per card costs nothing when nothing asks for a price, so
+    the whole booking-facts block is skipped unless a setting wants it.
+  endcomment
+  assign show_facts = false
+  if section.settings.show_price or section.settings.show_deposit or section.settings.show_spaces
+    assign show_facts = true
+  endif
+
   assign eyebrow = section.settings.eyebrow
   if section.settings.eyebrow_name != blank
     assign eyebrow = eyebrow | replace: '[teacher]', section.settings.eyebrow_name
@@ -119,8 +128,45 @@
     line-height: 1.4;
   }
   #shopify-section-{{ sid }} .rb-cc__body p { margin: 0; }
+
+  /* Booking facts. Sit above the button, under the blurb, in the card's own
+     text colour — they are facts about the class, not a second voice. */
+  #shopify-section-{{ sid }} .rb-cc__when {
+    margin: 4px 0 0;
+    font-family: var(--rb-sans);
+    font-size: var(--rb-fs-meta);
+    line-height: 1.3;
+    opacity: 0.92;
+  }
+  #shopify-section-{{ sid }} .rb-cc__facts {
+    margin-top: clamp(8px, 0.83vw, 16px);
+    font-family: var(--rb-sans);
+    line-height: 1.35;
+  }
+  #shopify-section-{{ sid }} .rb-cc__facts p { margin: 0; }
+  #shopify-section-{{ sid }} .rb-cc__price {
+    font-size: clamp(13px, 0.94vw, 18px);
+    font-weight: 600;
+  }
+  #shopify-section-{{ sid }} .rb-cc__deposit,
+  #shopify-section-{{ sid }} .rb-cc__spaces {
+    margin-top: 2px !important;
+    font-size: var(--rb-fs-meta);
+    opacity: 0.9;
+  }
+  /* the one fact that should catch the eye, so the "spaces filling up" line in
+     the late-September ads is backed by the same number on the page */
+  #shopify-section-{{ sid }} .rb-cc__spaces {
+    font-weight: 600;
+    opacity: 1;
+  }
+
   #shopify-section-{{ sid }} .rb-cc__cta {
     align-self: center;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: clamp(6px, 0.52vw, 10px);
     margin-top: auto;
     padding-top: clamp(14px, 1.46vw, 28px);
   }
@@ -162,6 +208,23 @@
     color: {{ section.settings.tone_b_text }};
   }
   #shopify-section-{{ sid }} .rb-cc__card--b .rb-cc__btn { color: {{ section.settings.tone_b }}; }
+
+  /* With a Book pill present, "View Class" steps back to a ghost so there is
+     one obvious action per card. Alone, it keeps the comp's white pill.
+
+     This has to sit after the tone rules AND carry .rb-cc__card, or
+     `.rb-cc__card--a .rb-cc__btn { color: tone_a }` wins on source order at
+     equal specificity and paints a coral label on a coral panel. */
+  #shopify-section-{{ sid }} .rb-cc__card .rb-cc__btn--book ~ .rb-cc__btn {
+    background: transparent;
+    border-color: currentColor;
+    color: inherit;
+  }
+  #shopify-section-{{ sid }} .rb-cc__card .rb-cc__btn--book ~ .rb-cc__btn:hover {
+    background: rgba(255, 255, 255, 0.16);
+    border-color: currentColor;
+    color: inherit;
+  }
 </style>
 
 <div class="rb-section rb-cc">
@@ -183,6 +246,107 @@
         {%- liquid
           assign by = item.metafields.booking.instructor_name
           assign time = item.metafields.booking.class_time
+        -%}
+
+        {%- comment -%}
+          Booking facts for a landing page. All four are off by default, so every
+          page that already runs this section keeps the comp's card exactly:
+          image, title, time, teacher, blurb, pill. The Term 4 page turns them on
+          because an ad has to answer "when, how much, is there space" before the
+          click, not after it.
+
+          Prices are read off the variants rather than a metafield, because the
+          variants are what the booking widget actually charges. Titles are
+          matched loosely ("Drop-in", "Single Session", "Monthly", "Full Term",
+          "Deposit (Pay in 2)") so renaming a variant does not blank the card.
+        {%- endcomment -%}
+        {%- liquid
+          assign p_single = 0
+          assign p_month = 0
+          assign p_term = 0
+          assign p_dep = 0
+          assign seats = -1
+
+          if show_facts
+            for v in item.variants
+              assign vt = v.title | downcase
+              if vt contains 'deposit' or vt contains 'pay in 2'
+                assign p_dep = v.price
+              elsif vt contains 'month'
+                assign p_month = v.price
+              elsif vt contains 'term'
+                assign p_term = v.price
+                if v.inventory_management != blank
+                  assign seats = v.inventory_quantity
+                endif
+              elsif vt contains 'single' or vt contains 'drop' or vt contains 'session'
+                assign p_single = v.price
+                if seats == -1 and v.inventory_management != blank
+                  assign seats = v.inventory_quantity
+                endif
+              endif
+            endfor
+
+            comment
+              A class with one unnamed variant ("Default Title") still needs a
+              price on the card, so fall back to the product's own.
+            endcomment
+            if p_single == 0 and p_month == 0 and p_term == 0
+              assign p_single = item.price_min
+              if seats == -1 and item.first_available_variant.inventory_management != blank
+                assign seats = item.first_available_variant.inventory_quantity
+              endif
+            endif
+          endif
+        -%}
+
+        {%- liquid
+          assign when = ''
+          if section.settings.show_schedule
+            assign days = ''
+            if item.metafields.booking.day_mon.value
+              assign days = days | append: ', Mondays'
+            endif
+            if item.metafields.booking.day_tue.value
+              assign days = days | append: ', Tuesdays'
+            endif
+            if item.metafields.booking.day_wed.value
+              assign days = days | append: ', Wednesdays'
+            endif
+            if item.metafields.booking.day_thu.value
+              assign days = days | append: ', Thursdays'
+            endif
+            if item.metafields.booking.day_fri.value
+              assign days = days | append: ', Fridays'
+            endif
+            if item.metafields.booking.day_sat.value
+              assign days = days | append: ', Saturdays'
+            endif
+            if item.metafields.booking.day_sun.value
+              assign days = days | append: ', Sundays'
+            endif
+            assign days = days | remove_first: ', '
+
+            assign starts = ''
+            assign start_raw = item.metafields.booking.start_date
+            if start_raw != blank
+              assign starts = start_raw | date: '%-d %b'
+            endif
+
+            comment
+              A one-off workshop has a date, not a weekday pattern — saying
+              "Thursdays" about a single evening reads as a weekly class.
+            endcomment
+            if item.metafields.booking.is_one_off.value
+              assign when = starts
+            elsif days != blank and starts != blank
+              assign when = days | append: ' · from ' | append: starts
+            elsif days != blank
+              assign when = days
+            else
+              assign when = starts
+            endif
+          endif
         -%}
 
         {%- comment -%}
@@ -263,17 +427,74 @@
               <p class="rb-cc__by">{{ section.settings.by_prefix }} {{ by }}</p>
             {%- endif -%}
 
+            {%- if when != blank -%}
+              <p class="rb-cc__when">{{ when }}</p>
+            {%- endif -%}
+
             {%- if section.settings.show_excerpt -%}
               <div class="rb-cc__body">
                 <p>{{ item.description | strip_html | truncatewords: 18 }}</p>
               </div>
             {%- endif -%}
 
-            {%- if section.settings.button_label != blank -%}
+            {%- if show_facts -%}
+              <div class="rb-cc__facts">
+                {%- if section.settings.show_price -%}
+                  <p class="rb-cc__price">
+                    {%- assign bits = '' -%}
+                    {%- if p_single > 0 -%}
+                      {%- capture bit -%}{{ p_single | money_without_trailing_zeros }} {{ section.settings.session_word }}{%- endcapture -%}
+                      {%- assign bits = bits | append: ' · ' | append: bit -%}
+                    {%- endif -%}
+                    {%- if p_month > 0 -%}
+                      {%- capture bit -%}{{ p_month | money_without_trailing_zeros }} {{ section.settings.month_word }}{%- endcapture -%}
+                      {%- assign bits = bits | append: ' · ' | append: bit -%}
+                    {%- endif -%}
+                    {%- if p_term > 0 -%}
+                      {%- capture bit -%}{{ p_term | money_without_trailing_zeros }} {{ section.settings.term_word }}{%- endcapture -%}
+                      {%- assign bits = bits | append: ' · ' | append: bit -%}
+                    {%- endif -%}
+                    {{- bits | remove_first: ' · ' -}}
+                  </p>
+                {%- endif -%}
+
+                {%- if section.settings.show_deposit and p_dep > 0 -%}
+                  <p class="rb-cc__deposit">
+                    {{- section.settings.deposit_label }} {{ p_dep | money_without_trailing_zeros -}}
+                  </p>
+                {%- endif -%}
+
+                {%- comment -%}
+                  Scarcity is only honest when it is real, so this renders from
+                  live inventory and only once the seats actually run low. A
+                  class with untracked inventory reports -1 and says nothing.
+                {%- endcomment -%}
+                {%- if section.settings.show_spaces and seats > 0 and seats <= section.settings.spaces_threshold -%}
+                  <p class="rb-cc__spaces">{{ section.settings.spaces_label | replace: '[n]', seats }}</p>
+                {%- endif -%}
+              </div>
+            {%- endif -%}
+
+            {%- if section.settings.button_label != blank or section.settings.book_label != blank -%}
               <div class="rb-cc__cta">
-                <a href="{{ item.url }}" class="rb-btn rb-btn--serif rb-cc__btn">
-                  {{- section.settings.button_label | escape -}}
-                </a>
+                {%- if section.settings.book_label != blank -%}
+                  {%- comment -%}
+                    Straight to the booking widget rather than the top of the
+                    class page — the widget is the third band down, and an ad
+                    click that lands above the fold it needs still has to scroll.
+                    The widget's real element id is per-product
+                    ("…template--<template id>__booking"), so the link says
+                    #book and saf-rebrand.js resolves it on arrival.
+                  {%- endcomment -%}
+                  <a href="{{ item.url }}#book" class="rb-btn rb-btn--serif rb-cc__btn rb-cc__btn--book">
+                    {{- section.settings.book_label | escape -}}
+                  </a>
+                {%- endif -%}
+                {%- if section.settings.button_label != blank -%}
+                  <a href="{{ item.url }}" class="rb-btn rb-btn--serif rb-cc__btn">
+                    {{- section.settings.button_label | escape -}}
+                  </a>
+                {%- endif -%}
               </div>
             {%- endif -%}
           </div>
@@ -333,6 +554,29 @@
     { "type": "text", "id": "image_ratio", "default": "398 / 380", "label": "Card image ratio" },
     { "type": "range", "id": "radius", "min": 0, "max": 48, "step": 1,
       "default": 18, "unit": "px", "label": "Card corner radius" },
+    { "type": "header", "content": "Booking facts",
+      "info": "All off by default, which is the comp's card. Switch them on for a page an ad lands on, where the click has to be earned before the class page loads." },
+    { "type": "checkbox", "id": "show_schedule", "default": false,
+      "label": "Show the day and start date",
+      "info": "Reads booking.day_* and booking.start_date. A one-off workshop shows its date instead of a weekday." },
+    { "type": "checkbox", "id": "show_price", "default": false, "label": "Show prices",
+      "info": "Read off the variants the booking widget charges — drop-in, monthly, full term." },
+    { "type": "text", "id": "session_word", "default": "a session", "label": "Wording after the drop-in price" },
+    { "type": "text", "id": "month_word", "default": "a month", "label": "Wording after the monthly price" },
+    { "type": "text", "id": "term_word", "default": "the term", "label": "Wording after the term price" },
+    { "type": "checkbox", "id": "show_deposit", "default": false,
+      "label": "Show the pay-in-2 deposit",
+      "info": "Only appears on classes that have pay-in-2 switched on in the booking app." },
+    { "type": "text", "id": "deposit_label", "default": "Or hold your seat for", "label": "Wording before the deposit" },
+    { "type": "checkbox", "id": "show_spaces", "default": false,
+      "label": "Show spaces left when a class is filling up",
+      "info": "Live inventory. Says nothing until the class drops to the number below, and nothing at all if inventory is untracked." },
+    { "type": "range", "id": "spaces_threshold", "min": 1, "max": 24, "step": 1,
+      "default": 8, "label": "Only show spaces at or below" },
+    { "type": "text", "id": "spaces_label", "default": "Only [n] spaces left",
+      "label": "Spaces wording", "info": "[n] is replaced with the number left." },
+    { "type": "text", "id": "book_label", "label": "Book button label",
+      "info": "Blank leaves the comp's single pill. Filled adds a Book pill that jumps straight to the booking widget, and steps the other button back to an outline." },
     { "type": "header", "content": "Colour" },
     { "type": "color", "id": "background", "default": "#ffffff", "label": "Background" },
     { "type": "select", "id": "pattern", "label": "Card colours", "default": "all_a",

@@ -16,7 +16,8 @@ set -e
 cd "$(dirname "$0")"
 
 STORE="b77sng-1n.myshopify.com"
-THEME="151028203598"
+# SAAF Rebrand V1 (Hanre) — the live theme since 2026-08-20
+THEME="152790532174"
 
 echo "→ Syncing editor settings from Shopify..."
 shopify theme pull \

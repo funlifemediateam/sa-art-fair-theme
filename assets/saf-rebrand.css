@@ -423,6 +423,18 @@ html:has(.bk-page) main > .shopify-section.rb-section-wrapper:first-child {
 }
 
 /* --------------------------------------------------------------------------
+   Deep links into a class page
+   A card elsewhere on the site can send someone straight to the booking widget
+   with #book, which saf-rebrand.js resolves to this section. The header is
+   sticky, so the target has to clear it or the widget lands under the nav.
+   The id is per-product — see the note in saf-rebrand.js — hence the suffix
+   match rather than a fixed id.
+   -------------------------------------------------------------------------- */
+[id^="shopify-section-"][id$="__booking"] {
+  scroll-margin-top: calc(var(--rb-header-h) + 24px);
+}
+
+/* --------------------------------------------------------------------------
    Shared motion
    -------------------------------------------------------------------------- */
 @media (prefers-reduced-motion: reduce) {

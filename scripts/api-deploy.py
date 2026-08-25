@@ -20,8 +20,11 @@ import urllib.request
 
 STORE = "b77sng-1n.myshopify.com"
 # Live theme by default. Set SAF_THEME_ID to push to an unpublished theme
-# instead — used for the rebrand build so the live site stays untouched.
-THEME = os.environ.get("SAF_THEME_ID", "151028203598")
+# instead. The live theme became "SAAF Rebrand V1 (Hanre)" on 2026-08-20;
+# the old "Copy of Dawn" 151028203598 is unpublished and no longer a target.
+REBRAND_THEME = "152790532174"
+REBRAND_BRANCH = "rebrand-v1"
+THEME = os.environ.get("SAF_THEME_ID", REBRAND_THEME)
 TOKEN = os.environ.get("SHOPIFY_ADMIN_TOKEN", "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")
 API = f"https://{STORE}/admin/api/2024-10/themes/{THEME}/assets.json"
 THEME_DIRS = ("assets/", "config/", "layout/", "locales/", "sections/", "snippets/", "templates/")
@@ -85,7 +88,37 @@ def _git_push():
         print(f"GitHub PUSH FAILED (commit is saved locally): {e}")
 
 
+def current_branch():
+    try:
+        return subprocess.check_output(
+            ["git", "rev-parse", "--abbrev-ref", "HEAD"], text=True).strip()
+    except Exception:
+        return ""
+
+
+def guard_branch():
+    """Refuse to push pre-rebrand files over Hanre's live design.
+
+    `main` still holds the old Dawn build; `rebrand-v1` holds the design that is
+    now live. Deploying from the wrong branch would silently overwrite the
+    rebrand section by section, which is exactly the mistake that is hardest to
+    notice and hardest to undo. Override with SAF_FORCE=1 when you really mean
+    it (e.g. pushing a hotfix from a detached HEAD).
+    """
+    if THEME != REBRAND_THEME or os.environ.get("SAF_FORCE") == "1":
+        return
+    branch = current_branch()
+    if branch and branch != REBRAND_BRANCH:
+        print(f"REFUSING TO DEPLOY: you are on branch '{branch}', but theme {THEME}")
+        print(f"is the live rebrand, built from '{REBRAND_BRANCH}'.")
+        print("Pushing from here would overwrite the rebrand with the old design.")
+        print(f"  git switch {REBRAND_BRANCH}     # then re-run")
+        print("  SAF_FORCE=1 python3 scripts/api-deploy.py ...   # if you really mean it")
+        sys.exit(1)
+
+
 def main():
+    guard_branch()
     explicit = sys.argv[1:]
     files = explicit or local_theme_files()
 

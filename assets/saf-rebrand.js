@@ -115,10 +115,55 @@
     reflect();
   }
 
+  /* #book — send an ad click straight to the booking widget.
+
+     A card elsewhere on the site cannot name the widget's real element id:
+     Shopify renders a JSON-template section as
+     "shopify-section-template--<template id>__booking", and every class product
+     carries its own product.booking-<product id> template, so that number is
+     different on every class page. Rather than teach each card a per-product id,
+     the link says #book and this resolves it here.
+
+     The widget is an app block that fetches its own data, so the section can be
+     nearly empty at DOMContentLoaded and land at the wrong scroll offset. Retry
+     a few times, and stop early once someone scrolls themselves. */
+  function scrollToBooking() {
+    if (window.location.hash !== '#book') return;
+
+    var tries = 0;
+    var userMoved = false;
+    var startY = window.scrollY;
+    function onUserScroll() {
+      if (Math.abs(window.scrollY - startY) > 40) userMoved = true;
+    }
+    window.addEventListener('scroll', onUserScroll, { passive: true });
+
+    function attempt() {
+      var target =
+        document.querySelector('[id^="shopify-section-"][id$="__booking"]') ||
+        document.querySelector('.bk-page') ||
+        document.querySelector('[data-api]');
+
+      if (target) {
+        target.scrollIntoView({ behavior: tries === 0 ? 'auto' : 'smooth', block: 'start' });
+        startY = window.scrollY;
+      }
+
+      tries += 1;
+      if (tries < 4 && !userMoved) {
+        setTimeout(attempt, tries * 400);
+      } else {
+        window.removeEventListener('scroll', onUserScroll);
+      }
+    }
+    attempt();
+  }
+
   function init(scope) {
     var root = scope || document;
     root.querySelectorAll('.rb-header-section').forEach(setup);
     root.querySelectorAll('[data-rb-carousel]').forEach(setupCarousel);
+    if (!scope) scrollToBooking();
   }
 
   if (document.readyState === 'loading') {

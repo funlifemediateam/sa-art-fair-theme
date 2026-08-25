@@ -1,0 +1,76 @@
+{% comment %}
+  Which "side" of the site is the visitor on — the Collect/Buy side or the
+  Create/Make side? Bianca's first ask on the wording doc:
+
+    "Is it possible for the buy art or make art button to be highlighted
+     depending on what side of the website we are on?"
+
+  ECHOES 'a', 'b' or '' (neither — home, cart, search, account). A snippet's
+  own `assign`s do not escape `{% render %}`, so the caller captures the echo:
+
+    {%- capture rb_active -%}
+      {%- render 'rb-active-path', a_url: x, b_url: y, a_paths: p, b_paths: q -%}
+    {%- endcapture -%}
+    {%- assign rb_active = rb_active | strip -%}
+
+  Resolution order, most certain first:
+
+  1. The pill's own URL matches the current path exactly.
+  2. A product's type — Class and Workshop are the Create side, every other
+     product is an artwork and so the Collect side. This is the only signal
+     that is right for all 25 named-person collections without a hand-kept
+     list: a teacher collection holds classes, an artist collection holds
+     artworks, and the SAME PERSON can own one of each (susan-orpen /
+     susan-orpen-1), so matching a person by name cannot tell the two apart.
+  3. The same test on a collection's first product.
+  4. A comma-separated path-fragment list, editable in the theme editor, for
+     the pages that hold no products (/pages/artists, /pages/studio, ...).
+{% endcomment %}
+{%- liquid
+  assign side = ''
+  assign here = request.path | downcase
+  assign a_here = a_url | default: '' | split: '?' | first | downcase
+  assign b_here = b_url | default: '' | split: '?' | first | downcase
+
+  if a_here != '' and here == a_here
+    assign side = 'a'
+  elsif b_here != '' and here == b_here
+    assign side = 'b'
+  endif
+
+  if side == ''
+    assign ptype = ''
+    if template.name == 'product'
+      assign ptype = product.type | downcase | strip
+    elsif template.name == 'collection'
+      assign ptype = collection.products.first.type | downcase | strip
+    endif
+    if ptype == 'class' or ptype == 'workshop'
+      assign side = 'b'
+    elsif ptype != ''
+      assign side = 'a'
+    endif
+  endif
+
+  if side == ''
+    assign a_list = a_paths | default: '' | strip_newlines | replace: ' ', '' | split: ','
+    for frag in a_list
+      if frag != '' and here contains frag
+        assign side = 'a'
+        break
+      endif
+    endfor
+  endif
+
+  if side == ''
+    assign b_list = b_paths | default: '' | strip_newlines | replace: ' ', '' | split: ','
+    for frag in b_list
+      if frag != '' and here contains frag
+        assign side = 'b'
+        break
+      endif
+    endfor
+  endif
+
+  echo side
+-%}
