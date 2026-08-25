@@ -103,6 +103,19 @@
     gap: 10px;
     margin-top: 20px;
   }
+  /* Contact leads the row. Tighter side padding than the path pills because it
+     carries an icon as well as its word — at the panel's 460px the three
+     buttons only fit on one line if this one gives the space back. It wraps
+     onto its own line below that, which is why the row is flex-wrap. */
+  #rb-drawer-{{ sid }} .rb-drawer__contact {
+    gap: 9px;
+    padding-inline: clamp(14px, 1.2vw, 22px);
+  }
+  #rb-drawer-{{ sid }} .rb-drawer__contact svg {
+    width: 18px;
+    height: 18px;
+    flex: 0 0 auto;
+  }
 
   @media (prefers-reduced-motion: reduce) {
     #rb-drawer-{{ sid }} .rb-drawer__panel,
@@ -140,6 +153,22 @@
     {%- assign fill_a = section.settings.cta_a_fill | default: 'outline' -%}
     {%- assign fill_b = section.settings.cta_b_fill | default: 'outline' -%}
     <div class="rb-drawer__ctas">
+      {%- comment -%}
+        Contact is a button here rather than a line in the menu above — it is an
+        action, not another place to browse, so it belongs with the two path
+        buttons. It keeps the envelope it wore in the header bar so the move
+        reads as the same control, relocated.
+      {%- endcomment -%}
+      {%- if section.settings.show_contact and section.settings.contact_url != blank -%}
+        <a href="{{ section.settings.contact_url }}" class="rb-btn rb-btn--plain rb-btn--outline rb-drawer__contact">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+            <rect x="2.5" y="5" width="19" height="14" rx="2"></rect>
+            <path d="M3 6.5l9 6 9-6"></path>
+          </svg>
+          {{- section.settings.contact_label | default: 'Contact' | escape -}}
+        </a>
+      {%- endif -%}
+
       {%- if section.settings.cta_a_label != blank -%}
         <a href="{{ section.settings.cta_a_url | default: '#' }}" class="rb-btn rb-btn--plain rb-btn--{{ fill_a }}">
           {{- section.settings.cta_a_label | escape -}}

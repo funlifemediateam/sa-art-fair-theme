@@ -122,23 +122,6 @@
   #shopify-section-{{ sid }} .rb-header__icon svg { width: 22px; height: 22px; }
   #shopify-section-{{ sid }} .rb-header__icon:hover { color: {{ section.settings.icon_hover_color }}; }
 
-  /* Contact reads as an icon by default and picks up its word once the bar is
-     wide enough to take it without crowding the pills. */
-  #shopify-section-{{ sid }} .rb-header__icon-label { display: none; }
-  @media screen and (min-width: 990px) {
-    #shopify-section-{{ sid }} .rb-header__icon--contact {
-      width: auto;
-      gap: 8px;
-      padding-inline: 6px;
-    }
-    #shopify-section-{{ sid }} .rb-header__icon-label {
-      display: inline;
-      font-family: var(--rb-sans);
-      font-size: var(--rb-fs-btn);
-      line-height: 1;
-    }
-  }
-
   /* "You are here" on the two path pills.
      The comp draws both pills the same, so this only ever ADDS state to the
      one you are already inside — the resting pair is Hanre's design untouched.
@@ -310,6 +293,25 @@
   </a>
 
   <div class="rb-header__right">
+    {%- comment -%}
+      Instagram sits to the LEFT of the two path pills, so the run to the right
+      edge reads pills → burger with nothing between them. Contact is not in the
+      bar at all — it is a button in the drawer (see rb-drawer.liquid), which is
+      also where the comp puts everything that is not a path pill.
+    {%- endcomment -%}
+    {%- if section.settings.show_instagram -%}
+      {%- assign ig_url = section.settings.instagram_url | default: settings.social_instagram_link -%}
+      {%- if ig_url != blank -%}
+        <a href="{{ ig_url }}" class="rb-header__icon" target="_blank" rel="noopener" aria-label="Instagram (opens in a new tab)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+            <rect x="3" y="3" width="18" height="18" rx="5"></rect>
+            <circle cx="12" cy="12" r="4"></circle>
+            <circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"></circle>
+          </svg>
+        </a>
+      {%- endif -%}
+    {%- endif -%}
+
     <div class="rb-header__ctas rb-header__right">
       {%- if section.settings.cta_a_label != blank -%}
         {%- capture pill_a -%}
@@ -355,38 +357,6 @@
         {%- endif -%}
       {%- endif -%}
     </div>
-
-    {%- comment -%}
-      Contact and Instagram, per Bianca's brief ("include a contact button on
-      each page header / Instagram button on header"). Both live in the header
-      GROUP, so adding them here puts them on every page at once. Icon-only at
-      the comp's 44px hit area so the bar keeps Hanre's proportions; the
-      contact one carries a visible label from 990px up, where there is room.
-    {%- endcomment -%}
-    {%- if section.settings.show_contact and section.settings.contact_url != blank -%}
-      <a href="{{ section.settings.contact_url }}"
-         class="rb-header__icon rb-header__icon--contact"
-         aria-label="{{ section.settings.contact_label | default: 'Contact' | escape }}">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
-          <rect x="2.5" y="5" width="19" height="14" rx="2"></rect>
-          <path d="M3 6.5l9 6 9-6"></path>
-        </svg>
-        <span class="rb-header__icon-label">{{ section.settings.contact_label | default: 'Contact' | escape }}</span>
-      </a>
-    {%- endif -%}
-
-    {%- if section.settings.show_instagram -%}
-      {%- assign ig_url = section.settings.instagram_url | default: settings.social_instagram_link -%}
-      {%- if ig_url != blank -%}
-        <a href="{{ ig_url }}" class="rb-header__icon" target="_blank" rel="noopener" aria-label="Instagram (opens in a new tab)">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
-            <rect x="3" y="3" width="18" height="18" rx="5"></rect>
-            <circle cx="12" cy="12" r="4"></circle>
-            <circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"></circle>
-          </svg>
-        </a>
-      {%- endif -%}
-    {%- endif -%}
 
     {%- if section.settings.show_search -%}
       <a href="{{ routes.search_url }}" class="rb-header__icon" aria-label="Search">
@@ -503,17 +473,17 @@
     { "type": "textarea", "id": "cta_b_paths", "label": "Extra paths that count as Button B",
       "default": "/pages/create-art, /pages/studio, /pages/the-team, /pages/term-4, /pages/classes-workshops, /collections/classes, /collections/workshops, /collections/teachers" },
     { "type": "header", "content": "Icons",
-      "info": "The design shows none of these in the bar; the drawer carries the cart link instead." },
-    { "type": "checkbox", "id": "show_contact", "default": true, "label": "Show contact button" },
-    { "type": "text", "id": "contact_label", "default": "Contact", "label": "Contact label",
-      "info": "Shown next to the icon on screens 990px and wider." },
-    { "type": "url", "id": "contact_url", "label": "Contact link" },
+      "info": "Instagram sits to the LEFT of the two path buttons, so nothing separates them from the menu button. The design shows no search or cart in the bar; the drawer carries the cart link instead." },
     { "type": "checkbox", "id": "show_instagram", "default": true, "label": "Show Instagram button" },
     { "type": "text", "id": "instagram_url", "label": "Instagram URL",
       "info": "Leave blank to use the store's Instagram link from Theme settings → Social media." },
     { "type": "checkbox", "id": "show_search", "default": false, "label": "Show search icon" },
     { "type": "checkbox", "id": "show_cart", "default": false, "label": "Show cart icon" },
     { "type": "header", "content": "Drawer" },
+    { "type": "checkbox", "id": "show_contact", "default": true, "label": "Show contact button in the menu",
+      "info": "Sits with the two path buttons at the foot of the slide-in menu. This is where the header bar's contact button moved to." },
+    { "type": "text", "id": "contact_label", "default": "Contact", "label": "Contact label" },
+    { "type": "url", "id": "contact_url", "label": "Contact link" },
     { "type": "checkbox", "id": "drawer_cart_link", "default": true, "label": "Show cart link in drawer" },
     { "type": "checkbox", "id": "drawer_account_link", "default": true, "label": "Show account link in drawer" },
     { "type": "header", "content": "Colour" },
