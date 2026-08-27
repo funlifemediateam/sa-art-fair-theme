@@ -22,6 +22,8 @@
 <script src="{{ 'saf-rebrand.js' | asset_url }}" defer></script>
 
 {%- assign sid = section.id -%}
+{%- assign card_vw = section.settings.card_width | times: 100.0 | divided_by: 1920.0 -%}
+{%- capture card_w -%}clamp(230px, {{ card_vw }}vw, {{ section.settings.card_width }}px){%- endcapture -%}
 
 <style>
   #shopify-section-{{ sid }} .rb-tst {
@@ -65,8 +67,13 @@
     /* a <figure> carries a UA margin of 1em 40px — left in, it pushed the
        cards 80px apart and added 19px of dead height to the band */
     margin: 0;
-    width: clamp(230px, {{ section.settings.card_width | times: 100.0 | divided_by: 1920.0 }}vw, {{ section.settings.card_width }}px);
-    aspect-ratio: {{ section.settings.card_width }} / {{ section.settings.card_height }};
+    width: {{ card_w }};
+    /* The comp's card is a fixed 490x640 box. Real testimonials are not a fixed
+       length, so this is a FLOOR rather than a fixed height: a card that fits
+       keeps the comp's exact proportions, and one whose quote will not fit
+       grows instead of clipping it. The rail is a stretch flex row, so every
+       card in the band follows the tallest one and the row stays aligned. */
+    min-height: calc({{ card_w }} * {{ section.settings.card_height }} / {{ section.settings.card_width }});
     border-radius: {{ section.settings.radius }}px;
     overflow: hidden;
     display: flex;
@@ -151,14 +158,45 @@
 
   {%- for block in section.blocks -%}
     {%- if block.type == 'quote' -%}
+      {%- comment -%}
+        Auto-fit. The comp's quote size only ever had to hold one line of lorem;
+        a real review runs anywhere from ~100 to ~600 characters. Rather than
+        clip the long ones or drop the comp's size on the short ones, step the
+        size down by how much text the card is actually carrying. The floor keeps
+        a very long quote readable — past that point the card grows instead.
+        Anything at less than full size also gives up the comp's wide right
+        gutter, which exists to break a SHORT quote onto its intended lines and
+        only wastes measure on a long one.
+      {%- endcomment -%}
+      {%- assign qlen = block.settings.quote | strip_html | strip | size -%}
+      {%- assign qsize = block.settings.quote_size | default: 'auto' -%}
+      {%- if qsize == 'auto' -%}
+        {%- if qlen <= 150 -%}{%- assign qpct = 100 -%}
+        {%- elsif qlen <= 200 -%}{%- assign qpct = 90 -%}
+        {%- elsif qlen <= 270 -%}{%- assign qpct = 82 -%}
+        {%- elsif qlen <= 350 -%}{%- assign qpct = 72 -%}
+        {%- elsif qlen <= 450 -%}{%- assign qpct = 64 -%}
+        {%- elsif qlen <= 600 -%}{%- assign qpct = 55 -%}
+        {%- else -%}{%- assign qpct = 46 -%}
+        {%- endif -%}
+      {%- else -%}
+        {%- assign qpct = qsize | plus: 0 -%}
+      {%- endif -%}
+
       #shopify-section-{{ sid }} [data-blk="{{ block.id }}"] {
         background: {{ block.settings.background }};
         /* the veil over a panel background image is this card's own colour, so
            it is declared here rather than passed into the snippet */
         --rb-paper-veil: {{ block.settings.background }};
       }
+      {%- if qpct < 100 -%}
+        #shopify-section-{{ sid }} [data-blk="{{ block.id }}"] {
+          padding-right: clamp(18px, 2.29vw, 44px);
+        }
+      {%- endif -%}
       #shopify-section-{{ sid }} [data-blk="{{ block.id }}"] .rb-tst__quote {
         color: {{ block.settings.quote_color }};
+        font-size: max(15px, calc(var(--rb-fs-quote) * {{ qpct | divided_by: 100.0 }}));
       }
       #shopify-section-{{ sid }} [data-blk="{{ block.id }}"] .rb-tst__attr {
         color: {{ block.settings.attr_color }};
@@ -269,6 +307,17 @@
           "default": "<p>“Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt”</p>",
           "label": "Quote" },
         { "type": "text", "id": "attribution", "default": "- Name Surname, Studio Student.", "label": "Attribution" },
+        { "type": "select", "id": "quote_size", "label": "Quote text size", "default": "auto",
+          "info": "Auto sizes the quote to how long it is, so a long review still fits the card. Pick a size to override it.",
+          "options": [
+            { "value": "auto", "label": "Auto" },
+            { "value": "100", "label": "Full size" },
+            { "value": "90", "label": "90%" },
+            { "value": "80", "label": "80%" },
+            { "value": "70", "label": "70%" },
+            { "value": "60", "label": "60%" },
+            { "value": "50", "label": "50%" }
+          ] },
         { "type": "color", "id": "background", "default": "#b00e3f", "label": "Card colour" },
         { "type": "color", "id": "quote_color", "default": "#e07468", "label": "Quote colour" },
         { "type": "color", "id": "attr_color", "default": "#e07468", "label": "Attribution colour" },
