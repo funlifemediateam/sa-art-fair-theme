@@ -195,6 +195,9 @@
      panel's edges, never the artwork above. Sitting outside the panel it also
      clears the stacking context .rb-paper isolates. */
   #shopify-section-{{ sid }} .rb-ac__hit {
+    /* Dawn's base.css hides :empty elements, and this anchor is deliberately
+       empty — without an explicit display it never renders at all */
+    display: block;
     position: absolute;
     inset: 0;
     z-index: 2;
