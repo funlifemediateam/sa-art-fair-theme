@@ -231,6 +231,13 @@
    and flattened to neutral grey, so ONE texture tints to any brand colour
    through the blend. Put .rb-paper on the element and set its background
    colour as usual; --rb-paper-strength dials the texture back per section.
+
+   The sheet is drawn at its NATIVE size and repeated — never `cover`. The
+   crumple was lifted off a 1920-wide comp, so one texture pixel is one CSS
+   pixel and the grain matches Hanre's frames exactly. `cover` blew it up
+   2.7x on a full-bleed band (and threw away ~70% of the sheet), which is
+   what made every panel read as a zoomed-in photo of paper. The tile is
+   wrap-blended so the repeat has no visible seam.
    -------------------------------------------------------------------------- */
 .rb-paper {
   position: relative;
@@ -244,7 +251,8 @@
   inset: 0;
   z-index: -1;
   background-image: var(--rb-paper-src);
-  background-size: cover;
+  background-size: auto;
+  background-repeat: repeat;
   background-position: center;
   mix-blend-mode: soft-light;
   opacity: var(--rb-paper-strength, 1);
