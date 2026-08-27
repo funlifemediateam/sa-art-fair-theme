@@ -9,13 +9,26 @@
 
 {{ 'saf-rebrand.css' | asset_url | stylesheet_tag }}
 
-{%- assign sid = section.id -%}
+{%- liquid
+  assign sid = section.id
+
+  comment
+    "Band height at 1920px wide" has to be measured against the width the band
+    ACTUALLY gets. Full bleed that is 1920; inset into the container it is
+    --rb-container (1674), so dividing by 1920 made the Store band 13% shorter
+    than the number asked for and cover-cropped the photograph to suit.
+  endcomment
+  assign band_w = 1920
+  if section.settings.contained
+    assign band_w = 1674
+  endif
+-%}
 
 <style>
   #shopify-section-{{ sid }} .rb-quiz {
     position: relative;
     width: 100%;
-    aspect-ratio: 1920 / {{ section.settings.band_height }};
+    aspect-ratio: {{ band_w }} / {{ section.settings.band_height }};
     min-height: {{ section.settings.min_height }}px;
     overflow: hidden;
     background: var(--rb-ink);
@@ -52,7 +65,12 @@
   }
   #shopify-section-{{ sid }} .rb-quiz__badge {
     display: block;
-    width: clamp(66px, 5.73vw, 110px);
+    /* .rb-quiz__inner is a column flex box, so the badge is a flex ITEM: with the
+       default flex-shrink it gets squashed out of its aspect-ratio whenever the
+       stack is taller than the band (adding the optional sub-line is enough), and
+       the protea ends up cropped. Comp badge is 104 x 162 at 1920. */
+    flex: 0 0 auto;
+    width: clamp(62px, 5.42vw, 104px);
     aspect-ratio: 253 / 395;
     border-radius: 999px;
     overflow: hidden;
