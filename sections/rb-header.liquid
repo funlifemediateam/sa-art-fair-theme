@@ -67,10 +67,19 @@
   endunless
   assign cls_a = 'rb-btn rb-btn--plain rb-btn--' | append: section.settings.cta_a_fill
   assign cls_b = 'rb-btn rb-btn--plain rb-btn--' | append: section.settings.cta_b_fill
+  comment
+    Both pills are solid in the comp, so "here" cannot be signalled by adding
+    colour — the colour IS each side's identity. Mark it by STEPPING THE OTHER
+    ONE BACK instead: the side you are on keeps its fill, the side you are not
+    on drops to an outline of its own colour. On home/cart/search neither
+    matches and the pair stays exactly as Hanre drew it.
+  endcomment
   if rb_active == 'a'
     assign cls_a = cls_a | append: ' is-here is-here--a'
+    assign cls_b = cls_b | append: ' is-away is-away--b'
   elsif rb_active == 'b'
     assign cls_b = cls_b | append: ' is-here is-here--b'
+    assign cls_a = cls_a | append: ' is-away is-away--a'
   endif
 -%}
 
@@ -123,11 +132,12 @@
   #shopify-section-{{ sid }} .rb-header__icon:hover { color: {{ section.settings.icon_hover_color }}; }
 
   /* "You are here" on the two path pills.
-     The comp draws both pills the same, so this only ever ADDS state to the
-     one you are already inside — the resting pair is Hanre's design untouched.
-     The fill is the side's own colour from the home page's two-path panels
-     (moss for Buy Art, coral for Make Art) so the header reinforces the split
-     the rest of the site teaches. */
+     The side you are on keeps a solid fill in its own colour (moss for Buy
+     Art, cherry for Make Art — the same split the home page's two-path panels
+     teach). The side you are NOT on steps back to an outline of that same
+     colour, so the pair still reads as two colour-coded routes but only one
+     of them is lit. Colour alone could not carry this: with both pills solid
+     the "here" fill and the resting fill are the same hex. */
   .rb-btn.is-here {
     color: {{ section.settings.active_text_color }};
     font-weight: 600;
@@ -144,6 +154,28 @@
   .rb-btn.is-here:hover { color: {{ section.settings.active_text_color }}; }
   .rb-btn.is-here--a:hover { background: {{ section.settings.active_a_color }}; filter: brightness(0.92); }
   .rb-btn.is-here--b:hover { background: {{ section.settings.active_b_color }}; filter: brightness(0.92); }
+
+  /* The other side. `.rb-btn.is-away` is two classes, so it outranks the
+     single-class fill rules (.rb-btn--moss / --cherry) in saf-rebrand.css
+     without !important; the :hover pair below outranks their :hover twins the
+     same way. Hover fills it in, which doubles as the affordance that it is
+     still a live link. */
+  .rb-btn.is-away {
+    background: transparent;
+    font-weight: 400;
+  }
+  .rb-btn.is-away--a { color: {{ section.settings.active_a_color }}; border-color: {{ section.settings.active_a_color }}; }
+  .rb-btn.is-away--b { color: {{ section.settings.active_b_color }}; border-color: {{ section.settings.active_b_color }}; }
+  .rb-btn.is-away--a:hover {
+    background: {{ section.settings.active_a_color }};
+    border-color: {{ section.settings.active_a_color }};
+    color: {{ section.settings.active_text_color }};
+  }
+  .rb-btn.is-away--b:hover {
+    background: {{ section.settings.active_b_color }};
+    border-color: {{ section.settings.active_b_color }};
+    color: {{ section.settings.active_text_color }};
+  }
   #shopify-section-{{ sid }} .rb-header__count {
     position: absolute;
     top: 4px; right: 2px;
@@ -444,7 +476,7 @@
   {%- endif -%}
 {%- endif -%}
 
-{%- render 'rb-drawer', sid: sid, menu: menu, section: section -%}
+{%- render 'rb-drawer', sid: sid, menu: menu, section: section, active: rb_active -%}
 
 {% schema %}
 {

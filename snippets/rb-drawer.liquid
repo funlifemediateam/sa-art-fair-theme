@@ -171,6 +171,22 @@
       assign fill_b = section.settings.cta_b_fill | default: 'outline'
 
       comment
+        ...and the same "you are here" state as the header pair, passed down as
+        `active` ('a', 'b' or blank) so the drawer never disagrees with the bar
+        behind it. The CSS for is-here / is-away lives in rb-header.liquid and
+        is unscoped, so it reaches these pills too.
+      endcomment
+      assign cls_a = 'rb-btn rb-btn--plain rb-btn--' | append: fill_a
+      assign cls_b = 'rb-btn rb-btn--plain rb-btn--' | append: fill_b
+      if active == 'a'
+        assign cls_a = cls_a | append: ' is-here is-here--a'
+        assign cls_b = cls_b | append: ' is-away is-away--b'
+      elsif active == 'b'
+        assign cls_b = cls_b | append: ' is-here is-here--b'
+        assign cls_a = cls_a | append: ' is-away is-away--a'
+      endif
+
+      comment
         The call button prefers its own number, then the WhatsApp number the
         site already publishes site-wide, then the shop record. With none of
         those set it falls back to the contact page rather than rendering a
@@ -246,12 +262,16 @@
 
       <div class="rb-drawer__ctas">
         {%- if section.settings.cta_a_label != blank -%}
-          <a href="{{ section.settings.cta_a_url | default: '#' }}" class="rb-btn rb-btn--plain rb-btn--{{ fill_a }}">
+          <a href="{{ section.settings.cta_a_url | default: '#' }}"
+             class="{{ cls_a }}"
+             {% if active == 'a' %}aria-current="true"{% endif %}>
             {{- section.settings.cta_a_label | escape -}}
           </a>
         {%- endif -%}
         {%- if section.settings.cta_b_label != blank -%}
-          <a href="{{ section.settings.cta_b_url | default: '#' }}" class="rb-btn rb-btn--plain rb-btn--{{ fill_b }}">
+          <a href="{{ section.settings.cta_b_url | default: '#' }}"
+             class="{{ cls_b }}"
+             {% if active == 'b' %}aria-current="true"{% endif %}>
             {{- section.settings.cta_b_label | escape -}}
           </a>
         {%- endif -%}
