@@ -54,6 +54,12 @@
   }
   #shopify-section-{{ sid }} .rb-split__heading {
     max-width: {{ section.settings.heading_width }}px;
+    /* the sentence panels sit at the comp's display size; a quote panel sets
+       its own scale because the words carry the whole sheet. Declared as a
+       var so the sans branch below — which comes later and would otherwise
+       win the font-size at equal specificity — inherits the same multiplier. */
+    --rb-split-scale: {{ section.settings.heading_scale | default: 100 | divided_by: 100.0 }};
+    font-size: calc(var(--rb-fs-display) * var(--rb-split-scale));
   }
   #shopify-section-{{ sid }} .rb-split__heading p { margin: 0; }
   #shopify-section-{{ sid }} .rb-split__heading p + p { margin-top: 0.1em; }
@@ -69,7 +75,7 @@
     #shopify-section-{{ sid }} .rb-split__heading {
       font-family: var(--rb-sans);
       font-weight: 700;
-      font-size: var(--rb-fs-name);
+      font-size: calc(var(--rb-fs-name) * var(--rb-split-scale));
       line-height: 1.12;
       letter-spacing: -0.01em;
     }
@@ -230,6 +236,9 @@
       ] },
     { "type": "range", "id": "heading_width", "min": 260, "max": 1000, "step": 10,
       "default": 560, "unit": "px", "label": "Heading max width" },
+    { "type": "range", "id": "heading_scale", "min": 80, "max": 200, "step": 5,
+      "default": 100, "unit": "%", "label": "Heading size",
+      "info": "100% is the comp's own size for the two sentence panels. A short quote wants more." },
     { "type": "text", "id": "attribution", "label": "Quote credit",
       "info": "Small IvyPresto italic, hung off the right of the sentence. Leave empty on a band that is not a quote." },
     { "type": "richtext", "id": "body", "label": "Body" },
