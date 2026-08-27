@@ -159,10 +159,53 @@
     attempt();
   }
 
+  /* Header path dropdowns.
+
+     The comp hangs each panel from the left edge of its button. Create Art is
+     the last thing before the burger, so under about 1600px its panel runs past
+     the right edge of the window — and a panel hidden with `visibility` still
+     counts toward the page's scroll width, so it would add a horizontal
+     scrollbar even while closed.
+
+     Shift it left by exactly the overhang and no more, so the design as drawn
+     survives at every width that can hold it. The CSS carries a right-aligned
+     fallback for panels this has not reached; `is-fitted` switches it off. */
+  var DROP_GUTTER = 16;
+
+  function fitDropdowns() {
+    var panels = document.querySelectorAll('.rb-header__drop-panel');
+    if (!panels.length) return;
+
+    panels.forEach(function (panel) {
+      panel.classList.add('is-fitted');
+      panel.style.setProperty('--rb-drop-shift', '0px');
+    });
+
+    // measure only after every reset, so a widened window gives the space back
+    panels.forEach(function (panel) {
+      var over =
+        panel.getBoundingClientRect().right -
+        (document.documentElement.clientWidth - DROP_GUTTER);
+      if (over > 0) {
+        panel.style.setProperty('--rb-drop-shift', -Math.ceil(over) + 'px');
+      }
+    });
+  }
+
+  var dropFrame = null;
+  function queueFitDropdowns() {
+    if (dropFrame) return;
+    dropFrame = requestAnimationFrame(function () {
+      dropFrame = null;
+      fitDropdowns();
+    });
+  }
+
   function init(scope) {
     var root = scope || document;
     root.querySelectorAll('.rb-header-section').forEach(setup);
     root.querySelectorAll('[data-rb-carousel]').forEach(setupCarousel);
+    queueFitDropdowns();
     if (!scope) scrollToBooking();
   }
 
@@ -173,4 +216,11 @@
   }
 
   document.addEventListener('shopify:section:load', function (e) { init(e.target); });
+
+  window.addEventListener('resize', queueFitDropdowns);
+  /* the pills are set in a webfont — the panel and the button both move once it
+     lands, and the first measurement was taken against the fallback face */
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(queueFitDropdowns);
+  }
 })();

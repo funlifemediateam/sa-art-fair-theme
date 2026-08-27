@@ -174,20 +174,26 @@
     left: 0;
     right: 0;
     top: 100%;
-    height: 14px;
+    height: 16px;
   }
+  /* Card, not a menu strip: the comp draws a plain white panel floating on a
+     shadow with no outline, set in the same sans at card size so the six
+     destinations read as headings rather than fine print. */
   #shopify-section-{{ sid }} .rb-header__drop-panel {
     position: absolute;
     z-index: 5;
-    top: calc(100% + 12px);
-    left: 0;
-    min-width: 224px;
+    top: calc(100% + 14px);
+    /* 0 unless the panel would run off the right edge — see fitDropdowns() in
+       saf-rebrand.js, which shifts it by exactly the overhang and no more. */
+    left: var(--rb-drop-shift, 0px);
+    min-width: 240px;
+    max-width: calc(100vw - 32px);
     margin: 0;
-    padding: 14px 20px;
-    border: 1px solid rgba(30, 30, 30, 0.14);
-    border-radius: 12px;
+    padding: 20px 26px;
+    border: 0;
+    border-radius: 16px;
     background: {{ section.settings.background }};
-    box-shadow: 0 8px 26px rgba(30, 30, 30, 0.12);
+    box-shadow: 0 1px 2px rgba(30, 30, 30, 0.06), 0 14px 34px rgba(30, 30, 30, 0.13);
     list-style: none;
     opacity: 0;
     visibility: hidden;
@@ -202,9 +208,9 @@
   }
   #shopify-section-{{ sid }} .rb-header__drop-panel a {
     display: block;
-    padding: 5px 0;
+    padding: 6px 0;
     font-family: var(--rb-sans);
-    font-size: var(--rb-fs-body-sm);
+    font-size: var(--rb-fs-card);
     line-height: 1.35;
     color: {{ section.settings.text_color }};
     text-decoration: none;
@@ -213,6 +219,27 @@
   #shopify-section-{{ sid }} .rb-header__drop-panel a:hover,
   #shopify-section-{{ sid }} .rb-header__drop-panel a:focus-visible {
     color: var(--rb-cherry);
+  }
+  /* second half of the hover corridor: the panel may be shifted left of its
+     button, so the button's bridge alone does not cover a diagonal approach */
+  #shopify-section-{{ sid }} .rb-header__drop-panel::before {
+    content: '';
+    display: block;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 100%;
+    height: 16px;
+  }
+  /* Fallback for the one case JS cannot cover — it has not run yet, or at all.
+     Button B is the last thing before the burger, so under ~1600px a
+     left-aligned panel hangs past the window edge, and a hidden panel still
+     counts toward scroll width, so it would add a scrollbar even while closed. */
+  @media screen and (max-width: 1580px) {
+    #shopify-section-{{ sid }} .rb-header__drop--b .rb-header__drop-panel:not(.is-fitted) {
+      left: auto;
+      right: 0;
+    }
   }
   @media (prefers-reduced-motion: reduce) {
     #shopify-section-{{ sid }} .rb-header__drop-panel { transition: none; }
@@ -322,7 +349,7 @@
           </a>
         {%- endcapture -%}
         {%- if has_drop_a -%}
-          <div class="rb-header__drop">
+          <div class="rb-header__drop rb-header__drop--a">
             {{ pill_a }}
             <ul class="rb-header__drop-panel">
               {%- for link in linklists[drop_a].links -%}
@@ -344,7 +371,7 @@
           </a>
         {%- endcapture -%}
         {%- if has_drop_b -%}
-          <div class="rb-header__drop">
+          <div class="rb-header__drop rb-header__drop--b">
             {{ pill_b }}
             <ul class="rb-header__drop-panel">
               {%- for link in linklists[drop_b].links -%}
