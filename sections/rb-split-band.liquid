@@ -19,6 +19,11 @@
   assign img = section.settings.image
   assign panel_pct = section.settings.panel_width
   assign media_pct = 100 | minus: panel_pct
+
+  assign mark_src = 'saf-protea-cherry.png'
+  if section.settings.mark == 'ink'
+    assign mark_src = 'saf-protea-ink.png'
+  endif
 -%}
 
 <style>
@@ -78,6 +83,39 @@
     margin-top: clamp(14px, 1.46vw, 28px);
     color: {{ section.settings.text_color }};
   }
+  /* A quote credit. Right-aligned inside the heading's own measure so it hangs
+     off the end of the last line the way the comp's quote panels do, whether
+     the panel itself is centred or left. */
+  #shopify-section-{{ sid }} .rb-split__attrib {
+    width: 100%;
+    max-width: {{ section.settings.heading_width }}px;
+    margin: clamp(10px, 0.94vw, 18px) 0 0;
+    font-family: var(--rb-serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: var(--rb-fs-body-sm);
+    line-height: 1.2;
+    letter-spacing: 0.01em;
+    text-align: right;
+    color: {{ section.settings.accent_color }};
+  }
+
+  /* Absolute so the sentence keeps the panel's optical centre and the protea
+     still sits on the floor of the sheet. margin-top:auto would push the
+     sentence to the top instead, which is not the comp. */
+  #shopify-section-{{ sid }} .rb-split__mark {
+    position: absolute;
+    left: 50%;
+    bottom: clamp(24px, 2.6vw, 50px);
+    transform: translateX(-50%);
+    width: clamp(
+      {{ section.settings.mark_width | divided_by: 2 }}px,
+      {{ section.settings.mark_width | times: 100.0 | divided_by: 1920.0 }}vw,
+      {{ section.settings.mark_width }}px
+    );
+    height: auto;
+  }
+
   #shopify-section-{{ sid }} .rb-split__cta { margin-top: clamp(18px, 1.98vw, 38px); }
 
   #shopify-section-{{ sid }} .rb-split__media {
@@ -104,6 +142,13 @@
       {% if section.settings.media_side == 'left' %}grid-row: 1;{% endif %}
     }
     #shopify-section-{{ sid }} .rb-split__panel { padding-block: 48px; }
+    /* no floor to sit on once the panel is only as tall as its content */
+    #shopify-section-{{ sid }} .rb-split__mark {
+      position: static;
+      transform: none;
+      align-self: center;
+      margin-top: 30px;
+    }
   }
 </style>
 
@@ -118,6 +163,10 @@
         <div class="rb-display rb-split__heading">{{ section.settings.heading }}</div>
       {%- endif -%}
 
+      {%- if section.settings.attribution != blank -%}
+        <p class="rb-split__attrib">{{ section.settings.attribution | escape }}</p>
+      {%- endif -%}
+
       {%- if section.settings.body != blank -%}
         <div class="rb-body rb-split__body">{{ section.settings.body }}</div>
       {%- endif -%}
@@ -127,6 +176,17 @@
           href="{{ section.settings.button_link | default: '#' }}"
           class="rb-btn rb-btn--serif rb-btn--ghost rb-split__cta"
         >{{ section.settings.button_label | escape }}</a>
+      {%- endif -%}
+
+      {%- if section.settings.show_mark -%}
+        <img
+          src="{{ mark_src | asset_url }}"
+          alt=""
+          width="179"
+          height="243"
+          class="rb-split__mark"
+          loading="lazy"
+        >
       {%- endif -%}
     </div>
 
@@ -170,6 +230,8 @@
       ] },
     { "type": "range", "id": "heading_width", "min": 260, "max": 1000, "step": 10,
       "default": 560, "unit": "px", "label": "Heading max width" },
+    { "type": "text", "id": "attribution", "label": "Quote credit",
+      "info": "Small IvyPresto italic, hung off the right of the sentence. Leave empty on a band that is not a quote." },
     { "type": "richtext", "id": "body", "label": "Body" },
     { "type": "select", "id": "align", "label": "Panel alignment", "default": "center",
       "options": [
@@ -178,6 +240,17 @@
       ] },
     { "type": "text", "id": "button_label", "label": "Button label" },
     { "type": "url", "id": "button_link", "label": "Button link" },
+    { "type": "header", "content": "Protea mark" },
+    { "type": "checkbox", "id": "show_mark", "default": false,
+      "label": "Show the small protea mark",
+      "info": "Sits on the floor of the panel. Off by default so a band that already carries a logo above it does not double up." },
+    { "type": "select", "id": "mark", "label": "Which protea", "default": "cherry",
+      "options": [
+        { "value": "cherry", "label": "Cherry" },
+        { "value": "ink", "label": "Ink" }
+      ] },
+    { "type": "range", "id": "mark_width", "min": 40, "max": 200, "step": 5,
+      "default": 90, "unit": "px", "label": "Mark width at 1920px wide" },
     { "type": "header", "content": "Colour" },
     { "type": "color", "id": "panel_color", "default": "#a2ad8e", "label": "Panel colour" },
     { "type": "color", "id": "text_color", "default": "#ffffff", "label": "Panel text" },
