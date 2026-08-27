@@ -153,6 +153,9 @@
     {%- if block.type == 'quote' -%}
       #shopify-section-{{ sid }} [data-blk="{{ block.id }}"] {
         background: {{ block.settings.background }};
+        /* the veil over a panel background image is this card's own colour, so
+           it is declared here rather than passed into the snippet */
+        --rb-paper-veil: {{ block.settings.background }};
       }
       #shopify-section-{{ sid }} [data-blk="{{ block.id }}"] .rb-tst__quote {
         color: {{ block.settings.quote_color }};
@@ -178,6 +181,17 @@
       {%- for block in section.blocks -%}
         {%- if block.type == 'quote' -%}
           <figure class="rb-tst__card rb-tst__card--quote rb-paper" data-blk="{{ block.id }}" {{ block.shopify_attributes }}>
+            {%- render 'rb-panel-image',
+              image: block.settings.panel_image,
+              fit: block.settings.panel_image_fit,
+              focal_x: block.settings.panel_image_focal_x,
+              focal_y: block.settings.panel_image_focal_y,
+              veil_opacity: block.settings.panel_image_veil,
+              sizes: '(max-width: 749px) 70vw, 26vw',
+              widths: '300, 460, 700, 1000',
+              width: 1000
+            -%}
+
             <blockquote class="rb-tst__quote">{{ block.settings.quote }}</blockquote>
             {%- if block.settings.attribution != blank -%}
               <figcaption class="rb-tst__attr">{{ block.settings.attribution | escape }}</figcaption>
@@ -257,7 +271,22 @@
         { "type": "text", "id": "attribution", "default": "- Name Surname, Studio Student.", "label": "Attribution" },
         { "type": "color", "id": "background", "default": "#b00e3f", "label": "Card colour" },
         { "type": "color", "id": "quote_color", "default": "#e07468", "label": "Quote colour" },
-        { "type": "color", "id": "attr_color", "default": "#e07468", "label": "Attribution colour" }
+        { "type": "color", "id": "attr_color", "default": "#e07468", "label": "Attribution colour" },
+        { "type": "image_picker", "id": "panel_image", "label": "Card background image",
+          "info": "Sits behind the quote, over the card colour and under the crumpled paper texture. Leave empty for a plain coloured card." },
+        { "type": "select", "id": "panel_image_fit", "label": "How it fills the card", "default": "cover",
+          "options": [
+            { "value": "cover", "label": "Fill the card (crops)" },
+            { "value": "contain", "label": "Fit the whole image (no crop)" }
+          ] },
+        { "type": "range", "id": "panel_image_focal_x", "min": 0, "max": 100, "step": 1,
+          "default": 50, "unit": "%", "label": "Card image focal point — horizontal",
+          "info": "Only used when the image fills the card." },
+        { "type": "range", "id": "panel_image_focal_y", "min": 0, "max": 100, "step": 1,
+          "default": 50, "unit": "%", "label": "Card image focal point — vertical" },
+        { "type": "range", "id": "panel_image_veil", "min": 0, "max": 100, "step": 5,
+          "default": 0, "unit": "%", "label": "Card colour over the image",
+          "info": "Tints the image back towards the card colour so the quote keeps its contrast." }
       ]
     },
     {

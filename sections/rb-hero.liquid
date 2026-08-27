@@ -111,7 +111,24 @@
 <div class="rb-section rb-bleed">
   <div class="rb-hero{% if section.settings.fill == 'colour' %} rb-paper{% endif %}">
     {%- if section.settings.fill == 'colour' -%}
-      {%- comment -%} colour band: no photograph, the paper texture carries it {%- endcomment -%}
+      {%- comment -%}
+        Colour band. The paper texture carries it on its own, which is the
+        comp — but a picked image now paints behind that texture instead of
+        being thrown away, so a coloured hero can take a photograph or a flat
+        graphic without leaving the brand surface. The band's own focal point
+        and overlay settings drive it, so there is only ever one image picker
+        on this section.
+      {%- endcomment -%}
+      {%- render 'rb-panel-image',
+        image: img,
+        focal_x: section.settings.focal_x,
+        focal_y: section.settings.focal_y,
+        veil: section.settings.overlay_color,
+        veil_opacity: section.settings.overlay_opacity,
+        sizes: '100vw',
+        widths: '750, 1100, 1500, 1920, 2400, 3000',
+        width: 2400
+      -%}
     {%- elsif img != blank -%}
       {{
         img
@@ -178,7 +195,7 @@
     { "type": "range", "id": "texture", "min": 0, "max": 100, "step": 5,
       "default": 100, "unit": "%", "label": "Crumpled paper texture" },
     { "type": "image_picker", "id": "image", "label": "Background image",
-      "info": "Comp uses a 1920x883 photograph of a paint palette." },
+      "info": "Comp uses a 1920x883 photograph of a paint palette. On a coloured-paper band it paints behind the crumpled texture, over the band colour — leave it empty there for a plain coloured band." },
     { "type": "range", "id": "band_height", "min": 300, "max": 1100, "step": 10,
       "default": 850, "unit": "px", "label": "Band height at 1920px wide",
       "info": "Sets the aspect ratio, so the band scales with the viewport." },

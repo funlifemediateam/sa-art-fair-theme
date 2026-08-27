@@ -201,6 +201,17 @@
 <div class="rb-section rb-bleed">
   <div class="rb-fp">
     <div class="rb-fp__panel rb-paper">
+      {%- render 'rb-panel-image',
+        image: section.settings.panel_image,
+        fit: section.settings.panel_image_fit,
+        focal_x: section.settings.panel_image_focal_x,
+        focal_y: section.settings.panel_image_focal_y,
+        veil: section.settings.panel_color,
+        veil_opacity: section.settings.panel_image_veil,
+        sizes: '(max-width: 749px) 100vw, 50vw',
+        width: 1600
+      -%}
+
       {%- if section.settings.eyebrow != blank -%}
         <p class="rb-fp__eyebrow">{{ section.settings.eyebrow | escape }}</p>
       {%- endif -%}
@@ -298,6 +309,22 @@
       "info": "The comp uses square buttons here, unlike the stadium pills elsewhere." },
     { "type": "range", "id": "texture", "min": 0, "max": 100, "step": 5,
       "default": 100, "unit": "%", "label": "Crumpled paper texture" },
+    { "type": "header", "content": "Panel background image" },
+    { "type": "image_picker", "id": "panel_image", "label": "Panel background image",
+      "info": "Sits behind the words, over the panel colour and under the crumpled paper texture. Leave empty for a plain coloured panel." },
+    { "type": "select", "id": "panel_image_fit", "label": "How it fills the panel", "default": "cover",
+      "options": [
+        { "value": "cover", "label": "Fill the panel (crops)" },
+        { "value": "contain", "label": "Fit the whole image (no crop)" }
+      ] },
+    { "type": "range", "id": "panel_image_focal_x", "min": 0, "max": 100, "step": 1,
+      "default": 50, "unit": "%", "label": "Panel image focal point — horizontal",
+      "info": "Only used when the image fills the panel." },
+    { "type": "range", "id": "panel_image_focal_y", "min": 0, "max": 100, "step": 1,
+      "default": 50, "unit": "%", "label": "Panel image focal point — vertical" },
+    { "type": "range", "id": "panel_image_veil", "min": 0, "max": 100, "step": 5,
+      "default": 0, "unit": "%", "label": "Panel colour over the image",
+      "info": "Tints the image back towards the panel colour so the words keep their contrast." },
     { "type": "header", "content": "Artwork" },
     { "type": "image_picker", "id": "image", "label": "Artwork" },
     { "type": "range", "id": "panel_width", "min": 30, "max": 70, "step": 1,

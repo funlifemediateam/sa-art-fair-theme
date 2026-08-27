@@ -1,0 +1,54 @@
+{%- comment -%}
+  Optional photograph or artwork behind a coloured paper panel.
+
+  Every rb-* section that draws a .rb-paper panel offers an image picker for it,
+  and they all render it through here so one change fixes all of them. Drop the
+  render call INSIDE the element that carries .rb-paper — the layer is absolute
+  and .rb-paper is already position: relative, so it never touches the panel's
+  own flex/grid layout.
+
+  Renders nothing at all when no image is picked, which is the default
+  everywhere, so an untouched panel is byte-identical to before.
+
+  Params
+    image        (required) the image_picker value. Blank renders nothing.
+    fit          'cover' (default) | 'contain'
+    focal_x      0-100, horizontal focal point. Only bites on cover.
+    focal_y      0-100, vertical focal point. Only bites on cover.
+    veil         a colour laid back over the photo — pass the panel's own colour
+    veil_opacity 0-100, how much of that colour. 0 (default) = none.
+    sizes        srcset sizes hint, e.g. '50vw'. Defaults to 100vw.
+    widths       srcset width list. Defaults to a full-bleed-band ladder.
+    width        the width the src itself is cut at. Defaults to 1600.
+{%- endcomment -%}
+
+{%- if image != blank -%}
+  {%- liquid
+    assign panel_fit = fit | default: 'cover'
+    assign panel_fx = focal_x | default: 50
+    assign panel_fy = focal_y | default: 50
+    assign panel_veil = veil_opacity | default: 0
+    assign panel_src_width = width | default: 1600
+    assign panel_sizes = sizes | default: '100vw'
+    assign panel_widths = widths | default: '400, 600, 900, 1200, 1600, 2000'
+  -%}
+  <div
+    class="rb-paper__bg{% if panel_fit == 'contain' %} rb-paper__bg--contain{% endif %}"
+    aria-hidden="true"
+    style="
+      --rb-paper-bg-pos: {{ panel_fx }}% {{ panel_fy }}%;
+      {%- if veil != blank %} --rb-paper-veil: {{ veil }};{% endif %}
+      --rb-paper-veil-opacity: {{ panel_veil | divided_by: 100.0 }};
+    "
+  >
+    {{
+      image
+      | image_url: width: panel_src_width
+      | image_tag:
+        widths: panel_widths,
+        sizes: panel_sizes,
+        loading: 'lazy',
+        alt: ''
+    }}
+  </div>
+{%- endif -%}

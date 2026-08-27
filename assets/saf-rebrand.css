@@ -260,6 +260,59 @@
 }
 
 /* --------------------------------------------------------------------------
+   Paper panel background image
+   Rendered by snippets/rb-panel-image.liquid, which every rb-* section with a
+   coloured panel now offers an image picker for.
+
+   It slots BETWEEN the panel's flat colour and the crumple: .rb-paper is a
+   stacking context, so the element's own background paints first, then the
+   negative-z children in order — -2 (this photograph) and then -1 (the
+   crumple). So the texture still reads over the photo and the panel keeps its
+   brand surface instead of turning into a plain image box.
+
+   The photo is a real <img> rather than a background-image so it gets the CDN
+   srcset and lazy-loading the rest of the theme's images get. Cover is the
+   default; `contain` exists because a panel is sometimes fed a whole flat
+   graphic (a quote plate) that must not be cropped — see the plate-crop notes.
+   -------------------------------------------------------------------------- */
+.rb-paper__bg {
+  display: block; /* Dawn's base.css hides div:empty */
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.rb-paper__bg > img,
+.rb-paper__bg > svg {
+  display: block;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: var(--rb-paper-bg-pos, 50% 50%);
+}
+
+.rb-paper__bg--contain > img,
+.rb-paper__bg--contain > svg {
+  object-fit: contain;
+}
+
+/* The panel colour laid back over the photograph so the text keeps its
+   contrast. 0% by default — a picked image reads as picked until asked. */
+.rb-paper__bg::after {
+  content: '';
+  display: block;
+  position: absolute;
+  inset: 0;
+  background: var(--rb-paper-veil, transparent);
+  opacity: var(--rb-paper-veil-opacity, 0);
+}
+
+/* --------------------------------------------------------------------------
    Type primitives
    -------------------------------------------------------------------------- */
 .rb-page-title {

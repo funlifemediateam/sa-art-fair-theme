@@ -224,6 +224,9 @@
     #shopify-section-{{ sid }} [data-blk="{{ block.id }}"] .rb-ac__panel {
       background: {{ bg }};
       color: {{ fg }};
+      /* the veil over a panel background image is this card's own tone, so it
+         is declared here rather than passed into the snippet */
+      --rb-paper-veil: {{ bg }};
     }
     #shopify-section-{{ sid }} [data-blk="{{ block.id }}"] .rb-ac__meta { color: {{ meta }}; }
     #shopify-section-{{ sid }} [data-blk="{{ block.id }}"] .rb-ac__cta {
@@ -385,6 +388,17 @@
             </div>
 
             <div class="rb-ac__panel rb-paper">
+              {%- render 'rb-panel-image',
+                image: section.settings.panel_image,
+                fit: section.settings.panel_image_fit,
+                focal_x: section.settings.panel_image_focal_x,
+                focal_y: section.settings.panel_image_focal_y,
+                veil_opacity: section.settings.panel_image_veil,
+                sizes: '(max-width: 639px) 90vw, (max-width: 989px) 45vw, 30vw',
+                widths: '300, 460, 700, 1000',
+                width: 1000
+              -%}
+
               {%- if block.settings.medium != blank or block.settings.place != blank -%}
                 <p class="rb-meta rb-ac__meta">
                   <span>{{ block.settings.medium }}</span>
@@ -516,7 +530,23 @@
     { "type": "color", "id": "tone_b_text", "default": "#dfe4d4", "label": "Tone B text" },
     { "type": "color", "id": "tone_b_meta", "default": "#a5ad93", "label": "Tone B meta row" },
     { "type": "range", "id": "texture", "min": 0, "max": 100, "step": 5,
-      "default": 100, "unit": "%", "label": "Crumpled paper texture" }
+      "default": 100, "unit": "%", "label": "Crumpled paper texture" },
+    { "type": "header", "content": "Panel background image" },
+    { "type": "image_picker", "id": "panel_image", "label": "Panel background image",
+      "info": "Sits behind the text panel on every card, over the card tone and under the crumpled paper texture. Leave empty for plain coloured panels." },
+    { "type": "select", "id": "panel_image_fit", "label": "How it fills the panel", "default": "cover",
+      "options": [
+        { "value": "cover", "label": "Fill the panel (crops)" },
+        { "value": "contain", "label": "Fit the whole image (no crop)" }
+      ] },
+    { "type": "range", "id": "panel_image_focal_x", "min": 0, "max": 100, "step": 1,
+      "default": 50, "unit": "%", "label": "Panel image focal point — horizontal",
+      "info": "Only used when the image fills the panel." },
+    { "type": "range", "id": "panel_image_focal_y", "min": 0, "max": 100, "step": 1,
+      "default": 50, "unit": "%", "label": "Panel image focal point — vertical" },
+    { "type": "range", "id": "panel_image_veil", "min": 0, "max": 100, "step": 5,
+      "default": 0, "unit": "%", "label": "Card tone over the image",
+      "info": "Tints the image back towards each card's own tone so the names and bios keep their contrast." }
   ],
   "blocks": [
     {

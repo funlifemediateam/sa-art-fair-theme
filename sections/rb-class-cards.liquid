@@ -201,11 +201,15 @@
   #shopify-section-{{ sid }} .rb-cc__card--a .rb-cc__panel {
     background: {{ section.settings.tone_a }};
     color: {{ section.settings.tone_a_text }};
+    /* the veil over a panel background image is this card's own tone, so it
+       is declared here rather than passed into the snippet */
+    --rb-paper-veil: {{ section.settings.tone_a }};
   }
   #shopify-section-{{ sid }} .rb-cc__card--a .rb-cc__btn { color: {{ section.settings.tone_a }}; }
   #shopify-section-{{ sid }} .rb-cc__card--b .rb-cc__panel {
     background: {{ section.settings.tone_b }};
     color: {{ section.settings.tone_b_text }};
+    --rb-paper-veil: {{ section.settings.tone_b }};
   }
   #shopify-section-{{ sid }} .rb-cc__card--b .rb-cc__btn { color: {{ section.settings.tone_b }}; }
 
@@ -416,6 +420,17 @@
           </a>
 
           <div class="rb-cc__panel rb-paper">
+            {%- render 'rb-panel-image',
+              image: section.settings.panel_image,
+              fit: section.settings.panel_image_fit,
+              focal_x: section.settings.panel_image_focal_x,
+              focal_y: section.settings.panel_image_focal_y,
+              veil_opacity: section.settings.panel_image_veil,
+              sizes: '(max-width: 639px) 90vw, (max-width: 989px) 45vw, 26vw',
+              widths: '260, 400, 600, 900',
+              width: 900
+            -%}
+
             <div class="rb-cc__row">
               <h3 class="rb-cc__title"><a href="{{ item.url }}">{{ item.title }}</a></h3>
               {%- if time != blank -%}
@@ -590,6 +605,22 @@
     { "type": "color", "id": "tone_b_text", "default": "#ffffff", "label": "Tone B text" },
     { "type": "range", "id": "texture", "min": 0, "max": 100, "step": 5,
       "default": 100, "unit": "%", "label": "Crumpled paper texture" },
+    { "type": "header", "content": "Panel background image" },
+    { "type": "image_picker", "id": "panel_image", "label": "Panel background image",
+      "info": "Sits behind the text panel on every card, over the card tone and under the crumpled paper texture. Leave empty for plain coloured panels." },
+    { "type": "select", "id": "panel_image_fit", "label": "How it fills the panel", "default": "cover",
+      "options": [
+        { "value": "cover", "label": "Fill the panel (crops)" },
+        { "value": "contain", "label": "Fit the whole image (no crop)" }
+      ] },
+    { "type": "range", "id": "panel_image_focal_x", "min": 0, "max": 100, "step": 1,
+      "default": 50, "unit": "%", "label": "Panel image focal point — horizontal",
+      "info": "Only used when the image fills the panel." },
+    { "type": "range", "id": "panel_image_focal_y", "min": 0, "max": 100, "step": 1,
+      "default": 50, "unit": "%", "label": "Panel image focal point — vertical" },
+    { "type": "range", "id": "panel_image_veil", "min": 0, "max": 100, "step": 5,
+      "default": 0, "unit": "%", "label": "Card tone over the image",
+      "info": "Tints the image back towards each card's own tone so the titles and details keep their contrast." },
     { "type": "header", "content": "Footer link" },
     { "type": "text", "id": "more_label", "label": "Button label" },
     { "type": "url", "id": "more_link", "label": "Button link",

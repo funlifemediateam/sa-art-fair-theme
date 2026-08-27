@@ -126,6 +126,9 @@
     #shopify-section-{{ sid }} [data-blk="{{ block.id }}"] .rb-pg__panel {
       background: {{ panel_bg }};
       color: {{ panel_fg }};
+      /* the veil over a panel background image is this card's own tone, so it
+         is declared here rather than passed into the snippet */
+      --rb-paper-veil: {{ panel_bg }};
     }
   {%- endfor -%}
 </style>
@@ -169,6 +172,17 @@
           </a>
 
           <div class="rb-pg__panel rb-paper">
+            {%- render 'rb-panel-image',
+              image: section.settings.panel_image,
+              fit: section.settings.panel_image_fit,
+              focal_x: section.settings.panel_image_focal_x,
+              focal_y: section.settings.panel_image_focal_y,
+              veil_opacity: section.settings.panel_image_veil,
+              sizes: '(max-width: 519px) 90vw, (max-width: 989px) 45vw, 23vw',
+              widths: '260, 380, 560, 900',
+              width: 900
+            -%}
+
             {%- if name != blank -%}
               <p class="rb-pg__name">{{ name }}</p>
             {%- endif -%}
@@ -226,6 +240,22 @@
     { "type": "color", "id": "tone_b_text", "default": "#ffffff", "label": "Panel tone B text" },
     { "type": "range", "id": "texture", "min": 0, "max": 100, "step": 5,
       "default": 100, "unit": "%", "label": "Crumpled paper texture" },
+    { "type": "header", "content": "Panel background image" },
+    { "type": "image_picker", "id": "panel_image", "label": "Panel background image",
+      "info": "Sits behind the name plate on every card, over the card tone and under the crumpled paper texture. Leave empty for plain coloured plates." },
+    { "type": "select", "id": "panel_image_fit", "label": "How it fills the plate", "default": "cover",
+      "options": [
+        { "value": "cover", "label": "Fill the plate (crops)" },
+        { "value": "contain", "label": "Fit the whole image (no crop)" }
+      ] },
+    { "type": "range", "id": "panel_image_focal_x", "min": 0, "max": 100, "step": 1,
+      "default": 50, "unit": "%", "label": "Panel image focal point — horizontal",
+      "info": "Only used when the image fills the plate." },
+    { "type": "range", "id": "panel_image_focal_y", "min": 0, "max": 100, "step": 1,
+      "default": 50, "unit": "%", "label": "Panel image focal point — vertical" },
+    { "type": "range", "id": "panel_image_veil", "min": 0, "max": 100, "step": 5,
+      "default": 0, "unit": "%", "label": "Card tone over the image",
+      "info": "Tints the image back towards each card's own tone so the names keep their contrast." },
     { "type": "header", "content": "Footer link" },
     { "type": "text", "id": "more_label", "label": "Button label",
       "info": "Blank shows no button, which is what the design has." },
