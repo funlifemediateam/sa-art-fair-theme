@@ -215,6 +215,27 @@
   }
   #shopify-section-{{ sid }} .rb-ac__bio p { margin: 0; }
 
+  {%- if section.settings.bio_lines > 0 -%}
+    /* A row is as tall as its longest bio, and the bios are client copy of
+       wildly different lengths — one long one left every other panel in the
+       row half empty. Capping the lines evens the wall out and is what makes
+       the blocks small; the full text is on the artist's own page. Off below
+       640px, where the grid is a single column and there is no row to match. */
+    @media screen and (min-width: 640px) {
+      #shopify-section-{{ sid }} .rb-ac__bio {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: {{ section.settings.bio_lines }};
+        line-clamp: {{ section.settings.bio_lines }};
+        overflow: hidden;
+      }
+      /* Chrome clamps a block child fine; Firefox only counts line boxes that
+         belong to the -webkit-box itself */
+      #shopify-section-{{ sid }} .rb-ac__bio p { display: inline; }
+      #shopify-section-{{ sid }} .rb-ac__bio p + p::before { content: ' '; }
+    }
+  {%- endif -%}
+
   /* the pill is a separate bar under the card, not inside it */
   #shopify-section-{{ sid }} .rb-ac__cta {
     display: flex;
@@ -585,6 +606,9 @@
     { "type": "range", "id": "meta_gap", "min": 0, "max": 40, "step": 2,
       "default": 6, "unit": "px", "label": "Space under the medium/place row",
       "info": "The gap between that row and the artist's name." },
+    { "type": "range", "id": "bio_lines", "min": 0, "max": 10, "step": 1,
+      "default": 4, "label": "Bio lines on a card",
+      "info": "Every card in a row is as tall as the longest bio in it. 0 shows every bio in full and lets the rows run tall. Mobile always shows the full bio." },
     { "type": "header", "content": "Portrait inset" },
     { "type": "range", "id": "portrait_w", "min": 15, "max": 70, "step": 1,
       "default": 42, "unit": "%", "label": "Portrait width" },
