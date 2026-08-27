@@ -188,24 +188,29 @@
     overflow-wrap: break-word;
     text-wrap: balance;
   }
-  #shopify-section-{{ sid }} .rb-ac__name a { color: inherit; text-decoration: none; }
-  /* the whole card is the link — the name carries it so there is still only
-     one tab stop, and the pill under the card is no longer needed */
-  #shopify-section-{{ sid }} .rb-ac__name a::after {
-    content: '';
+  /* The whole card is the link, so the pill under it is no longer needed.
+     It is ONE bare anchor laid over the card rather than a stretched
+     pseudo-element on the name, because .rb-paper makes the text panel
+     position: relative — a pseudo-element inside it can only ever reach the
+     panel's edges, never the artwork above. Sitting outside the panel it also
+     clears the stacking context .rb-paper isolates. */
+  #shopify-section-{{ sid }} .rb-ac__hit {
     position: absolute;
     inset: 0;
+    z-index: 2;
+    border-radius: inherit;
   }
-  #shopify-section-{{ sid }} .rb-ac__card:hover .rb-ac__name a,
-  #shopify-section-{{ sid }} .rb-ac__name a:focus-visible { text-decoration: underline; }
-  #shopify-section-{{ sid }} .rb-ac__name a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+  #shopify-section-{{ sid }} .rb-ac__card:hover .rb-ac__name,
+  #shopify-section-{{ sid }} .rb-ac__card:focus-within .rb-ac__name { text-decoration: underline; }
+  #shopify-section-{{ sid }} .rb-ac__hit:focus-visible {
+    outline: 3px solid {{ section.settings.finder_accent }};
+    outline-offset: -3px;
+  }
   #shopify-section-{{ sid }} .rb-ac__bio {
     margin-top: clamp(8px, 0.83vw, 16px);
     font-size: var(--rb-fs-body-sm);
   }
   #shopify-section-{{ sid }} .rb-ac__bio p { margin: 0; }
-  /* a link written into a bio must stay reachable above the card overlay */
-  #shopify-section-{{ sid }} .rb-ac__bio a { position: relative; }
 
   /* the pill is a separate bar under the card, not inside it */
   #shopify-section-{{ sid }} .rb-ac__cta {
@@ -271,8 +276,7 @@
     /* the name needs its own declaration: Dawn's base stylesheet colours every
        h2 with the theme foreground, and a declared colour beats the panel's
        inherited one however specific the panel rule is */
-    #shopify-section-{{ sid }} [data-blk="{{ block.id }}"] .rb-ac__name,
-    #shopify-section-{{ sid }} [data-blk="{{ block.id }}"] .rb-ac__name a { color: {{ nm_col }}; }
+    #shopify-section-{{ sid }} [data-blk="{{ block.id }}"] .rb-ac__name { color: {{ nm_col }}; }
     #shopify-section-{{ sid }} [data-blk="{{ block.id }}"] .rb-ac__cta {
       background: {{ bg }};
       color: {{ fg }};
@@ -456,13 +460,26 @@
               {%- endif -%}
 
               {%- if name != blank -%}
-                <h2 class="rb-name rb-ac__name"><a href="{{ url | default: '#' }}">{{ name }}</a></h2>
+                <h2 class="rb-name rb-ac__name" id="rb-ac-{{ block.id }}-name">{{ name }}</h2>
               {%- endif -%}
 
               {%- if bio != blank -%}
                 <div class="rb-body rb-ac__bio">{{ bio }}</div>
               {%- endif -%}
             </div>
+
+            {%- comment -%}
+              The card's only link, laid over everything so the artwork, the
+              portrait, the meta row, the name and the bio all lead to the
+              artist. It takes its accessible name from the heading, so it
+              reads as "Susan Orpen, link" and there is still one tab stop per
+              card. Last child, so it is above the panel in paint order.
+            {%- endcomment -%}
+            <a
+              class="rb-ac__hit"
+              href="{{ url | default: '#' }}"
+              {% if name != blank %}aria-labelledby="rb-ac-{{ block.id }}-name"{% else %}aria-label="View artist"{% endif %}
+            ></a>
           </div>
 
           {%- if block.settings.button_label != blank -%}
