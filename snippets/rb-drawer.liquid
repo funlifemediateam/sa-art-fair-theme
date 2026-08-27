@@ -97,24 +97,40 @@
     color: {{ section.settings.text_color | default: '#1e1e1e' }};
     text-decoration: none;
   }
-  #rb-drawer-{{ sid }} .rb-drawer__ctas {
+  #rb-drawer-{{ sid }} .rb-drawer__actions { margin-top: 20px; }
+
+  /* Call and Instagram sit on their own row ABOVE the two path buttons, as
+     icon-only circles. Contact used to be a third pill in the same row and
+     pushed Create Art onto a second line at the panel's 460px — the pair now
+     always shares one line because nothing else competes for it. */
+  #rb-drawer-{{ sid }} .rb-drawer__icons {
     display: flex;
-    flex-wrap: wrap;
     gap: 10px;
-    margin-top: 20px;
+    margin-bottom: 12px;
   }
-  /* Contact leads the row. Tighter side padding than the path pills because it
-     carries an icon as well as its word — at the panel's 460px the three
-     buttons only fit on one line if this one gives the space back. It wraps
-     onto its own line below that, which is why the row is flex-wrap. */
-  #rb-drawer-{{ sid }} .rb-drawer__contact {
-    gap: 9px;
-    padding-inline: clamp(14px, 1.2vw, 22px);
-  }
-  #rb-drawer-{{ sid }} .rb-drawer__contact svg {
-    width: 18px;
-    height: 18px;
+  #rb-drawer-{{ sid }} .rb-drawer__icon-btn {
     flex: 0 0 auto;
+    width: 48px;
+    height: 48px;
+    min-height: 48px;
+    padding: 0;
+  }
+  #rb-drawer-{{ sid }} .rb-drawer__icon-btn svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* auto-flow column = one equal-width track per button, so a single button
+     still fills the row instead of leaving a dead half */
+  #rb-drawer-{{ sid }} .rb-drawer__ctas {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+    gap: 10px;
+  }
+  #rb-drawer-{{ sid }} .rb-drawer__ctas .rb-btn {
+    min-width: 0;
+    white-space: nowrap;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -150,38 +166,99 @@
       The pills carry whatever fill the header is set to, so a coloured header
       does not open a drawer wearing the old outline pair.
     {%- endcomment -%}
-    {%- assign fill_a = section.settings.cta_a_fill | default: 'outline' -%}
-    {%- assign fill_b = section.settings.cta_b_fill | default: 'outline' -%}
-    <div class="rb-drawer__ctas">
+    {%- liquid
+      assign fill_a = section.settings.cta_a_fill | default: 'outline'
+      assign fill_b = section.settings.cta_b_fill | default: 'outline'
+
+      comment
+        The call button prefers its own number, then the WhatsApp number the
+        site already publishes site-wide, then the shop record. With none of
+        those set it falls back to the contact page rather than rendering a
+        dead tel: link.
+      endcomment
+      assign phone_raw = section.settings.phone_number | default: settings.saf_whatsapp_number | default: shop.phone
+      assign phone_digits = phone_raw | remove: ' ' | remove: '(' | remove: ')' | remove: '-' | remove: '+'
+      assign ig_url = section.settings.instagram_url | default: settings.social_instagram_link
+    -%}
+    <div class="rb-drawer__actions">
       {%- comment -%}
-        Contact is a button here rather than a line in the menu above — it is an
-        action, not another place to browse, so it belongs with the two path
-        buttons. It keeps the envelope it wore in the header bar so the move
-        reads as the same control, relocated.
+        Contact and Instagram are actions, not places to browse, so they sit
+        with the path buttons rather than in the menu above — but as icons on
+        their own row, so Buy Art and Create Art keep a full line to themselves.
       {%- endcomment -%}
-      {%- if section.settings.show_contact and section.settings.contact_url != blank -%}
-        <a href="{{ section.settings.contact_url }}" class="rb-btn rb-btn--plain rb-btn--outline rb-drawer__contact">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
-            <rect x="2.5" y="5" width="19" height="14" rx="2"></rect>
-            <path d="M3 6.5l9 6 9-6"></path>
-          </svg>
-          {{- section.settings.contact_label | default: 'Contact' | escape -}}
-        </a>
+      {%- if section.settings.show_contact or section.settings.show_instagram -%}
+        <div class="rb-drawer__icons">
+          {%- if section.settings.show_contact -%}
+            {%- if phone_digits != blank -%}
+              <a
+                href="tel:+{{ phone_digits }}"
+                class="rb-btn rb-btn--plain rb-btn--outline rb-drawer__icon-btn"
+                aria-label="Call {{ phone_raw | escape }}"
+                title="Call {{ phone_raw | escape }}"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+                  <path d="M6.4 3.5h3l1.5 3.8-2 1.4a12.5 12.5 0 0 0 6.4 6.4l1.4-2 3.8 1.5v3a1.9 1.9 0 0 1-2.1 1.9A16.6 16.6 0 0 1 4.5 5.6 1.9 1.9 0 0 1 6.4 3.5z"></path>
+                </svg>
+              </a>
+            {%- elsif section.settings.contact_url != blank -%}
+              <a
+                href="{{ section.settings.contact_url }}"
+                class="rb-btn rb-btn--plain rb-btn--outline rb-drawer__icon-btn"
+                aria-label="{{ section.settings.contact_label | default: 'Contact' | escape }}"
+                title="{{ section.settings.contact_label | default: 'Contact' | escape }}"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+                  <rect x="2.5" y="5" width="19" height="14" rx="2"></rect>
+                  <path d="M3 6.5l9 6 9-6"></path>
+                </svg>
+              </a>
+            {%- endif -%}
+          {%- endif -%}
+
+          {%- if section.settings.show_instagram and ig_url != blank -%}
+            <a
+              href="{{ ig_url }}"
+              class="rb-btn rb-btn--plain rb-btn--outline rb-drawer__icon-btn"
+              target="_blank"
+              rel="noopener"
+              aria-label="Instagram (opens in a new tab)"
+              title="Instagram"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+                <rect x="3" y="3" width="18" height="18" rx="5"></rect>
+                <circle cx="12" cy="12" r="4"></circle>
+                <circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"></circle>
+              </svg>
+            </a>
+          {%- endif -%}
+        </div>
       {%- endif -%}
 
-      {%- if section.settings.cta_a_label != blank -%}
-        <a href="{{ section.settings.cta_a_url | default: '#' }}" class="rb-btn rb-btn--plain rb-btn--{{ fill_a }}">
-          {{- section.settings.cta_a_label | escape -}}
-        </a>
-      {%- endif -%}
-      {%- if section.settings.cta_b_label != blank -%}
-        <a href="{{ section.settings.cta_b_url | default: '#' }}" class="rb-btn rb-btn--plain rb-btn--{{ fill_b }}">
-          {{- section.settings.cta_b_label | escape -}}
-        </a>
-      {%- endif -%}
+      <div class="rb-drawer__ctas">
+        {%- if section.settings.cta_a_label != blank -%}
+          <a href="{{ section.settings.cta_a_url | default: '#' }}" class="rb-btn rb-btn--plain rb-btn--{{ fill_a }}">
+            {{- section.settings.cta_a_label | escape -}}
+          </a>
+        {%- endif -%}
+        {%- if section.settings.cta_b_label != blank -%}
+          <a href="{{ section.settings.cta_b_url | default: '#' }}" class="rb-btn rb-btn--plain rb-btn--{{ fill_b }}">
+            {{- section.settings.cta_b_label | escape -}}
+          </a>
+        {%- endif -%}
+      </div>
     </div>
 
     <div class="rb-drawer__foot">
+      {%- comment -%}
+        The contact PAGE lost its route when the button became a phone icon —
+        'Contact' is not in the drawer menu (it was removed when the button was
+        added). This keeps the page one tap away without a third pill.
+      {%- endcomment -%}
+      {%- if section.settings.contact_url != blank and phone_digits != blank -%}
+        <a href="{{ section.settings.contact_url }}">
+          {{- section.settings.contact_label | default: 'Contact' | escape -}}
+        </a>
+      {%- endif -%}
       {%- if section.settings.drawer_cart_link -%}
         <a href="{{ routes.cart_url }}">Cart ({{ cart.item_count }})</a>
       {%- endif -%}
