@@ -48,7 +48,7 @@
         "image_ratio": "1 / 1",
         "hover_label": "View Artwork",
         "bar_color": "#f4f4f1",
-        "more_label": "See More…",
+        "more_label": "See More\u2026",
         "heading_color": "#505a43",
         "card_title_color": "#1e1e1e",
         "card_meta_color": "#1e1e1e"
@@ -72,15 +72,15 @@
         "button_radius": 0,
         "texture": 100,
         "image": "shopify://shop_images/saf-store-featured-art.jpg",
-        "panel_width": 50,
-        "min_height": 520,
+        "panel_width": 48,
+        "min_height": 850,
         "focal_x": 50,
         "focal_y": 50,
         "portrait": "shopify://shop_images/saf-portrait-kerri.jpg",
         "portrait_w": 40,
-        "portrait_ratio": "382 / 313",
-        "portrait_x": 62,
-        "portrait_y": 48
+        "portrait_ratio": "397 / 346",
+        "portrait_x": 49,
+        "portrait_y": 51
       }
     },
     "statement": {
@@ -103,11 +103,11 @@
         "contained": true,
         "radius": 24,
         "image": "shopify://shop_images/saf-home-quiz.jpg",
-        "band_height": 640,
+        "band_height": 830,
         "min_height": 340,
         "mobile_ratio": "3 / 4",
         "show_badge": false,
-        "heading": "What’s your art personality?",
+        "heading": "What\u2019s your art personality?",
         "subheading": "See how your personality can shape your journey as a collector.",
         "text_color": "#ffffff",
         "button_label": "Take The Quiz",

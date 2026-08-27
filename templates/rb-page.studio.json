@@ -56,7 +56,7 @@
             "collection": "classes",
             "title": "Studio Classes",
             "image": "shopify://shop_images/saf-studio-classes.jpg",
-            "body": "<p>Our termly classes are designed to make creativity part of your week. Meet with the same small group each week, learn from experienced artists, and explore a wide variety of mediums — from painting and drawing to watercolour and beyond.</p><p>With different days, times and skill levels to choose from, there’s a class for every kind of creative.</p>",
+            "body": "<p>Our termly classes are designed to make creativity part of your week. Meet with the same small group each week, learn from experienced artists, and explore a wide variety of mediums \u2014 from painting and drawing to watercolour and beyond.</p><p>With different days, times and skill levels to choose from, there\u2019s a class for every kind of creative.</p>",
             "button_label": "Browse Classes"
           }
         },
@@ -79,7 +79,7 @@
       "settings": {
         "show_mark": true,
         "eyebrow": "<p>We host an array of <strong>termly classes, workshops</strong> and <strong>events</strong></p>",
-        "image_ratio": "535 / 400",
+        "image_ratio": "535 / 572",
         "background": "#ffffff",
         "title_color": "#1e1e1e",
         "body_color": "#1e1e1e"
@@ -94,7 +94,7 @@
             "icon": "easel",
             "number": "1.",
             "title": "Picking A Class",
-            "notes": "<p><strong>What To Expect</strong>Our classes vary by medium, teacher and experience level, with options for both adults and children. Most classes meet weekly for around two hours, with up to 10 classes each term.</p><p><strong>Materials</strong>Your teacher will share a materials list before your class, helping you gather everything you need to get creative — and keep creating at home.</p>"
+            "notes": "<p><strong>What To Expect</strong>Our classes vary by medium, teacher and experience level, with options for both adults and children. Most classes meet weekly for around two hours, with up to 10 classes each term.</p><p><strong>Materials</strong>Your teacher will share a materials list before your class, helping you gather everything you need to get creative \u2014 and keep creating at home.</p>"
           }
         },
         "book": {
@@ -103,7 +103,7 @@
             "icon": "palette",
             "number": "2.",
             "title": "Booking A Class",
-            "notes": "<p><strong>Simple Online Booking</strong>Find the class that feels right for you, choose your preferred day and time, and book your place online. Most classes welcome new students throughout the term, so you don’t always have to wait for the next one to begin.</p><p><strong>Missed A Class?</strong>Life happens. If you miss a class, you can make it up by joining another suitable class — giving you a little more flexibility in your creative week.</p>"
+            "notes": "<p><strong>Simple Online Booking</strong>Find the class that feels right for you, choose your preferred day and time, and book your place online. Most classes welcome new students throughout the term, so you don\u2019t always have to wait for the next one to begin.</p><p><strong>Missed A Class?</strong>Life happens. If you miss a class, you can make it up by joining another suitable class \u2014 giving you a little more flexibility in your creative week.</p>"
           }
         },
         "package": {
@@ -137,7 +137,7 @@
         "t1": {
           "type": "quote",
           "settings": {
-            "quote": "<p>“Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt”</p>",
+            "quote": "<p>\u201cLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt\u201d</p>",
             "attribution": "- Name Surname, Workshop Guest.",
             "background": "#e07468",
             "quote_color": "#0c3642",
@@ -147,7 +147,7 @@
         "t2": {
           "type": "quote",
           "settings": {
-            "quote": "<p>“Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt”</p>",
+            "quote": "<p>\u201cLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt\u201d</p>",
             "attribution": "- Name Surname, Studio Student.",
             "background": "#b00e3f",
             "quote_color": "#e07468",
@@ -165,7 +165,7 @@
         "t4": {
           "type": "quote",
           "settings": {
-            "quote": "<p>“Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt”</p>",
+            "quote": "<p>\u201cLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt\u201d</p>",
             "attribution": "- Name Surname, Studio Student.",
             "background": "#0c3642",
             "quote_color": "#e07468",
