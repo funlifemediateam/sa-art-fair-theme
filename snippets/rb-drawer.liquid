@@ -178,6 +178,16 @@
       endcomment
       assign phone_raw = section.settings.phone_number | default: settings.saf_whatsapp_number | default: shop.phone
       assign phone_digits = phone_raw | remove: ' ' | remove: '(' | remove: ')' | remove: '-' | remove: '+'
+
+      comment
+        Label the button with the number only when someone typed one here, in
+        the shape they typed it. The WhatsApp fallback is stored bare
+        (27724778807), which reads as noise in a tooltip or to a screen reader.
+      endcomment
+      assign phone_label = section.settings.phone_number | strip
+      if phone_label == blank
+        assign phone_label = shop.name
+      endif
       assign ig_url = section.settings.instagram_url | default: settings.social_instagram_link
     -%}
     <div class="rb-drawer__actions">
@@ -193,8 +203,8 @@
               <a
                 href="tel:+{{ phone_digits }}"
                 class="rb-btn rb-btn--plain rb-btn--outline rb-drawer__icon-btn"
-                aria-label="Call {{ phone_raw | escape }}"
-                title="Call {{ phone_raw | escape }}"
+                aria-label="Call {{ phone_label | escape }}"
+                title="Call {{ phone_label | escape }}"
               >
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
                   <path d="M6.4 3.5h3l1.5 3.8-2 1.4a12.5 12.5 0 0 0 6.4 6.4l1.4-2 3.8 1.5v3a1.9 1.9 0 0 1-2.1 1.9A16.6 16.6 0 0 1 4.5 5.6 1.9 1.9 0 0 1 6.4 3.5z"></path>
