@@ -2,11 +2,13 @@
   Rebrand artist cards — the artists index. Each card is one of the artist's
   works with their black-and-white portrait set into it, a sage or moss paper
   panel underneath carrying a medium/place meta row, the name in large
-  IvyPresto and a short bio, then a full-width pill under the card.
+  IvyPresto and a short bio. The whole card is the link to the artist; the
+  optional pill under it is off by default.
 
   The comp darkens the middle column of every row, so "Auto" tones by column
   position rather than by a flat alternation — with three columns that gives
-  light / dark / light on every row, which is what the design shows.
+  light / dark / light on every row, which is what the design shows, and with
+  four it alternates across the row.
 
   Cards read from collections, which is how artists are modelled in this
   store, and every field can be overridden per card.
@@ -17,6 +19,13 @@
 {%- liquid
   assign sid = section.id
   assign cols = section.settings.columns
+
+  # the browser needs a width hint that follows the column count, or a four-up
+  # grid downloads images sized for a three-up one
+  assign card_vw = 100 | divided_by: cols
+  assign inset_vw = 40 | divided_by: cols
+  assign card_sizes = '(max-width: 639px) 90vw, (max-width: 989px) 45vw, ' | append: card_vw | append: 'vw'
+  assign inset_sizes = '(max-width: 639px) 40vw, ' | append: inset_vw | append: 'vw'
 -%}
 
 <style>
@@ -128,6 +137,10 @@
     border-radius: {{ section.settings.radius }}px;
     overflow: hidden;
     flex: 1 1 auto;
+    /* the card is the click target and the measure the name sizes against, so
+       it is both the positioning context and the query container */
+    position: relative;
+    container-type: inline-size;
   }
   #shopify-section-{{ sid }} .rb-ac__media {
     position: relative;
@@ -163,19 +176,36 @@
     align-items: baseline;
     justify-content: space-between;
     gap: 12px;
-    margin: 0 0 clamp(8px, 0.83vw, 16px);
+    margin: 0 0 {{ section.settings.meta_gap }}px;
   }
   #shopify-section-{{ sid }} .rb-ac__name {
     margin: 0;
     line-height: 1.02;
+    /* the comp sets 64px on a 560px card; as a share of the card that holds at
+       any column count, so a four-up grid shrinks the name with the block
+       instead of overflowing it */
+    font-size: clamp(24px, 11.4cqi, var(--rb-fs-name));
+    overflow-wrap: break-word;
+    text-wrap: balance;
   }
   #shopify-section-{{ sid }} .rb-ac__name a { color: inherit; text-decoration: none; }
-  #shopify-section-{{ sid }} .rb-ac__name a:hover { text-decoration: underline; }
+  /* the whole card is the link — the name carries it so there is still only
+     one tab stop, and the pill under the card is no longer needed */
+  #shopify-section-{{ sid }} .rb-ac__name a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+  #shopify-section-{{ sid }} .rb-ac__card:hover .rb-ac__name a,
+  #shopify-section-{{ sid }} .rb-ac__name a:focus-visible { text-decoration: underline; }
+  #shopify-section-{{ sid }} .rb-ac__name a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
   #shopify-section-{{ sid }} .rb-ac__bio {
     margin-top: clamp(8px, 0.83vw, 16px);
     font-size: var(--rb-fs-body-sm);
   }
   #shopify-section-{{ sid }} .rb-ac__bio p { margin: 0; }
+  /* a link written into a bio must stay reachable above the card overlay */
+  #shopify-section-{{ sid }} .rb-ac__bio a { position: relative; }
 
   /* the pill is a separate bar under the card, not inside it */
   #shopify-section-{{ sid }} .rb-ac__cta {
@@ -192,6 +222,13 @@
     --rb-paper-strength: {{ section.settings.texture | divided_by: 100.0 }};
   }
 
+  {%- if cols > 3 -%}
+    /* four across needs a step down before the two-column break, or the cards
+       are squeezed on a laptop screen */
+    @media screen and (max-width: 1279px) {
+      #shopify-section-{{ sid }} .rb-ac__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+  {%- endif -%}
   @media screen and (max-width: 989px) {
     #shopify-section-{{ sid }} .rb-ac__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
@@ -215,10 +252,12 @@
         assign bg = section.settings.tone_a
         assign fg = section.settings.tone_a_text
         assign meta = section.settings.tone_a_meta
+        assign nm_col = section.settings.tone_a_name
       else
         assign bg = section.settings.tone_b
         assign fg = section.settings.tone_b_text
         assign meta = section.settings.tone_b_meta
+        assign nm_col = section.settings.tone_b_name
       endif
     -%}
     #shopify-section-{{ sid }} [data-blk="{{ block.id }}"] .rb-ac__panel {
@@ -229,6 +268,11 @@
       --rb-paper-veil: {{ bg }};
     }
     #shopify-section-{{ sid }} [data-blk="{{ block.id }}"] .rb-ac__meta { color: {{ meta }}; }
+    /* the name needs its own declaration: Dawn's base stylesheet colours every
+       h2 with the theme foreground, and a declared colour beats the panel's
+       inherited one however specific the panel rule is */
+    #shopify-section-{{ sid }} [data-blk="{{ block.id }}"] .rb-ac__name,
+    #shopify-section-{{ sid }} [data-blk="{{ block.id }}"] .rb-ac__name a { color: {{ nm_col }}; }
     #shopify-section-{{ sid }} [data-blk="{{ block.id }}"] .rb-ac__cta {
       background: {{ bg }};
       color: {{ fg }};
@@ -364,7 +408,7 @@
                   | image_url: width: 1200
                   | image_tag:
                     widths: '380, 560, 800, 1200',
-                    sizes: '(max-width: 639px) 90vw, (max-width: 989px) 45vw, 30vw',
+                    sizes: card_sizes,
                     loading: 'lazy',
                     alt: ''
                 }}
@@ -379,7 +423,7 @@
                     | image_url: width: 600
                     | image_tag:
                       widths: '200, 320, 460, 600',
-                      sizes: '(max-width: 639px) 40vw, 14vw',
+                      sizes: inset_sizes,
                       loading: 'lazy',
                       alt: name
                   }}
@@ -394,15 +438,20 @@
                 focal_x: section.settings.panel_image_focal_x,
                 focal_y: section.settings.panel_image_focal_y,
                 veil_opacity: section.settings.panel_image_veil,
-                sizes: '(max-width: 639px) 90vw, (max-width: 989px) 45vw, 30vw',
+                sizes: card_sizes,
                 widths: '300, 460, 700, 1000',
                 width: 1000
               -%}
 
+              {%- comment -%}
+                Each half of the meta row is rendered only when it has words in
+                it — a blank Place must not leave an empty span holding the
+                right-hand end of a space-between row.
+              {%- endcomment -%}
               {%- if block.settings.medium != blank or block.settings.place != blank -%}
                 <p class="rb-meta rb-ac__meta">
-                  <span>{{ block.settings.medium }}</span>
-                  <span>{{ block.settings.place }}</span>
+                  {%- if block.settings.medium != blank -%}<span>{{ block.settings.medium }}</span>{%- endif -%}
+                  {%- if block.settings.place != blank -%}<span>{{ block.settings.place }}</span>{%- endif -%}
                 </p>
               {%- endif -%}
 
@@ -513,6 +562,9 @@
     { "type": "text", "id": "image_ratio", "default": "555 / 402", "label": "Artwork ratio" },
     { "type": "range", "id": "radius", "min": 0, "max": 48, "step": 1,
       "default": 20, "unit": "px", "label": "Card corner radius" },
+    { "type": "range", "id": "meta_gap", "min": 0, "max": 40, "step": 2,
+      "default": 6, "unit": "px", "label": "Space under the medium/place row",
+      "info": "The gap between that row and the artist's name." },
     { "type": "header", "content": "Portrait inset" },
     { "type": "range", "id": "portrait_w", "min": 15, "max": 70, "step": 1,
       "default": 42, "unit": "%", "label": "Portrait width" },
@@ -525,9 +577,12 @@
     { "type": "color", "id": "background", "default": "#ffffff", "label": "Background" },
     { "type": "color", "id": "tone_a", "default": "#9da887", "label": "Tone A panel" },
     { "type": "color", "id": "tone_a_text", "default": "#ffffff", "label": "Tone A text" },
+    { "type": "color", "id": "tone_a_name", "default": "#505a43", "label": "Tone A artist name",
+      "info": "The comp writes the name in the opposite tone, not in the body colour." },
     { "type": "color", "id": "tone_a_meta", "default": "#f2f4ec", "label": "Tone A meta row" },
     { "type": "color", "id": "tone_b", "default": "#505a43", "label": "Tone B panel" },
     { "type": "color", "id": "tone_b_text", "default": "#dfe4d4", "label": "Tone B text" },
+    { "type": "color", "id": "tone_b_name", "default": "#9da887", "label": "Tone B artist name" },
     { "type": "color", "id": "tone_b_meta", "default": "#a5ad93", "label": "Tone B meta row" },
     { "type": "range", "id": "texture", "min": 0, "max": 100, "step": 5,
       "default": 100, "unit": "%", "label": "Crumpled paper texture" },
@@ -557,7 +612,8 @@
           "info": "Supplies the name, artwork, bio and link." },
         { "type": "text", "id": "name", "label": "Name override" },
         { "type": "text", "id": "medium", "default": "Watercolour Artist", "label": "Medium" },
-        { "type": "text", "id": "place", "default": "Hout Bay, Western Cape", "label": "Place" },
+        { "type": "text", "id": "place", "label": "Place",
+          "info": "Blank by default — the client asked for the location line off the cards." },
         { "type": "richtext", "id": "bio", "label": "Bio override",
           "info": "Blank uses the collection description." },
         { "type": "image_picker", "id": "image", "label": "Artwork override",
@@ -565,7 +621,8 @@
         { "type": "image_picker", "id": "portrait", "label": "Portrait",
           "info": "Blank uses the collection's own image, which is the photo of the person. Rendered black and white, as in the design." },
         { "type": "url", "id": "link", "label": "Link override" },
-        { "type": "text", "id": "button_label", "default": "See Collections", "label": "Button label" },
+        { "type": "text", "id": "button_label", "label": "Button label",
+          "info": "Blank by default — the whole card is a link to the artist, so the pill is redundant." },
         { "type": "select", "id": "tone", "label": "Panel colour", "default": "auto",
           "options": [
             { "value": "auto", "label": "Auto (darkens the middle column)" },
