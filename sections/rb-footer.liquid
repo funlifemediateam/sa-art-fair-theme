@@ -9,11 +9,24 @@
 
 {{ 'saf-rebrand.css' | asset_url | stylesheet_tag }}
 
+{%- comment -%}
+  The email and cell shown here follow the side of the site the visitor is on
+  (store vs studio) — see 'rb-contact-details'. The settings below stay as the
+  fallback for a theme that has none of that configured.
+{%- endcomment -%}
+{%- capture rb_email -%}
+  {%- render 'rb-contact-details', field: 'email' -%}
+{%- endcapture -%}
+{%- capture rb_phone -%}
+  {%- render 'rb-contact-details', field: 'phone' -%}
+{%- endcapture -%}
 {%- liquid
   assign sid = section.id
   assign socials = shop.metafields.booking_app.store_socials.value
   assign ig = socials.instagram | default: section.settings.instagram
   assign fb = socials.facebook | default: section.settings.facebook
+  assign rb_email = rb_email | strip | default: section.settings.email
+  assign rb_phone = rb_phone | strip | default: section.settings.phone
 -%}
 
 <style>
@@ -156,21 +169,21 @@
     </div>
 
     <div class="rb-footer__contact">
-      {%- if section.settings.email != blank -%}
-        <a href="mailto:{{ section.settings.email }}" class="rb-footer__row">
+      {%- if rb_email != blank -%}
+        <a href="mailto:{{ rb_email }}" class="rb-footer__row">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
             <rect x="2.5" y="5" width="19" height="14" rx="2"></rect>
             <path d="M3 6.5l9 6.5 9-6.5"></path>
           </svg>
-          {{ section.settings.email }}
+          {{ rb_email }}
         </a>
       {%- endif -%}
-      {%- if section.settings.phone != blank -%}
-        <a href="tel:{{ section.settings.phone | remove: ' ' }}" class="rb-footer__row">
+      {%- if rb_phone != blank -%}
+        <a href="tel:{{ rb_phone | remove: ' ' }}" class="rb-footer__row">
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
             <path d="M6.6 3h3l1.5 4-2 1.4a12 12 0 0 0 5.5 5.5l1.4-2 4 1.5v3a2 2 0 0 1-2.2 2A16.5 16.5 0 0 1 4.6 5.2 2 2 0 0 1 6.6 3z"></path>
           </svg>
-          {{ section.settings.phone }}
+          {{ rb_phone }}
         </a>
       {%- endif -%}
 
@@ -235,9 +248,10 @@
     { "type": "richtext", "id": "blurb",
       "default": "<p>Tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>",
       "label": "Blurb" },
-    { "type": "header", "content": "Contact" },
-    { "type": "text", "id": "email", "default": "Info@SAAF.com", "label": "Email" },
-    { "type": "text", "id": "phone", "default": "+27 680 000 00", "label": "Phone" },
+    { "type": "header", "content": "Contact",
+      "info": "The store and studio each have their own email and cell — set those in Theme settings → Contact by path, and the footer follows whichever side of the site the visitor is on. These two are only the fallback for when that is left blank." },
+    { "type": "text", "id": "email", "default": "Info@SAAF.com", "label": "Fallback email" },
+    { "type": "text", "id": "phone", "default": "+27 680 000 00", "label": "Fallback phone" },
     { "type": "text", "id": "address", "label": "Address",
       "info": "Shown as a location row that opens Google Maps in a new tab, so the site stays open behind it. Leave blank to hide the row." },
     { "type": "url", "id": "address_link", "label": "Map link",

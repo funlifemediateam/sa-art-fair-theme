@@ -166,6 +166,9 @@
       The pills carry whatever fill the header is set to, so a coloured header
       does not open a drawer wearing the old outline pair.
     {%- endcomment -%}
+    {%- capture side_phone -%}
+      {%- render 'rb-contact-details', field: 'phone' -%}
+    {%- endcapture -%}
     {%- liquid
       assign fill_a = section.settings.cta_a_fill | default: 'outline'
       assign fill_b = section.settings.cta_b_fill | default: 'outline'
@@ -187,20 +190,24 @@
       endif
 
       comment
-        The call button prefers its own number, then the WhatsApp number the
-        site already publishes site-wide, then the shop record. With none of
-        those set it falls back to the contact page rather than rendering a
-        dead tel: link.
+        The call button dials whoever looks after THIS side of the site — the
+        store's cell on the Buy Art side, the studio's on the Make Art side
+        (Theme settings → Contact by path). Then this section's own number,
+        then the WhatsApp number the site already publishes site-wide, then the
+        shop record. With none of those set it falls back to the contact page
+        rather than rendering a dead tel: link.
       endcomment
-      assign phone_raw = section.settings.phone_number | default: settings.saf_whatsapp_number | default: shop.phone
+      assign side_phone = side_phone | strip
+      assign phone_raw = side_phone | default: section.settings.phone_number | default: settings.saf_whatsapp_number | default: shop.phone
       assign phone_digits = phone_raw | remove: ' ' | remove: '(' | remove: ')' | remove: '-' | remove: '+'
 
       comment
-        Label the button with the number only when someone typed one here, in
-        the shape they typed it. The WhatsApp fallback is stored bare
-        (27724778807), which reads as noise in a tooltip or to a screen reader.
+        Label the button with the number only when a human typed one — here or
+        in the path contacts — in the shape they typed it. The WhatsApp
+        fallback is stored bare (27724778807), which reads as noise in a
+        tooltip or to a screen reader.
       endcomment
-      assign phone_label = section.settings.phone_number | strip
+      assign phone_label = side_phone | default: section.settings.phone_number | strip
       if phone_label == blank
         assign phone_label = shop.name
       endif

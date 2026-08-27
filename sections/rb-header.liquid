@@ -46,6 +46,17 @@
       assign has_drop_b = true
     endif
   endif
+
+  comment
+    The path lists live in Theme settings → Contact by path, because the FOOTER
+    and the WhatsApp button route their contact details off the same answer and
+    cannot read a section's settings. One list, one place to edit, so which
+    pill is lit and whose email is printed underneath can never disagree. The
+    two fields on this section are the older per-header lists, kept as the
+    fallback. A `render` argument cannot take a filter, so resolve first.
+  endcomment
+  assign rb_a_paths = settings.saf_path_a_paths | default: section.settings.cta_a_paths
+  assign rb_b_paths = settings.saf_path_b_paths | default: section.settings.cta_b_paths
 -%}
 
 {%- comment -%}
@@ -56,8 +67,8 @@
   {%- render 'rb-active-path',
     a_url: section.settings.cta_a_url,
     b_url: section.settings.cta_b_url,
-    a_paths: section.settings.cta_a_paths,
-    b_paths: section.settings.cta_b_paths
+    a_paths: rb_a_paths,
+    b_paths: rb_b_paths
   -%}
 {%- endcapture -%}
 {%- liquid
@@ -528,7 +539,7 @@
     { "type": "color", "id": "active_text_color", "default": "#ffffff", "label": "Highlight text" },
     { "type": "textarea", "id": "cta_a_paths", "label": "Extra paths that count as Button A",
       "default": "/pages/collect-art, /pages/artists, /collections/gallery, /collections/wishlist, /collections/warm-tones, /collections/cool-tones, /collections/neutral-tones",
-      "info": "Comma separated. A partial match counts, so /collections/artist- covers every artist page." },
+      "info": "EDIT THESE IN Theme settings → Contact by path INSTEAD. The same two lists also decide whose email and cell the footer prints, and a section's settings are unreadable from the footer — so the lists moved to theme settings and these two are only used when those are empty. Comma separated; a partial match counts, so /collections/artist- covers every artist page." },
     { "type": "textarea", "id": "cta_b_paths", "label": "Extra paths that count as Button B",
       "default": "/pages/create-art, /pages/studio, /pages/the-team, /pages/term-4, /pages/classes-workshops, /collections/classes, /collections/workshops, /collections/teachers" },
     { "type": "header", "content": "Icons",

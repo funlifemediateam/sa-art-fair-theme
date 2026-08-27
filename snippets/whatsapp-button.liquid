@@ -6,13 +6,26 @@
   Renders nothing when the number is blank (button stays hidden) — the
   sellable default.
 
+  The number follows the side of the site the visitor is on — the store's
+  cell on the Buy Art side, the studio's on the Make Art side — so the chat
+  opens with whoever the footer and the menu's call button are pointing at.
+  Theme settings → Contact by path holds the two numbers and the switch that
+  turns this off (for a number that is not on WhatsApp); with it off, or with
+  no number set for that side, the site-wide number below is used.
+
   Mobile stacking: on <990px the button sits above the fixed
   .saf-mobile-ctas bar, and whatsapp.js raises it above the booking
   hold-timer banner (#sa-bk-banner-container) whenever that is on screen,
   so the button, the CTA bar and the booking banner never overlap.
 {%- endcomment -%}
+{%- capture wa_side_number -%}
+  {%- if settings.saf_contact_route_whatsapp -%}
+    {%- render 'rb-contact-details', field: 'phone_digits' -%}
+  {%- endif -%}
+{%- endcapture -%}
 {%- liquid
-  assign wa_number = settings.saf_whatsapp_number | remove: ' ' | remove: '+' | remove: '-' | remove: '(' | remove: ')' | remove: '.'
+  assign wa_number = wa_side_number | strip | default: settings.saf_whatsapp_number
+  assign wa_number = wa_number | remove: ' ' | remove: '+' | remove: '-' | remove: '(' | remove: ')' | remove: '.'
 -%}
 {%- if wa_number != blank -%}
   {%- assign wa_label = settings.saf_whatsapp_label | default: 'Chat with us on WhatsApp' -%}

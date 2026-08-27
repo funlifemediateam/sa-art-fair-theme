@@ -1,0 +1,63 @@
+{% comment %}
+  Which contact details belong on THIS page.
+
+  Georgina runs studio admin, Bianca runs store admin, so the site publishes
+  a different mailbox and cell depending on which side of it you are reading:
+
+    Buy Art / Collect Art side  -> store@   + Bianca's cell
+    Make Art / Studio side      -> studio@  + Georgina's cell
+
+  The side is resolved by 'rb-active-path' — the SAME resolver the header uses
+  to decide which path pill is filled — so the contact row can never disagree
+  with the button the visitor is looking at. Its path lists live in
+  Theme settings → Contact by path, NOT on the header section, precisely so
+  that one edit moves both.
+
+  A page belonging to neither side (home, cart, search, /pages/about) falls to
+  `saf_contact_default`.
+
+  A snippet's assigns do not escape `render`, so the caller captures the echo,
+  one field per call:
+
+    {%- capture c_email -%}
+      {%- render 'rb-contact-details', field: 'email' -%}
+    {%- endcapture -%}
+    {%- assign c_email = c_email | strip -%}
+
+  field: 'email' (default) | 'phone' | 'phone_digits' | 'side'
+    phone_digits is the bare international form for tel: and wa.me links.
+    Every field echoes EMPTY when that side has nothing configured — callers
+    keep their own fallback so a theme with none of this set still works.
+{% endcomment %}
+{%- capture rb_c_side -%}
+  {%- render 'rb-active-path',
+    a_paths: settings.saf_path_a_paths,
+    b_paths: settings.saf_path_b_paths
+  -%}
+{%- endcapture -%}
+{%- liquid
+  assign rb_c_side = rb_c_side | strip
+  if rb_c_side == blank
+    assign rb_c_side = settings.saf_contact_default | default: 'b'
+  endif
+
+  if rb_c_side == 'a'
+    assign rb_c_email = settings.saf_contact_a_email
+    assign rb_c_phone = settings.saf_contact_a_phone
+  else
+    assign rb_c_email = settings.saf_contact_b_email
+    assign rb_c_phone = settings.saf_contact_b_phone
+  endif
+
+  assign rb_c_field = field | default: 'email'
+  case rb_c_field
+    when 'side'
+      echo rb_c_side
+    when 'phone'
+      echo rb_c_phone | strip
+    when 'phone_digits'
+      echo rb_c_phone | strip | remove: ' ' | remove: '+' | remove: '-' | remove: '(' | remove: ')' | remove: '.'
+    else
+      echo rb_c_email | strip
+  endcase
+-%}

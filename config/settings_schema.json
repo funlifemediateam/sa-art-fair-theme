@@ -1490,6 +1490,84 @@
     ]
   },
   {
+    "name": "Contact by path",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "The store and the studio are run by different people, so the footer, the menu's call button and the WhatsApp button all show the details for the side of the site the visitor is on. Leave a side blank and it falls back to whatever the footer section and the WhatsApp settings hold."
+      },
+      {
+        "type": "header",
+        "content": "Store side (Buy Art)"
+      },
+      {
+        "type": "text",
+        "id": "saf_contact_a_email",
+        "label": "Store email"
+      },
+      {
+        "type": "text",
+        "id": "saf_contact_a_phone",
+        "label": "Store phone",
+        "info": "As it should read on screen, e.g. +27 83 272 2915. The tel:, WhatsApp and dial links strip the spaces themselves."
+      },
+      {
+        "type": "header",
+        "content": "Studio side (Make Art)"
+      },
+      {
+        "type": "text",
+        "id": "saf_contact_b_email",
+        "label": "Studio email"
+      },
+      {
+        "type": "text",
+        "id": "saf_contact_b_phone",
+        "label": "Studio phone"
+      },
+      {
+        "type": "header",
+        "content": "Everywhere else"
+      },
+      {
+        "type": "select",
+        "id": "saf_contact_default",
+        "label": "Pages belonging to neither side",
+        "info": "Home, cart, search, /pages/about and /pages/contact sit on neither side.",
+        "options": [
+          { "value": "b", "label": "Show the studio details" },
+          { "value": "a", "label": "Show the store details" }
+        ],
+        "default": "b"
+      },
+      {
+        "type": "checkbox",
+        "id": "saf_contact_route_whatsapp",
+        "label": "Route WhatsApp chats the same way",
+        "info": "Off, or with no phone set for a side, the floating button keeps using the number in WhatsApp button below. Turn off if one of the two numbers is not on WhatsApp.",
+        "default": true
+      },
+      {
+        "type": "header",
+        "content": "Which pages count as which side"
+      },
+      {
+        "type": "paragraph",
+        "content": "Comma-separated path fragments. These also decide which header pill is highlighted, so this is the ONE place to edit routing — the header section reads these. Class and workshop products, teacher pages and artist pages are recognised automatically and need no entry."
+      },
+      {
+        "type": "textarea",
+        "id": "saf_path_a_paths",
+        "label": "Store side paths"
+      },
+      {
+        "type": "textarea",
+        "id": "saf_path_b_paths",
+        "label": "Studio side paths"
+      }
+    ]
+  },
+  {
     "name": "Reading text size",
     "settings": [
       {
