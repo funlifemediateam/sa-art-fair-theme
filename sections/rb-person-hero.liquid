@@ -42,6 +42,29 @@
   assign tags = tag_source | split: ','
 
   comment
+    The artist comp carries a short line of Cedarville script under the name.
+    Its content in Figma is lorem, and leaving the field blank left 34 artist
+    pages with nothing but a name. When "use the collection description" is on
+    the line is taken from the collection's own description — the FIRST
+    SENTENCE only, because a full bio set in a cursive face is unreadable and
+    the comp shows three short lines.
+
+    Off by default, so the teacher pages (which already print the description
+    in rb-script-statement further down) do not say the same thing twice.
+  endcomment
+  assign script = section.settings.script
+  if script == blank and section.settings.script_from_description and collection.description != blank
+    assign plain = collection.description | strip_html | strip | replace: '&nbsp;', ' '
+    assign first = plain | split: '. ' | first | strip
+    if first != blank
+      unless first contains '.'
+        assign first = first | append: '.'
+      endunless
+      assign script = first | truncate: 140
+    endif
+  endif
+
+  comment
     The design pairs one of the person's works, running off the right edge,
     with their black-and-white portrait set into it. Both come from the
     collection so that forty person pages are right from one shape:
@@ -124,34 +147,53 @@
 -%}
 
 <style>
+  {% comment %}
+    Measured off both comps at their 1920 frame: the artwork runs from 47.6%
+    to the right edge and is 790px tall, and it is flush with the top of the
+    section — there is no band of white above it. So the section carries no
+    vertical padding of its own; the artwork sets the height and the text
+    column centres against it.
+  {% endcomment %}
   #shopify-section-{{ sid }} .rb-ph {
     background: {{ section.settings.background }};
     display: grid;
     grid-template-columns: {{ section.settings.text_width }}fr {{ 100 | minus: section.settings.text_width }}fr;
     align-items: center;
-    gap: clamp(24px, 3.13vw, 60px);
-    padding-block: clamp(40px, 5.21vw, 100px);
+    gap: 0;
+    padding-block: 0;
   }
+  {% comment %}
+    Both comps set the text as one block whose lines share a left edge, with
+    the block itself centred in its column — so the wrapper centres and the
+    inner column carries the alignment. Centring each line instead would let
+    the name, the script and the icon row drift apart.
+  {% endcomment %}
   #shopify-section-{{ sid }} .rb-ph__text {
     box-sizing: border-box;
-    padding-left: var(--rb-gutter);
+    display: flex;
+    justify-content: center;
+    padding-inline: var(--rb-gutter);
+  }
+  #shopify-section-{{ sid }} .rb-ph__inner {
+    min-width: 0;
     text-align: {{ section.settings.align }};
-    {% if section.settings.align == 'center' %}
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    {% endif %}
   }
   #shopify-section-{{ sid }} .rb-ph__name {
     color: {{ section.settings.name_color }};
-    max-width: 8ch; /* both comps break the name after the first word */
-    {% if section.settings.align == 'center' %}text-align: center;{% endif %}
+    font-size: clamp(38px, 4.79vw, 92px);
+    /* both comps break the name after the first word; 8ch was wide enough to
+       keep "Kerri Sassen" on one line at this size */
+    max-width: 7ch;
+    {% if section.settings.align == 'center' %}margin-inline: auto;{% endif %}
   }
   #shopify-section-{{ sid }} .rb-ph__script {
-    margin-top: clamp(10px, 1.04vw, 20px);
+    margin-top: clamp(12px, 1.25vw, 24px);
     color: {{ section.settings.script_color }};
-    font-size: clamp(16px, 1.35vw, 26px);
-    line-height: 1.5;
+    font-size: clamp(19px, 2.08vw, 40px);
+    line-height: 1.2;
+    /* the comp wraps this line three times inside the text block */
+    max-width: clamp(240px, 18.6vw, 357px);
+    {% if section.settings.align == 'center' %}margin-inline: auto;{% endif %}
   }
   #shopify-section-{{ sid }} .rb-ph__script p { margin: 0; }
 
@@ -180,15 +222,16 @@
   }
   #shopify-section-{{ sid }} .rb-ph__social {
     display: inline-flex;
-    width: clamp(30px, 2.08vw, 40px);
-    height: clamp(30px, 2.08vw, 40px);
+    flex: 0 0 auto;
+    width: clamp(34px, 3.13vw, 60px);
+    height: clamp(34px, 3.13vw, 60px);
   }
   #shopify-section-{{ sid }} .rb-ph__social img { width: 100%; height: 100%; display: block; }
 
   #shopify-section-{{ sid }} .rb-ph__media {
     position: relative;
     width: 100%;
-    height: clamp(240px, 23.6vw, 453px);
+    height: clamp(280px, 41.15vw, 790px);
     overflow: hidden;
     background: #efefef;
   }
@@ -212,10 +255,12 @@
   @media screen and (max-width: 749px) {
     #shopify-section-{{ sid }} .rb-ph {
       grid-template-columns: 1fr;
-      padding-block: 40px 0;
+      padding-block: 32px 0;
+      gap: 28px;
     }
-    #shopify-section-{{ sid }} .rb-ph__text { padding-inline: var(--rb-gutter); }
+    #shopify-section-{{ sid }} .rb-ph__inner { width: 100%; }
     #shopify-section-{{ sid }} .rb-ph__name { max-width: none; }
+    #shopify-section-{{ sid }} .rb-ph__script { max-width: none; }
     #shopify-section-{{ sid }} .rb-ph__media { height: auto; aspect-ratio: 4 / 3; }
   }
 </style>
@@ -223,12 +268,13 @@
 <div class="rb-section rb-bleed">
   <div class="rb-ph">
     <div class="rb-ph__text">
+     <div class="rb-ph__inner">
       {%- if name != blank -%}
         <h1 class="rb-name rb-name--lg rb-ph__name">{{ name }}</h1>
       {%- endif -%}
 
-      {%- if section.settings.script != blank -%}
-        <div class="rb-script rb-ph__script">{{ section.settings.script }}</div>
+      {%- if script != blank -%}
+        <div class="rb-script rb-ph__script">{{ script }}</div>
       {%- endif -%}
 
       {%- if tags.size > 0 and section.settings.tags != blank -%}
@@ -254,6 +300,7 @@
           {%- endif -%}
         </div>
       {%- endif -%}
+     </div>
     </div>
 
     <div class="rb-ph__media">
@@ -300,6 +347,9 @@
       "info": "Blank uses the collection title." },
     { "type": "richtext", "id": "script", "label": "Script line",
       "info": "Cedarville Cursive, as on the artist page." },
+    { "type": "checkbox", "id": "script_from_description", "default": false,
+      "label": "Fall back to the collection description",
+      "info": "Used on artist pages: with the script line blank, the FIRST SENTENCE of the collection description is set in the script face. Leave off wherever the description already appears further down the page." },
     { "type": "text", "id": "tags", "label": "Tags",
       "info": "Comma separated, e.g. Abstract, Watercolour, Photography. Blank reads the mediums off this collection's own artwork tags." },
     { "type": "header", "content": "Actions" },
@@ -316,7 +366,8 @@
         { "value": "center", "label": "Centred (artist page)" }
       ] },
     { "type": "range", "id": "text_width", "min": 25, "max": 60, "step": 1,
-      "default": 40, "unit": "%", "label": "Text share of the row" },
+      "default": 48, "unit": "%", "label": "Text share of the row",
+      "info": "Both comps put the artwork's left edge at 48%." },
     { "type": "header", "content": "Colour" },
     { "type": "color", "id": "background", "default": "#ffffff", "label": "Background" },
     { "type": "color", "id": "name_color", "default": "#e07468", "label": "Name" },

@@ -10,7 +10,7 @@
         "button_label": "See Portfolio",
         "button_link": "",
         "align": "left",
-        "text_width": 40,
+        "text_width": 48,
         "background": "#ffffff",
         "name_color": "#e07468",
         "script_color": "#1e1e1e",
@@ -20,9 +20,9 @@
         "focal_y": 50,
         "portrait": "",
         "portrait_w": 40,
-        "portrait_ratio": "382 / 313",
-        "portrait_x": 54,
-        "portrait_y": 46
+        "portrait_ratio": "79 / 69",
+        "portrait_x": 52,
+        "portrait_y": 51
       }
     },
     "statement": {

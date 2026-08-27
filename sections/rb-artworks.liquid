@@ -38,19 +38,27 @@
   endfor
   assign medium_list = medium_tags | remove_first: ',' | split: ','
   assign colour_list = colour_tags | remove_first: ',' | split: ','
+
+  assign show_options = '12,24,48' | split: ','
 -%}
 
 <style>
   #shopify-section-{{ sid }} .rb-aw {
     background: {{ section.settings.background }};
     padding-block:
-      clamp(40px, 4.79vw, 92px)
+      {% if layout == 'rail' %}clamp(40px, 8.13vw, 156px){% else %}clamp(40px, 4.79vw, 92px){% endif %}
       clamp(48px, 6.77vw, 130px);
   }
+  {% comment %}
+    "Available Artworks" measures 480px of ink in BOTH the Store and the artist
+    comps, which is 64px of IvyPresto — larger than the shared section-title
+    token, so this heading carries its own size.
+  {% endcomment %}
   #shopify-section-{{ sid }} .rb-aw__heading {
     color: {{ section.settings.heading_color }};
     text-align: center;
-    margin-bottom: clamp(20px, 2.4vw, 46px);
+    font-size: clamp(30px, 3.33vw, 64px);
+    margin-bottom: {% if layout == 'rail' %}clamp(24px, 7.55vw, 145px){% else %}clamp(20px, 2.4vw, 46px){% endif %};
   }
 
   /* ---- toolbar layout (Store) ---------------------------------------- */
@@ -116,6 +124,27 @@
     padding-right: clamp(28px, 2.19vw, 42px);
   }
   #shopify-section-{{ sid }} .rb-aw__select-wrap { position: relative; display: inline-flex; }
+  {% comment %}
+    A bare <select> is as wide as its LONGEST option, so "Featured" sat with a
+    chevron floating 100px away from it. In the "fit" variant the visible text
+    is a span that carries the selected option, and the real select lies over
+    it invisibly — so the control hugs its label, as the comp draws it, and
+    stays a native select for keyboard and screen-reader users.
+  {% endcomment %}
+  #shopify-section-{{ sid }} .rb-aw__select-wrap--fit { align-items: center; }
+  #shopify-section-{{ sid }} .rb-aw__select-wrap--fit select {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+  #shopify-section-{{ sid }} .rb-aw__label {
+    pointer-events: none;
+    white-space: nowrap;
+  }
   #shopify-section-{{ sid }} .rb-aw__select-wrap svg {
     position: absolute;
     right: clamp(10px, 0.83vw, 16px);
@@ -170,39 +199,79 @@
   }
   #shopify-section-{{ sid }} .rb-aw__toggle input { margin: 0; }
 
-  /* ---- rail layout (artist page) -------------------------------------- */
+  /* ---- rail layout (artist page) --------------------------------------
+     Measured off the artist comp at its 1920 frame: the Show/Sort controls
+     are PLAIN TEXT with a chevron, not the pills the Store toolbar uses;
+     the rail is a 177px box at the left gutter whose rows are right-aligned;
+     and the grid beside it is three 408px columns with a 56px gutter. */
   #shopify-section-{{ sid }} .rb-aw__sorts {
     display: flex;
     justify-content: flex-end;
-    gap: clamp(8px, 0.83vw, 16px);
-    margin-bottom: clamp(16px, 1.72vw, 33px);
+    align-items: center;
+    gap: clamp(14px, 2.55vw, 49px);
+    margin-bottom: clamp(16px, 5.1vw, 98px);
+  }
+  #shopify-section-{{ sid }} .rb-aw__sorts .rb-aw__select-wrap {
+    padding-right: clamp(26px, 2.45vw, 47px);
+    font-family: var(--rb-sans);
+    font-size: clamp(15px, 1.3vw, 25px);
+    line-height: 1.2;
+    color: var(--rb-ink);
+  }
+  #shopify-section-{{ sid }} .rb-aw__sorts .rb-aw__control {
+    min-height: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    font-size: inherit;
+    line-height: inherit;
+  }
+  #shopify-section-{{ sid }} .rb-aw__sorts .rb-aw__select-wrap svg {
+    right: 0;
+    width: clamp(14px, 1.51vw, 29px);
+    height: clamp(14px, 1.51vw, 29px);
+    opacity: 1;
+    stroke-width: 1.5;
   }
   #shopify-section-{{ sid }} .rb-aw__layout {
     display: grid;
-    grid-template-columns: {{ section.settings.rail_width }}px minmax(0, 1fr);
-    gap: clamp(20px, 2.5vw, 48px);
+    grid-template-columns: max({{ section.settings.rail_width }}px, 10.6%) minmax(0, 1fr);
+    column-gap: 9.6%;
     align-items: start;
   }
+  /* the rail's rows sit against a common right edge in the comp */
+  #shopify-section-{{ sid }} .rb-aw__rail {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    text-align: right;
+  }
   #shopify-section-{{ sid }} .rb-aw__rail-title {
-    margin: 0 0 clamp(8px, 0.83vw, 16px);
+    margin: 0 0 clamp(14px, 1.98vw, 38px);
     font-family: var(--rb-sans);
     font-weight: 700;
-    font-size: var(--rb-fs-body-sm);
+    font-size: clamp(14px, 1.25vw, 24px);
+    line-height: 1.2;
   }
-  #shopify-section-{{ sid }} .rb-aw__rail-group + .rb-aw__rail-group { margin-top: clamp(10px, 1.04vw, 20px); }
+  #shopify-section-{{ sid }} .rb-aw__rail-group { width: 100%; }
+  #shopify-section-{{ sid }} .rb-aw__rail-group + .rb-aw__rail-group { margin-top: clamp(12px, 1.51vw, 29px); }
   #shopify-section-{{ sid }} .rb-aw__rail-group > summary {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 8px;
+    justify-content: flex-end;
+    gap: clamp(10px, 1.51vw, 29px);
     cursor: pointer;
     list-style: none;
     font-family: var(--rb-sans);
-    font-size: var(--rb-fs-body-sm);
+    font-size: clamp(14px, 1.25vw, 24px);
+    line-height: 1.2;
   }
   #shopify-section-{{ sid }} .rb-aw__rail-group > summary::-webkit-details-marker { display: none; }
   #shopify-section-{{ sid }} .rb-aw__rail-group > summary svg {
-    width: 12px; height: 12px; opacity: 0.6;
+    flex: 0 0 auto;
+    width: clamp(14px, 1.51vw, 29px);
+    height: clamp(14px, 1.51vw, 29px);
+    stroke-width: 1.5;
     transition: transform 0.2s ease;
   }
   #shopify-section-{{ sid }} .rb-aw__rail-group[open] > summary svg { transform: rotate(180deg); }
@@ -210,14 +279,15 @@
   #shopify-section-{{ sid }} .rb-aw__swatches {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 10px;
+    justify-content: flex-end;
+    gap: clamp(7px, 0.57vw, 11px);
+    margin-top: clamp(12px, 1.56vw, 30px);
   }
   #shopify-section-{{ sid }} .rb-aw__swatch {
     position: relative; /* holds the visually-hidden checkbox */
     display: inline-flex;
-    width: 22px;
-    height: 22px;
+    width: clamp(18px, 1.77vw, 34px);
+    height: clamp(18px, 1.77vw, 34px);
     border-radius: 50%;
     cursor: pointer;
     box-shadow: 0 0 0 1px rgba(30, 30, 30, 0.12) inset;
@@ -237,7 +307,7 @@
   #shopify-section-{{ sid }} .rb-aw__grid {
     display: grid;
     grid-template-columns: repeat({{ section.settings.columns }}, minmax(0, 1fr));
-    gap: clamp(24px, 3.44vw, 66px) clamp(20px, 3.13vw, 60px);
+    gap: clamp(24px, 3.44vw, 66px) {% if layout == 'rail' %}clamp(20px, 2.92vw, 56px){% else %}clamp(20px, 3.13vw, 60px){% endif %};
   }
   #shopify-section-{{ sid }} .rb-aw__card { display: flex; flex-direction: column; }
   #shopify-section-{{ sid }} .rb-aw__media {
@@ -292,13 +362,22 @@
     align-items: baseline;
     justify-content: space-between;
     gap: 12px;
-    margin-top: clamp(8px, 0.83vw, 16px);
+    margin-top: clamp(10px, 1.15vw, 22px);
+    font-size: clamp(14px, 1.3vw, 25px);
     color: {{ section.settings.card_meta_color }};
   }
+  /* pushed to the foot of the card so the pills line up across a row even
+     when one title wraps onto a second line, as the comp shows them */
   #shopify-section-{{ sid }} .rb-aw__cta-row {
     display: flex;
     justify-content: center;
-    margin-top: clamp(10px, 0.94vw, 18px);
+    margin-top: auto;
+    padding-top: clamp(16px, 1.93vw, 37px);
+  }
+  /* the comp's pill hugs its label — much tighter than the site-wide button */
+  #shopify-section-{{ sid }} .rb-aw__cta-row .rb-btn {
+    padding-inline: clamp(16px, 1.3vw, 25px);
+    font-size: clamp(15px, 1.22vw, 23px);
   }
 
   #shopify-section-{{ sid }} .rb-aw__count {
@@ -316,7 +395,12 @@
 
   @media screen and (max-width: 989px) {
     #shopify-section-{{ sid }} .rb-aw__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    #shopify-section-{{ sid }} .rb-aw__layout { grid-template-columns: 1fr; }
+    #shopify-section-{{ sid }} .rb-aw__layout { grid-template-columns: 1fr; row-gap: clamp(20px, 4vw, 40px); }
+    /* the rail's right edge only reads as an edge beside the grid; stacked
+       above it, the same alignment looks like a mistake */
+    #shopify-section-{{ sid }} .rb-aw__rail { align-items: flex-start; text-align: left; }
+    #shopify-section-{{ sid }} .rb-aw__rail-group > summary { justify-content: flex-start; }
+    #shopify-section-{{ sid }} .rb-aw__swatches { justify-content: flex-start; }
   }
   @media screen and (max-width: 639px) {
     #shopify-section-{{ sid }} .rb-aw__grid { grid-template-columns: 1fr; }
@@ -483,16 +567,27 @@
   {%- else -%}
     <div class="rb-container">
       <div class="rb-aw__sorts">
-        <span class="rb-aw__select-wrap">
+        {%- comment -%}
+          The comp reads "Show 24" at rest, so the resting option is the page
+          size the server already rendered — picking it must not switch the
+          grid to a client-rendered one. The explicit counts come after it,
+          and "Show all" is a large slice rather than an empty value, which
+          the filter script treats as "no filter active".
+        {%- endcomment -%}
+        <span class="rb-aw__select-wrap rb-aw__select-wrap--fit">
+          <span class="rb-aw__label" data-rba-label>Show {{ per_page }}</span>
           <select class="rb-aw__control" data-rba-show aria-label="How many to show">
-            <option value="">Show all</option>
-            <option value="12">Show 12</option>
-            <option value="24">Show 24</option>
-            <option value="48">Show 48</option>
+            <option value="">Show {{ per_page }}</option>
+            {%- for n in show_options -%}
+              {%- assign ni = n | plus: 0 -%}
+              {%- unless ni == per_page -%}<option value="{{ ni }}">Show {{ ni }}</option>{%- endunless -%}
+            {%- endfor -%}
+            <option value="9999">Show all</option>
           </select>
           {{ chevron }}
         </span>
-        <span class="rb-aw__select-wrap">
+        <span class="rb-aw__select-wrap rb-aw__select-wrap--fit">
+          <span class="rb-aw__label" data-rba-label>Featured</span>
           <select class="rb-aw__control" data-rba-sort aria-label="Sort by">
             <option value="">Featured</option>
             <option value="newest">Newest</option>
@@ -515,7 +610,7 @@
                 {%- for t in colour_list -%}
                   {%- liquid
                     assign val = t | remove_first: 'colour-'
-                    assign dot = '#9da887'
+                    assign dot = '#505a43'
                     case val
                       when 'warm'
                         assign dot = '#e07468'
@@ -599,7 +694,8 @@
     { "type": "header", "content": "Side rail" },
     { "type": "text", "id": "rail_title", "default": "Filter By:", "label": "Rail title" },
     { "type": "range", "id": "rail_width", "min": 120, "max": 320, "step": 10,
-      "default": 190, "unit": "px", "label": "Rail width" },
+      "default": 150, "unit": "px", "label": "Rail minimum width",
+      "info": "The rail tracks the comp's 10.6% of the content width and never falls below this." },
     { "type": "text", "id": "card_button", "default": "Browse Collection", "label": "Card button label" },
     { "type": "header", "content": "Footer link" },
     { "type": "text", "id": "more_label", "default": "See More…", "label": "Button label" },

@@ -256,6 +256,17 @@
         var pill = cb.closest('.rb-aw__toggle');
         if (pill) pill.classList.toggle('is-on', state.avail);
       });
+
+      /* The rail's Show/Sort controls draw their label in a span so the
+         control hugs its text instead of stretching to the widest option;
+         the span has to follow whatever the select now holds. */
+      root.querySelectorAll('.rb-aw__select-wrap--fit').forEach(function (wrap) {
+        var sel = wrap.querySelector('select');
+        var label = wrap.querySelector('[data-rba-label]');
+        if (!sel || !label || sel.selectedIndex < 0) return;
+        var text = sel.options[sel.selectedIndex].text;
+        if (label.textContent !== text) label.textContent = text;
+      });
     }
 
     function toggleIn(arr, v) {

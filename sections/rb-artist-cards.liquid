@@ -115,7 +115,7 @@
   #shopify-section-{{ sid }} .rb-ac__grid {
     display: grid;
     grid-template-columns: repeat({{ cols }}, minmax(0, 1fr));
-    gap: clamp(20px, 2.55vw, 49px);
+    gap: clamp(18px, 2.08vw, 40px); /* 40px between 562px cards in the comp */
   }
 
   #shopify-section-{{ sid }} .rb-ac__card {
@@ -310,11 +310,41 @@
         {%- liquid
           assign col = collections[block.settings.collection]
           assign name = block.settings.name | default: col.title
-          assign art = block.settings.image | default: col.featured_image
           assign url = block.settings.link | default: col.url
           assign bio = block.settings.bio
           if bio == blank
             assign bio = col.description
+          endif
+
+          comment
+            The comp's card is one of the artist's WORKS with their
+            black-and-white portrait set into it — the same pairing as the
+            person hero, so it resolves the same way:
+
+              portrait — the collection's own image, which in this store is
+                         the photo of the person;
+              artwork  — the first piece in the collection that is not that
+                         same photo.
+
+            A collection holding nothing but the portrait shows it large with
+            no inset, because the same picture twice reads as a mistake.
+          endcomment
+          assign art = block.settings.image
+          assign portrait = block.settings.portrait
+          if portrait == blank
+            assign portrait = col.image
+          endif
+          if art == blank
+            for item in col.products limit: 6
+              if item.featured_image != blank and item.featured_image != portrait
+                assign art = item.featured_image
+                break
+              endif
+            endfor
+          endif
+          if art == blank
+            assign art = portrait
+            assign portrait = blank
           endif
         -%}
         <article
@@ -339,10 +369,10 @@
                 {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
               {%- endif -%}
 
-              {%- if block.settings.portrait != blank -%}
+              {%- if portrait != blank -%}
                 <div class="rb-inset rb-ac__portrait">
                   {{
-                    block.settings.portrait
+                    portrait
                     | image_url: width: 600
                     | image_tag:
                       widths: '200, 320, 460, 600',
@@ -500,9 +530,10 @@
         { "type": "text", "id": "place", "default": "Hout Bay, Western Cape", "label": "Place" },
         { "type": "richtext", "id": "bio", "label": "Bio override",
           "info": "Blank uses the collection description." },
-        { "type": "image_picker", "id": "image", "label": "Artwork override" },
+        { "type": "image_picker", "id": "image", "label": "Artwork override",
+          "info": "Blank uses the first piece in the collection." },
         { "type": "image_picker", "id": "portrait", "label": "Portrait",
-          "info": "Rendered black and white, as in the design." },
+          "info": "Blank uses the collection's own image, which is the photo of the person. Rendered black and white, as in the design." },
         { "type": "url", "id": "link", "label": "Link override" },
         { "type": "text", "id": "button_label", "default": "See Collections", "label": "Button label" },
         { "type": "select", "id": "tone", "label": "Panel colour", "default": "auto",

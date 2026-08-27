@@ -13,7 +13,7 @@
         "show_mark": true,
         "mark": "saaf",
         "mark_width": 130,
-        "heading": "Discover a collection of local <em>artists and their work</em>, all part of the creative ecosystem we’re building together.",
+        "heading": "Discover a collection of local <em>artists and their work</em>, all part of the creative ecosystem we\u2019re building together.",
         "heading_style": "statement",
         "text_color": "#ffffff"
       }
@@ -26,7 +26,7 @@
           "settings": {
             "collection": "susan-orpen",
             "name": "",
-            "medium": "Watercolour · Acrylic · Mixed Media",
+            "medium": "Watercolour \u00b7 Acrylic \u00b7 Mixed Media",
             "place": "Hout Bay, Western Cape",
             "bio": "",
             "link": "",
@@ -39,7 +39,7 @@
           "settings": {
             "collection": "kerri-sassen",
             "name": "",
-            "medium": "Abstract · Mixed Media · Art Therapy",
+            "medium": "Abstract \u00b7 Mixed Media \u00b7 Art Therapy",
             "place": "Hout Bay, Western Cape",
             "bio": "",
             "link": "",
@@ -52,7 +52,7 @@
           "settings": {
             "collection": "zara-leigh",
             "name": "",
-            "medium": "Abstract Acrylic · Oil · Large Format",
+            "medium": "Abstract Acrylic \u00b7 Oil \u00b7 Large Format",
             "place": "Hout Bay, Western Cape",
             "bio": "",
             "link": "",
@@ -65,7 +65,7 @@
           "settings": {
             "collection": "amara-dube",
             "name": "",
-            "medium": "Oil · Figurative · Portrait",
+            "medium": "Oil \u00b7 Figurative \u00b7 Portrait",
             "place": "Hout Bay, Western Cape",
             "bio": "",
             "link": "",
@@ -78,7 +78,7 @@
           "settings": {
             "collection": "liesel-van-der-berg",
             "name": "",
-            "medium": "Ceramics · Sculpture · Mixed Media",
+            "medium": "Ceramics \u00b7 Sculpture \u00b7 Mixed Media",
             "place": "Hout Bay, Western Cape",
             "bio": "",
             "link": "",
@@ -91,7 +91,7 @@
           "settings": {
             "collection": "natasha-hendricks",
             "name": "",
-            "medium": "Printmaking · Photography · Collage",
+            "medium": "Printmaking \u00b7 Photography \u00b7 Collage",
             "place": "Hout Bay, Western Cape",
             "bio": "",
             "link": "",
@@ -505,10 +505,10 @@
         "grid_width": 1760,
         "image_ratio": "555 / 402",
         "radius": 20,
-        "portrait_w": 42,
-        "portrait_ratio": "132 / 130",
+        "portrait_w": 39,
+        "portrait_ratio": "109 / 130",
         "portrait_x": 49,
-        "portrait_y": 50,
+        "portrait_y": 48,
         "background": "#ffffff",
         "tone_a": "#9da887",
         "tone_a_text": "#ffffff",
@@ -516,7 +516,14 @@
         "tone_b": "#505a43",
         "tone_b_text": "#dfe4d4",
         "tone_b_meta": "#a5ad93",
-        "texture": 100
+        "texture": 100,
+        "show_finder": true,
+        "finder_label": "Find an artist",
+        "search_placeholder": "Search by name or medium",
+        "show_name_list": true,
+        "empty_text": "No artists match that search.",
+        "finder_text_color": "#1e1e1e",
+        "finder_accent": "#b00e3f"
       }
     }
   },
