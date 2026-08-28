@@ -1,246 +1,237 @@
 {
   "sections": {
-    "main": {
-      "type": "collection-gallery",
+    "hero": {
+      "type": "rb-hero",
       "settings": {
-        "eyebrow": "SA Art Fair",
-        "intro": "Original paintings, prints, and mixed media by our resident Hout Bay artists — each piece made in the studio and available to collect.",
-        "products_per_page": 24
+        "fill": "image",
+        "background": "#505a43",
+        "texture": 100,
+        "image": "shopify:\/\/shop_images\/saf-store-hero.jpg",
+        "image_blend": "normal",
+        "image_rotate": "0",
+        "band_height": 870,
+        "min_height": 340,
+        "mobile_ratio": "4 \/ 5",
+        "focal_x": 50,
+        "focal_y": 46,
+        "overlay_color": "#1e1e1e",
+        "overlay_opacity": 0,
+        "show_mark": true,
+        "mark": "store",
+        "mark_width": 190,
+        "heading": "The Store",
+        "auto_heading": false,
+        "heading_style": "page_title",
+        "text_color": "#ffffff",
+        "button_label": "",
+        "button_link": ""
       }
     },
-    "featured_artist": {
-      "type": "featured-artist",
+    "split": {
+      "type": "rb-split-band",
       "settings": {
-        "scheme": "dark",
-        "products_per_view": 2,
-        "show_prices": true,
-        "show_badge": true,
-        "show_hearts": true,
-        "padding_top": 56,
-        "padding_bottom": 64
+        "eyebrow": "",
+        "heading": "<p><em>Space<\/em> is<br\/>the breath<br\/>of <em>art.<\/em><\/p>",
+        "heading_font": "serif",
+        "heading_width": 560,
+        "heading_scale": 120,
+        "attribution": "Frank Lloyd Wright",
+        "body": "",
+        "align": "left",
+        "button_label": "",
+        "button_link": "",
+        "show_mark": true,
+        "mark": "cherry",
+        "mark_width": 55,
+        "panel_color": "#bea532",
+        "text_color": "#b00e3f",
+        "accent_color": "#b00e3f",
+        "texture": 100,
+        "panel_image_fit": "cover",
+        "panel_image_focal_x": 50,
+        "panel_image_focal_y": 50,
+        "panel_image_veil": 0,
+        "image": "shopify:\/\/shop_images\/saf-store-featured-art.jpg",
+        "media_side": "right",
+        "panel_width": 50,
+        "min_height": 610,
+        "mobile_ratio": "4 \/ 3",
+        "focal_x": 50,
+        "focal_y": 50
       }
     },
-    "shop_by_colour": {
-      "type": "shop-by-colour",
+    "artworks": {
+      "type": "rb-artworks",
+      "settings": {
+        "heading": "Available Artworks",
+        "collection": "gallery",
+        "layout": "toolbar",
+        "per_page": 9,
+        "columns": 3,
+        "image_ratio": "1 \/ 1",
+        "hover_label": "View Artwork",
+        "search_placeholder": "Search artworks, artists, mediums…",
+        "bar_color": "#f4f4f1",
+        "rail_title": "Filter By:",
+        "rail_width": 150,
+        "card_button": "Browse Collection",
+        "more_label": "See More…",
+        "more_link": "",
+        "background": "#ffffff",
+        "heading_color": "#505a43",
+        "card_title_color": "#1e1e1e",
+        "card_meta_color": "#1e1e1e"
+      }
+    },
+    "featured": {
+      "type": "rb-feature-person",
+      "settings": {
+        "source": "manual",
+        "eyebrow": "Featured Artist",
+        "name": "Kerri Sassen",
+        "body": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.<\/p>",
+        "button_a_label": "Browse Collection",
+        "button_a_link": "shopify:\/\/collections\/kerri-sassen",
+        "button_b_label": "See Artist Page",
+        "button_b_link": "shopify:\/\/collections\/kerri-sassen",
+        "panel_color": "#a2ad8e",
+        "text_color": "#ffffff",
+        "eyebrow_color": "#505a43",
+        "button_bg": "#505a43",
+        "button_text": "#ffffff",
+        "button_radius": 0,
+        "texture": 100,
+        "panel_image_fit": "cover",
+        "panel_image_focal_x": 50,
+        "panel_image_focal_y": 50,
+        "panel_image_veil": 0,
+        "image": "shopify:\/\/shop_images\/saf-store-featured-art.jpg",
+        "panel_width": 48,
+        "min_height": 850,
+        "focal_x": 50,
+        "focal_y": 50,
+        "portrait": "shopify:\/\/shop_images\/saf-portrait-kerri.jpg",
+        "portrait_w": 40,
+        "portrait_ratio": "397 \/ 346",
+        "portrait_x": 49,
+        "portrait_y": 51
+      }
+    },
+    "statement": {
+      "type": "rb-statement",
+      "settings": {
+        "show_mark": true,
+        "eyebrow": "",
+        "eyebrow_color": "#b00e3f",
+        "heading": "<p>Lorem ipsum dolor sit amet, consectetur <em>adipiscing elit.<\/em><\/p>",
+        "heading_color": "#1e1e1e",
+        "accent_color": "#505a43",
+        "heading_width": 900,
+        "body": "",
+        "body_color": "#1e1e1e",
+        "body_width": 900,
+        "background": "#ffffff",
+        "button_label": "",
+        "button_link": "",
+        "padding_top": 150,
+        "padding_bottom": 120
+      }
+    },
+    "quiz": {
+      "type": "rb-quiz-banner",
+      "settings": {
+        "contained": true,
+        "radius": 24,
+        "image": "shopify:\/\/shop_images\/saf-home-quiz.jpg",
+        "band_height": 830,
+        "min_height": 340,
+        "mobile_ratio": "3 \/ 4",
+        "focal_x": 50,
+        "focal_y": 50,
+        "overlay_color": "#1e1e1e",
+        "overlay_opacity": 0,
+        "show_badge": false,
+        "badge_color": "#bea532",
+        "heading": "What’s your art personality?",
+        "subheading": "See how your personality can shape your journey as a collector.",
+        "text_color": "#ffffff",
+        "button_label": "Take The Quiz",
+        "button_link": "shopify:\/\/collections\/art-quiz"
+      }
+    },
+    "shop_by_colour_iwqWK7": {
+      "type": "rb-shop-by-colour",
       "blocks": {
-        "sbc_warm": {
+        "colour_yceKTz": {
           "type": "colour",
           "settings": {
             "collection": "warm-tones",
-            "title": "Warm",
-            "swatch": "#c96a4a"
+            "title": "Warm Tones",
+            "label": "Reds, ochres and golds",
+            "swatch": "#e07468",
+            "image": "shopify:\/\/shop_images\/saf-home-collection-1.jpg"
           }
         },
-        "sbc_cool": {
+        "colour_zWGmRq": {
           "type": "colour",
           "settings": {
             "collection": "cool-tones",
-            "title": "Cool",
-            "swatch": "#18727d"
+            "title": "Cool Tones",
+            "label": "Blues, greens and greys",
+            "swatch": "#0c3642",
+            "image": "shopify:\/\/shop_images\/saf-home-collection-2.jpg"
           }
         },
-        "sbc_neutral": {
+        "colour_ApRH9N": {
           "type": "colour",
           "settings": {
             "collection": "neutral-tones",
-            "title": "Neutral",
-            "swatch": "#b7ab99"
+            "title": "Neutral Tones",
+            "label": "Sand, stone and linen",
+            "swatch": "#bea532",
+            "image": "shopify:\/\/shop_images\/saf-home-collection-3.jpg"
           }
         }
       },
       "block_order": [
-        "sbc_warm",
-        "sbc_cool",
-        "sbc_neutral"
+        "colour_yceKTz",
+        "colour_zWGmRq",
+        "colour_ApRH9N"
       ],
+      "name": "Shop by Colour",
       "settings": {
-        "eyebrow": "ART FOR YOUR SPACE",
+        "eyebrow": "Art For Your Space",
+        "eyebrow_color": "#bea532",
         "heading": "Shop by Colour",
+        "heading_color": "#505a43",
+        "accent_color": "#505a43",
+        "name_color": "#1e1e1e",
+        "name_idle_color": "#a9a7a2",
+        "meta_color": "#1e1e1e",
+        "rule_color": "#d5cbb2",
         "image_position": "left",
-        "background": "#eeefeb"
-      }
-    },
-    "art_under": {
-      "type": "art-under",
-      "settings": {
-        "eyebrow": "START YOUR COLLECTION",
-        "heading": "",
-        "button_label": "",
-        "product_limit": 8
-      }
-    },
-    "gallery_preview": {
-      "type": "home-gallery-preview",
-      "settings": {
-        "eyebrow": "FROM THE GALLERY",
-        "heading": "New & notable",
-        "collection_handle": "gallery",
-        "product_limit": 4,
-        "view_all": ""
-      }
-    },
-    "artists_preview": {
-      "type": "home-artists",
-      "blocks": {
-        "susan": {
-          "type": "artist",
-          "settings": {
-            "collection_handle": "susan-orpen",
-            "name": "Susan Orpen",
-            "role": "Watercolour · Acrylic · Mixed Media",
-            "bio": "Susan has been practising and teaching art in Hout Bay for over a decade. Her work spans watercolour landscapes to bold acrylic abstracts — and her teaching style makes even the most uncertain beginner feel at ease."
-          }
-        },
-        "kerri": {
-          "type": "artist",
-          "settings": {
-            "collection_handle": "kerri-sassen",
-            "name": "Kerri Sassen",
-            "role": "Abstract · Mixed Media · Art Therapy",
-            "bio": "Kerri brings warmth and expertise to every class. A qualified occupational art therapist, she creates a space where people explore abstraction freely — no experience needed, just an open mind."
-          }
-        },
-        "zara": {
-          "type": "artist",
-          "settings": {
-            "collection_handle": "zara-leigh",
-            "name": "Zara-Leigh Farinha",
-            "role": "Abstract Acrylic · Oil · Large Format",
-            "bio": "Zara-Leigh's energy is contagious. Known for large-format abstract works in acrylic and oil, her Friday 'Permission to Play' class is exactly what it sounds like — joyful, free, and surprising."
-          }
-        }
-      },
-      "block_order": [
-        "susan",
-        "kerri",
-        "zara"
-      ],
-      "settings": {
-        "eyebrow": "REPRESENTED",
-        "heading": "Our artists",
-        "team_page": "\/pages\/artists"
-      }
-    },
-    "reviews": {
-      "type": "testimonials",
-      "blocks": {
-        "r0": {
-          "type": "review",
-          "settings": {
-            "quote": "The whole process was seamless and the piece is even more beautiful in person. I'll definitely collect again.",
-            "name": "Megan",
-            "role": "Collector",
-            "rating": 5
-          }
-        },
-        "r1": {
-          "type": "review",
-          "settings": {
-            "quote": "I love that I could buy directly from the artist — it makes the work feel so much more personal.",
-            "name": "Thabo",
-            "role": "Collector",
-            "rating": 5
-          }
-        },
-        "r2": {
-          "type": "review",
-          "settings": {
-            "quote": "Beautifully packaged and delivered on time. A genuinely lovely way to buy original art.",
-            "name": "Claire",
-            "role": "Collector",
-            "rating": 5
-          }
-        }
-      },
-      "block_order": [
-        "r0",
-        "r1",
-        "r2"
-      ],
-      "settings": {
-        "layout": "grid",
-        "eyebrow": "What collectors say",
-        "heading": "Loved by our collectors",
-        "bg_color": "#eeefeb",
-        "text_color": "#1d1c21",
-        "accent_color": "#0f4a52",
-        "marquee_speed": 40
-      }
-    },
-    "art_quiz_teaser": {
-      "type": "art-quiz",
-      "settings": {
-        "teaser_mode": true,
-        "quiz_page": "\/collections\/art-quiz",
-        "heading": "What's Your Art Personality?",
-        "cta_text": "Take the Test",
-        "accent_color": "#f26b52",
-        "api_url": "https:\/\/sa-art-fair-admin.vercel.app",
-        "meta_text": "14 questions · 3 minutes"
-      }
-    },
-    "testimonials_strip": {
-      "type": "testimonials",
-      "blocks": {
-        "r0": {
-          "type": "review",
-          "settings": {
-            "quote": "A beautiful piece and a beautiful experience.",
-            "name": "Nadia",
-            "role": "Collector"
-          }
-        },
-        "r1": {
-          "type": "review",
-          "settings": {
-            "quote": "Supporting local artists has never felt this easy.",
-            "name": "James",
-            "role": "Collector"
-          }
-        },
-        "r2": {
-          "type": "review",
-          "settings": {
-            "quote": "My new favourite gallery — online or off.",
-            "name": "Priya",
-            "role": "Collector"
-          }
-        },
-        "r3": {
-          "type": "review",
-          "settings": {
-            "quote": "The art arrived perfectly and looks stunning at home.",
-            "name": "Sipho",
-            "role": "Collector"
-          }
-        }
-      },
-      "block_order": [
-        "r0",
-        "r1",
-        "r2",
-        "r3"
-      ],
-      "settings": {
-        "layout": "marquee",
-        "eyebrow": "",
-        "heading": "",
-        "bg_color": "#f5ece6",
-        "text_color": "#1d1c21",
-        "accent_color": "#f26b52",
-        "marquee_speed": 45
+        "media_width": 48,
+        "image_ratio": "8 \/ 5",
+        "mobile_ratio": "4 \/ 5",
+        "hover_label": "Browse Collection",
+        "view_all_label": "View All Art",
+        "view_all_url": "shopify:\/\/collections\/gallery",
+        "button_style": "outline",
+        "background": "#e6ddc6",
+        "texture": 100,
+        "panel_image_blend": "normal",
+        "padding_top": 130,
+        "padding_bottom": 140
       }
     }
   },
   "order": [
-    "main",
-    "featured_artist",
-    "shop_by_colour",
-    "art_under",
-    "gallery_preview",
-    "artists_preview",
-    "reviews",
-    "art_quiz_teaser",
-    "testimonials_strip"
+    "hero",
+    "split",
+    "artworks",
+    "featured",
+    "statement",
+    "quiz",
+    "shop_by_colour_iwqWK7"
   ]
 }
