@@ -14,6 +14,40 @@
 {%- liquid
   assign sid = section.id
   assign img = section.settings.image
+  assign band_colour = section.settings.background
+  assign band_blend = section.settings.image_blend
+  assign band_rotate = section.settings.image_rotate
+
+  comment
+    Per-collection backgrounds. One template can serve many collections — the
+    colour template is shared by Warm / Cool / Neutral Tones — so the band has
+    to be able to wear a different paper on each of them without the template
+    being forked three ways. Add one block per collection; the block for the
+    collection being viewed wins, every other block changes nothing, and a
+    collection with no block of its own keeps the section's own settings.
+  endcomment
+  for block in section.blocks
+    if block.type != 'collection_bg'
+      continue
+    endif
+    assign target = block.settings.collection
+    if collection == blank or target == blank or target.handle != collection.handle
+      continue
+    endif
+    if block.settings.image != blank
+      assign img = block.settings.image
+    endif
+    if block.settings.background != blank
+      assign band_colour = block.settings.background
+    endif
+    if block.settings.image_blend != 'inherit'
+      assign band_blend = block.settings.image_blend
+    endif
+    if block.settings.image_rotate != 'inherit'
+      assign band_rotate = block.settings.image_rotate
+    endif
+    break
+  endfor
 
   comment
     One template serves every unsuffixed collection, so the page-title lockup
@@ -43,7 +77,7 @@
     min-height: {{ section.settings.min_height }}px;
     overflow: hidden;
     {%- if section.settings.fill == 'colour' -%}
-      background: {{ section.settings.background }};
+      background: {{ band_colour }};
       --rb-paper-strength: {{ section.settings.texture | divided_by: 100.0 }};
     {%- else -%}
       background: var(--rb-ink);
@@ -129,8 +163,8 @@
         image: img,
         focal_x: section.settings.focal_x,
         focal_y: section.settings.focal_y,
-        blend: section.settings.image_blend,
-        rotate: section.settings.image_rotate,
+        blend: band_blend,
+        rotate: band_rotate,
         veil: section.settings.overlay_color,
         veil_opacity: section.settings.overlay_opacity,
         sizes: '100vw',
@@ -203,7 +237,7 @@
     { "type": "range", "id": "texture", "min": 0, "max": 100, "step": 5,
       "default": 100, "unit": "%", "label": "Crumpled paper texture" },
     { "type": "image_picker", "id": "image", "label": "Background image",
-      "info": "Comp uses a 1920x883 photograph of a paint palette. On a coloured-paper band it paints behind the crumpled texture, over the band colour — leave it empty there for a plain coloured band." },
+      "info": "Comp uses a 1920x883 photograph of a paint palette. On a coloured-paper band it paints behind the crumpled texture, over the band colour — leave it empty there for a plain coloured band. When one template serves several collections, add a \"Per-collection background\" block below to give a collection its own image." },
     { "type": "select", "id": "image_blend", "default": "normal",
       "label": "How the image meets the band colour",
       "info": "Only applies on a coloured-paper band. Screen is the Figma setting for a dark crumpled-paper photograph: the band colour stays and the paper's folds lift out of it. Drop the crumpled paper texture to 0% when you do that, or the theme's own texture doubles up on it.",
@@ -262,6 +296,41 @@
     { "type": "color", "id": "text_color", "default": "#ffffff", "label": "Heading colour" },
     { "type": "text", "id": "button_label", "label": "Button label" },
     { "type": "url", "id": "button_link", "label": "Button link" }
+  ],
+  "max_blocks": 12,
+  "blocks": [
+    {
+      "type": "collection_bg",
+      "name": "Per-collection background",
+      "settings": [
+        { "type": "paragraph",
+          "content": "Some templates are shared by several collections — Warm, Cool and Neutral Tones all use the same one. Add a block per collection to give each of them its own paper. Anything left blank here falls back to the section's own settings above." },
+        { "type": "collection", "id": "collection", "label": "Collection",
+          "info": "This block only applies on this collection's page." },
+        { "type": "image_picker", "id": "image", "label": "Background image" },
+        { "type": "color", "id": "background", "label": "Band colour",
+          "info": "Optional. Leave empty to keep the section's band colour." },
+        { "type": "select", "id": "image_blend", "default": "inherit",
+          "label": "How the image meets the band colour",
+          "options": [
+            { "value": "inherit", "label": "Same as the section" },
+            { "value": "normal", "label": "Image covers the colour" },
+            { "value": "screen", "label": "Screen — colour through a dark image" },
+            { "value": "multiply", "label": "Multiply — colour through a light image" },
+            { "value": "soft-light", "label": "Soft light — image as faint grain" },
+            { "value": "luminosity", "label": "Luminosity — image's shading, band's hue" }
+          ] },
+        { "type": "select", "id": "image_rotate", "default": "inherit",
+          "label": "Rotate the image",
+          "options": [
+            { "value": "inherit", "label": "Same as the section" },
+            { "value": "0", "label": "None" },
+            { "value": "90", "label": "90° clockwise" },
+            { "value": "180", "label": "180°" },
+            { "value": "270", "label": "90° anticlockwise (Figma 90°)" }
+          ] }
+      ]
+    }
   ],
   "presets": [{ "name": "Rebrand hero" }]
 }
