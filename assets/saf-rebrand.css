@@ -274,6 +274,18 @@
    srcset and lazy-loading the rest of the theme's images get. Cover is the
    default; `contain` exists because a panel is sometimes fed a whole flat
    graphic (a quote plate) that must not be cropped — see the plate-crop notes.
+
+   --rb-paper-bg-blend is how the layer MEETS the panel colour. Default `normal`
+   (initial value, so an unset panel renders exactly as before) means the photo
+   simply covers the colour. Hanre's comps instead put a near-black photograph
+   of crumpled paper onto a coloured rectangle at blend SCREEN — the panel
+   colour stays, the paper's folds lift out of it, and the band reads lighter
+   than its own hex. That is why the moss hero measured lighter in the comp
+   (luma ~99) than a flat #505a43 band (~84): screen(#505a43, texture) is ~100.
+   The blend lands on the whole layer, so it is confined to .rb-paper's
+   stacking context and blends against the panel's own background — but the
+   veil below composites INSIDE it and is blended too, so keep the veil at 0
+   whenever a blend mode is set.
    -------------------------------------------------------------------------- */
 .rb-paper__bg {
   display: block; /* Dawn's base.css hides div:empty */
@@ -283,6 +295,7 @@
   overflow: hidden;
   border-radius: inherit;
   pointer-events: none;
+  mix-blend-mode: var(--rb-paper-bg-blend, normal);
 }
 
 .rb-paper__bg > img,

@@ -118,11 +118,18 @@
         graphic without leaving the brand surface. The band's own focal point
         and overlay settings drive it, so there is only ever one image picker
         on this section.
+
+        "How the image meets the band colour" is the Figma layer's blend mode.
+        Hanre's frames are a coloured rectangle with a near-black crumpled-paper
+        photograph SCREENED over it — pick Screen there and the band colour is
+        what you set, lifted by the paper's folds, instead of being buried under
+        an opaque photo.
       {%- endcomment -%}
       {%- render 'rb-panel-image',
         image: img,
         focal_x: section.settings.focal_x,
         focal_y: section.settings.focal_y,
+        blend: section.settings.image_blend,
         veil: section.settings.overlay_color,
         veil_opacity: section.settings.overlay_opacity,
         sizes: '100vw',
@@ -196,6 +203,16 @@
       "default": 100, "unit": "%", "label": "Crumpled paper texture" },
     { "type": "image_picker", "id": "image", "label": "Background image",
       "info": "Comp uses a 1920x883 photograph of a paint palette. On a coloured-paper band it paints behind the crumpled texture, over the band colour — leave it empty there for a plain coloured band." },
+    { "type": "select", "id": "image_blend", "default": "normal",
+      "label": "How the image meets the band colour",
+      "info": "Only applies on a coloured-paper band. Screen is the Figma setting for a dark crumpled-paper photograph: the band colour stays and the paper's folds lift out of it. Drop the crumpled paper texture to 0% when you do that, or the theme's own texture doubles up on it.",
+      "options": [
+        { "value": "normal", "label": "Image covers the colour" },
+        { "value": "screen", "label": "Screen — colour through a dark image" },
+        { "value": "multiply", "label": "Multiply — colour through a light image" },
+        { "value": "soft-light", "label": "Soft light — image as faint grain" },
+        { "value": "luminosity", "label": "Luminosity — image's shading, band's hue" }
+      ] },
     { "type": "range", "id": "band_height", "min": 300, "max": 1100, "step": 10,
       "default": 850, "unit": "px", "label": "Band height at 1920px wide",
       "info": "Sets the aspect ratio, so the band scales with the viewport." },
