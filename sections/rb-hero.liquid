@@ -130,6 +130,7 @@
         focal_x: section.settings.focal_x,
         focal_y: section.settings.focal_y,
         blend: section.settings.image_blend,
+        rotate: section.settings.image_rotate,
         veil: section.settings.overlay_color,
         veil_opacity: section.settings.overlay_opacity,
         sizes: '100vw',
@@ -212,6 +213,15 @@
         { "value": "multiply", "label": "Multiply — colour through a light image" },
         { "value": "soft-light", "label": "Soft light — image as faint grain" },
         { "value": "luminosity", "label": "Luminosity — image's shading, band's hue" }
+      ] },
+    { "type": "select", "id": "image_rotate", "default": "0",
+      "label": "Rotate the image",
+      "info": "The comps turn the portrait paper texture a quarter, so the band shows a strip across the sheet's width. Figma's 90° is 270° here — Figma counts anticlockwise, CSS clockwise.",
+      "options": [
+        { "value": "0", "label": "None" },
+        { "value": "90", "label": "90° clockwise" },
+        { "value": "180", "label": "180°" },
+        { "value": "270", "label": "90° anticlockwise (Figma 90°)" }
       ] },
     { "type": "range", "id": "band_height", "min": 300, "max": 1100, "step": 10,
       "default": 850, "unit": "px", "label": "Band height at 1920px wide",

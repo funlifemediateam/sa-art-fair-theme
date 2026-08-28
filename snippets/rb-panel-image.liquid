@@ -19,6 +19,11 @@
                  the photo covers the panel colour. Anything else blends it with
                  the panel colour underneath — 'screen' is how Hanre's comps put
                  a near-black paper texture onto a coloured band.
+    rotate       0 (default) | 90 | 180 | 270, degrees clockwise. Hanre drops a
+                 PORTRAIT paper texture into a landscape band and turns it, so
+                 the crop is a strip across the sheet's width. On a quarter turn
+                 the cover box is the panel's own dimensions swapped, so the
+                 rotated image still fills it — see the CSS.
     veil         a colour laid back over the photo — pass the panel's own colour
     veil_opacity 0-100, how much of that colour. 0 (default) = none. NOTE the
                  veil composites INSIDE the blended layer, so it is itself
@@ -35,16 +40,25 @@
     assign panel_fy = focal_y | default: 50
     assign panel_veil = veil_opacity | default: 0
     assign panel_blend = blend | default: 'normal'
+    assign panel_rot = rotate | default: 0 | plus: 0
     assign panel_src_width = width | default: 1600
     assign panel_sizes = sizes | default: '100vw'
     assign panel_widths = widths | default: '400, 600, 900, 1200, 1600, 2000'
+
+    assign rot_class = ''
+    if panel_rot == 90 or panel_rot == 270
+      assign rot_class = ' rb-paper__bg--rot rb-paper__bg--rot-quarter'
+    elsif panel_rot == 180
+      assign rot_class = ' rb-paper__bg--rot'
+    endif
   -%}
   <div
-    class="rb-paper__bg{% if panel_fit == 'contain' %} rb-paper__bg--contain{% endif %}"
+    class="rb-paper__bg{% if panel_fit == 'contain' %} rb-paper__bg--contain{% endif %}{{ rot_class }}"
     aria-hidden="true"
     style="
       --rb-paper-bg-pos: {{ panel_fx }}% {{ panel_fy }}%;
       {%- if panel_blend != 'normal' %} --rb-paper-bg-blend: {{ panel_blend }};{% endif %}
+      {%- if rot_class != blank %} --rb-paper-bg-rot: {{ panel_rot }}deg;{% endif %}
       {%- if veil != blank %} --rb-paper-veil: {{ veil }};{% endif %}
       --rb-paper-veil-opacity: {{ panel_veil | divided_by: 100.0 }};
     "

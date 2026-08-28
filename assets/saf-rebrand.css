@@ -314,6 +314,31 @@
   object-fit: contain;
 }
 
+/* Rotated variants. Hanre's comps drop a PORTRAIT paper texture into a
+   landscape band and turn it a quarter, so what shows is a strip across the
+   sheet's width — a different crop of the same photo than an unturned cover
+   fit gives. A quarter turn means the cover box has to be the panel's own
+   dimensions SWAPPED before the rotation, or a landscape band would cover-fit
+   a landscape box and then spin it into empty corners. Container query units
+   are what let the img read its parent's height as a width. */
+.rb-paper__bg--rot {
+  container-type: size;
+}
+
+.rb-paper__bg--rot > img,
+.rb-paper__bg--rot > svg {
+  inset: auto;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(var(--rb-paper-bg-rot, 0deg));
+}
+
+.rb-paper__bg--rot-quarter > img,
+.rb-paper__bg--rot-quarter > svg {
+  width: 100cqh;
+  height: 100cqw;
+}
+
 /* The panel colour laid back over the photograph so the text keeps its
    contrast. 0% by default — a picked image reads as picked until asked. */
 .rb-paper__bg::after {
