@@ -1,13 +1,58 @@
 {
   "sections": {
-    "main": {
-      "type": "collection-gallery",
+    "hero": {
+      "type": "rb-hero",
       "settings": {
-        "eyebrow": "SA Art Fair",
-        "intro": "Original works from our Hout Bay studio, curated by palette — find the piece that matches your space.",
-        "products_per_page": 24
+        "fill": "colour",
+        "background": "#e27b70",
+        "texture": 100,
+        "image": "",
+        "image_blend": "normal",
+        "image_rotate": "0",
+        "band_height": 560,
+        "min_height": 260,
+        "mobile_ratio": "4 / 3",
+        "focal_x": 50,
+        "focal_y": 50,
+        "overlay_color": "#1e1e1e",
+        "overlay_opacity": 0,
+        "show_mark": true,
+        "mark": "store",
+        "mark_width": 130,
+        "heading": "",
+        "auto_heading": true,
+        "heading_style": "page_title",
+        "text_color": "#ffffff",
+        "button_label": "",
+        "button_link": ""
+      }
+    },
+    "artworks": {
+      "type": "rb-artworks",
+      "settings": {
+        "heading": "Available Artworks",
+        "collection": "",
+        "layout": "toolbar",
+        "per_page": 24,
+        "columns": 4,
+        "image_ratio": "1 / 1",
+        "hover_label": "View Artwork",
+        "search_placeholder": "Search artworks, artists, mediums…",
+        "bar_color": "#f4f4f1",
+        "rail_title": "Filter By:",
+        "rail_width": 150,
+        "card_button": "Browse Collection",
+        "more_label": "",
+        "more_link": "",
+        "background": "#ffffff",
+        "heading_color": "#505a43",
+        "card_title_color": "#1e1e1e",
+        "card_meta_color": "#1e1e1e"
       }
     }
   },
-  "order": ["main"]
+  "order": [
+    "hero",
+    "artworks"
+  ]
 }
