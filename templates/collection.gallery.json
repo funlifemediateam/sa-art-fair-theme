@@ -117,8 +117,74 @@
         "portrait_y": 51
       }
     },
+    "shop_by_colour_iwqWK7": {
+      "type": "rb-shop-by-colour",
+      "blocks": {
+        "colour_yceKTz": {
+          "type": "colour",
+          "settings": {
+            "collection": "warm-tones",
+            "title": "Warm Tones",
+            "label": "Reds, ochres and golds",
+            "image": "shopify:\/\/shop_images\/saf-home-collection-1.jpg",
+            "swatch": "#e07468"
+          }
+        },
+        "colour_zWGmRq": {
+          "type": "colour",
+          "settings": {
+            "collection": "cool-tones",
+            "title": "Cool Tones",
+            "label": "Blues, greens and greys",
+            "image": "shopify:\/\/shop_images\/saf-home-collection-2.jpg",
+            "swatch": "#0c3642"
+          }
+        },
+        "colour_ApRH9N": {
+          "type": "colour",
+          "settings": {
+            "collection": "neutral-tones",
+            "title": "Neutral Tones",
+            "label": "Sand, stone and linen",
+            "image": "shopify:\/\/shop_images\/saf-home-collection-3.jpg",
+            "swatch": "#bea532"
+          }
+        }
+      },
+      "block_order": [
+        "colour_yceKTz",
+        "colour_zWGmRq",
+        "colour_ApRH9N"
+      ],
+      "name": "Shop by Colour",
+      "settings": {
+        "eyebrow": "Art For Your Space",
+        "eyebrow_color": "#bea532",
+        "heading": "Shop by Colour",
+        "heading_color": "#505a43",
+        "accent_color": "#505a43",
+        "name_color": "#1e1e1e",
+        "name_idle_color": "#a9a7a2",
+        "meta_color": "#1e1e1e",
+        "rule_color": "#d5cbb2",
+        "image_position": "left",
+        "media_width": 48,
+        "image_ratio": "8 \/ 5",
+        "mobile_ratio": "4 \/ 5",
+        "hover_label": "Browse Collection",
+        "view_all_label": "View All Art",
+        "view_all_url": "shopify:\/\/collections\/gallery",
+        "button_style": "outline",
+        "background": "#ffffff",
+        "texture": 0,
+        "panel_image_blend": "normal",
+        "padding_top": 130,
+        "padding_bottom": 140
+      }
+    },
     "statement": {
       "type": "rb-statement",
+      "disabled": true,
       "settings": {
         "show_mark": true,
         "eyebrow": "",
@@ -158,71 +224,6 @@
         "button_label": "Take The Quiz",
         "button_link": "shopify:\/\/collections\/art-quiz"
       }
-    },
-    "shop_by_colour_iwqWK7": {
-      "type": "rb-shop-by-colour",
-      "blocks": {
-        "colour_yceKTz": {
-          "type": "colour",
-          "settings": {
-            "collection": "warm-tones",
-            "title": "Warm Tones",
-            "label": "Reds, ochres and golds",
-            "swatch": "#e07468",
-            "image": "shopify:\/\/shop_images\/saf-home-collection-1.jpg"
-          }
-        },
-        "colour_zWGmRq": {
-          "type": "colour",
-          "settings": {
-            "collection": "cool-tones",
-            "title": "Cool Tones",
-            "label": "Blues, greens and greys",
-            "swatch": "#0c3642",
-            "image": "shopify:\/\/shop_images\/saf-home-collection-2.jpg"
-          }
-        },
-        "colour_ApRH9N": {
-          "type": "colour",
-          "settings": {
-            "collection": "neutral-tones",
-            "title": "Neutral Tones",
-            "label": "Sand, stone and linen",
-            "swatch": "#bea532",
-            "image": "shopify:\/\/shop_images\/saf-home-collection-3.jpg"
-          }
-        }
-      },
-      "block_order": [
-        "colour_yceKTz",
-        "colour_zWGmRq",
-        "colour_ApRH9N"
-      ],
-      "name": "Shop by Colour",
-      "settings": {
-        "eyebrow": "Art For Your Space",
-        "eyebrow_color": "#bea532",
-        "heading": "Shop by Colour",
-        "heading_color": "#505a43",
-        "accent_color": "#505a43",
-        "name_color": "#1e1e1e",
-        "name_idle_color": "#a9a7a2",
-        "meta_color": "#1e1e1e",
-        "rule_color": "#d5cbb2",
-        "image_position": "left",
-        "media_width": 48,
-        "image_ratio": "8 \/ 5",
-        "mobile_ratio": "4 \/ 5",
-        "hover_label": "Browse Collection",
-        "view_all_label": "View All Art",
-        "view_all_url": "shopify:\/\/collections\/gallery",
-        "button_style": "outline",
-        "background": "#e6ddc6",
-        "texture": 100,
-        "panel_image_blend": "normal",
-        "padding_top": 130,
-        "padding_bottom": 140
-      }
     }
   },
   "order": [
@@ -230,8 +231,8 @@
     "split",
     "artworks",
     "featured",
+    "shop_by_colour_iwqWK7",
     "statement",
-    "quiz",
-    "shop_by_colour_iwqWK7"
+    "quiz"
   ]
 }
