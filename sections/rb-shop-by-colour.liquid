@@ -1,0 +1,733 @@
+{% comment %}
+  Rebrand "Shop by Colour" — the pre-rebrand editorial section rebuilt in
+  Hanre's language.
+
+  The idea is unchanged (hover a colour, its artwork cross-fades in, click
+  through to that tone's collection) and so is every setting id, so the values
+  already in the template and in the admin app survive the swap. What changes
+  is the dress: IvyPresto + Afacad instead of Dawn's Playfair/Assistant, the
+  rebrand palette, hard-edged media with the .rb-aw hover veil, a crumpled
+  paper band, and the serif pill the rest of the site uses for "browse".
+
+  Swatch colours match the ones the Store's artwork filter rail already draws
+  for the same three tags — warm #e07468, cool #0c3642, neutral #bea532 — so
+  the two colour affordances on this page agree with each other.
+
+  App overrides: shop.metafields.booking_app.shop_by_colour (json). Fields set
+  in the admin app's Shop by Colour tab win over the theme-editor block; blank
+  app fields fall back to it. Colours are matched by collection handle, so a
+  block with no collection picked can never be overridden — that is why the
+  blocks must point at warm-tones / cool-tones / neutral-tones.
+
+  Image fallback chain: app image → block image → collection image → first
+  product image.
+{% endcomment %}
+
+{{ 'saf-rebrand.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign sid = section.id
+  assign cfg = shop.metafields.booking_app.shop_by_colour.value
+
+  assign sbc_eyebrow = section.settings.eyebrow
+  assign sbc_heading = section.settings.heading | default: 'Shop by Colour'
+  if cfg.eyebrow != blank
+    assign sbc_eyebrow = cfg.eyebrow
+  endif
+  if cfg.heading != blank
+    assign sbc_heading = cfg.heading
+  endif
+
+  assign pt_vw = section.settings.padding_top | times: 100.0 | divided_by: 1920.0
+  assign pb_vw = section.settings.padding_bottom | times: 100.0 | divided_by: 1920.0
+
+  case section.settings.button_style
+    when 'moss'
+      assign btn_fill = 'rb-btn--moss'
+    when 'cherry'
+      assign btn_fill = 'rb-btn--cherry'
+    when 'white'
+      assign btn_fill = 'rb-btn--white'
+    else
+      assign btn_fill = 'rb-btn--outline'
+  endcase
+-%}
+
+<style>
+  #shopify-section-{{ sid }} .rb-sbc {
+    /* holds the optional background-image layer even when the texture, and so
+       .rb-paper's own position: relative, is switched off */
+    position: relative;
+    background: {{ section.settings.background }};
+    padding-block:
+      clamp(44px, {{ pt_vw }}vw, {{ section.settings.padding_top }}px)
+      clamp(44px, {{ pb_vw }}vw, {{ section.settings.padding_bottom }}px);
+    {%- if section.settings.texture > 0 %}
+      --rb-paper-strength: {{ section.settings.texture | divided_by: 100.0 }};
+    {%- endif %}
+    /* the drawer nav links here as /collections/gallery#shop-by-colour */
+    scroll-margin-top: calc(var(--rb-header-h) + 24px);
+  }
+
+  #shopify-section-{{ sid }} .rb-sbc__layout {
+    display: grid;
+    grid-template-columns: minmax(0, {{ section.settings.media_width }}fr) minmax(0, {{ 100 | minus: section.settings.media_width }}fr);
+    gap: clamp(28px, 4.17vw, 80px);
+    align-items: center;
+  }
+  #shopify-section-{{ sid }} .rb-sbc__layout--flip .rb-sbc__media { order: 2; }
+  #shopify-section-{{ sid }} .rb-sbc__layout--flip .rb-sbc__panel { order: 1; }
+
+  /* ---- media stack ------------------------------------------------------
+     Hard-edged rectangle, no radius — every media box in the comps is one.
+     The cards are stacked and cross-faded; only the active one takes clicks. */
+  #shopify-section-{{ sid }} .rb-sbc__media {
+    position: relative;
+    width: 100%;
+    aspect-ratio: {{ section.settings.image_ratio }};
+    overflow: hidden;
+    background: #efefef;
+  }
+  #shopify-section-{{ sid }} .rb-sbc__card {
+    position: absolute;
+    inset: 0;
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.55s ease, visibility 0.55s;
+  }
+  #shopify-section-{{ sid }} .rb-sbc__card.is-active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+  #shopify-section-{{ sid }} .rb-sbc__frame {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #efefef;
+  }
+  #shopify-section-{{ sid }} .rb-sbc__frame img,
+  #shopify-section-{{ sid }} .rb-sbc__frame svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  #shopify-section-{{ sid }} .rb-sbc__card:hover .rb-sbc__frame img { transform: scale(1.03); }
+
+  /* same veil + serif pill the artwork cards use on hover */
+  #shopify-section-{{ sid }} .rb-sbc__veil {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    inset: 0;
+    background: rgba(30, 30, 30, 0.18);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+  #shopify-section-{{ sid }} .rb-sbc__card:hover .rb-sbc__veil,
+  #shopify-section-{{ sid }} .rb-sbc__card:focus-visible .rb-sbc__veil { opacity: 1; }
+  #shopify-section-{{ sid }} .rb-sbc__pill {
+    background: rgba(255, 255, 255, 0.92);
+    color: var(--rb-ink);
+    border-color: transparent;
+    pointer-events: none;
+  }
+  #shopify-section-{{ sid }} .rb-sbc__caption { display: none; }
+
+  /* ---- text panel ------------------------------------------------------- */
+  #shopify-section-{{ sid }} .rb-sbc__eyebrow {
+    color: {{ section.settings.eyebrow_color }};
+    margin-bottom: clamp(10px, 1.04vw, 20px);
+  }
+  #shopify-section-{{ sid }} .rb-sbc__heading {
+    color: {{ section.settings.heading_color }};
+    margin-bottom: clamp(20px, 2.4vw, 46px);
+  }
+  #shopify-section-{{ sid }} .rb-sbc__heading em,
+  #shopify-section-{{ sid }} .rb-sbc__heading i { color: {{ section.settings.accent_color }}; }
+
+  #shopify-section-{{ sid }} .rb-sbc__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid {{ section.settings.rule_color }};
+  }
+  #shopify-section-{{ sid }} .rb-sbc__list li { border-bottom: 1px solid {{ section.settings.rule_color }}; }
+
+  #shopify-section-{{ sid }} .rb-sbc__link {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto auto;
+    align-items: center;
+    column-gap: clamp(12px, 1.15vw, 22px);
+    padding-block: clamp(14px, 1.56vw, 30px);
+    text-decoration: none;
+    color: inherit;
+  }
+  #shopify-section-{{ sid }} .rb-sbc__swatch {
+    display: block;
+    width: clamp(14px, 1.25vw, 24px);
+    height: clamp(14px, 1.25vw, 24px);
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 1px rgba(30, 30, 30, 0.12);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  #shopify-section-{{ sid }} .rb-sbc__name {
+    display: block;
+    font-family: var(--rb-serif);
+    font-weight: 400;
+    font-size: clamp(21px, 2.08vw, 40px);
+    line-height: 1.15;
+    color: {{ section.settings.name_idle_color }};
+    transition: color 0.3s ease;
+  }
+  #shopify-section-{{ sid }} .rb-sbc__desc {
+    display: block;
+    margin-top: 2px;
+    font-family: var(--rb-sans);
+    font-size: var(--rb-fs-meta);
+    line-height: 1.3;
+    color: {{ section.settings.meta_color }};
+    opacity: 0.65;
+    transition: opacity 0.3s ease;
+  }
+  #shopify-section-{{ sid }} .rb-sbc__count {
+    font-family: var(--rb-sans);
+    font-size: var(--rb-fs-meta);
+    white-space: nowrap;
+    color: {{ section.settings.meta_color }};
+    opacity: 0.55;
+    transition: opacity 0.3s ease;
+  }
+  #shopify-section-{{ sid }} .rb-sbc__arrow {
+    display: block;
+    width: clamp(18px, 1.46vw, 28px);
+    height: clamp(18px, 1.46vw, 28px);
+    color: {{ section.settings.accent_color }};
+    opacity: 0;
+    transform: translateX(-8px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+  #shopify-section-{{ sid }} .rb-sbc__arrow svg { display: block; width: 100%; height: 100%; }
+
+  #shopify-section-{{ sid }} .rb-sbc__link.is-active .rb-sbc__name,
+  #shopify-section-{{ sid }} .rb-sbc__link:hover .rb-sbc__name { color: {{ section.settings.name_color }}; }
+  #shopify-section-{{ sid }} .rb-sbc__link.is-active .rb-sbc__swatch { transform: scale(1.22); }
+  #shopify-section-{{ sid }} .rb-sbc__link.is-active .rb-sbc__desc { opacity: 1; }
+  #shopify-section-{{ sid }} .rb-sbc__link.is-active .rb-sbc__count { opacity: 0.9; }
+  #shopify-section-{{ sid }} .rb-sbc__link.is-active .rb-sbc__arrow { opacity: 1; transform: translateX(0); }
+  #shopify-section-{{ sid }} .rb-sbc__link:focus-visible { outline: 2px solid var(--rb-cherry); outline-offset: 4px; }
+
+  #shopify-section-{{ sid }} .rb-sbc__cta {
+    margin-top: clamp(22px, 2.4vw, 46px);
+  }
+  /* both live inside the layout, so they must be display:none — not merely
+     invisible — or they take a grid cell of their own on desktop */
+  #shopify-section-{{ sid }} .rb-sbc__progress,
+  #shopify-section-{{ sid }} .rb-sbc__cta--mobile { display: none; }
+
+  /* ---- mobile: heading, then a swipeable rail with a peek of the next ---- */
+  @media screen and (max-width: 749px) {
+    #shopify-section-{{ sid }} .rb-sbc__layout {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+    }
+    #shopify-section-{{ sid }} .rb-sbc__panel { order: -1; }
+    #shopify-section-{{ sid }} .rb-sbc__list,
+    #shopify-section-{{ sid }} .rb-sbc__cta--desktop { display: none; }
+    #shopify-section-{{ sid }} .rb-sbc__heading { margin-bottom: clamp(16px, 4vw, 26px); }
+
+    #shopify-section-{{ sid }} .rb-sbc__media {
+      aspect-ratio: auto;
+      height: auto;
+      overflow: visible;
+      background: none;
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      margin-inline: calc(var(--rb-gutter) * -1);
+      padding-inline: var(--rb-gutter);
+      scroll-padding-inline: var(--rb-gutter);
+    }
+    #shopify-section-{{ sid }} .rb-sbc__media::-webkit-scrollbar { display: none; }
+    #shopify-section-{{ sid }} .rb-sbc__card {
+      position: relative;
+      inset: auto;
+      flex: 0 0 76%;
+      max-width: 76%;
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      scroll-snap-align: start;
+    }
+    #shopify-section-{{ sid }} .rb-sbc__frame {
+      height: auto;
+      aspect-ratio: {{ section.settings.mobile_ratio }};
+    }
+    #shopify-section-{{ sid }} .rb-sbc__card:hover .rb-sbc__frame img { transform: none; }
+    #shopify-section-{{ sid }} .rb-sbc__veil { display: none; }
+    #shopify-section-{{ sid }} .rb-sbc__caption {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    #shopify-section-{{ sid }} .rb-sbc__caption-name {
+      font-family: var(--rb-serif);
+      font-size: clamp(18px, 5vw, 24px);
+      line-height: 1.15;
+      color: {{ section.settings.name_color }};
+    }
+    #shopify-section-{{ sid }} .rb-sbc__caption-count {
+      font-family: var(--rb-sans);
+      font-size: var(--rb-fs-meta);
+      white-space: nowrap;
+      color: {{ section.settings.meta_color }};
+      opacity: 0.6;
+    }
+    #shopify-section-{{ sid }} .rb-sbc__progress {
+      display: block;
+      position: relative;
+      height: 1px;
+      margin-top: 18px;
+      background: {{ section.settings.rule_color }};
+    }
+    #shopify-section-{{ sid }} .rb-sbc__progress span {
+      display: block;
+      position: absolute;
+      top: -1px;
+      left: 0;
+      height: 3px;
+      width: 33%;
+      background: {{ section.settings.accent_color }};
+      transition: transform 0.15s ease;
+      will-change: transform;
+    }
+    #shopify-section-{{ sid }} .rb-sbc__cta--mobile {
+      display: inline-flex;
+      align-self: flex-start;
+      margin-top: clamp(18px, 5vw, 26px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #shopify-section-{{ sid }} .rb-sbc__card,
+    #shopify-section-{{ sid }} .rb-sbc__frame img,
+    #shopify-section-{{ sid }} .rb-sbc__name,
+    #shopify-section-{{ sid }} .rb-sbc__swatch,
+    #shopify-section-{{ sid }} .rb-sbc__arrow,
+    #shopify-section-{{ sid }} .rb-sbc__veil { transition: none; }
+  }
+</style>
+
+{%- capture arrow_svg -%}
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15"/><path d="M12.5 5.5 19 12l-6.5 6.5"/></svg>
+{%- endcapture -%}
+
+<div class="rb-section rb-sbc{% if section.settings.texture > 0 %} rb-paper{% endif %}" id="shop-by-colour">
+  {%- if section.settings.panel_image != blank -%}
+    {%- render 'rb-panel-image',
+      image: section.settings.panel_image,
+      fit: 'cover',
+      blend: section.settings.panel_image_blend,
+      sizes: '100vw'
+    -%}
+  {%- endif -%}
+
+  <div class="rb-container">
+    <div
+      class="rb-sbc__layout{% if section.settings.image_position == 'right' %} rb-sbc__layout--flip{% endif %}"
+      data-rbsbc
+    >
+      <div class="rb-sbc__media" data-rbsbc-track>
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign col = block.settings.collection
+
+            assign ov_title = blank
+            assign ov_label = blank
+            assign ov_image = blank
+            if cfg and col != blank
+              for c in cfg.colours
+                if c.collection == col.handle
+                  assign ov_title = c.title
+                  assign ov_label = c.label
+                  assign ov_image = c.image
+                endif
+              endfor
+            endif
+
+            assign card_title = ov_title | default: block.settings.title
+            if card_title == blank and col != blank
+              assign card_title = col.title
+            endif
+            if card_title == blank
+              assign card_title = 'Colour'
+            endif
+
+            assign card_desc = ov_label | default: block.settings.label
+
+            assign card_image = block.settings.image
+            if card_image == blank and col != blank
+              assign card_image = col.image | default: col.products.first.featured_image
+            endif
+
+            assign card_url = routes.all_products_collection_url
+            if col != blank
+              assign card_url = col.url
+            endif
+
+            assign card_alt = card_title | escape
+          -%}
+          <a
+            class="rb-sbc__card{% if forloop.first %} is-active{% endif %}"
+            href="{{ card_url }}"
+            data-rbsbc-card="{{ forloop.index0 }}"
+            aria-label="{{ card_title | escape }}{% if col != blank %} — {{ col.products_count }} artworks{% endif %}"
+            {{ block.shopify_attributes }}
+          >
+            <span class="rb-sbc__frame">
+              {%- if ov_image != blank -%}
+                {%- assign sep = '?' -%}
+                {%- if ov_image contains '?' -%}{%- assign sep = '&' -%}{%- endif -%}
+                <img
+                  loading="lazy"
+                  decoding="async"
+                  width="900"
+                  height="675"
+                  alt="{{ card_alt }}"
+                  src="{{ ov_image }}{{ sep }}width=900"
+                  srcset="{{ ov_image }}{{ sep }}width=500 500w, {{ ov_image }}{{ sep }}width=900 900w, {{ ov_image }}{{ sep }}width=1400 1400w"
+                  sizes="(max-width: 749px) 76vw, 45vw"
+                >
+              {%- elsif card_image != blank -%}
+                {{
+                  card_image
+                  | image_url: width: 1400
+                  | image_tag:
+                    widths: '400, 600, 900, 1200, 1400',
+                    sizes: '(max-width: 749px) 76vw, 45vw',
+                    loading: 'lazy',
+                    alt: card_alt
+                }}
+              {%- else -%}
+                {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
+              {%- endif -%}
+
+              <span class="rb-sbc__veil">
+                <span class="rb-btn rb-btn--serif rb-sbc__pill">
+                  {{- section.settings.hover_label | default: 'Browse Collection' | escape -}}
+                </span>
+              </span>
+            </span>
+
+            <span class="rb-sbc__caption">
+              <span class="rb-sbc__caption-name">{{ card_title | escape }}</span>
+              {%- if col != blank -%}
+                <span class="rb-sbc__caption-count">
+                  {{- col.products_count }} artwork{% unless col.products_count == 1 %}s{% endunless -%}
+                </span>
+              {%- elsif card_desc != blank -%}
+                <span class="rb-sbc__caption-count">{{ card_desc | escape }}</span>
+              {%- endif -%}
+            </span>
+          </a>
+        {%- endfor -%}
+      </div>
+
+      <div class="rb-sbc__panel">
+        {%- if sbc_eyebrow != blank -%}
+          <p class="rb-caps rb-sbc__eyebrow">{{ sbc_eyebrow | escape }}</p>
+        {%- endif -%}
+
+        {%- if sbc_heading != blank -%}
+          <h2 class="rb-section-title rb-sbc__heading">{{ sbc_heading }}</h2>
+        {%- endif -%}
+
+        <ul class="rb-sbc__list">
+          {%- for block in section.blocks -%}
+            {%- liquid
+              assign col = block.settings.collection
+
+              assign ov_title = blank
+              assign ov_label = blank
+              assign ov_swatch = blank
+              if cfg and col != blank
+                for c in cfg.colours
+                  if c.collection == col.handle
+                    assign ov_title = c.title
+                    assign ov_label = c.label
+                    assign ov_swatch = c.swatch
+                  endif
+                endfor
+              endif
+
+              assign link_title = ov_title | default: block.settings.title
+              if link_title == blank and col != blank
+                assign link_title = col.title
+              endif
+              if link_title == blank
+                assign link_title = 'Colour'
+              endif
+
+              assign link_desc = ov_label | default: block.settings.label
+              assign link_swatch = ov_swatch | default: block.settings.swatch
+
+              assign link_url = routes.all_products_collection_url
+              if col != blank
+                assign link_url = col.url
+              endif
+            -%}
+            <li>
+              <a
+                class="rb-sbc__link{% if forloop.first %} is-active{% endif %}"
+                href="{{ link_url }}"
+                data-rbsbc-link="{{ forloop.index0 }}"
+              >
+                {%- if link_swatch != blank and link_swatch != 'rgba(0,0,0,0)' -%}
+                  <span class="rb-sbc__swatch" style="background: {{ link_swatch }};"></span>
+                {%- else -%}
+                  <span class="rb-sbc__swatch" style="background: transparent; box-shadow: none;"></span>
+                {%- endif -%}
+
+                <span>
+                  <span class="rb-sbc__name">{{ link_title | escape }}</span>
+                  {%- if link_desc != blank -%}
+                    <span class="rb-sbc__desc">{{ link_desc | escape }}</span>
+                  {%- endif -%}
+                </span>
+
+                {%- if col != blank -%}
+                  <span class="rb-sbc__count">
+                    {{- col.products_count }} artwork{% unless col.products_count == 1 %}s{% endunless -%}
+                  </span>
+                {%- else -%}
+                  <span class="rb-sbc__count"></span>
+                {%- endif -%}
+
+                <span class="rb-sbc__arrow">{{ arrow_svg }}</span>
+              </a>
+            </li>
+          {%- endfor -%}
+        </ul>
+
+        {%- if section.settings.view_all_label != blank -%}
+          <div class="rb-sbc__cta rb-sbc__cta--desktop">
+            <a
+              href="{{ section.settings.view_all_url | default: routes.all_products_collection_url }}"
+              class="rb-btn rb-btn--serif {{ btn_fill }}"
+            >{{ section.settings.view_all_label | escape }}</a>
+          </div>
+        {%- endif -%}
+      </div>
+
+      <span class="rb-sbc__progress" aria-hidden="true"><span></span></span>
+
+      {%- if section.settings.view_all_label != blank -%}
+        <a
+          href="{{ section.settings.view_all_url | default: routes.all_products_collection_url }}"
+          class="rb-btn rb-btn--serif {{ btn_fill }} rb-sbc__cta rb-sbc__cta--mobile"
+        >{{ section.settings.view_all_label | escape }}</a>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    function init(scope) {
+      (scope || document).querySelectorAll('[data-rbsbc]').forEach(function (root) {
+        if (root.dataset.rbsbcBound) return;
+        root.dataset.rbsbcBound = '1';
+
+        var links = root.querySelectorAll('[data-rbsbc-link]');
+        var cards = root.querySelectorAll('[data-rbsbc-card]');
+        var track = root.querySelector('[data-rbsbc-track]');
+        var fill = root.querySelector('.rb-sbc__progress span');
+
+        function activate(i) {
+          links.forEach(function (el) { el.classList.toggle('is-active', el.dataset.rbsbcLink === i); });
+          cards.forEach(function (el) { el.classList.toggle('is-active', el.dataset.rbsbcCard === i); });
+        }
+        root.rbsbcActivate = activate;
+
+        links.forEach(function (link) {
+          ['mouseenter', 'focus'].forEach(function (evt) {
+            link.addEventListener(evt, function () { activate(link.dataset.rbsbcLink); });
+          });
+        });
+
+        /* mobile swipe progress line */
+        if (track && fill && cards.length) {
+          var ticking = false;
+          function paint() {
+            ticking = false;
+            var max = track.scrollWidth - track.clientWidth;
+            if (max <= 0) return;
+            var seg = 100 / cards.length;
+            fill.style.width = seg + '%';
+            fill.style.transform = 'translateX(' + (track.scrollLeft / max) * (100 / seg - 1) * 100 + '%)';
+          }
+          track.addEventListener('scroll', function () {
+            if (!ticking) { ticking = true; requestAnimationFrame(paint); }
+          }, { passive: true });
+          paint();
+        }
+      });
+    }
+
+    init();
+
+    /* theme editor: rebind after a section reload, preview the block being edited */
+    document.addEventListener('shopify:section:load', function (e) { init(e.target); });
+    document.addEventListener('shopify:block:select', function (e) {
+      var card = e.target.closest ? e.target.closest('[data-rbsbc-card]') : null;
+      if (!card) return;
+      var root = card.closest('[data-rbsbc]');
+      if (root && root.rbsbcActivate) root.rbsbcActivate(card.dataset.rbsbcCard);
+      if (card.scrollIntoView && window.innerWidth < 750) {
+        card.scrollIntoView({ inline: 'start', block: 'nearest' });
+      }
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Rebrand shop by colour",
+  "tag": "section",
+  "class": "rb-section-wrapper",
+  "max_blocks": 6,
+  "settings": [
+    { "type": "paragraph", "content": "Heading, colour names, descriptions, swatches and images can also be managed from the SA Art Fair admin app (Shop by Colour tab) — values set there override these. The app matches a colour by its collection, so every block needs one picked." },
+    { "type": "text", "id": "eyebrow", "default": "Art For Your Space", "label": "Eyebrow" },
+    { "type": "color", "id": "eyebrow_color", "default": "#bea532", "label": "Eyebrow colour" },
+    { "type": "text", "id": "heading", "default": "Shop by Colour", "label": "Heading" },
+    { "type": "color", "id": "heading_color", "default": "#505a43", "label": "Heading colour" },
+    { "type": "color", "id": "accent_color", "default": "#505a43", "label": "Accent colour",
+      "info": "Arrow, swipe indicator and any italic run in the heading." },
+
+    { "type": "header", "content": "Colour list" },
+    { "type": "color", "id": "name_color", "default": "#1e1e1e", "label": "Colour name — active" },
+    { "type": "color", "id": "name_idle_color", "default": "#a9a7a2", "label": "Colour name — resting" },
+    { "type": "color", "id": "meta_color", "default": "#1e1e1e", "label": "Description and count colour" },
+    { "type": "color", "id": "rule_color", "default": "#dcd6c6", "label": "Divider colour" },
+
+    { "type": "header", "content": "Media" },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image position (desktop)",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    { "type": "range", "id": "media_width", "min": 30, "max": 60, "step": 1, "default": 45,
+      "unit": "%", "label": "Image column width" },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "Image shape (desktop)",
+      "options": [
+        { "value": "4 / 3", "label": "Landscape 4:3" },
+        { "value": "8 / 5", "label": "Wide 8:5" },
+        { "value": "1 / 1", "label": "Square" },
+        { "value": "4 / 5", "label": "Portrait 4:5" }
+      ],
+      "default": "4 / 3"
+    },
+    {
+      "type": "select",
+      "id": "mobile_ratio",
+      "label": "Image shape (mobile)",
+      "options": [
+        { "value": "4 / 5", "label": "Portrait 4:5" },
+        { "value": "1 / 1", "label": "Square" },
+        { "value": "4 / 3", "label": "Landscape 4:3" }
+      ],
+      "default": "4 / 5"
+    },
+    { "type": "text", "id": "hover_label", "default": "Browse Collection", "label": "Hover pill label" },
+
+    { "type": "header", "content": "Link" },
+    { "type": "text", "id": "view_all_label", "default": "View All Art", "label": "Button label",
+      "info": "Leave blank to hide the button." },
+    { "type": "url", "id": "view_all_url", "label": "Button link" },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "Button style",
+      "options": [
+        { "value": "outline", "label": "Outline" },
+        { "value": "moss", "label": "Moss" },
+        { "value": "cherry", "label": "Cherry" },
+        { "value": "white", "label": "White" }
+      ],
+      "default": "outline"
+    },
+
+    { "type": "header", "content": "Band" },
+    { "type": "color", "id": "background", "default": "#e6ddc6", "label": "Background" },
+    { "type": "range", "id": "texture", "min": 0, "max": 100, "step": 5, "default": 100,
+      "unit": "%", "label": "Crumpled paper texture" },
+    { "type": "image_picker", "id": "panel_image", "label": "Background image",
+      "info": "Optional — sits under the crumple, over the band colour." },
+    {
+      "type": "select",
+      "id": "panel_image_blend",
+      "label": "Background image blend",
+      "options": [
+        { "value": "normal", "label": "Normal" },
+        { "value": "screen", "label": "Screen" },
+        { "value": "multiply", "label": "Multiply" },
+        { "value": "soft-light", "label": "Soft light" }
+      ],
+      "default": "normal"
+    },
+    { "type": "range", "id": "padding_top", "min": 40, "max": 300, "step": 5, "default": 130,
+      "unit": "px", "label": "Top padding at 1920px wide" },
+    { "type": "range", "id": "padding_bottom", "min": 40, "max": 300, "step": 5, "default": 140,
+      "unit": "px", "label": "Bottom padding at 1920px wide" }
+  ],
+  "blocks": [
+    {
+      "type": "colour",
+      "name": "Colour",
+      "settings": [
+        { "type": "collection", "id": "collection", "label": "Collection",
+          "info": "Required — the count, image and link all come from it." },
+        { "type": "text", "id": "title", "label": "Name", "info": "Leave blank to use the collection title." },
+        { "type": "text", "id": "label", "label": "Description", "info": "Small line under the name, e.g. Reds, ochres and golds." },
+        { "type": "image_picker", "id": "image", "label": "Image", "info": "Leave blank to use the collection image." },
+        { "type": "color", "id": "swatch", "label": "Swatch dot", "default": "#e07468" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Rebrand shop by colour",
+      "blocks": [
+        { "type": "colour", "settings": { "title": "Warm Tones", "label": "Reds, ochres and golds", "swatch": "#e07468" } },
+        { "type": "colour", "settings": { "title": "Cool Tones", "label": "Blues, greens and greys", "swatch": "#0c3642" } },
+        { "type": "colour", "settings": { "title": "Neutral Tones", "label": "Sand, stone and linen", "swatch": "#bea532" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
