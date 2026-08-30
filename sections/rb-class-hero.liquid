@@ -94,7 +94,8 @@
     display: grid;
     grid-template-columns: {{ section.settings.text_width }}fr {{ 100 | minus: section.settings.text_width }}fr;
     align-items: center;
-    gap: clamp(24px, 3.13vw, 60px);
+    /* shared with the person hero — see --rb-hero-* in saf-rebrand.css */
+    gap: var(--rb-hero-gap);
     padding-block: clamp(40px, 5.73vw, 110px);
   }
   #shopify-section-{{ sid }} .rb-ch__text {
@@ -148,7 +149,7 @@
     display: flex;
     gap: clamp(4px, 0.42vw, 8px);
     overflow: hidden;
-    height: clamp(220px, 21.2vw, 407px);
+    height: var(--rb-hero-media-h);
   }
   #shopify-section-{{ sid }} .rb-ch__media .rb-media {
     flex: 0 0 {{ section.settings.image_a_width }}%;

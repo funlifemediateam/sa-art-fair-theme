@@ -136,6 +136,19 @@
     teacher page shows the right Instagram without anyone filling in 40
     templates by hand.
   endcomment
+  comment
+    The image half is sized to the class hero's, not to this section's own comp
+    (client instruction, 2026-08-30). There the row is 52fr / 48fr with
+    --rb-hero-gap between, so the picture is 48% of the row once the gap is
+    out of it. Here the row is still split by "Text share of the row" and the
+    text column must not move, so the same width is asked of the media on its
+    own: the media column is (100 - text_width)% of the row, which makes 48%
+    of the row this share of that column, less the 48% of the gap that the
+    class hero's picture also gives up.
+  endcomment
+  assign media_col = 100 | minus: section.settings.text_width
+  assign media_pct = 4800.0 | divided_by: media_col | round: 4
+
   assign social_url = section.settings.social_url
   if social_url == blank and name != blank
     assign social_key = name | handleize
@@ -148,19 +161,22 @@
 
 <style>
   {% comment %}
-    Measured off both comps at their 1920 frame: the artwork runs from 47.6%
-    to the right edge and is 790px tall, and it is flush with the top of the
-    section — there is no band of white above it. So the section carries no
-    vertical padding of its own; the artwork sets the height and the text
-    column centres against it.
+    The comps put the artwork from 47.6% to the right edge, 790px tall and
+    flush with the top of the section. The client asked for the same picture
+    box the class page wears instead, so the height and the width now come off
+    the shared --rb-hero-* tokens and the artwork is smaller than the name
+    block — which means the section can no longer take its height from the
+    artwork, and needs the class hero's vertical padding to keep the text off
+    the header. The COLUMNS are untouched: the text side sits exactly where it
+    did.
   {% endcomment %}
   #shopify-section-{{ sid }} .rb-ph {
     background: {{ section.settings.background }};
     display: grid;
-    grid-template-columns: {{ section.settings.text_width }}fr {{ 100 | minus: section.settings.text_width }}fr;
+    grid-template-columns: {{ section.settings.text_width }}fr {{ media_col }}fr;
     align-items: center;
     gap: 0;
-    padding-block: 0;
+    padding-block: clamp(40px, 5.73vw, 110px);
   }
   {% comment %}
     Both comps set the text as one block whose lines share a left edge, with
@@ -230,8 +246,11 @@
 
   #shopify-section-{{ sid }} .rb-ph__media {
     position: relative;
-    width: 100%;
-    height: clamp(280px, 41.15vw, 790px);
+    /* same box as the class hero's pair of pictures, still flush with the
+       right edge of the page */
+    justify-self: end;
+    width: calc({{ media_pct }}% - 0.48 * var(--rb-hero-gap));
+    height: var(--rb-hero-media-h);
     overflow: hidden;
     background: #efefef;
   }
@@ -261,7 +280,15 @@
     #shopify-section-{{ sid }} .rb-ph__inner { width: 100%; }
     #shopify-section-{{ sid }} .rb-ph__name { max-width: none; }
     #shopify-section-{{ sid }} .rb-ph__script { max-width: none; }
-    #shopify-section-{{ sid }} .rb-ph__media { height: auto; aspect-ratio: 4 / 3; }
+    {%- comment -%}
+      Stacked, so the width calc above (which assumes a two-column row) has to
+      go — the picture is the full width of the phone like every other section.
+    {%- endcomment -%}
+    #shopify-section-{{ sid }} .rb-ph__media {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 4 / 3;
+    }
   }
 </style>
 
@@ -367,7 +394,7 @@
       ] },
     { "type": "range", "id": "text_width", "min": 25, "max": 60, "step": 1,
       "default": 48, "unit": "%", "label": "Text share of the row",
-      "info": "Both comps put the artwork's left edge at 48%." },
+      "info": "Both comps put the text column at 48%. The artwork keeps the size it has on a class page whatever this is set to, so it will not fill the rest of the row." },
     { "type": "header", "content": "Colour" },
     { "type": "color", "id": "background", "default": "#ffffff", "label": "Background" },
     { "type": "color", "id": "name_color", "default": "#e07468", "label": "Name" },
