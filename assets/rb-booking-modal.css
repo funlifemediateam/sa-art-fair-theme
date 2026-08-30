@@ -53,10 +53,12 @@
   transition: opacity 0.2s ease;
 }
 
-.rb-bkm__backdrop {
-  /* Explicit, and not negotiable: Dawn's base.css collapses `div:empty` to
-     display:none, and this div is empty by design. Same reason .rb-bkm__body
-     below declares one — it is empty until the JS moves the widget into it. */
+.rb-bkm > .rb-bkm__backdrop {
+  /* Explicit, and the child combinator is load-bearing: Dawn's base.css
+     collapses `div:empty` to display:none and this div is empty by design.
+     `div:empty` is specificity 0,1,1 — a bare class loses to it. Same reason
+     .rb-bkm__body below is written as a child selector: it is empty until the
+     JS moves the widget into it. */
   display: block;
   position: absolute;
   inset: 0;
@@ -144,7 +146,7 @@ html.rb-bkm-open body {
 }
 
 /* --- right pane: the app block lands here -------------------------------- */
-.rb-bkm__body {
+.rb-bkm__dialog > .rb-bkm__body {
   display: block; /* see .rb-bkm__backdrop — div:empty would collapse it */
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
