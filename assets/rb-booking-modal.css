@@ -71,6 +71,14 @@ html.rb-bkm-open body {
   overflow: hidden;
 }
 
+/* Nothing floats over the dialog. Both sit below it on z-index, so this is
+   about not showing a live-looking button through a dimmed backdrop — and on
+   mobile the sheet reaches the bottom edge, right where the CTA bar lives. */
+html.rb-bkm-open .saf-whatsapp,
+html.rb-bkm-open .saf-mobile-ctas {
+  display: none;
+}
+
 /* --------------------------------------------------------------------------
    Dialog
    -------------------------------------------------------------------------- */
@@ -172,6 +180,12 @@ html.rb-bkm-open body {
 }
 
 .rb-bkm__body .bk-widget { max-width: none; }
+
+/* The widget reserves its price row before a date is picked, which costs ~48px
+   of blank space — cheap in a full-width section, expensive in a dialog. Hidden
+   only while the amount is genuinely empty; the widget writing a price into it
+   brings the row straight back. */
+.rb-bkm__body .bk-w-price-line:has(#bk-w-price:empty) { display: none; }
 
 /* --- close ---------------------------------------------------------------- */
 .rb-bkm__close {
