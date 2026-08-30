@@ -62,7 +62,7 @@
         "tone_a_text": "#ffffff",
         "tone_b": "#b00e3f",
         "tone_b_text": "#ffffff",
-        "texture": 100,
+        "texture": 0,
         "panel_image_fit": "cover",
         "panel_image_focal_x": 50,
         "panel_image_focal_y": 50,

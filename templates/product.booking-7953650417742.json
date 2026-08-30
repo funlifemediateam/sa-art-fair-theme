@@ -135,7 +135,7 @@
         "tone_a_text": "#ffffff",
         "tone_b": "#b00e3f",
         "tone_b_text": "#ffffff",
-        "texture": 100,
+        "texture": 0,
         "more_label": "See all classes",
         "more_link": "\/collections\/classes"
       }
