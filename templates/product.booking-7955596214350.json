@@ -16,7 +16,7 @@
         "image_a": "",
         "image_b": "",
         "image_a_width": 62,
-        "text_width": 52,
+        "text_width": 48,
         "background": "#ffffff",
         "title_color": "#e07468",
         "teacher_color": "#1e1e1e",
@@ -38,7 +38,7 @@
           "type": "note",
           "settings": {
             "label": "Costs:",
-            "body": "<p>From [price] — [sessions] sessions<\/p>",
+            "body": "<p>From [price] — [sessions] sessions</p>",
             "use_product_description": false
           }
         }
@@ -48,7 +48,7 @@
         "costs"
       ],
       "settings": {
-        "heading": "<p>A guided <em>[class]<\/em> session.<\/p>",
+        "heading": "<p>A guided <em>[class]</em> session.</p>",
         "anchor": "booking",
         "button_label": "Make a Booking",
         "button_link": "",
@@ -66,7 +66,7 @@
       "type": "apps",
       "blocks": {
         "booking_widget": {
-          "type": "shopify:\/\/apps\/sa-booking-admin\/blocks\/booking-widget\/019effec-1823-75cb-82db-853f80a4249c",
+          "type": "shopify://apps/sa-booking-admin/blocks/booking-widget/019effec-1823-75cb-82db-853f80a4249c",
           "settings": {
             "class_product": "",
             "eyebrow": "Book Your Spot",
@@ -106,7 +106,7 @@
         "focal_y": 60,
         "portrait": "",
         "portrait_w": 34,
-        "portrait_ratio": "382 \/ 313",
+        "portrait_ratio": "382 / 313",
         "portrait_x": 46,
         "portrait_y": 40
       }
@@ -117,17 +117,17 @@
         "collection": "classes",
         "count": 6,
         "only_classes": true,
-        "eyebrow": "<p>Browse our classes<\/p>",
+        "eyebrow": "<p>Browse our classes</p>",
         "eyebrow_name": "",
         "teacher_filter": "",
-        "intro": "<p>More from the studio calendar.<\/p>",
+        "intro": "<p>More from the studio calendar.</p>",
         "intro_color": "#1e1e1e",
         "by_prefix": "By",
         "show_excerpt": true,
         "button_label": "View Class",
         "columns": 3,
         "grid_width": 1300,
-        "image_ratio": "398 \/ 380",
+        "image_ratio": "398 / 380",
         "radius": 18,
         "background": "#ffffff",
         "pattern": "all_a",
@@ -137,7 +137,7 @@
         "tone_b_text": "#ffffff",
         "texture": 0,
         "more_label": "See all classes",
-        "more_link": "\/collections\/classes"
+        "more_link": "/collections/classes"
       }
     },
     "pagenav": {
@@ -147,28 +147,28 @@
           "type": "link",
           "settings": {
             "label": "Classes",
-            "link": "shopify:\/\/collections\/classes"
+            "link": "shopify://collections/classes"
           }
         },
         "workshops": {
           "type": "link",
           "settings": {
             "label": "Workshops",
-            "link": "shopify:\/\/collections\/workshops"
+            "link": "shopify://collections/workshops"
           }
         },
         "teachers": {
           "type": "link",
           "settings": {
             "label": "Meet the Teachers",
-            "link": "\/pages\/the-team"
+            "link": "/pages/the-team"
           }
         },
         "contact": {
           "type": "link",
           "settings": {
             "label": "Contact",
-            "link": "\/pages\/contact"
+            "link": "/pages/contact"
           }
         }
       },
