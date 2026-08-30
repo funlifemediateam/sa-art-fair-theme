@@ -281,6 +281,10 @@
     {{ 'base.css' | asset_url | stylesheet_tag }}
     {{ 'custom.css' | asset_url | stylesheet_tag }}
     {%- render 'rb-fonts' -%}
+    {%- comment -%} Booking modal, class + workshop pages only. In the head so
+      the rule that pulls the inline booking section out of the flow lands
+      before first paint; the dialog itself is rendered at the end of body. {%- endcomment -%}
+    {%- render 'rb-booking-modal', part: 'css' -%}
     <link rel="stylesheet" href="{{ 'component-cart-items.css' | asset_url }}" media="print" onload="this.media='all'">
 
     {%- if settings.cart_type == 'drawer' -%}
@@ -423,6 +427,10 @@
     {%- comment -%} Floating WhatsApp button — hidden until a number is set in
       Theme settings → WhatsApp button. {%- endcomment -%}
     {%- render 'whatsapp-button' -%}
+
+    {%- comment -%} Booking overlay for class/workshop pages: the "Book Now"
+      pill opens the booking app block here instead of it sitting inline. {%- endcomment -%}
+    {%- render 'rb-booking-modal' -%}
 
     {%- comment -%} Newsletter signup popup. Not rendered on cart; the script
       itself also skips checkout/booking flows and defers to the quiz lead

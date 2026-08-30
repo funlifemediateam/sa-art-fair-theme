@@ -1,0 +1,85 @@
+{%- comment -%}
+  Booking modal for class and workshop product pages.
+
+  The client's brief (elderflowernursery.co.za as the reference): the "Book
+  Now" pill in the class hero should open the booking widget in an overlay,
+  and the widget should no longer sit as a section further down the page.
+
+  The widget is the sa-booking-admin APP BLOCK, hosted in Dawn's `apps`
+  section inside templates/product.booking*.json. The extension cannot be
+  redeployed from here (the Shopify CLI is blocked from the partner org), and
+  the templates are editor-owned, so neither is touched: rb-booking-modal.js
+  moves the rendered app block into .rb-bkm__body and hides the section it
+  came out of. Booking still runs on exactly the app block the app ships.
+
+  Usage — rendered twice from layout/theme.liquid so the hide rule lands in
+  the head and the dialog lands at the end of the body:
+
+    {%- render 'rb-booking-modal', part: 'css' -%}   in <head>
+    {%- render 'rb-booking-modal' -%}                before </body>
+
+  Both calls share the one guard below, so the two can never drift apart.
+{%- endcomment -%}
+
+{%- liquid
+  assign rb_bkm_on = false
+  if request.page_type == 'product'
+    assign rb_bkm_suffix = product.template_suffix | default: ''
+    if rb_bkm_suffix contains 'booking'
+      assign rb_bkm_on = true
+    elsif rb_bkm_suffix == 'class'
+      assign rb_bkm_on = true
+    endif
+  endif
+-%}
+
+{%- if rb_bkm_on -%}
+  {%- if part == 'css' -%}
+    {{ 'rb-booking-modal.css' | asset_url | stylesheet_tag }}
+  {%- else -%}
+    {%- assign rb_bkm_blurb = product.description | strip_html | strip | truncatewords: 28 -%}
+    <div class="rb-bkm" id="rb-bkm" hidden>
+      <div class="rb-bkm__backdrop" data-rb-bkm-close></div>
+
+      <div
+        class="rb-bkm__dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Book {{ product.title | escape }}"
+        tabindex="-1"
+      >
+        <div class="rb-bkm__panel">
+          <p class="rb-bkm__eyebrow">Book your spot</p>
+          <h2 class="rb-bkm__title">{{ product.title | escape }}</h2>
+          {%- if product.featured_image != blank -%}
+            <div class="rb-bkm__thumb">
+              {{
+                product.featured_image
+                | image_url: width: 800
+                | image_tag:
+                  widths: '300, 500, 800',
+                  sizes: '(max-width: 899px) 0px, 34vw',
+                  loading: 'lazy',
+                  alt: product.title
+              }}
+            </div>
+          {%- endif -%}
+          {%- if rb_bkm_blurb != blank -%}
+            <p class="rb-bkm__blurb">{{ rb_bkm_blurb }}</p>
+          {%- endif -%}
+        </div>
+
+        <button type="button" class="rb-bkm__close" data-rb-bkm-close aria-label="Close booking">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M6 6l12 12M18 6L6 18" />
+          </svg>
+        </button>
+
+        {%- comment -%} rb-booking-modal.js moves the app block in here. {%- endcomment -%}
+        <div class="rb-bkm__body" data-rb-bkm-body></div>
+      </div>
+    </div>
+
+    <script src="{{ 'rb-booking-modal.js' | asset_url }}" defer></script>
+  {%- endif -%}
+{%- endif -%}
