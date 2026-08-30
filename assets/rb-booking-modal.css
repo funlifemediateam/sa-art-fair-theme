@@ -54,6 +54,10 @@
 }
 
 .rb-bkm__backdrop {
+  /* Explicit, and not negotiable: Dawn's base.css collapses `div:empty` to
+     display:none, and this div is empty by design. Same reason .rb-bkm__body
+     below declares one — it is empty until the JS moves the widget into it. */
+  display: block;
   position: absolute;
   inset: 0;
   background: rgba(30, 30, 30, 0.55);
@@ -141,10 +145,19 @@ html.rb-bkm-open body {
 
 /* --- right pane: the app block lands here -------------------------------- */
 .rb-bkm__body {
+  display: block; /* see .rb-bkm__backdrop — div:empty would collapse it */
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   padding: clamp(20px, 2vw, 36px);
   background: var(--rb-white, #ffffff);
+}
+
+/* The panel already names the class, so the widget's own eyebrow and title
+   would say it twice. Only while the panel is on screen — below 900px the
+   panel is hidden and these are the only place the class is named. */
+@media (min-width: 900px) {
+  .rb-bkm__body .bk-w-eyebrow,
+  .rb-bkm__body .bk-w-class-title { display: none; }
 }
 
 /* The dialog is already a card; drop the widget's own frame so we do not
