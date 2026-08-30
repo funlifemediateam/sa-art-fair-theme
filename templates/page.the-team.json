@@ -1,68 +1,318 @@
 {
   "sections": {
-    "the_team": {
-      "type": "page-the-team",
+    "hero": {
+      "type": "rb-hero",
+      "settings": {
+        "fill": "colour",
+        "background": "#b00e3f",
+        "texture": 100,
+        "image": "shopify://shop_images/tissuepaper_background__B00E3F_SA_Art_Fair.webp",
+        "image_blend": "normal",
+        "image_rotate": "0",
+        "band_height": 680,
+        "min_height": 260,
+        "mobile_ratio": "4 / 3",
+        "focal_x": 50,
+        "focal_y": 50,
+        "overlay_color": "#1e1e1e",
+        "overlay_opacity": 0,
+        "show_mark": true,
+        "mark": "saaf",
+        "mark_width": 150,
+        "heading": "The Team",
+        "auto_heading": false,
+        "heading_style": "page_title",
+        "text_color": "#ffffff",
+        "button_label": "",
+        "button_link": ""
+      }
+    },
+    "founders": {
+      "type": "rb-founders",
+      "settings": {
+        "image": "shopify://shop_images/saf-home-founders.png",
+        "image_width": 475,
+        "show_stamp": true,
+        "stamp_width": 175,
+        "heading": "SA Art Fair is run by Bianca and Georgina, out of the studio in Hout Bay.",
+        "heading_color": "#b00e3f",
+        "column_one": "",
+        "column_two": "",
+        "body_color": "#1e1e1e",
+        "signature": "– Bianca & Georgina",
+        "background": "#ffffff"
+      }
+    },
+    "teachers": {
+      "type": "rb-people-grid",
       "blocks": {
-        "founders": {
-          "type": "founders",
+        "p0": {
+          "type": "person",
           "settings": {
-            "image": "shopify:\/\/shop_images\/B_G_pic.png",
-            "badge": "Founders",
-            "names": "Georgina & Bianca",
-            "role": "Co-Founders & Creatives",
-            "bio": "Met 13 years ago through mutual connections, Georgina and Bianca combined their creative expertise — Bianca's branding and social media skills with Georgina's ceramic work — to establish the SA Art Fair in Hout Bay and, subsequently, The Studio."
+            "collection": "susan-orpen-1",
+            "name": "",
+            "role": "Art Classes",
+            "link": "",
+            "button_label": "Learn More",
+            "tone": "auto"
           }
         },
-        "susan": {
-          "type": "member",
+        "p1": {
+          "type": "person",
           "settings": {
-            "image": "shopify:\/\/shop_images\/WhatsApp_Image_2026-01-07_at_10.03.53.jpg",
-            "name": "Susan Orpen",
-            "role": "Artist & Teacher",
-            "bio": "A celebrated South African artist with over three decades of teaching experience. Trained with a BA in English and History of Art, Susan works across watercolour, acrylic, and mixed media — creating wildlife, landscapes, and portraits that feature in international private collections.",
-            "tags": "Watercolour · Acrylic · Mixed Media"
+            "collection": "shelley-cowling-1",
+            "name": "",
+            "role": "Art Classes",
+            "link": "",
+            "button_label": "Learn More",
+            "tone": "auto"
           }
         },
-        "kerri": {
-          "type": "member",
+        "p2": {
+          "type": "person",
           "settings": {
-            "image": "shopify:\/\/shop_images\/donna__2.png",
-            "name": "Kerri Sassen",
-            "role": "Artist & Teacher",
-            "bio": "A self-taught South African artist working across a variety of mediums, recently focusing on larger abstract pieces. Kerri also works as an Occupational Therapist, integrating both careers to celebrate, process, and break through via art.",
-            "tags": "Abstract · Mixed Media · Occupational Art Therapy"
+            "collection": "jacqui-sundelson-1",
+            "name": "",
+            "role": "Art Classes",
+            "link": "",
+            "button_label": "Learn More",
+            "tone": "auto"
           }
         },
-        "zara": {
-          "type": "member",
+        "p3": {
+          "type": "person",
           "settings": {
-            "image": "shopify:\/\/shop_images\/WhatsApp_Image_2026-02-09_at_07.28.19__1.jpg",
-            "name": "Zara-Leigh Farinha",
-            "role": "Artist & Teacher",
-            "bio": "Johannesburg-born and Hout Bay-based, Zara-Leigh works intuitively with abstract acrylic and oil paintings on large-format canvas. With over 10 years' experience as a fashion, decor, and makeup artist across South Africa, London, and New York, she brings a uniquely global creative sensibility.",
-            "tags": "Abstract Acrylic · Oil on Canvas · Large Format"
+            "collection": "janice-grant-1",
+            "name": "",
+            "role": "Art Classes",
+            "link": "",
+            "button_label": "Learn More",
+            "tone": "auto"
+          }
+        },
+        "p4": {
+          "type": "person",
+          "settings": {
+            "collection": "zara-leigh-farinha-1",
+            "name": "",
+            "role": "Art Classes",
+            "link": "",
+            "button_label": "Learn More",
+            "tone": "auto"
+          }
+        },
+        "p5": {
+          "type": "person",
+          "settings": {
+            "collection": "teacher-1",
+            "name": "",
+            "role": "Art Classes",
+            "link": "",
+            "button_label": "Learn More",
+            "tone": "auto"
+          }
+        },
+        "p6": {
+          "type": "person",
+          "settings": {
+            "collection": "teacher-2",
+            "name": "",
+            "role": "Art Classes",
+            "link": "",
+            "button_label": "Learn More",
+            "tone": "auto"
+          }
+        },
+        "p7": {
+          "type": "person",
+          "settings": {
+            "collection": "teacher-3",
+            "name": "",
+            "role": "Art Classes",
+            "link": "",
+            "button_label": "Learn More",
+            "tone": "auto"
+          }
+        },
+        "p8": {
+          "type": "person",
+          "settings": {
+            "collection": "teacher-4",
+            "name": "",
+            "role": "Art Classes",
+            "link": "",
+            "button_label": "Learn More",
+            "tone": "auto"
+          }
+        },
+        "p9": {
+          "type": "person",
+          "settings": {
+            "collection": "teacher-5",
+            "name": "",
+            "role": "Art Classes",
+            "link": "",
+            "button_label": "Learn More",
+            "tone": "auto"
+          }
+        },
+        "p10": {
+          "type": "person",
+          "settings": {
+            "collection": "teacher-6",
+            "name": "",
+            "role": "Art Classes",
+            "link": "",
+            "button_label": "Learn More",
+            "tone": "auto"
+          }
+        },
+        "p11": {
+          "type": "person",
+          "settings": {
+            "collection": "teacher-7",
+            "name": "",
+            "role": "Art Classes",
+            "link": "",
+            "button_label": "Learn More",
+            "tone": "auto"
+          }
+        },
+        "p12": {
+          "type": "person",
+          "settings": {
+            "collection": "teacher-8",
+            "name": "",
+            "role": "Art Classes",
+            "link": "",
+            "button_label": "Learn More",
+            "tone": "auto"
+          }
+        },
+        "p13": {
+          "type": "person",
+          "settings": {
+            "collection": "teacher-9",
+            "name": "",
+            "role": "Art Classes",
+            "link": "",
+            "button_label": "Learn More",
+            "tone": "auto"
+          }
+        },
+        "p14": {
+          "type": "person",
+          "settings": {
+            "collection": "teacher-10",
+            "name": "",
+            "role": "Art Classes",
+            "link": "",
+            "button_label": "Learn More",
+            "tone": "auto"
+          }
+        },
+        "p15": {
+          "type": "person",
+          "settings": {
+            "collection": "teacher-11",
+            "name": "",
+            "role": "Art Classes",
+            "link": "",
+            "button_label": "Learn More",
+            "tone": "auto"
+          }
+        },
+        "p16": {
+          "type": "person",
+          "settings": {
+            "collection": "teacher-12",
+            "name": "",
+            "role": "Art Classes",
+            "link": "",
+            "button_label": "Learn More",
+            "tone": "auto"
+          }
+        },
+        "p17": {
+          "type": "person",
+          "settings": {
+            "collection": "teacher-13",
+            "name": "",
+            "role": "Art Classes",
+            "link": "",
+            "button_label": "Learn More",
+            "tone": "auto"
+          }
+        },
+        "p18": {
+          "type": "person",
+          "settings": {
+            "collection": "teacher-14",
+            "name": "",
+            "role": "Art Classes",
+            "link": "",
+            "button_label": "Learn More",
+            "tone": "auto"
+          }
+        },
+        "p19": {
+          "type": "person",
+          "settings": {
+            "collection": "teacher-15",
+            "name": "",
+            "role": "Art Classes",
+            "link": "",
+            "button_label": "Learn More",
+            "tone": "auto"
           }
         }
       },
       "block_order": [
-        "founders",
-        "susan",
-        "kerri",
-        "zara"
+        "p0",
+        "p1",
+        "p2",
+        "p3",
+        "p4",
+        "p5",
+        "p6",
+        "p7",
+        "p8",
+        "p9",
+        "p10",
+        "p11",
+        "p12",
+        "p13",
+        "p14",
+        "p15",
+        "p16",
+        "p17",
+        "p18",
+        "p19"
       ],
       "settings": {
-        "eyebrow": "The Studio at SA Art Fair",
-        "heading": "Meet the Team",
-        "intro": "The artists, teachers, and creatives who make it all happen in Hout Bay.",
-        "cta_eyebrow": "Join Us",
-        "cta_heading": "Learn from the artists who inspire you.",
-        "cta_text": "Book a place in one of our hands-on workshops and classes, held in our Hout Bay studio.",
-        "cta_btn_label": "View workshops & classes",
-        "cta_btn_url": "shopify:\/\/collections\/workshops-classes"
+        "eyebrow": "<p>Meet our teachers</p>",
+        "intro": "<p>The artists who teach the studio's classes and workshops.</p>",
+        "intro_color": "#1e1e1e",
+        "columns": 4,
+        "image_ratio": "227 / 200",
+        "background": "#ffffff",
+        "tone_a": "#b00e3f",
+        "tone_a_text": "#ffffff",
+        "tone_b": "#e07468",
+        "tone_b_text": "#ffffff",
+        "texture": 0,
+        "panel_image_fit": "cover",
+        "panel_image_focal_x": 50,
+        "panel_image_focal_y": 50,
+        "panel_image_veil": 0,
+        "more_label": "",
+        "more_link": ""
       }
     }
   },
   "order": [
-    "the_team"
+    "hero",
+    "founders",
+    "teachers"
   ]
 }

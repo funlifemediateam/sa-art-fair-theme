@@ -1,0 +1,252 @@
+{
+  "sections": {
+    "hero": {
+      "type": "rb-hero",
+      "settings": {
+        "fill": "colour",
+        "background": "#e07468",
+        "texture": 100,
+        "band_height": 560,
+        "min_height": 260,
+        "mobile_ratio": "4 / 3",
+        "focal_x": 50,
+        "focal_y": 50,
+        "overlay_opacity": 0,
+        "show_mark": true,
+        "mark": "studio",
+        "mark_width": 150,
+        "heading": "Term 4 at The Studio",
+        "auto_heading": false,
+        "heading_style": "page_title",
+        "text_color": "#ffffff",
+        "button_label": "See the classes",
+        "button_link": "#shopify-section-classes"
+      }
+    },
+    "intro": {
+      "type": "rb-statement",
+      "settings": {
+        "show_mark": false,
+        "eyebrow": "Bookings are open",
+        "eyebrow_color": "#b00e3f",
+        "heading": "<p>Five classes. One term. <em>Starting 4 October.</em></p>",
+        "heading_color": "#1e1e1e",
+        "accent_color": "#b00e3f",
+        "heading_width": 1100,
+        "body": "<p>Small groups, working artists teaching them, everything you need on the day. Choose the class that fits your week, then drop in, pay monthly or book the full term.</p>",
+        "body_color": "#1e1e1e",
+        "body_width": 760,
+        "background": "#ffffff",
+        "button_label": "",
+        "button_link": "",
+        "padding_top": 110,
+        "padding_bottom": 40
+      }
+    },
+    "classes": {
+      "type": "rb-class-cards",
+      "settings": {
+        "collection": "term-4",
+        "count": 12,
+        "only_classes": true,
+        "eyebrow": "<p>Term 4 classes</p>",
+        "eyebrow_name": "",
+        "teacher_filter": "",
+        "intro": "",
+        "intro_color": "#1e1e1e",
+        "by_prefix": "By",
+        "show_excerpt": true,
+        "show_schedule": true,
+        "show_price": true,
+        "session_word": "a session",
+        "month_word": "a month",
+        "term_word": "the term",
+        "show_deposit": true,
+        "deposit_label": "Or hold your seat for",
+        "show_spaces": true,
+        "spaces_threshold": 8,
+        "spaces_label": "Only [n] spaces left",
+        "book_label": "Book Now",
+        "button_label": "View Class",
+        "columns": 3,
+        "grid_width": 1300,
+        "image_ratio": "398 / 380",
+        "radius": 18,
+        "background": "#ffffff",
+        "pattern": "alternate",
+        "tone_a": "#e07468",
+        "tone_a_text": "#ffffff",
+        "tone_b": "#b00e3f",
+        "tone_b_text": "#ffffff",
+        "texture": 100,
+        "more_label": "",
+        "more_link": ""
+      }
+    },
+    "steps": {
+      "type": "rb-steps",
+      "blocks": {
+        "pick": {
+          "type": "step",
+          "settings": {
+            "icon": "easel",
+            "number": "1.",
+            "title": "Picking A Class",
+            "notes": "<p><strong>What To Expect</strong>Our classes vary by medium, teacher and experience level, with options for both adults and children. Most classes meet weekly for around two hours, with up to 10 classes each term.</p><p><strong>Materials</strong>Your teacher will share a materials list before your class, helping you gather everything you need to get creative — and keep creating at home.</p>"
+          }
+        },
+        "book": {
+          "type": "step",
+          "settings": {
+            "icon": "palette",
+            "number": "2.",
+            "title": "Booking A Class",
+            "notes": "<p><strong>Simple Online Booking</strong>Find the class that feels right for you, choose your preferred day and time, and book your place online. Most classes welcome new students throughout the term, so you don’t always have to wait for the next one to begin.</p><p><strong>Missed A Class?</strong>Life happens. If you miss a class, you can make it up by joining another suitable class — giving you a little more flexibility in your creative week.</p>"
+          }
+        },
+        "package": {
+          "type": "step",
+          "settings": {
+            "icon": "laptop",
+            "number": "3.",
+            "title": "Pick A Package",
+            "notes": "<p><strong>Choose What Works For You</strong>Depending on the class, you can choose to drop in, pay monthly or book for the full term. Pick the option that suits your schedule and how you want to create.</p><p><strong>Paying Online</strong>Everything is handled online, making it simple to book your place, choose your payment option and get straight to the creative part.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "pick",
+        "book",
+        "package"
+      ],
+      "settings": {
+        "show_rule": true,
+        "rule_color": "#c9c9c9",
+        "background": "#ffffff",
+        "number_color": "#b00e3f",
+        "title_color": "#1e1e1e",
+        "label_color": "#1e1e1e",
+        "body_color": "#1e1e1e"
+      }
+    },
+    "enquire": {
+      "type": "rb-split-band",
+      "settings": {
+        "eyebrow": "Not sure which one?",
+        "heading": "<p>Tell us what you want to make, and we’ll point you at the <em>right class</em>.</p>",
+        "heading_font": "serif",
+        "heading_width": 520,
+        "body": "<p>A quick message is enough. We’ll come back to you with the class that fits, and hold a place while you decide.</p>",
+        "align": "center",
+        "button_label": "Ask us on WhatsApp",
+        "button_link": "https://wa.me/27724778807?text=Hi%2C%20I%27d%20like%20to%20ask%20about%20the%20Term%204%20classes",
+        "panel_color": "#505a43",
+        "text_color": "#ffffff",
+        "accent_color": "#bea532",
+        "texture": 100,
+        "image": "shopify://shop_images/saf-studio-team.jpg",
+        "media_side": "right",
+        "panel_width": 50,
+        "min_height": 480,
+        "mobile_ratio": "4 / 3",
+        "focal_x": 50,
+        "focal_y": 50
+      }
+    },
+    "teachers": {
+      "type": "rb-people-grid",
+      "blocks": {
+        "p0": {
+          "type": "person",
+          "settings": {
+            "collection": "janice-grant-1",
+            "name": "",
+            "role": "Art Classes",
+            "image": "",
+            "link": "",
+            "button_label": "Learn More",
+            "tone": "auto"
+          }
+        },
+        "p1": {
+          "type": "person",
+          "settings": {
+            "collection": "zara-leigh-farinha-1",
+            "name": "",
+            "role": "Art Classes",
+            "image": "",
+            "link": "",
+            "button_label": "Learn More",
+            "tone": "auto"
+          }
+        },
+        "p2": {
+          "type": "person",
+          "settings": {
+            "collection": "shelley-cowling-1",
+            "name": "",
+            "role": "Art Classes",
+            "image": "",
+            "link": "",
+            "button_label": "Learn More",
+            "tone": "auto"
+          }
+        },
+        "p3": {
+          "type": "person",
+          "settings": {
+            "collection": "susan-orpen-1",
+            "name": "",
+            "role": "Art Classes",
+            "image": "",
+            "link": "",
+            "button_label": "Learn More",
+            "tone": "auto"
+          }
+        },
+        "p4": {
+          "type": "person",
+          "settings": {
+            "collection": "kerri-sassen-1",
+            "name": "",
+            "role": "Art Classes",
+            "image": "",
+            "link": "",
+            "button_label": "Learn More",
+            "tone": "auto"
+          }
+        }
+      },
+      "block_order": [
+        "p0",
+        "p1",
+        "p2",
+        "p3",
+        "p4"
+      ],
+      "settings": {
+        "eyebrow": "<p>Who you’ll be learning from</p>",
+        "intro": "<p>Every class is led by a working artist from the studio.</p>",
+        "intro_color": "#1e1e1e",
+        "columns": 5,
+        "image_ratio": "227 / 200",
+        "background": "#ffffff",
+        "tone_a": "#b00e3f",
+        "tone_a_text": "#ffffff",
+        "tone_b": "#e07468",
+        "tone_b_text": "#ffffff",
+        "texture": 0,
+        "more_label": "Meet all our teachers",
+        "more_link": "/pages/the-team"
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "intro",
+    "classes",
+    "steps",
+    "enquire",
+    "teachers"
+  ]
+}

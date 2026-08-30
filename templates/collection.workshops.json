@@ -1,77 +1,185 @@
 {
   "sections": {
-    "workshops-hero": {
-      "type": "collection-hero",
+    "hero": {
+      "type": "rb-hero",
       "settings": {
-        "eyebrow": "SA Art Fair",
-        "intro": "Hands-on studio workshops and art classes in Hout Bay \u2014 guided by our resident artists, open to all skill levels."
+        "fill": "colour",
+        "background": "#e07468",
+        "texture": 100,
+        "band_height": 690,
+        "min_height": 260,
+        "mobile_ratio": "4 / 3",
+        "focal_x": 50,
+        "focal_y": 50,
+        "overlay_opacity": 0,
+        "show_mark": true,
+        "mark": "studio",
+        "mark_width": 150,
+        "heading": "Workshops",
+        "auto_heading": false,
+        "heading_style": "page_title",
+        "text_color": "#ffffff"
       }
     },
-    "product-grid": {
-      "type": "collection-classes",
+    "classes": {
+      "type": "rb-class-cards",
       "settings": {
-        "products_per_page": 16,
-        "enable_filtering": true,
-        "enable_sorting": true,
-        "padding_top": 36,
-        "padding_bottom": 36
+        "collection": "",
+        "count": 24,
+        "only_classes": true,
+        "eyebrow": "<p>Browse our workshops</p>",
+        "eyebrow_name": "",
+        "teacher_filter": "",
+        "intro": "<p>One-off workshops, no experience needed.</p>",
+        "intro_color": "#1e1e1e",
+        "by_prefix": "By",
+        "show_excerpt": true,
+        "button_label": "View Class",
+        "columns": 3,
+        "grid_width": 1300,
+        "image_ratio": "398 / 380",
+        "radius": 18,
+        "background": "#ffffff",
+        "pattern": "alternate",
+        "tone_a": "#e07468",
+        "tone_a_text": "#ffffff",
+        "tone_b": "#b00e3f",
+        "tone_b_text": "#ffffff",
+        "texture": 100,
+        "more_label": "",
+        "more_link": ""
       }
     },
-    "image_banner_j4J4EQ": {
-      "type": "image-banner",
+    "teachers": {
+      "type": "rb-people-grid",
       "blocks": {
-        "heading_AbXXyB": {
-          "type": "heading",
-          "disabled": true,
+        "p0": {
+          "type": "person",
           "settings": {
-            "heading": "Image banner",
-            "heading_size": "h1"
+            "collection": "susan-orpen-1",
+            "name": "",
+            "role": "Art Classes",
+            "image": "",
+            "link": "",
+            "button_label": "Learn More",
+            "tone": "auto"
           }
         },
-        "text_rdLDip": {
-          "type": "text",
-          "disabled": true,
+        "p1": {
+          "type": "person",
           "settings": {
-            "text": "Give customers details about the banner image(s) or content on the template.",
-            "text_style": "body"
+            "collection": "shelley-cowling-1",
+            "name": "",
+            "role": "Art Classes",
+            "image": "",
+            "link": "",
+            "button_label": "Learn More",
+            "tone": "auto"
           }
         },
-        "buttons_JN7FCn": {
-          "type": "buttons",
-          "disabled": true,
+        "p2": {
+          "type": "person",
           "settings": {
-            "button_label_1": "Button label",
-            "button_link_1": "",
-            "button_style_secondary_1": false,
-            "button_label_2": "Button label",
-            "button_link_2": "",
-            "button_style_secondary_2": false
+            "collection": "jacqui-sundelson-1",
+            "name": "",
+            "role": "Art Classes",
+            "image": "",
+            "link": "",
+            "button_label": "Learn More",
+            "tone": "auto"
+          }
+        },
+        "p3": {
+          "type": "person",
+          "settings": {
+            "collection": "janice-grant-1",
+            "name": "",
+            "role": "Art Classes",
+            "image": "",
+            "link": "",
+            "button_label": "Learn More",
+            "tone": "auto"
+          }
+        },
+        "p4": {
+          "type": "person",
+          "settings": {
+            "collection": "zara-leigh-farinha-1",
+            "name": "",
+            "role": "Art Classes",
+            "image": "",
+            "link": "",
+            "button_label": "Learn More",
+            "tone": "auto"
+          }
+        },
+        "p5": {
+          "type": "person",
+          "settings": {
+            "collection": "teacher-1",
+            "name": "",
+            "role": "Art Classes",
+            "image": "",
+            "link": "",
+            "button_label": "Learn More",
+            "tone": "auto"
+          }
+        },
+        "p6": {
+          "type": "person",
+          "settings": {
+            "collection": "teacher-2",
+            "name": "",
+            "role": "Art Classes",
+            "image": "",
+            "link": "",
+            "button_label": "Learn More",
+            "tone": "auto"
+          }
+        },
+        "p7": {
+          "type": "person",
+          "settings": {
+            "collection": "teacher-3",
+            "name": "",
+            "role": "Art Classes",
+            "image": "",
+            "link": "",
+            "button_label": "Learn More",
+            "tone": "auto"
           }
         }
       },
       "block_order": [
-        "heading_AbXXyB",
-        "text_rdLDip",
-        "buttons_JN7FCn"
+        "p0",
+        "p1",
+        "p2",
+        "p3",
+        "p4",
+        "p5",
+        "p6",
+        "p7"
       ],
       "settings": {
-        "image": "shopify://shop_images/an-upper-class-art-studio-in-hout-by-cape-town-showcasing-the-art-they-sell-and-people-also-doing-art-classes-or-art-workshops-hyper-relialistic-with-the-mountains-and-ocean-in-the-ba_55e02391-c205-4ea6-9dc9-5d64542b5fd1.png",
-        "image_overlay_opacity": 0,
-        "image_height": "medium",
-        "image_behavior": "none",
-        "desktop_content_position": "middle-center",
-        "desktop_content_alignment": "center",
-        "show_text_box": true,
-        "color_scheme": "",
-        "stack_images_on_mobile": true,
-        "mobile_content_alignment": "center",
-        "show_text_below": true
+        "eyebrow": "<p>Meet our teachers</p>",
+        "intro": "<p>Every class is led by a working artist from the studio.</p>",
+        "intro_color": "#1e1e1e",
+        "columns": 4,
+        "image_ratio": "227 / 200",
+        "background": "#ffffff",
+        "tone_a": "#b00e3f",
+        "tone_a_text": "#ffffff",
+        "tone_b": "#e07468",
+        "tone_b_text": "#ffffff",
+        "texture": 0,
+        "more_label": "Meet all our teachers",
+        "more_link": "/pages/the-team"
       }
     }
   },
   "order": [
-    "workshops-hero",
-    "product-grid",
-    "image_banner_j4J4EQ"
+    "hero",
+    "classes",
+    "teachers"
   ]
 }
