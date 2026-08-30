@@ -89,14 +89,25 @@
 -%}
 
 <style>
+  {% comment %}
+    The picture is the person hero's box, not this comp's — same width, same
+    height, flush with the top of the section (client instruction 2026-08-30;
+    see --rb-hero-* in saf-rebrand.css). Two consequences worth knowing:
+
+    the media track is a PERCENTAGE OF THE ROW rather than a fr share, because
+    a fr share is measured after the gap is taken out and would land 79px
+    short of the person hero's picture; and the section lost its vertical
+    padding, because the picture — now taller than the copy beside it — sets
+    the height, exactly as it does on a person page.
+  {% endcomment %}
   #shopify-section-{{ sid }} .rb-ch {
     background: {{ section.settings.background }};
     display: grid;
-    grid-template-columns: {{ section.settings.text_width }}fr {{ 100 | minus: section.settings.text_width }}fr;
+    grid-template-columns: 1fr {{ 100 | minus: section.settings.text_width }}%;
     align-items: center;
     /* shared with the person hero — see --rb-hero-* in saf-rebrand.css */
     gap: var(--rb-hero-gap);
-    padding-block: clamp(40px, 5.73vw, 110px);
+    padding-block: 0;
   }
   #shopify-section-{{ sid }} .rb-ch__text {
     box-sizing: border-box;
@@ -231,8 +242,8 @@
         {%- if img_a != blank -%}
           {{
             img_a
-            | image_url: width: 1200
-            | image_tag: widths: '400, 600, 900, 1200', sizes: '(max-width: 749px) 100vw, 30vw',
+            | image_url: width: 1600
+            | image_tag: widths: '400, 600, 900, 1200, 1600', sizes: '(max-width: 749px) 100vw, 33vw',
               loading: 'eager', alt: img_a.alt | default: title
           }}
         {%- else -%}
@@ -243,8 +254,8 @@
         <div class="rb-media rb-media--b">
           {{
             img_b
-            | image_url: width: 900
-            | image_tag: widths: '300, 500, 700, 900', sizes: '(max-width: 749px) 60vw, 22vw',
+            | image_url: width: 1400
+            | image_tag: widths: '300, 500, 700, 900, 1400', sizes: '(max-width: 749px) 60vw, 32vw',
               loading: 'eager', alt: img_b.alt | default: teacher
           }}
         </div>
@@ -291,7 +302,8 @@
       "default": 62, "unit": "%", "label": "Artwork share of the image pair" },
     { "type": "header", "content": "Layout" },
     { "type": "range", "id": "text_width", "min": 30, "max": 70, "step": 1,
-      "default": 52, "unit": "%", "label": "Text share of the row" },
+      "default": 48, "unit": "%", "label": "Text share of the row",
+      "info": "The picture takes the rest of the row and the copy sits in what is left of it, less a gutter. Artist and teacher pages are set to the same 48, so changing it here parts the class hero from those." },
     { "type": "header", "content": "Colour" },
     { "type": "color", "id": "background", "default": "#ffffff", "label": "Background" },
     { "type": "color", "id": "title_color", "default": "#e07468", "label": "Subject colour" },

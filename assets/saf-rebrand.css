@@ -73,14 +73,16 @@
   --rb-header-h: clamp(84px, 8.85vw, 170px);
 
   /* The image half of a split hero. The class hero (rb-class-hero) and the
-     person hero (rb-person-hero) wear the SAME box on the right — 48% of the
-     row once this gutter is out of it, and this tall — so the two page types
-     read as one family. Both sections read these two tokens, and the person
-     hero derives its 48% from them, so the pair cannot drift apart again.
-     The person hero used to run 790px tall and 52% wide off its own comp;
-     matched to the class hero on the client's instruction, 2026-08-30. */
+     person hero (rb-person-hero) wear the SAME box on the right — the person
+     hero's, measured off its comp: 52% of the row, flush with the right edge,
+     and 790px tall on a 1920 frame. The class hero used to run 407px tall and
+     48%-after-its-gutter wide; grown to the person hero's on the client's
+     instruction, 2026-08-30. Both sections read these tokens, so the pair
+     cannot drift apart again. --rb-hero-gap is the strip of paper the class
+     hero keeps between its copy and the picture; the person hero needs none,
+     its text block being centred in its own column. */
   --rb-hero-gap: clamp(24px, 3.13vw, 60px);
-  --rb-hero-media-h: clamp(220px, 21.2vw, 407px);
+  --rb-hero-media-h: clamp(280px, 41.15vw, 790px);
 }
 
 /* --------------------------------------------------------------------------
