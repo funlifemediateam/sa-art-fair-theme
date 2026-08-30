@@ -281,6 +281,11 @@
     {{ 'base.css' | asset_url | stylesheet_tag }}
     {{ 'custom.css' | asset_url | stylesheet_tag }}
     {%- render 'rb-fonts' -%}
+    {%- comment -%} Stop-gap for a ReferenceError in the booking app block that
+      makes it impossible to book a class. Must load before the block's own
+      script, hence the head. Delete with the snippet once the extension
+      ships its fix — the snippet explains the whole thing. {%- endcomment -%}
+    {%- render 'rb-booking-widget-shim' -%}
     {%- comment -%} Booking modal, class + workshop pages only. In the head so
       the rule that pulls the inline booking section out of the flow lands
       before first paint; the dialog itself is rendered at the end of body. {%- endcomment -%}

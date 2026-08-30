@@ -1,0 +1,37 @@
+{%- comment -%}
+  TEMPORARY — delete this snippet (and its render in layout/theme.liquid) once
+  the sa-booking-admin extension has been redeployed.
+
+  THE BUG (live, found 2026-08-30): in the booking widget's app block,
+  `selectedCalDate` is declared with `var` INSIDE renderClass(), but
+  renderDiscountNudge() sits one scope up and reads it. So every click on a
+  date in single-session mode threw
+
+      ReferenceError: selectedCalDate is not defined
+
+  and the throw landed BEFORE updateUI() — which is what writes the price, the
+  total and enables "Add to Cart". Picking a date left all three blank and the
+  button disabled, so no class or workshop could actually be booked. Verified
+  with the widget in its original inline position too, so it is the app's bug,
+  not the booking modal's.
+
+  THE REAL FIX is one line in the extension:
+  extensions/booking-embed/blocks/booking-widget.liquid — declare
+  `var selectedCalDate = null;` beside `selectedDates` at widget scope and
+  leave a bare assignment where the old declaration was. It is already made in
+  the admin repo, waiting on a deploy; the Shopify CLI cannot reach the partner
+  org from this machine, so it cannot be shipped from here.
+
+  THE SHIM: declaring the name at global scope gives that free variable
+  something to resolve to, so the read returns null instead of throwing and
+  updateUI() runs. The widget's own `var` inside renderClass still shadows it,
+  so the real single-mode date logic is untouched.
+
+  KNOWN COST: renderDiscountNudge now always sees null in single-session mode,
+  so the "Also available: Full term …" nudge does not appear when a single date
+  is picked. Multi-date mode reads selectedDates and still shows it in full.
+  The deploy of the real fix restores it.
+{%- endcomment -%}
+<script>
+  var selectedCalDate = null;
+</script>
