@@ -1,0 +1,43 @@
+{%- comment -%}
+  Artwork product page only: white background (so a photo's own soft studio
+  backdrop blends into the page instead of sitting on Dawn's cream scheme-1),
+  plus — when the product has more than one image — a small "Gallery" trigger
+  directly under the main photo that opens the extra shots (detail crops,
+  room mockups) in Dawn's existing product media modal. Mirrors the visual
+  language of 'class-subnav' (which does the equivalent job on class/workshop
+  product pages) without touching that file or its shop-metafield config.
+
+  Usage: render inside .product__media-wrapper, right after
+  'product-media-gallery', so it lands directly beneath the main image.
+{%- endcomment -%}
+{%- assign is_class = false -%}
+{%- if product.type == 'Class' or product.type == 'Workshop' or product.template_suffix contains 'booking' -%}
+  {%- assign is_class = true -%}
+{%- endif -%}
+
+{%- unless is_class -%}
+  <style>
+    #MainProduct-{{ section.id }} { background: #ffffff; }
+    {%- if product.media.size > 1 -%}
+    .artwork-gallery-nav { border-top: 1px solid rgba(29,28,33,0.08); margin-top: 16px; }
+    .artwork-gallery-nav__inner { padding: 12px 2px 0; display: flex; align-items: center; gap: 10px; }
+    .artwork-gallery-nav__label { font-family: var(--font-body-family); font-size: 0.68rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: #0f4a52; opacity: 0.85; }
+    .artwork-gallery-nav button { font-family: var(--font-body-family); font-size: 0.95rem; color: #1d1c21;
+      background: none; border: none; padding: 4px 2px; cursor: pointer;
+      border-bottom: 2px solid transparent; transition: border-color .15s, color .15s; }
+    .artwork-gallery-nav button:hover { color: #0f4a52; border-bottom-color: #f26b52; }
+    {%- endif -%}
+  </style>
+
+  {%- if product.media.size > 1 -%}
+    <nav class="artwork-gallery-nav" aria-label="More photos of this artwork">
+      <div class="artwork-gallery-nav__inner">
+        <span class="artwork-gallery-nav__label">This Piece</span>
+        <modal-opener data-modal="#ProductModal-{{ section.id }}">
+          <button type="button">Gallery</button>
+        </modal-opener>
+      </div>
+    </nav>
+  {%- endif -%}
+{%- endunless -%}
