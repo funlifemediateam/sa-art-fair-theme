@@ -415,6 +415,7 @@
 {%- capture grid_markup -%}
   <div class="rb-aw__grid" data-rba-server>
     {%- paginate col.products by per_page -%}
+      {%- assign next_page_url = paginate.next.url -%}
       {%- for item in col.products -%}
         <article class="rb-aw__card">
           <a href="{{ item.url }}" class="rb-media rb-aw__media">
@@ -655,10 +656,19 @@
     </div>
   {%- endif -%}
 
-  {%- if section.settings.more_label != blank -%}
+  {%- comment -%}
+    Blank `more_link` used to fall back to `col.url` — on a page that IS
+    that same collection (e.g. the Store's own "Available Artworks" grid),
+    that just links the button back to the page it's already on, so
+    clicking it "refreshes to the same page" instead of showing more work.
+    A blank link now falls back to the collection's next page instead, and
+    the button is hidden once there is no next page to show.
+  {%- endcomment -%}
+  {%- assign more_href = section.settings.more_link | default: next_page_url -%}
+  {%- if section.settings.more_label != blank and more_href != blank -%}
     <div class="rb-container">
       <div class="rb-aw__more" data-rba-more>
-        <a href="{{ section.settings.more_link | default: col.url | default: '#' }}"
+        <a href="{{ more_href }}"
            class="rb-btn rb-btn--serif rb-btn--outline">
           {{- section.settings.more_label | escape -}}
         </a>

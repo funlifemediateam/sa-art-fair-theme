@@ -86,8 +86,12 @@
     gap: 6px 0;
   }
   #shopify-section-{{ sid }} .rb-ac__names li { display: inline-flex; align-items: center; }
-  /* a dot between names, never a trailing one */
-  #shopify-section-{{ sid }} .rb-ac__names li + li::before {
+  /* a dot between names, never a trailing one. The general-sibling form (not
+     just li + li) matters once the search box hides names: a visible item can
+     sit right after a RUN of hidden ones, and it still needs a dot as long as
+     some earlier item in the list is visible — only the first visible item of
+     all should go without one. */
+  #shopify-section-{{ sid }} .rb-ac__names li:not([hidden]) ~ li:not([hidden])::before {
     content: '';
     display: block;
     width: 3px;
@@ -111,9 +115,6 @@
     border-bottom-color: currentColor;
   }
   #shopify-section-{{ sid }} .rb-ac__names li[hidden] { display: none; }
-  /* the separator belongs to the item before it, so a hidden neighbour must
-     not leave an orphan dot at the start of a filtered row */
-  #shopify-section-{{ sid }} .rb-ac__names li[hidden] + li::before { display: none; }
 
   #shopify-section-{{ sid }} .rb-ac__empty {
     margin: clamp(20px, 2vw, 34px) 0 0;
