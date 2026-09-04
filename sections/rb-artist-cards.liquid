@@ -547,19 +547,28 @@
           .trim();
       }
 
+      function matchesQuery(haystack, q) {
+        /* a hit only when some WORD in the haystack starts with the query —
+           not just any letter appearing anywhere in it — so typing "s" finds
+           "Sara" but not "Careisha". Padding both sides with a space turns
+           "starts a word" into "follows a space". */
+        if (!q) return true;
+        return (' ' + haystack + ' ').indexOf(' ' + q) !== -1;
+      }
+
       function apply() {
         var q = norm(input.value);
         var shown = 0;
 
         cards.forEach(function (card) {
-          var hit = !q || norm(card.getAttribute('data-search')).indexOf(q) !== -1;
+          var hit = matchesQuery(norm(card.getAttribute('data-search')), q);
           card.hidden = !hit;
           if (hit) shown++;
         });
 
         names.forEach(function (li) {
           var a = li.querySelector('a');
-          li.hidden = !!q && norm(a && a.textContent).indexOf(q) === -1;
+          li.hidden = !matchesQuery(norm(a && a.textContent), q);
         });
 
         if (empty) empty.hidden = shown !== 0;
