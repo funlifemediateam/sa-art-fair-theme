@@ -91,6 +91,23 @@
     object-fit: cover;
     object-position: {{ section.settings.focal_x }}% {{ section.settings.focal_y }}%;
   }
+  #shopify-section-{{ sid }} .rb-hero__video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: {{ section.settings.focal_x }}% {{ section.settings.focal_y }}%;
+  }
+  {%- if section.settings.fill == 'video' and section.settings.video != blank and section.settings.video_mobile_fallback -%}
+    /* mobile wears the photograph instead — autoplaying video is expensive
+       on mobile data, so the fallback image swaps in under 750px */
+    #shopify-section-{{ sid }} .rb-hero__video-fallback { display: none; }
+    @media screen and (max-width: 749px) {
+      #shopify-section-{{ sid }} .rb-hero__video { display: none; }
+      #shopify-section-{{ sid }} .rb-hero__video-fallback { display: block; }
+    }
+  {%- endif -%}
   #shopify-section-{{ sid }} .rb-hero__overlay {
     /* explicit display: Dawn's base.css hides every `div:empty`, and these
        decorative layers have no children */
@@ -171,6 +188,55 @@
         widths: '750, 1100, 1500, 1920, 2400, 3000',
         width: 2400
       -%}
+    {%- elsif section.settings.fill == 'video' -%}
+      {%- comment -%}
+        Self-hosted background video — muted, looped, no controls, full-bleed
+        cover like the photograph. The picked image is its poster while the
+        video loads and, unless turned off below, its mobile fallback, so the
+        band is never blank in the editor either way.
+      {%- endcomment -%}
+      {%- if section.settings.video != blank -%}
+        {{
+          section.settings.video
+          | video_tag:
+            class: 'rb-hero__video',
+            autoplay: true,
+            loop: true,
+            muted: true,
+            controls: false,
+            playsinline: true,
+            preload: 'auto',
+            image_size: '1920x'
+        }}
+      {%- endif -%}
+      {%- if section.settings.video == blank -%}
+        {%- if img != blank -%}
+          {{
+            img
+            | image_url: width: 3840
+            | image_tag:
+              class: 'rb-hero__img',
+              widths: '750, 1100, 1500, 1920, 2400, 3000, 3840',
+              sizes: '100vw',
+              loading: 'eager',
+              fetchpriority: 'high',
+              alt: img.alt | default: shop.name
+          }}
+        {%- else -%}
+          {{ 'hero-apparel-1' | placeholder_svg_tag: 'rb-hero__placeholder placeholder-svg' }}
+        {%- endif -%}
+      {%- elsif section.settings.video_mobile_fallback and img != blank -%}
+        {{
+          img
+          | image_url: width: 1500
+          | image_tag:
+            class: 'rb-hero__img rb-hero__video-fallback',
+            widths: '375, 550, 750, 1100, 1500',
+            sizes: '100vw',
+            loading: 'eager',
+            alt: img.alt | default: shop.name
+        }}
+      {%- endif -%}
     {%- elsif img != blank -%}
       {{
         img
@@ -230,6 +296,7 @@
     { "type": "select", "id": "fill", "label": "Band fill", "default": "image",
       "options": [
         { "value": "image", "label": "Photograph" },
+        { "value": "video", "label": "Video" },
         { "value": "colour", "label": "Coloured paper (artists page)" }
       ] },
     { "type": "color", "id": "background", "default": "#505a43", "label": "Band colour",
@@ -237,7 +304,7 @@
     { "type": "range", "id": "texture", "min": 0, "max": 100, "step": 5,
       "default": 100, "unit": "%", "label": "Crumpled paper texture" },
     { "type": "image_picker", "id": "image", "label": "Background image",
-      "info": "Comp uses a 1920x883 photograph of a paint palette. On a coloured-paper band it paints behind the crumpled texture, over the band colour — leave it empty there for a plain coloured band. When one template serves several collections, add a \"Per-collection background\" block below to give a collection its own image." },
+      "info": "Comp uses a 1920x883 photograph of a paint palette. On a coloured-paper band it paints behind the crumpled texture, over the band colour — leave it empty there for a plain coloured band. On a video band it's the poster and (unless turned off below) the mobile fallback. When one template serves several collections, add a \"Per-collection background\" block below to give a collection its own image." },
     { "type": "select", "id": "image_blend", "default": "normal",
       "label": "How the image meets the band colour",
       "info": "Only applies on a coloured-paper band. Screen is the Figma setting for a dark crumpled-paper photograph: the band colour stays and the paper's folds lift out of it. Drop the crumpled paper texture to 0% when you do that, or the theme's own texture doubles up on it.",
@@ -257,6 +324,12 @@
         { "value": "180", "label": "180°" },
         { "value": "270", "label": "90° anticlockwise (Figma 90°)" }
       ] },
+    { "type": "header", "content": "Video" },
+    { "type": "video", "id": "video", "label": "Background video",
+      "info": "Used when the band fill above is set to Video. Upload an MP4 to Shopify Files — it plays muted, looped, with no controls, the way an Instagram Reels background does. The photograph above is its poster while the video loads." },
+    { "type": "checkbox", "id": "video_mobile_fallback", "default": true,
+      "label": "Show the photograph instead of the video on mobile",
+      "info": "Autoplaying video is expensive on mobile data — on by default. Turn off to play the video on every screen size." },
     { "type": "range", "id": "band_height", "min": 300, "max": 1100, "step": 10,
       "default": 850, "unit": "px", "label": "Band height at 1920px wide",
       "info": "Sets the aspect ratio, so the band scales with the viewport." },
