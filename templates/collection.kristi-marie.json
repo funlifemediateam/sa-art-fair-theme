@@ -1,0 +1,71 @@
+{
+  "sections": {
+    "hero": {
+      "type": "rb-person-hero",
+      "settings": {
+        "name": "",
+        "script": "",
+        "tags": "",
+        "social_url": "",
+        "button_label": "",
+        "button_link": "",
+        "align": "center",
+        "text_width": 48,
+        "background": "#ffffff",
+        "name_color": "#505a43",
+        "script_color": "#1e1e1e",
+        "tag_color": "#0c3642",
+        "image": "",
+        "focal_x": 50,
+        "focal_y": 50,
+        "portrait": "",
+        "portrait_w": 39,
+        "portrait_ratio": "79 \/ 69",
+        "portrait_x": 47,
+        "portrait_y": 52,
+        "script_from_description": true
+      }
+    },
+    "artworks": {
+      "type": "rb-artworks",
+      "settings": {
+        "heading": "Available Artworks",
+        "collection": "",
+        "layout": "rail",
+        "per_page": 24,
+        "columns": 3,
+        "image_ratio": "17 \/ 14",
+        "hover_label": "View Artwork",
+        "rail_title": "Filter By:",
+        "rail_width": 150,
+        "card_button": "Browse Collection",
+        "more_label": "",
+        "background": "#ffffff",
+        "heading_color": "#505a43",
+        "card_title_color": "#1e1e1e",
+        "card_meta_color": "#1e1e1e"
+      }
+    },
+    "about": {
+      "type": "rb-script-statement",
+      "settings": {
+        "heading": "<p>More about <em>Kristi<\/em>.<\/p>",
+        "body": "",
+        "use_collection_description": true,
+        "background": "#e2ead7",
+        "heading_color": "#1e1e1e",
+        "accent_color": "#505a43",
+        "body_color": "#1e1e1e",
+        "heading_width": 700,
+        "body_width": 640,
+        "padding_top": 140,
+        "padding_bottom": 160
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "artworks",
+    "about"
+  ]
+}
