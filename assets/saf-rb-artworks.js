@@ -48,10 +48,13 @@
     var moreEl = root.querySelector('[data-rba-more]');
     var cardStyle = root.dataset.rbaCard || 'artwork';
     var viewLabel = root.dataset.rbaViewLabel || 'View Artwork';
+    var perPage = parseInt(root.dataset.rbaPerPage, 10) || 12;
+    var moreLink = moreEl ? moreEl.querySelector('[data-rba-more-auto]') : null;
 
     var items = null;
     var loading = false;
     var failed = false;
+    var shownCount = perPage;
 
     var state = {
       q: '', artist: '', mediums: [], colours: [],
@@ -178,6 +181,7 @@
       reflect();
 
       if (!active()) {
+        shownCount = perPage;
         if (serverEl) serverEl.hidden = false;
         resultsEl.hidden = true;
         resultsEl.innerHTML = '';
@@ -202,6 +206,36 @@
       if (emptyEl) emptyEl.hidden = shown.length > 0;
       if (countEl) countEl.textContent = list.length === 1 ? '1 work' : list.length + ' works';
       if (moreEl) moreEl.hidden = true;
+    }
+
+    /* ── "See More" — reveals the next chunk of the untouched grid in
+       place, instead of navigating to a paginated URL. Only takes over
+       when the button is still pointing at collection pagination
+       (data-rba-more-auto); a merchant-set custom link is left alone. */
+    function showMore() {
+      if (loading) return;
+      function render() {
+        if (failed || !items) {
+          location.href = moreLink.href;
+          return;
+        }
+        var list = sorted(items.filter(matches));
+        shownCount = Math.min(shownCount + perPage, list.length);
+        if (serverEl) serverEl.hidden = true;
+        resultsEl.hidden = false;
+        resultsEl.innerHTML = list.slice(0, shownCount).map(tile).join('');
+        if (emptyEl) emptyEl.hidden = true;
+        if (moreEl) moreEl.hidden = shownCount >= list.length;
+      }
+      if (!items) load(render);
+      else render();
+    }
+
+    if (moreLink) {
+      moreLink.addEventListener('click', function (e) {
+        e.preventDefault();
+        showMore();
+      });
     }
 
     /* ── URL params, so a filtered view is shareable ── */

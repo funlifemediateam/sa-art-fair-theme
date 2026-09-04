@@ -474,6 +474,7 @@
   data-rba-url="{{ col.url }}"
   data-rba-card="{% if layout == 'rail' %}collection{% else %}artwork{% endif %}"
   data-rba-view-label="{{ section.settings.hover_label | escape }}"
+  data-rba-per-page="{{ per_page }}"
 >
   {%- if section.settings.heading != blank -%}
     <div class="rb-container">
@@ -669,7 +670,8 @@
     <div class="rb-container">
       <div class="rb-aw__more" data-rba-more>
         <a href="{{ more_href }}"
-           class="rb-btn rb-btn--serif rb-btn--outline">
+           class="rb-btn rb-btn--serif rb-btn--outline"
+           {% if section.settings.more_link == blank %}data-rba-more-auto{% endif %}>
           {{- section.settings.more_label | escape -}}
         </a>
       </div>
