@@ -86,6 +86,14 @@ html.rb-bkm-open .saf-mobile-ctas {
   position: relative;
   display: grid;
   grid-template-columns: minmax(0, 0.78fr) minmax(0, 1fr);
+  /* Without an explicit row track, an implicit auto row sizes to the
+     TALLER child's full content height (max-content) — the multi-date
+     calendar pane's own box then grows past max-height below, and since
+     the dialog clips with overflow:hidden, the excess is cut off instead
+     of being reachable via the pane's own overflow-y:auto. minmax(0, 1fr)
+     caps the row at the dialog's available height so children stretch to
+     fit it and scroll internally instead. */
+  grid-template-rows: minmax(0, 1fr);
   width: min(1040px, 100%);
   max-height: min(88vh, 880px);
   background: var(--rb-white, #ffffff);
