@@ -3,14 +3,14 @@
     "art_quiz": {
       "type": "art-quiz",
       "settings": {
-        "heading": "What's Your Art Personality?",
-        "subheading": "See how your personality can shape your journey as a collector.",
-        "cta_text": "Take the Test",
+        "heading": "What Art Do You Love?",
+        "subheading": "14 artworks. 14 quick decisions. Discover the art you're naturally drawn to.",
+        "cta_text": "Take The Quiz",
         "overlay_opacity": 50,
         "accent_color": "#f26b52",
         "min_height": 85,
         "api_url": "https://sa-art-fair-admin.vercel.app",
-        "meta_text": "14 questions · 3 minutes"
+        "meta_text": "14 artworks · 1 minute"
       }
     }
   },
