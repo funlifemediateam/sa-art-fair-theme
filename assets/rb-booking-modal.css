@@ -109,6 +109,12 @@ html.rb-bkm-open .saf-mobile-ctas {
   background: var(--rb-coral-flat, #e07468);
   color: var(--rb-white, #ffffff);
   overflow-y: auto;
+  /* Grid items default to min-height:auto, which lets a tall child (the
+     multi-date calendar pane, say) grow the implicit row past the dialog's
+     max-height instead of scrolling — the overflow then gets clipped by
+     .rb-bkm__dialog's own overflow:hidden. min-height:0 lets this pane
+     shrink to the row height so its own overflow-y:auto can do its job. */
+  min-height: 0;
 }
 
 .rb-bkm__eyebrow {
@@ -160,6 +166,13 @@ html.rb-bkm-open .saf-mobile-ctas {
   -webkit-overflow-scrolling: touch;
   padding: clamp(20px, 2vw, 36px);
   background: var(--rb-white, #ffffff);
+  /* Same grid min-height:0 fix as .rb-bkm__panel above — without it, the
+     multi-date calendar plus its selected-dates chips and the discount
+     nudge push this pane's content taller than the dialog, the implicit
+     grid row grows to match, and the fields below (Full name, etc.) get
+     clipped by the dialog's overflow:hidden instead of being reachable by
+     scrolling this pane. */
+  min-height: 0;
 }
 
 /* The panel already names the class, so the widget's own eyebrow and title
