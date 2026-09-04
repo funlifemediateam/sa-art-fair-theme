@@ -1,7 +1,7 @@
-{%- assign quiz_heading    = section.settings.heading    | default: "What's Your Art Personality?" -%}
-{%- assign quiz_subheading = section.settings.subheading | default: 'See how your personality can shape your journey as a collector.' -%}
-{%- assign quiz_cta        = section.settings.cta_text   | default: 'Take the Test' -%}
-{%- assign quiz_meta       = section.settings.meta_text  | default: '10 questions · 3 minutes' -%}
+{%- assign quiz_heading    = section.settings.heading    | default: 'What Art Do You Love?' -%}
+{%- assign quiz_subheading = section.settings.subheading | default: "14 artworks. 14 quick decisions. Discover the art you're naturally drawn to." -%}
+{%- assign quiz_cta        = section.settings.cta_text   | default: 'Take The Quiz' -%}
+{%- assign quiz_meta       = section.settings.meta_text  | default: '14 artworks · 1 minute' -%}
 {%- assign quiz_api_url    = section.settings.api_url    | default: 'https://sa-art-fair-admin.vercel.app' -%}
 {%- assign overlay_alpha   = section.settings.overlay_opacity | divided_by: 100.0 -%}
 {%- assign accent          = section.settings.accent_color | default: '#0f4a52' -%}
@@ -41,7 +41,7 @@
   </div>
 
   <div style="position:relative;z-index:1;text-align:center;padding:{% if teaser %}64px 24px{% else %}80px 24px{% endif %};max-width:680px;width:100%">
-    <p style="font-size:0.7rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:{{ accent }};margin:0 0 18px">Art Personality</p>
+    <p style="font-size:0.7rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:{{ accent }};margin:0 0 18px">Art You Love</p>
     <h2 style="font-size:{% if teaser %}clamp(1.7rem,4vw,2.6rem){% else %}clamp(2rem,5vw,3.4rem){% endif %};font-weight:700;line-height:1.1;color:#fff;margin:0 0 20px;letter-spacing:-0.02em">
       {{- quiz_heading -}}
     </h2>
@@ -87,7 +87,7 @@
 
 {% schema %}
 {
-  "name": "Art Personality Quiz",
+  "name": "Art You Love Quiz",
   "tag": "section",
   "class": "section",
   "settings": [
@@ -99,25 +99,25 @@
       "type": "text",
       "id": "heading",
       "label": "Heading",
-      "default": "What's Your Art Personality?"
+      "default": "What Art Do You Love?"
     },
     {
       "type": "text",
       "id": "subheading",
       "label": "Subheading",
-      "default": "See how your personality can shape your journey as a collector."
+      "default": "14 artworks. 14 quick decisions. Discover the art you're naturally drawn to."
     },
     {
       "type": "text",
       "id": "cta_text",
       "label": "Button text",
-      "default": "Take the Test"
+      "default": "Take The Quiz"
     },
     {
       "type": "text",
       "id": "meta_text",
       "label": "Small text under button",
-      "default": "10 questions · 3 minutes",
+      "default": "14 artworks · 1 minute",
       "info": "Leave blank to hide."
     },
     {
@@ -194,7 +194,7 @@
   ],
   "presets": [
     {
-      "name": "Art Personality Quiz"
+      "name": "Art You Love Quiz"
     },
     {
       "name": "Quiz teaser",
