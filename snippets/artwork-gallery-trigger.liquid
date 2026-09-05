@@ -26,6 +26,82 @@
     {% endcomment %}
     #MainProduct-{{ section.id }} .product-form__quantity { max-width: none; }
     #MainProduct-{{ section.id }} .product-form__quantity .quantity { width: 100%; }
+
+    {% comment %}
+      Artwork photos come in every shape (square, landscape, tall 4:5 crops…)
+      and Dawn's stock gallery sizes the image box to the PHOTO's own aspect
+      ratio (--ratio-percent), so a portrait piece renders a much taller page
+      than a square one sitting right next to it in the catalogue. Force the
+      main display + thumbnails to a fixed square "mat" and letterbox the
+      photo inside it (object-fit: contain) so every product page has the
+      same footprint no matter the artwork's proportions.
+    {% endcomment %}
+    #MainProduct-{{ section.id }} .product__media-wrapper .product-media-container {
+      --aspect-ratio: 1;
+      background: #f5ece6;
+      border: 1px solid rgba(29, 28, 33, 0.12);
+    }
+    #MainProduct-{{ section.id }} .product__media-wrapper .product-media-container .media > img,
+    #MainProduct-{{ section.id }} .product__media-wrapper .product-media-container .media > video,
+    #MainProduct-{{ section.id }} .product__media-wrapper .product-media-container .media model-viewer {
+      object-fit: contain;
+    }
+    {% comment %} Neutralise Dawn's "cover" branch in case any per-artwork template has media_fit set to Cover — contain + letterboxing is the whole point here. {% endcomment %}
+    @media screen and (max-width: 749px) {
+      #MainProduct-{{ section.id }} .product__media-wrapper .product-media-container.media-fit-cover {
+        display: block;
+        align-self: auto;
+      }
+      #MainProduct-{{ section.id }} .product__media-wrapper .product-media-container.media-fit-cover .media {
+        position: relative;
+      }
+    }
+    @media screen and (min-width: 750px) {
+      #MainProduct-{{ section.id }} .product__media-wrapper .product-media-container.media-fit-cover,
+      #MainProduct-{{ section.id }} .product__media-wrapper .product-media-container.media-fit-cover .product__modal-opener,
+      #MainProduct-{{ section.id }} .product__media-wrapper .product-media-container.media-fit-cover .media {
+        height: auto;
+      }
+    }
+    {% comment %} Thumbnail slots are already square (Dawn's own ::before padding hack) — just switch the crop from cover to contain so the small preview matches the main image instead of cropping it. {% endcomment %}
+    #MainProduct-{{ section.id }} .thumbnail-list__item .thumbnail {
+      background: #f5ece6;
+      border: 1px solid rgba(29, 28, 33, 0.12);
+    }
+    #MainProduct-{{ section.id }} .thumbnail-list__item .thumbnail img {
+      object-fit: contain;
+    }
+
+    {% comment %}
+      Media modal (click-to-zoom popup): stock Dawn fills the entire viewport
+      with a background matching the page, so it's not obvious it's a popup
+      at all. Dim the backdrop and box the content so there's visible space
+      on every side to click out of.
+    {% endcomment %}
+    #MainProduct-{{ section.id }} .product-media-modal {
+      background-color: rgba(29, 28, 33, 0.82);
+    }
+    #MainProduct-{{ section.id }} .product-media-modal__dialog {
+      box-sizing: border-box;
+      padding: 3vh 3vw;
+    }
+    #MainProduct-{{ section.id }} .product-media-modal__content {
+      background: rgb(var(--color-background));
+      box-shadow: 0 2rem 6rem rgba(29, 28, 33, 0.35);
+      border-radius: 4px;
+    }
+    @media screen and (min-width: 750px) {
+      #MainProduct-{{ section.id }} .product-media-modal__dialog {
+        padding: 6vh 8vw;
+      }
+      #MainProduct-{{ section.id }} .product-media-modal__content {
+        max-width: 90rem;
+        max-height: 88vh;
+        margin: 0 auto;
+        padding: 3rem 4rem;
+      }
+    }
+
     {%- if product.media.size > 1 -%}
     .artwork-gallery-nav { border-top: 1px solid rgba(29,28,33,0.08); margin-top: 16px; }
     .artwork-gallery-nav__inner { padding: 12px 2px 0; display: flex; align-items: center; gap: 10px; }
