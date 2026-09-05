@@ -76,25 +76,28 @@
       Media modal (click-to-zoom popup): stock Dawn fills the entire viewport
       with a background matching the page, so it's not obvious it's a popup
       at all. Dim the backdrop and box the content so there's visible space
-      on every side to click out of.
+      on every side to click out of. NOTE: ModalDialog's connectedCallback
+      (global.js) moves this <product-modal> to a direct child of <body> on
+      page load, so it is NOT a descendant of #MainProduct-{{ section.id }}
+      at runtime — must target it by its own id instead.
     {% endcomment %}
-    #MainProduct-{{ section.id }} .product-media-modal {
+    #ProductModal-{{ section.id }} {
       background-color: rgba(29, 28, 33, 0.82);
     }
-    #MainProduct-{{ section.id }} .product-media-modal__dialog {
+    #ProductModal-{{ section.id }} .product-media-modal__dialog {
       box-sizing: border-box;
       padding: 3vh 3vw;
     }
-    #MainProduct-{{ section.id }} .product-media-modal__content {
+    #ProductModal-{{ section.id }} .product-media-modal__content {
       background: rgb(var(--color-background));
       box-shadow: 0 2rem 6rem rgba(29, 28, 33, 0.35);
       border-radius: 4px;
     }
     @media screen and (min-width: 750px) {
-      #MainProduct-{{ section.id }} .product-media-modal__dialog {
+      #ProductModal-{{ section.id }} .product-media-modal__dialog {
         padding: 6vh 8vw;
       }
-      #MainProduct-{{ section.id }} .product-media-modal__content {
+      #ProductModal-{{ section.id }} .product-media-modal__content {
         max-width: 90rem;
         max-height: 88vh;
         margin: 0 auto;
