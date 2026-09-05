@@ -195,44 +195,64 @@
         "q1": {
           "type": "quote",
           "settings": {
-            "quote": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.</p>",
-            "attribution": "Name Surname",
+            "quote": "<p>“There is a great need for a nurturing place where artists at all levels can learn new approaches and styles in different media. The Studio is a place where you can grow.”</p>",
+            "attribution": "- Michelle Alexander",
             "background": "#e07468",
-            "quote_color": "#ffffff",
-            "attr_color": "#ffffff"
+            "quote_color": "#0c3642",
+            "attr_color": "#0c3642"
           }
         },
         "q2": {
           "type": "quote",
           "settings": {
-            "quote": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.</p>",
-            "attribution": "Name Surname",
-            "background": "#505a43",
-            "quote_color": "#ffffff",
-            "attr_color": "#dfe4d4"
+            "quote": "<p>“Friday is now my favorite day of the week. Zara is a nurturing, gentle and inspiring teacher and I am learning so much and in a fun and lighthearted atmosphere. It’s a wonderful group of supportive and encouraging people. Everyone brings something different and meaningful to add to my creative process. I highly recommend it.”</p>",
+            "attribution": "- Dani Rubehiemer",
+            "background": "#b00e3f",
+            "quote_color": "#e07468",
+            "attr_color": "#e07468"
           }
         },
         "q3": {
           "type": "quote",
           "settings": {
-            "quote": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.</p>",
-            "attribution": "Name Surname",
+            "quote": "<p>“The SA Art Fair is such a special organisation that is run by the amazing duo; Georgina &amp; Bianca. The way that these 2 ladies support South African artists &amp; South African art in general, is just wonderful! The Studio is such a special spot too!!”</p>",
+            "attribution": "- Kate Mackenzie",
+            "background": "#0c3642",
+            "quote_color": "#e07468",
+            "attr_color": "#e07468"
+          }
+        },
+        "q4": {
+          "type": "quote",
+          "settings": {
+            "quote": "<p>“I have been attending the watercolor classes at the SA Art Fair Studio this term and am absolutely loving them. I have been so impressed by what we have all been able to create in a few sessions. The class has students from all skill levels and if you are just there for the fun of it (like I am!), you never feel left behind or overwhelmed. It’s been nice to meet new faces and learn new watercolor techniques from an artist in a fun, welcoming environment. I can highly recommend this space for experienced artists and newbies who are looking for some creative ‘me time’.”</p>",
+            "attribution": "- Tarryn Bartlett",
+            "background": "#e07468",
+            "quote_color": "#0c3642",
+            "attr_color": "#0c3642"
+          }
+        },
+        "q5": {
+          "type": "quote",
+          "settings": {
+            "quote": "<p>“Beautiful relaxing space to explore your artistic endeavours. Different courses for all levels and styles offered.”</p>",
+            "attribution": "- Gaby Blumberg",
             "background": "#b00e3f",
-            "quote_color": "#ffffff",
-            "attr_color": "#ffffff"
+            "quote_color": "#e07468",
+            "attr_color": "#e07468"
           }
         }
       },
-      "block_order": ["q1", "q2", "q3"],
+      "block_order": ["q1", "q2", "q3", "q4", "q5"],
       "settings": {
-        "eyebrow": "<p>What our <strong>collectors</strong> say</p>",
+        "eyebrow": "<p>What people say about <strong>SA Art Fair</strong></p>",
         "show_arrows": true,
         "background": "#e6ddc6",
         "show_texture": true,
         "card_width": 490,
-        "card_height": 560,
+        "card_height": 640,
         "radius": 42,
-        "texture": 60
+        "texture": 0
       }
     }
   },
