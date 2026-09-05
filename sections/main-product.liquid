@@ -703,6 +703,7 @@
                   {% render 'icon-with-text', block: block %}
               {%- endcase -%}
             {%- endfor -%}
+            {% render 'product-artist-band' %}
             <a href="{{ product.url }}" class="link product__view-details animate-arrow">
               {{ 'products.product.view_full_details' | t }}
               {{- 'icon-arrow.svg' | inline_asset_content -}}
@@ -710,8 +711,6 @@
           </section>
         </div>
       </div>
-
-      {% render 'product-artist-band' %}
 
       {% render 'product-media-modal', variant_images: variant_images %}
 
