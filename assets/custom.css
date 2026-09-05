@@ -418,7 +418,7 @@ body.template-index:has(.header-wrapper--transparent) #MainContent {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.55);
   border: 1px solid rgba(29, 28, 33, 0.15);
   border-radius: 100%;
   cursor: pointer;
@@ -428,7 +428,7 @@ body.template-index:has(.header-wrapper--transparent) #MainContent {
 }
 .saf-wishlist-toggle:hover {
   transform: scale(1.08);
-  background: #fff;
+  background: rgba(255, 255, 255, 0.8);
 }
 /* Sold badge occupies top-right — drop the heart below it */
 .card-wrapper:has(.saf-sold-badge) .saf-wishlist-toggle {
