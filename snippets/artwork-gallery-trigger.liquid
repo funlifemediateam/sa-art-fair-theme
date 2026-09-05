@@ -18,6 +18,14 @@
 {%- unless is_class -%}
   <style>
     #MainProduct-{{ section.id }} { background: #ffffff; }
+    {% comment %}
+      Dawn's quantity stepper is intentionally compact (a fixed ~14rem box)
+      while the buy buttons below it stretch full width — reads as
+      mismatched on a single-variant artwork with nothing else in that row.
+      Stretch it to match.
+    {% endcomment %}
+    #MainProduct-{{ section.id }} .product-form__quantity { max-width: none; }
+    #MainProduct-{{ section.id }} .product-form__quantity .quantity { width: 100%; }
     {%- if product.media.size > 1 -%}
     .artwork-gallery-nav { border-top: 1px solid rgba(29,28,33,0.08); margin-top: 16px; }
     .artwork-gallery-nav__inner { padding: 12px 2px 0; display: flex; align-items: center; gap: 10px; }
