@@ -24,7 +24,6 @@
   {%- assign artist_handle = artist_handle | strip -%}
   {%- assign artist_col = collections[artist_handle] -%}
 
-  <!-- PABAND DEBUG: is_class={{ is_class }} handle=[{{ artist_handle }}] col_title=[{{ artist_col.title }}] col_image=[{{ artist_col.image | url }}] col_desc_len=[{{ artist_col.description | size }}] vendor=[{{ product.vendor }}] -->
   {%- assign has_content = false -%}
   {%- if artist_col != blank and artist_col.title != blank -%}
     {%- if artist_col.image != blank or artist_col.description != blank -%}
