@@ -43,8 +43,11 @@
     width: {{ section.settings.stamp_width }}px;
     max-width: 37%;
     height: auto;
-    /* the stamp starts just inside the polaroid's right edge in the comp */
-    transform: translate(-6%, -50%);
+    /* the stamp overlaps ~1/4 of its own width onto the polaroid's right edge
+       in the comp — both PNGs have baked-in transparent margins (the gold
+       badge especially, ~7% on its left), so this has to overshoot a plain
+       "just touching" value to actually look like an overlap */
+    transform: translate(-26%, -50%);
     pointer-events: none;
   }
 
@@ -89,7 +92,7 @@
        centred and near-full-width; tuck it back onto the image instead */
     #shopify-section-{{ sid }} .rb-founders__stamp {
       left: auto;
-      right: -8%;
+      right: -27%;
       transform: translateY(-50%);
     }
   }
