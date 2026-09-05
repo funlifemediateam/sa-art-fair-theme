@@ -85,6 +85,8 @@
       background-color: rgba(29, 28, 33, 0.82);
     }
     #ProductModal-{{ section.id }} .product-media-modal__dialog {
+      {% comment %} .dialog carries Dawn's own opaque `.gradient` scheme background, which otherwise paints over the dim backdrop above and hides it completely. {% endcomment %}
+      background: transparent;
       box-sizing: border-box;
       padding: 3vh 3vw;
     }
