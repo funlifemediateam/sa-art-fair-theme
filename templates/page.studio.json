@@ -6,7 +6,10 @@
         "fill": "image",
         "background": "#505a43",
         "texture": 100,
-        "image": "shopify://shop_images/saf-studio-hero.jpg",
+        "image": "shopify://shop_images/The_Studio_cover_image_SA_Art_Fair.jpg",
+        "image_blend": "normal",
+        "image_rotate": "0",
+        "video_mobile_fallback": true,
         "band_height": 860,
         "min_height": 340,
         "mobile_ratio": "4 / 5",
@@ -27,19 +30,29 @@
     },
     "creative": {
       "type": "rb-split-band",
+      "disabled": true,
       "settings": {
         "eyebrow": "",
-        "heading": "<p>A Creative Space<br><em>For Nurturing<br>Artist Talent</em></p>",
+        "heading": "<p>A Creative Space<br/><em>For Nurturing<br/>Artist Talent</em></p>",
         "heading_font": "sans",
         "heading_width": 640,
+        "heading_scale": 100,
+        "attribution": "",
         "body": "",
         "align": "left",
         "button_label": "",
         "button_link": "",
+        "show_mark": false,
+        "mark": "cherry",
+        "mark_width": 90,
         "panel_color": "#e07468",
         "text_color": "#ffffff",
         "accent_color": "#b00e3f",
         "texture": 100,
+        "panel_image_fit": "cover",
+        "panel_image_focal_x": 50,
+        "panel_image_focal_y": 50,
+        "panel_image_veil": 0,
         "image": "shopify://shop_images/saf-studio-team.jpg",
         "media_side": "right",
         "panel_width": 49,
@@ -69,7 +82,7 @@
             "collection": "classes",
             "title": "Studio Classes",
             "image": "shopify://shop_images/saf-studio-classes.jpg",
-            "body": "<p>Our termly classes are designed to make creativity part of your week. Meet with the same small group each week, learn from experienced artists, and explore a wide variety of mediums - from painting and drawing to watercolour and beyond.</p><p>With different days, times and skill levels to choose from, there’s a class for every kind of creative.</p>",
+            "body": "<p>Our termly classes are designed to make creativity part of your week. Meet with the same small group each week, learn from experienced artists, and explore a wide variety of mediums - from painting and drawing to watercolour and beyond.</p><p>With different days, times and skill levels to choose from, there\u2019s a class for every kind of creative.</p>",
             "link": "",
             "button_label": "Browse Classes"
           }
@@ -93,7 +106,7 @@
       ],
       "settings": {
         "show_mark": true,
-        "eyebrow": "<p>We host an array of <strong>annual classes, workshops</strong> and <strong>events</strong></p>",
+        "eyebrow": "<p>We host an array of <strong>ongoing weekly classes, workshops</strong> and <strong>events</strong></p>",
         "heading": "",
         "image_ratio": "535 / 572",
         "background": "#ffffff",
@@ -110,7 +123,7 @@
             "icon": "easel",
             "number": "1.",
             "title": "Picking A Class",
-            "notes": "<p><strong>What To Expect</strong>Our classes vary by medium, teacher and experience level, with options for both adults and children. Most classes meet weekly for around two hours, with up to 10 classes each term.</p><p><strong>Materials</strong>Your teacher will share a materials list before your class, helping you gather everything you need to get creative — and keep creating at home.</p>"
+            "notes": "<p><strong>What To Expect</strong>Our classes vary by medium, teacher and experience level, with options for both adults and children. Most classes meet weekly for around two hours, with up to 10 classes each term.</p><p><strong>Materials</strong>Your teacher will share a materials list before your class, helping you gather everything you need to get creative \u2014 and keep creating at home.</p>"
           }
         },
         "book": {
@@ -119,7 +132,7 @@
             "icon": "palette",
             "number": "2.",
             "title": "Booking A Class",
-            "notes": "<p><strong>Simple Online Booking</strong>Find the class that feels right for you, choose your preferred day and time, and book your place online. Most classes welcome new students throughout the term, so you don’t always have to wait for the next one to begin.</p><p><strong>Missed A Class?</strong>Life happens. If you miss a class, you can make it up by joining another suitable class — giving you a little more flexibility in your creative week.</p>"
+            "notes": "<p><strong>Simple Online Booking</strong>Find the class that feels right for you, choose your preferred day and time, and book your place online. Most classes welcome new students throughout the term, so you don\u2019t always have to wait for the next one to begin.</p><p><strong>Missed A Class?</strong>Life happens. If you miss a class, you can make it up by joining another suitable class \u2014 giving you a little more flexibility in your creative week.</p>"
           }
         },
         "package": {
@@ -153,21 +166,31 @@
         "t1": {
           "type": "quote",
           "settings": {
-            "quote": "<p>“There is a great need for a nurturing place where artists at all levels can learn new approaches and styles in different media. The Studio is a place where you can grow.”</p>",
+            "quote": "<p>\u201cThere is a great need for a nurturing place where artists at all levels can learn new approaches and styles in different media. The Studio is a place where you can grow.\u201d</p>",
             "attribution": "- Michelle Alexander",
+            "quote_size": "auto",
             "background": "#e07468",
             "quote_color": "#0c3642",
-            "attr_color": "#0c3642"
+            "attr_color": "#0c3642",
+            "panel_image_fit": "cover",
+            "panel_image_focal_x": 50,
+            "panel_image_focal_y": 50,
+            "panel_image_veil": 0
           }
         },
         "t2": {
           "type": "quote",
           "settings": {
-            "quote": "<p>“Friday is now my favorite day of the week. Zara is a nurturing, gentle and inspiring teacher and I am learning so much and in a fun and lighthearted atmosphere. It’s a wonderful group of supportive and encouraging people. Everyone brings something different and meaningful to add to my creative process. I highly recommend it.”</p>",
+            "quote": "<p>\u201cFriday is now my favorite day of the week. Zara is a nurturing, gentle and inspiring teacher and I am learning so much and in a fun and lighthearted atmosphere. It\u2019s a wonderful group of supportive and encouraging people. Everyone brings something different and meaningful to add to my creative process. I highly recommend it.\u201d</p>",
             "attribution": "- Dani Rubehiemer",
+            "quote_size": "auto",
             "background": "#b00e3f",
             "quote_color": "#e07468",
-            "attr_color": "#e07468"
+            "attr_color": "#e07468",
+            "panel_image_fit": "cover",
+            "panel_image_focal_x": 50,
+            "panel_image_focal_y": 50,
+            "panel_image_veil": 0
           }
         },
         "t3": {
@@ -181,31 +204,46 @@
         "t4": {
           "type": "quote",
           "settings": {
-            "quote": "<p>“The SA Art Fair is such a special organisation that is run by the amazing duo; Georgina &amp; Bianca. The way that these 2 ladies support South African artists &amp; South African art in general, is just wonderful! The Studio is such a special spot too!!”</p>",
+            "quote": "<p>\u201cThe SA Art Fair is such a special organisation that is run by the amazing duo; Georgina &amp; Bianca. The way that these 2 ladies support South African artists &amp; South African art in general, is just wonderful! The Studio is such a special spot too!!\u201d</p>",
             "attribution": "- Kate Mackenzie",
+            "quote_size": "auto",
             "background": "#0c3642",
             "quote_color": "#e07468",
-            "attr_color": "#e07468"
+            "attr_color": "#e07468",
+            "panel_image_fit": "cover",
+            "panel_image_focal_x": 50,
+            "panel_image_focal_y": 50,
+            "panel_image_veil": 0
           }
         },
         "t5": {
           "type": "quote",
           "settings": {
-            "quote": "<p>“I have been attending the watercolor classes at the SA Art Fair Studio this term and am absolutely loving them. I have been so impressed by what we have all been able to create in a few sessions. The class has students from all skill levels and if you are just there for the fun of it (like I am!), you never feel left behind or overwhelmed. It’s been nice to meet new faces and learn new watercolor techniques from an artist in a fun, welcoming environment. I can highly recommend this space for experienced artists and newbies who are looking for some creative ‘me time’.”</p>",
+            "quote": "<p>\u201cI have been attending the watercolor classes at the SA Art Fair Studio this term and am absolutely loving them. I have been so impressed by what we have all been able to create in a few sessions. The class has students from all skill levels and if you are just there for the fun of it (like I am!), you never feel left behind or overwhelmed. It\u2019s been nice to meet new faces and learn new watercolor techniques from an artist in a fun, welcoming environment. I can highly recommend this space for experienced artists and newbies who are looking for some creative \u2018me time\u2019.\u201d</p>",
             "attribution": "- Tarryn Bartlett",
+            "quote_size": "auto",
             "background": "#e07468",
             "quote_color": "#0c3642",
-            "attr_color": "#0c3642"
+            "attr_color": "#0c3642",
+            "panel_image_fit": "cover",
+            "panel_image_focal_x": 50,
+            "panel_image_focal_y": 50,
+            "panel_image_veil": 0
           }
         },
         "t6": {
           "type": "quote",
           "settings": {
-            "quote": "<p>“Beautiful relaxing space to explore your artistic endeavours. Different courses for all levels and styles offered.”</p>",
+            "quote": "<p>\u201cBeautiful relaxing space to explore your artistic endeavours. Different courses for all levels and styles offered.\u201d</p>",
             "attribution": "- Gaby Blumberg",
+            "quote_size": "auto",
             "background": "#b00e3f",
             "quote_color": "#e07468",
-            "attr_color": "#e07468"
+            "attr_color": "#e07468",
+            "panel_image_fit": "cover",
+            "panel_image_focal_x": 50,
+            "panel_image_focal_y": 50,
+            "panel_image_veil": 0
           }
         }
       },
@@ -245,7 +283,7 @@
         "t1": {
           "type": "person",
           "settings": {
-            "collection": "shelley-cowling-1",
+            "collection": "janice-grant-1",
             "name": "",
             "role": "Art Classes",
             "link": "",
@@ -256,7 +294,7 @@
         "t2": {
           "type": "person",
           "settings": {
-            "collection": "jacqui-sundelson-1",
+            "collection": "zara-leigh-farinha-1",
             "name": "",
             "role": "Art Classes",
             "link": "",
@@ -267,7 +305,7 @@
         "t3": {
           "type": "person",
           "settings": {
-            "collection": "janice-grant-1",
+            "collection": "careshia-esperanza",
             "name": "",
             "role": "Art Classes",
             "link": "",
@@ -278,7 +316,7 @@
         "t4": {
           "type": "person",
           "settings": {
-            "collection": "zara-leigh-farinha-1",
+            "collection": "petronella",
             "name": "",
             "role": "Art Classes",
             "link": "",
@@ -289,29 +327,7 @@
         "t5": {
           "type": "person",
           "settings": {
-            "collection": "teacher-1",
-            "name": "",
-            "role": "Art Classes",
-            "link": "",
-            "button_label": "Learn More",
-            "tone": "auto"
-          }
-        },
-        "t6": {
-          "type": "person",
-          "settings": {
-            "collection": "teacher-2",
-            "name": "",
-            "role": "Art Classes",
-            "link": "",
-            "button_label": "Learn More",
-            "tone": "auto"
-          }
-        },
-        "t7": {
-          "type": "person",
-          "settings": {
-            "collection": "teacher-3",
+            "collection": "chloe",
             "name": "",
             "role": "Art Classes",
             "link": "",
@@ -326,9 +342,7 @@
         "t2",
         "t3",
         "t4",
-        "t5",
-        "t6",
-        "t7"
+        "t5"
       ],
       "settings": {
         "eyebrow": "<p>Meet our teachers</p>",
@@ -342,6 +356,10 @@
         "tone_b": "#e07468",
         "tone_b_text": "#ffffff",
         "texture": 0,
+        "panel_image_fit": "cover",
+        "panel_image_focal_x": 50,
+        "panel_image_focal_y": 50,
+        "panel_image_veil": 0,
         "more_label": "Meet all our teachers",
         "more_link": "/pages/the-team"
       }
