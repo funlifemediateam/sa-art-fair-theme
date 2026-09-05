@@ -30,7 +30,7 @@
     {%- assign artist_bio = artist_col.description | strip_html | strip_newlines | strip | truncatewords: 42 -%}
 
     <div class="product__description rte">
-      <p><strong>About.......... {{ artist_name }}</strong></p>
+      <p><strong>About {{ artist_name }}</strong></p>
       <p>{{ artist_bio }}</p>
       <p><a href="{{ artist_col.url }}" class="link">View {{ artist_name | split: ' ' | first }}'s full collection</a></p>
     </div>
