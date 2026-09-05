@@ -1,18 +1,14 @@
 {%- comment -%}
-  Artwork product page only: a short "About the Artist" band under the main
-  product grid, so a one-line-description artwork page doesn't end after the
-  buy button. Mirrors 'class-subnav' / 'artwork-gallery-trigger' — a small
-  self-contained snippet with its own inline styles, since main-product.liquid
-  loads no rebrand stylesheet and one product template serves every artwork
-  (see snippets/rb-artist-handle.liquid for why the artist is resolved from
-  the product rather than a per-page setting).
+  Artwork product page only: plain-text "About the artist" note under the
+  product description, so a one-line-description artwork page doesn't end
+  right after the buy button. Deliberately unstyled — reuses Dawn's own
+  .rte/.link classes rather than a custom card (Keagan rejected a first pass
+  with a photo circle + coloured band).
 
   Skips itself entirely on Class/Workshop products, and when no artist
-  collection can be resolved or that collection has neither a photo nor a
-  bio to show (nothing worth a band for).
+  collection can be resolved or that collection has no bio to show.
 
-  Usage: render once per product page, outside the two-column product grid
-  so it can run full width.
+  Usage: render inside .product__info-container, after the block loop.
 {%- endcomment -%}
 {%- assign is_class = false -%}
 {%- if product.type == 'Class' or product.type == 'Workshop' or product.template_suffix contains 'booking' -%}
@@ -25,77 +21,18 @@
   {%- assign artist_col = collections[artist_handle] -%}
 
   {%- assign has_content = false -%}
-  {%- if artist_col != blank and artist_col.title != blank -%}
-    {%- if artist_col.image != blank or artist_col.description != blank -%}
-      {%- assign has_content = true -%}
-    {%- endif -%}
+  {%- if artist_col != blank and artist_col.title != blank and artist_col.description != blank -%}
+    {%- assign has_content = true -%}
   {%- endif -%}
 
   {%- if has_content -%}
     {%- assign artist_name = artist_col.title -%}
-    {%- assign artist_bio = artist_col.description | strip_html | strip_newlines | strip -%}
-    {%- assign artist_bio = artist_bio | truncatewords: 42 -%}
+    {%- assign artist_bio = artist_col.description | strip_html | strip_newlines | strip | truncatewords: 42 -%}
 
-    <style>
-      .paband { background: #f5ece6; border-top: 1px solid rgba(29,28,33,0.08); margin-top: clamp(32px,4vw,56px); }
-      .paband__inner {
-        max-width: 1280px; margin-inline: auto; padding: clamp(28px,4vw,44px) clamp(16px,4vw,48px);
-        display: flex; align-items: center; gap: clamp(20px,3vw,36px);
-      }
-      .paband__photo {
-        flex: 0 0 auto; width: clamp(84px,9vw,132px); height: clamp(84px,9vw,132px);
-        border-radius: 50%; overflow: hidden; background: #0f4a52;
-        display: flex; align-items: center; justify-content: center;
-      }
-      .paband__photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
-      .paband__initial {
-        font-family: var(--font-heading-family); font-size: clamp(1.8rem,3vw,2.6rem);
-        color: #eeefeb; line-height: 1;
-      }
-      .paband__text { min-width: 0; }
-      .paband__eyebrow {
-        font-family: var(--font-body-family); font-size: 0.68rem; font-weight: 700;
-        letter-spacing: 0.2em; text-transform: uppercase; color: #0f4a52; margin: 0 0 8px;
-      }
-      .paband__name {
-        font-family: var(--font-heading-family); font-size: clamp(1.15rem,1.6vw,1.5rem);
-        font-weight: 700; color: #1d1c21; margin: 0 0 8px; line-height: 1.15;
-      }
-      .paband__name a { color: inherit; text-decoration: none; }
-      .paband__name a:hover { text-decoration: underline; }
-      .paband__bio {
-        font-family: var(--font-body-family); font-size: 0.92rem; line-height: 1.6;
-        color: rgba(29,28,33,0.78); margin: 0 0 12px; max-width: 62ch;
-      }
-      .paband__link {
-        font-family: var(--font-body-family); font-size: 0.85rem; font-weight: 600;
-        color: #1d1c21; text-decoration: none; border-bottom: 2px solid #f26b52;
-        padding-bottom: 1px; transition: color 0.15s ease;
-      }
-      .paband__link:hover { color: #0f4a52; }
-      @media screen and (max-width: 589px) {
-        .paband__inner { flex-direction: column; align-items: flex-start; text-align: left; gap: 16px; }
-      }
-    </style>
-
-    <div class="paband">
-      <div class="paband__inner">
-        <div class="paband__photo">
-          {%- if artist_col.image != blank -%}
-            {{ artist_col.image | image_url: width: 260 | image_tag: loading: 'lazy', alt: artist_name | escape }}
-          {%- else -%}
-            <span class="paband__initial">{{ artist_name | slice: 0 }}</span>
-          {%- endif -%}
-        </div>
-        <div class="paband__text">
-          <p class="paband__eyebrow">About the Artist</p>
-          <h2 class="paband__name"><a href="{{ artist_col.url }}">{{ artist_name }}</a></h2>
-          {%- if artist_bio != blank -%}
-            <p class="paband__bio">{{ artist_bio }}</p>
-          {%- endif -%}
-          <a href="{{ artist_col.url }}" class="paband__link">View {{ artist_name | split: ' ' | first }}&rsquo;s full collection &rarr;</a>
-        </div>
-      </div>
+    <div class="product__description rte">
+      <p><strong>About the artist — {{ artist_name }}</strong></p>
+      <p>{{ artist_bio }}</p>
+      <p><a href="{{ artist_col.url }}" class="link">View {{ artist_name | split: ' ' | first }}'s full collection</a></p>
     </div>
   {%- endif -%}
 {%- endunless -%}
