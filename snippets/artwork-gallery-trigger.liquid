@@ -35,10 +35,22 @@
       main display + thumbnails to a fixed square "mat" and letterbox the
       photo inside it (object-fit: contain) so every product page has the
       same footprint no matter the artwork's proportions.
+
+      The inset itself is done with padding on .product-media-container
+      (box-sizing: border-box) rather than on .media, because .media's own
+      height comes from a padding-top percentage-of-width hack — padding
+      added there would corrupt that math. Percentage padding always
+      resolves against the CONTAINING block's WIDTH (even padding-top/
+      bottom), so one `padding: 4%` value below produces an equal pixel
+      inset on all four sides, and the box stays a perfect square: shrinking
+      the content width by 2*4% and adding 4%+4% back as top/bottom padding
+      exactly cancels out.
     {% endcomment %}
     #MainProduct-{{ section.id }} .product__media-wrapper .product-media-container {
       --aspect-ratio: 1;
-      background: #f5ece6;
+      box-sizing: border-box;
+      padding: 4%;
+      background: #ffffff;
       border: 1px solid rgba(29, 28, 33, 0.12);
     }
     #MainProduct-{{ section.id }} .product__media-wrapper .product-media-container .media > img,
@@ -63,9 +75,11 @@
         height: auto;
       }
     }
-    {% comment %} Thumbnail slots are already square (Dawn's own ::before padding hack) — just switch the crop from cover to contain so the small preview matches the main image instead of cropping it. {% endcomment %}
+    {% comment %} Thumbnail slots are already square (Dawn's own ::before padding hack) — just switch the crop from cover to contain so the small preview matches the main image instead of cropping it, and inset it the same way as the main image. {% endcomment %}
     #MainProduct-{{ section.id }} .thumbnail-list__item .thumbnail {
-      background: #f5ece6;
+      box-sizing: border-box;
+      padding: 8%;
+      background: #ffffff;
       border: 1px solid rgba(29, 28, 33, 0.12);
     }
     #MainProduct-{{ section.id }} .thumbnail-list__item .thumbnail img {
@@ -116,6 +130,45 @@
       background: none; border: none; padding: 4px 2px; cursor: pointer;
       border-bottom: 2px solid transparent; transition: border-color .15s, color .15s; }
     .artwork-gallery-nav button:hover { color: #0f4a52; border-bottom-color: #f26b52; }
+
+    {% comment %}
+      Modal carousel nav: Dawn's stock modal shows every image stacked in one
+      tall scrolling column on desktop (only mobile limits to one-at-a-time).
+      Force one-at-a-time at every width and add prev/next arrows (bound in
+      artwork-modal-nav.js) so multiple photos page left/right or swipe
+      instead of scrolling down.
+    {% endcomment %}
+    #ProductModal-{{ section.id }} .product-media-modal__content > *:not(.active) {
+      display: none;
+    }
+    .artwork-modal-nav {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 2;
+      width: 4.4rem;
+      height: 4.4rem;
+      border-radius: 50%;
+      background-color: rgb(var(--color-background));
+      border: 0.1rem solid rgba(var(--color-foreground), 0.1);
+      color: rgba(29, 28, 33, 0.75);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      padding: 0;
+    }
+    .artwork-modal-nav:hover { color: rgba(29, 28, 33, 1); }
+    .artwork-modal-nav svg { width: 1.2rem; height: 1.2rem; }
+    .artwork-modal-nav--prev { left: 2rem; }
+    .artwork-modal-nav--next { right: 2rem; }
+    .artwork-modal-nav--prev svg { transform: rotate(90deg); }
+    .artwork-modal-nav--next svg { transform: rotate(-90deg); }
+    @media screen and (max-width: 749px) {
+      .artwork-modal-nav { width: 3.6rem; height: 3.6rem; }
+      .artwork-modal-nav--prev { left: 0.8rem; }
+      .artwork-modal-nav--next { right: 0.8rem; }
+    }
     {%- endif -%}
   </style>
 
@@ -128,5 +181,13 @@
         </modal-opener>
       </div>
     </nav>
+    <script src="{{ 'artwork-modal-nav.js' | asset_url }}" defer="defer"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        if (window.SAFArtworkModalNav) {
+          window.SAFArtworkModalNav.bind(document.getElementById('ProductModal-{{ section.id }}'));
+        }
+      });
+    </script>
   {%- endif -%}
 {%- endunless -%}
