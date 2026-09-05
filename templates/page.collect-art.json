@@ -64,39 +64,39 @@
     "featured_artists": {
       "type": "rb-artist-cards",
       "blocks": {
-        "susan": {
-          "type": "artist",
-          "settings": {
-            "collection": "susan-orpen",
-            "name": "",
-            "medium": "Watercolour · Acrylic · Mixed Media",
-            "place": "Hout Bay, Western Cape",
-            "bio": "",
-            "link": "",
-            "button_label": "See Collections",
-            "tone": "auto"
-          }
-        },
-        "kerri": {
-          "type": "artist",
-          "settings": {
-            "collection": "kerri-sassen",
-            "name": "",
-            "medium": "Abstract · Mixed Media · Art Therapy",
-            "place": "Hout Bay, Western Cape",
-            "bio": "",
-            "link": "",
-            "button_label": "See Collections",
-            "tone": "auto"
-          }
-        },
         "zara": {
           "type": "artist",
           "settings": {
-            "collection": "zara-leigh",
+            "collection": "zara-leigh-farinha-2",
             "name": "",
             "medium": "Abstract Acrylic · Oil · Large Format",
-            "place": "Hout Bay, Western Cape",
+            "place": "Hout Bay, Cape Town",
+            "bio": "",
+            "link": "",
+            "button_label": "See Collections",
+            "tone": "auto"
+          }
+        },
+        "gaby": {
+          "type": "artist",
+          "settings": {
+            "collection": "gaby-blumberg",
+            "name": "",
+            "medium": "Oil · Acrylic · Abstract Landscape",
+            "place": "Cape Town, Western Cape",
+            "bio": "",
+            "link": "",
+            "button_label": "See Collections",
+            "tone": "auto"
+          }
+        },
+        "karen": {
+          "type": "artist",
+          "settings": {
+            "collection": "karen-van-huyssteen",
+            "name": "",
+            "medium": "Acrylic · Figurative · Abstract",
+            "place": "",
             "bio": "",
             "link": "",
             "button_label": "See Collections",
@@ -104,7 +104,7 @@
           }
         }
       },
-      "block_order": ["susan", "kerri", "zara"],
+      "block_order": ["zara", "gaby", "karen"],
       "settings": {
         "columns": 3,
         "grid_width": 1760,
