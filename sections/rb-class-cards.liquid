@@ -50,8 +50,8 @@
   #shopify-section-{{ sid }} .rb-cc {
     background: {{ section.settings.background }};
     padding-block:
-      clamp(48px, 6.25vw, 120px)
-      clamp(48px, 7.29vw, 140px);
+      clamp(40px, 3.75vw, 72px)
+      clamp(40px, 4.38vw, 84px);
   }
   #shopify-section-{{ sid }} .rb-cc__head {
     display: flex;
@@ -71,6 +71,7 @@
   #shopify-section-{{ sid }} .rb-cc__grid {
     display: grid;
     grid-template-columns: repeat({{ section.settings.columns }}, minmax(0, 1fr));
+    align-items: start;
     gap: clamp(20px, 2.66vw, 51px);
     max-width: {{ section.settings.grid_width }}px;
     margin-inline: auto;
