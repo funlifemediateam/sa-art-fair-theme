@@ -711,6 +711,8 @@
         </div>
       </div>
 
+      {% render 'product-artist-band' %}
+
       {% render 'product-media-modal', variant_images: variant_images %}
 
       {% assign popups = section.blocks | where: 'type', 'popup' %}
