@@ -484,10 +484,18 @@
                     </button>
                   </modal-opener>
                 {%- when 'share' -%}
-                  {% liquid
-                    assign share_url = product.selected_variant.url | default: product.url | prepend: request.origin
-                    render 'share-button', block: block, share_link: share_url
-                  %}
+                  {% comment %}
+                    Captured rather than output here — Keagan wants Share at
+                    the literal bottom of the page, not mid-flow between the
+                    description and the buy box. Emitted once, after
+                    everything else, near the end of this file.
+                  {% endcomment %}
+                  {% capture share_markup %}
+                    {% liquid
+                      assign share_url = product.selected_variant.url | default: product.url | prepend: request.origin
+                      render 'share-button', block: block, share_link: share_url
+                    %}
+                  {% endcapture %}
 
                 {%- when 'disclosures' -%}
                   {%- render 'product-disclosures',
@@ -711,6 +719,10 @@
           </section>
         </div>
       </div>
+
+      {% render 'product-you-might-like' %}
+
+      <div class="page-width">{{ share_markup }}</div>
 
       {% render 'product-media-modal', variant_images: variant_images %}
 

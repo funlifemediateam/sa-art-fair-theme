@@ -1,9 +1,12 @@
 {% comment %}
-  Rebrand contact band — map on top, serif heading with a gold italic
-  lead-in, and an underline-only contact form below it. Map and form column
-  both use the site's standard .rb-container width/gutter so their edges
-  align exactly (2026-09-05: was a side-by-side map-left/form-right layout;
-  changed to stacked per client feedback that the two blocks read as unaligned).
+  Rebrand contact band — map bleeding off the left edge, serif heading with a
+  gold italic lead-in, and an underline-only contact form on the right.
+
+  Comp: map 969 x 614 (50.5% of the 1920 frame), form column 614 wide sitting
+  140px clear of the map with a 197px right margin. The map always stretches
+  to the form column's full height (2026-09-05: was optional via a
+  "stretch_map" checkbox, off by default, which left the home page's shorter
+  map with a void underneath it — made permanent instead of per-page).
 
   The map is an embed by default so it stays sharp and interactive; supply an
   image instead if a static, styled map is preferred.
@@ -16,33 +19,24 @@
 <style>
   #shopify-section-{{ sid }} .rb-contact {
     background: {{ section.settings.background }};
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: {{ section.settings.map_width }}% minmax(0, 1fr);
+    align-items: stretch;
     padding-block: clamp(48px, 6.25vw, 120px);
   }
-  {%- comment -%}
-    Map and form column share this exact rule so their left/right edges land
-    on the same pixel at every width. Previously the map bled to the screen
-    edge while the form sat inset on its own clamp() values — close but never
-    quite matching — which is what read as "untidy" once the form moved below
-    the map instead of beside it.
-  {%- endcomment -%}
-  #shopify-section-{{ sid }} .rb-contact__map,
-  #shopify-section-{{ sid }} .rb-contact__col {
-    width: 100%;
-    max-width: calc(var(--rb-container) + var(--rb-gutter) * 2);
-    margin-inline: auto;
-    padding-inline: var(--rb-gutter);
-    box-sizing: border-box;
-  }
-  #shopify-section-{{ sid }} .rb-contact__map-inner {
+  #shopify-section-{{ sid }} .rb-contact__map {
     position: relative;
-    height: clamp(280px, 32vw, 520px);
+    /* width: 100% is load-bearing. Under the mobile rule below the box has
+       BOTH an aspect-ratio and this min-height, and with an auto width the
+       browser resolves the width from the height (320 x 4/3 = 427px) and
+       bursts the grid track. */
+    width: 100%;
+    min-height: clamp(320px, 31.98vw, 614px);
     overflow: hidden;
     background: #ededed;
   }
-  #shopify-section-{{ sid }} .rb-contact__map-inner iframe,
-  #shopify-section-{{ sid }} .rb-contact__map-inner img {
+  #shopify-section-{{ sid }} .rb-contact__map iframe,
+  #shopify-section-{{ sid }} .rb-contact__map img {
     position: absolute;
     inset: 0;
     width: 100%;
@@ -51,8 +45,10 @@
     object-fit: cover;
     filter: grayscale({{ section.settings.map_grayscale }}%);
   }
+
   #shopify-section-{{ sid }} .rb-contact__col {
-    margin-top: clamp(36px, 4.17vw, 80px);
+    padding-left: clamp(20px, 7.29vw, 140px);
+    padding-right: clamp(20px, 10.26vw, 197px);
   }
   #shopify-section-{{ sid }} .rb-contact__heading {
     color: {{ section.settings.heading_color }};
@@ -155,31 +151,40 @@
   }
   #shopify-section-{{ sid }} .rb-contact__msg--ok { color: var(--rb-moss); }
   #shopify-section-{{ sid }} .rb-contact__msg--err { color: var(--rb-cherry); }
+
+  @media screen and (max-width: 899px) {
+    #shopify-section-{{ sid }} .rb-contact {
+      grid-template-columns: 1fr;
+      gap: 36px;
+    }
+    #shopify-section-{{ sid }} .rb-contact__map { aspect-ratio: 4 / 3; }
+    #shopify-section-{{ sid }} .rb-contact__col {
+      padding-inline: var(--rb-gutter);
+    }
+  }
 </style>
 
 <div class="rb-section rb-contact">
   <div class="rb-contact__map">
-    <div class="rb-contact__map-inner">
-      {%- if section.settings.map_image != blank -%}
-        {{
-          section.settings.map_image
-          | image_url: width: 1940
-          | image_tag:
-            widths: '600, 900, 1200, 1600, 1940',
-            sizes: '100vw',
-            loading: 'lazy',
-            alt: section.settings.map_alt
-        }}
-      {%- elsif section.settings.map_embed != blank -%}
-        <iframe
-          src="{{ section.settings.map_embed }}"
-          title="{{ section.settings.map_alt | escape }}"
-          loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade"
-          allowfullscreen
-        ></iframe>
-      {%- endif -%}
-    </div>
+    {%- if section.settings.map_image != blank -%}
+      {{
+        section.settings.map_image
+        | image_url: width: 1940
+        | image_tag:
+          widths: '600, 900, 1200, 1600, 1940',
+          sizes: '(max-width: 899px) 100vw, 50vw',
+          loading: 'lazy',
+          alt: section.settings.map_alt
+      }}
+    {%- elsif section.settings.map_embed != blank -%}
+      <iframe
+        src="{{ section.settings.map_embed }}"
+        title="{{ section.settings.map_alt | escape }}"
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        allowfullscreen
+      ></iframe>
+    {%- endif -%}
   </div>
 
   <div class="rb-contact__col">
@@ -272,6 +277,8 @@
     { "type": "color", "id": "heading_color", "default": "#1e1e1e", "label": "Heading colour" },
     { "type": "color", "id": "heading_accent", "default": "#bea532", "label": "Heading italic colour" },
     { "type": "header", "content": "Map" },
+    { "type": "range", "id": "map_width", "min": 30, "max": 65, "step": 1,
+      "default": 50, "unit": "%", "label": "Map column width" },
     { "type": "text", "id": "map_embed",
       "default": "https://maps.google.com/maps?q=SA+Art+Fair+Hout+Bay+Cape+Town&t=&z=13&ie=UTF8&iwloc=&output=embed",
       "label": "Map embed URL",

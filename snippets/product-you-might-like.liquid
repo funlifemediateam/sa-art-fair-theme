@@ -1,0 +1,54 @@
+{%- comment -%}
+  Artwork product page only: "You might like" — Shopify's own product
+  recommendations engine, rendered with the theme's standard card-product
+  grid (same markup Dawn's own sections/related-products.liquid uses), so it
+  looks exactly like any other product grid on the site. No custom design.
+
+  Native Dawn wiring (<product-recommendations> custom element, defined in
+  global.js which loads site-wide) fetches routes.product_recommendations_url
+  client-side once this element scrolls into view, re-rendering THIS SAME
+  section (main-product.liquid, via data-section-id) with `recommendations`
+  populated, then swaps in just this element's content. Working this way
+  (rather than as a JSON-template block, or as its own separate section)
+  reaches every artwork regardless of which of the many per-product templates
+  it uses — see snippets/product-artist-band.liquid for why that matters here.
+
+  Skips itself entirely on Class/Workshop products.
+{%- endcomment -%}
+{%- assign is_class = false -%}
+{%- if product.type == 'Class' or product.type == 'Workshop' or product.template_suffix contains 'booking' -%}
+  {%- assign is_class = true -%}
+{%- endif -%}
+
+{%- unless is_class -%}
+  {{ 'component-card.css' | asset_url | stylesheet_tag }}
+  {{ 'component-price.css' | asset_url | stylesheet_tag }}
+  {{ 'section-related-products.css' | asset_url | stylesheet_tag }}
+
+  <div class="page-width" style="margin-top: clamp(32px, 5vw, 64px);">
+    <product-recommendations
+      class="related-products isolate"
+      data-url="{{ routes.product_recommendations_url }}?limit=4"
+      data-section-id="{{ section.id }}"
+      data-product-id="{{ product.id }}"
+    >
+      {%- if recommendations.performed and recommendations.products_count > 0 -%}
+        <h2 class="related-products__heading inline-richtext h2">You might like</h2>
+        <ul class="grid product-grid grid--2-col-tablet-down grid--4-col-desktop" role="list">
+          {%- assign skip_card_product_styles = false -%}
+          {%- for recommendation in recommendations.products -%}
+            <li class="grid__item">
+              {% render 'card-product',
+                card_product: recommendation,
+                media_aspect_ratio: 'square',
+                skip_styles: skip_card_product_styles,
+                product_view_context: 'recommendation'
+              %}
+            </li>
+            {%- assign skip_card_product_styles = true -%}
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+    </product-recommendations>
+  </div>
+{%- endunless -%}
