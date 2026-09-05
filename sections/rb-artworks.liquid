@@ -676,7 +676,8 @@
       <div class="rb-aw__more" data-rba-more>
         <a href="{{ more_href }}"
            class="rb-btn rb-btn--serif rb-btn--outline"
-           {% if section.settings.more_link == blank %}data-rba-more-auto{% endif %}>
+           {% if section.settings.more_link == blank %}data-rba-more-auto{% endif %}
+           data-rba-less-label="{{ section.settings.less_label | escape }}">
           {{- section.settings.more_label | escape -}}
         </a>
       </div>
@@ -716,6 +717,8 @@
     { "type": "text", "id": "card_button", "default": "Browse Collection", "label": "Card button label" },
     { "type": "header", "content": "Footer link" },
     { "type": "text", "id": "more_label", "default": "See More…", "label": "Button label" },
+    { "type": "text", "id": "less_label", "default": "See Less", "label": "Button label (fully expanded)",
+      "info": "Shown once every work is on screen, so the button can collapse the grid back. Only applies when Button link is blank." },
     { "type": "url", "id": "more_link", "label": "Button link",
       "info": "Defaults to the collection." },
     { "type": "header", "content": "Colour" },

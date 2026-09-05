@@ -50,6 +50,8 @@
     var viewLabel = root.dataset.rbaViewLabel || 'View Artwork';
     var perPage = parseInt(root.dataset.rbaPerPage, 10) || 12;
     var moreLink = moreEl ? moreEl.querySelector('[data-rba-more-auto]') : null;
+    var moreLabelText = moreLink ? moreLink.textContent : '';
+    var lessLabelText = moreLink ? (moreLink.getAttribute('data-rba-less-label') || 'See Less') : '';
 
     var items = null;
     var loading = false;
@@ -188,6 +190,7 @@
         if (emptyEl) emptyEl.hidden = true;
         if (countEl) countEl.textContent = '';
         if (moreEl) moreEl.hidden = false;
+        if (moreLink) moreLink.textContent = moreLabelText;
         return;
       }
 
@@ -208,10 +211,12 @@
       if (moreEl) moreEl.hidden = true;
     }
 
-    /* ── "See More" — reveals the next chunk of the untouched grid in
-       place, instead of navigating to a paginated URL. Only takes over
-       when the button is still pointing at collection pagination
-       (data-rba-more-auto); a merchant-set custom link is left alone. */
+    /* ── "See More" / "See Less" — reveals the next chunk of the untouched
+       grid in place, instead of navigating to a paginated URL, and once
+       every work is showing flips into a "See Less" toggle that collapses
+       back to the first page. Only takes over when the button is still
+       pointing at collection pagination (data-rba-more-auto); a
+       merchant-set custom link is left alone. */
     function showMore() {
       if (loading) return;
       function render() {
@@ -220,12 +225,14 @@
           return;
         }
         var list = sorted(items.filter(matches));
-        shownCount = Math.min(shownCount + perPage, list.length);
+        var collapsing = shownCount >= list.length;
+        shownCount = collapsing ? perPage : Math.min(shownCount + perPage, list.length);
         if (serverEl) serverEl.hidden = true;
         resultsEl.hidden = false;
         resultsEl.innerHTML = list.slice(0, shownCount).map(tile).join('');
         if (emptyEl) emptyEl.hidden = true;
-        if (moreEl) moreEl.hidden = shownCount >= list.length;
+        if (moreLink) moreLink.textContent = shownCount >= list.length ? lessLabelText : moreLabelText;
+        if (collapsing) root.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
       if (!items) load(render);
       else render();
