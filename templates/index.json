@@ -8,11 +8,11 @@
         "texture": 100,
         "image_blend": "normal",
         "image_rotate": "0",
-        "video": "shopify://files/videos/the.studio.website.mp4",
+        "video": "shopify:\/\/files\/videos\/the.studio.website.mp4",
         "video_mobile_fallback": false,
         "band_height": 850,
         "min_height": 380,
-        "mobile_ratio": "4 / 5",
+        "mobile_ratio": "4 \/ 5",
         "focal_x": 50,
         "focal_y": 50,
         "overlay_color": "#1e1e1e",
@@ -34,11 +34,11 @@
         "show_mark": false,
         "eyebrow": "Your Creative Ecosystem",
         "eyebrow_color": "#b00e3f",
-        "heading": "<p><em>Learn. Create. Exhibit. Collect.</em></p>",
+        "heading": "<p><em>Learn. Create. Exhibit. Collect.<\/em><\/p>",
         "heading_color": "#bea532",
         "accent_color": "#bea532",
         "heading_width": 1270,
-        "body": "<p>SA Art Fair is a working art ecosystem in Hout Bay. A studio where artists learn and make, and an online gallery where artists exhibit and sell, and a home for collectors who want to buy from the artists who create. Whichever door you come in through, creator, collector, artist or teacher; you’re part of our same creative circle.</p>",
+        "body": "<p>SA Art Fair is a working art ecosystem in Hout Bay. A studio where artists learn and make, and an online gallery where artists exhibit and sell, and a home for collectors who want to buy from the artists who create. Whichever door you come in through, creator, collector, artist or teacher; you’re part of our same creative circle.<\/p>",
         "body_color": "#1e1e1e",
         "body_width": 900,
         "background": "#ffffff",
@@ -54,12 +54,12 @@
         "buy": {
           "type": "path",
           "settings": {
-            "image": "shopify://shop_images/saf-home-path-collect.jpg",
+            "image": "shopify:\/\/shop_images\/saf-home-path-collect.jpg",
             "badge": "store",
             "heading": "Buy Art",
-            "body": "<p>Discover and collect original artworks from our local artists.</p>",
+            "body": "<p>Discover and collect original artworks from our local artists.<\/p>",
             "button_label": "Visit our store",
-            "button_link": "shopify://collections/gallery",
+            "button_link": "shopify:\/\/collections\/gallery",
             "text_color": "#505a43",
             "button_bg": "#e2ead7",
             "button_text": "#505a43",
@@ -70,12 +70,12 @@
         "make": {
           "type": "path",
           "settings": {
-            "image": "shopify://shop_images/saf-home-path-create.jpg",
+            "image": "shopify:\/\/shop_images\/saf-home-path-create.jpg",
             "badge": "studio",
             "heading": "Make Art",
-            "body": "<p>Hands-on art classes &amp; workshops for all levels: from beginners classes to masterclasses.</p>",
+            "body": "<p>Hands-on art classes &amp; workshops for all levels: from beginners classes to masterclasses.<\/p>",
             "button_label": "Visit our studio",
-            "button_link": "/pages/studio",
+            "button_link": "\/pages\/studio",
             "text_color": "#b00e3f",
             "button_bg": "#b00e3f",
             "button_text": "#ffffff",
@@ -97,9 +97,9 @@
           "type": "collection",
           "settings": {
             "collection": "originals",
-            "title": "Collection Title",
-            "image": "shopify://shop_images/saf-home-collection-2.jpg",
-            "artist": "Artist Name",
+            "title": "",
+            "image": "shopify:\/\/shop_images\/saf-home-collection-2.jpg",
+            "artist": "",
             "link": "",
             "button_label": "Browse Collection"
           }
@@ -108,9 +108,9 @@
           "type": "collection",
           "settings": {
             "collection": "limited-editions",
-            "title": "Collection Title",
-            "image": "shopify://shop_images/saf-home-collection-1.jpg",
-            "artist": "Artist Name",
+            "title": "",
+            "image": "shopify:\/\/shop_images\/saf-home-collection-1.jpg",
+            "artist": "",
             "link": "",
             "button_label": "Browse Collection"
           }
@@ -119,9 +119,9 @@
           "type": "collection",
           "settings": {
             "collection": "art-under",
-            "title": "Collection Title",
-            "image": "shopify://shop_images/saf-home-collection-3.jpg",
-            "artist": "Artist Name",
+            "title": "",
+            "image": "shopify:\/\/shop_images\/saf-home-collection-3.jpg",
+            "artist": "",
             "link": "",
             "button_label": "Browse Collection"
           }
@@ -144,10 +144,10 @@
       "settings": {
         "contained": false,
         "radius": 0,
-        "image": "shopify://shop_images/quiz_banner_SA_Art_Fair.webp",
+        "image": "shopify:\/\/shop_images\/quiz_banner_SA_Art_Fair.webp",
         "band_height": 880,
         "min_height": 400,
-        "mobile_ratio": "3 / 4",
+        "mobile_ratio": "3 \/ 4",
         "focal_x": 50,
         "focal_y": 50,
         "overlay_color": "#1e1e1e",
@@ -158,20 +158,20 @@
         "subheading": "14 artworks. 14 quick decisions. Discover the art you're naturally drawn to.",
         "text_color": "#ffffff",
         "button_label": "Take The Quiz",
-        "button_link": "shopify://collections/art-quiz"
+        "button_link": "shopify:\/\/collections\/art-quiz"
       }
     },
     "founders": {
       "type": "rb-founders",
       "settings": {
-        "image": "shopify://shop_images/saf-home-founders.png",
+        "image": "shopify:\/\/shop_images\/saf-home-founders.png",
         "image_width": 475,
         "show_stamp": true,
         "stamp_width": 175,
         "heading": "SA Art Fair began with two friends, a love of art, and a simple belief: art is better when it is shared.",
         "heading_color": "#b00e3f",
-        "column_one": "<p>What started as a local art fair has grown into a welcoming space to discover, collect, learn and create. An eco-system that brings artists and art lovers together in one community.</p><p>In The Store, discover and collect work from South African artists. In The Studio, pick up a brush, try something new and create alongside others.</p>",
-        "column_two": "<p>You don’t need to be an expert or an artist to belong here. Just bring your curiosity.</p><p>Come and discover. Come and create. Come and be part of it.</p>",
+        "column_one": "<p>What started as a local art fair has grown into a welcoming space to discover, collect, learn and create. An eco-system that brings artists and art lovers together in one community.<\/p><p>In The Store, discover and collect work from South African artists. In The Studio, pick up a brush, try something new and create alongside others.<\/p>",
+        "column_two": "<p>You don’t need to be an expert or an artist to belong here. Just bring your curiosity.<\/p><p>Come and discover. Come and create. Come and be part of it.<\/p>",
         "body_color": "#1e1e1e",
         "signature": "– Bianca & Georgina xx",
         "background": "#ffffff"
@@ -180,11 +180,11 @@
     "contact": {
       "type": "rb-contact",
       "settings": {
-        "heading": "<p><em>Established</em> in the valley of the Cape Town.</p>",
+        "heading": "<p><em>Established<\/em> in the valley of the Cape Town.<\/p>",
         "heading_color": "#1e1e1e",
         "heading_accent": "#bea532",
         "map_width": 50,
-        "map_embed": "https://maps.google.com/maps?q=SA+Art+Fair+Hout+Bay+Cape+Town&t=&z=13&ie=UTF8&iwloc=&output=embed",
+        "map_embed": "https:\/\/maps.google.com\/maps?q=SA+Art+Fair+Hout+Bay+Cape+Town&t=&z=13&ie=UTF8&iwloc=&output=embed",
         "map_alt": "Map to the SA Art Fair studio",
         "map_grayscale": 100,
         "form_label": "Get in touch",
