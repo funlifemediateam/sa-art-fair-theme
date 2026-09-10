@@ -130,6 +130,10 @@
     line-height: 1.3;
     text-decoration: underline;
   }
+  #shopify-section-{{ sid }} .rb-cc__by a {
+    color: inherit;
+    text-decoration: none;
+  }
   #shopify-section-{{ sid }} .rb-cc__body {
     margin-top: clamp(6px, 0.63vw, 12px);
     font-size: var(--rb-fs-meta);
@@ -257,6 +261,39 @@
         {%- liquid
           assign by = item.metafields.booking.instructor_name
           assign time = item.metafields.booking.class_time
+        -%}
+
+        {%- comment -%}
+          Class products are named "<subject> with <teacher> | <day> <time>", so
+          printing the whole title above a credit line says the teacher's name
+          twice (client instruction 2026-09-10). Only the teacher's name comes
+          out — the day and time after it are what the card is for.
+
+          The name cannot simply be everything after "with": "Young Artists with
+          Janice Grant | Kids Class | Mon 3:30-5:30" would lose the two segments
+          the client wants kept. It runs to the next "|", or to the end of the
+          title when there is none ("MAKE FROM WITHIN with Careshia").
+
+          Matched on " with " with spaces, so WITHIN survives.
+        {%- endcomment -%}
+        {%- liquid
+          assign card_title = item.title
+
+          if section.settings.strip_teacher
+            assign norm = item.title | replace: ' WITH ', ' with ' | replace: ' With ', ' with '
+            assign head = norm | split: ' with ' | first
+
+            if norm contains ' with ' and head != blank
+              assign tail = norm | remove_first: head | remove_first: ' with '
+              assign card_title = head
+
+              if tail contains '|'
+                assign credit = tail | split: '|' | first
+                assign after = tail | remove_first: credit
+                assign card_title = head | append: ' ' | append: after
+              endif
+            endif
+          endif
         -%}
 
         {%- comment -%}
@@ -439,14 +476,29 @@
             -%}
 
             <div class="rb-cc__row">
-              <h3 class="rb-cc__title"><a href="{{ item.url }}">{{ item.title }}</a></h3>
+              <h3 class="rb-cc__title"><a href="{{ item.url }}">{{ card_title }}</a></h3>
               {%- if time != blank -%}
                 <span class="rb-cc__time">{{ time }}</span>
               {%- endif -%}
             </div>
 
+            {%- comment -%}
+              The credit is the only place the teacher's name appears now, so it
+              links to their page. Same resolver the class page's teacher band
+              uses; it returns nothing when the person has no published
+              collection, and then the credit stays plain text.
+            {%- endcomment -%}
             {%- if by != blank -%}
-              <p class="rb-cc__by">{{ section.settings.by_prefix }} {{ by }}</p>
+              {%- capture teacher_handle -%}{%- render 'rb-teacher-handle', product: item -%}{%- endcapture -%}
+              {%- assign teacher_handle = teacher_handle | strip -%}
+              {%- assign teacher_col = collections[teacher_handle] -%}
+              <p class="rb-cc__by">
+                {%- if teacher_col != blank -%}
+                  <a href="{{ teacher_col.url }}">{{ section.settings.by_prefix }} {{ by }}</a>
+                {%- else -%}
+                  {{- section.settings.by_prefix }} {{ by -}}
+                {%- endif -%}
+              </p>
             {%- endif -%}
 
             {%- if when != blank -%}
@@ -566,7 +618,10 @@
       "label": "Intro" },
     { "type": "color", "id": "intro_color", "default": "#1e1e1e", "label": "Intro colour" },
     { "type": "header", "content": "Cards" },
-    { "type": "text", "id": "by_prefix", "default": "By", "label": "Teacher prefix" },
+    { "type": "checkbox", "id": "strip_teacher", "default": true,
+      "label": "Trim \"with <teacher>\" off the card title",
+      "info": "The teacher is credited on the line under the title, so the title keeps only the subject, the day and the time." },
+    { "type": "text", "id": "by_prefix", "default": "With", "label": "Teacher prefix" },
     { "type": "checkbox", "id": "show_excerpt", "default": true, "label": "Show a short description" },
     { "type": "text", "id": "button_label", "default": "View Class", "label": "Card button label" },
     { "type": "range", "id": "columns", "min": 2, "max": 4, "step": 1,
