@@ -8,7 +8,7 @@
         "texture": 100,
         "band_height": 690,
         "min_height": 260,
-        "mobile_ratio": "4 / 3",
+        "mobile_ratio": "4 \/ 3",
         "focal_x": 50,
         "focal_y": 50,
         "overlay_opacity": 0,
@@ -27,17 +27,17 @@
         "collection": "",
         "count": 24,
         "only_classes": true,
-        "eyebrow": "<p>Browse our workshops</p>",
+        "eyebrow": "<p>Browse our workshops<\/p>",
         "eyebrow_name": "",
         "teacher_filter": "",
-        "intro": "<p>One-off workshops, no experience needed.</p>",
+        "intro": "<p>One-off workshops, no experience needed.<\/p>",
         "intro_color": "#1e1e1e",
         "by_prefix": "By",
         "show_excerpt": true,
         "button_label": "View Class",
         "columns": 3,
         "grid_width": 1300,
-        "image_ratio": "398 / 380",
+        "image_ratio": "398 \/ 380",
         "radius": 18,
         "background": "#ffffff",
         "pattern": "alternate",
@@ -68,7 +68,7 @@
         "p1": {
           "type": "person",
           "settings": {
-            "collection": "shelley-cowling-1",
+            "collection": "janice-grant-1",
             "name": "",
             "role": "Art Classes",
             "image": "",
@@ -80,7 +80,7 @@
         "p2": {
           "type": "person",
           "settings": {
-            "collection": "jacqui-sundelson-1",
+            "collection": "zara-leigh-farinha-1",
             "name": "",
             "role": "Art Classes",
             "image": "",
@@ -92,7 +92,7 @@
         "p3": {
           "type": "person",
           "settings": {
-            "collection": "janice-grant-1",
+            "collection": "careshia-esperanza",
             "name": "",
             "role": "Art Classes",
             "image": "",
@@ -104,7 +104,7 @@
         "p4": {
           "type": "person",
           "settings": {
-            "collection": "zara-leigh-farinha-1",
+            "collection": "petronella",
             "name": "",
             "role": "Art Classes",
             "image": "",
@@ -116,31 +116,7 @@
         "p5": {
           "type": "person",
           "settings": {
-            "collection": "teacher-1",
-            "name": "",
-            "role": "Art Classes",
-            "image": "",
-            "link": "",
-            "button_label": "Learn More",
-            "tone": "auto"
-          }
-        },
-        "p6": {
-          "type": "person",
-          "settings": {
-            "collection": "teacher-2",
-            "name": "",
-            "role": "Art Classes",
-            "image": "",
-            "link": "",
-            "button_label": "Learn More",
-            "tone": "auto"
-          }
-        },
-        "p7": {
-          "type": "person",
-          "settings": {
-            "collection": "teacher-3",
+            "collection": "chloe",
             "name": "",
             "role": "Art Classes",
             "image": "",
@@ -156,16 +132,14 @@
         "p2",
         "p3",
         "p4",
-        "p5",
-        "p6",
-        "p7"
+        "p5"
       ],
       "settings": {
-        "eyebrow": "<p>Meet our teachers</p>",
-        "intro": "<p>Every class is led by a working artist from the studio.</p>",
+        "eyebrow": "<p>Meet our teachers<\/p>",
+        "intro": "<p>Every class is led by a working artist from the studio.<\/p>",
         "intro_color": "#1e1e1e",
         "columns": 4,
-        "image_ratio": "227 / 200",
+        "image_ratio": "227 \/ 200",
         "background": "#ffffff",
         "tone_a": "#b00e3f",
         "tone_a_text": "#ffffff",
@@ -173,13 +147,37 @@
         "tone_b_text": "#ffffff",
         "texture": 0,
         "more_label": "Meet all our teachers",
-        "more_link": "/pages/the-team"
+        "more_link": "\/pages\/the-team"
+      }
+    },
+    "signup": {
+      "type": "rb-signup",
+      "settings": {
+        "eyebrow": "<p>Watch this space<\/p>",
+        "heading": "<p>No workshops on the calendar right now.<\/p>",
+        "intro": "<p>New one-off workshops are added every term. Leave your email and we’ll let you know the moment the next dates open for booking.<\/p>",
+        "show_name": false,
+        "name_label": "First name",
+        "email_label": "Email address",
+        "submit_label": "Notify me",
+        "tag": "workshop-interest",
+        "note": "<p>Workshop dates only. Unsubscribe any time.<\/p>",
+        "success_message": "You’re on the list. We’ll email you as soon as new workshops open.",
+        "secondary_label": "",
+        "secondary_link": "",
+        "background": "#ffffff",
+        "panel_color": "#b00e3f",
+        "text_color": "#ffffff",
+        "accent_color": "#bea532",
+        "panel_width": 1000,
+        "radius": 18
       }
     }
   },
   "order": [
     "hero",
     "classes",
+    "signup",
     "teachers"
   ]
 }
