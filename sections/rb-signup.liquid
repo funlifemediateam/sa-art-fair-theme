@@ -1,0 +1,315 @@
+{% comment %}
+  Rebrand signup band — a single coloured panel holding an email capture.
+
+  Built for the workshops page, where the class grid above it is empty between
+  terms: rather than leave a void under "Browse our workshops", the band says
+  nothing is on the calendar yet and takes an email address for when something
+  is.
+
+  The form is Shopify's own `customer` form (the one Dawn's footer newsletter
+  uses), so a signup becomes a REAL customer record with email marketing
+  consent, tagged with whatever "Tag" says. That matters: the app's admin token
+  has no write_customers scope, so nothing we could post to the booking API
+  would ever land in Customers — and Customers is where Shopify Email builds
+  the segment that eventually gets mailed.
+
+  Shopify posts the form to /contact and redirects back with
+  ?customer_posted=true, which is what form.posted_successfully? reads. That
+  round trip returns to the top of the page, so the script at the bottom brings
+  the panel back into view — otherwise the confirmation is off screen and the
+  visitor cannot tell it worked.
+{% endcomment %}
+
+{{ 'saf-rebrand.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign sid = section.id
+  assign panel = section.settings.panel_color
+  assign ink = section.settings.text_color
+-%}
+
+<style>
+  #shopify-section-{{ sid }} .rb-signup {
+    background: {{ section.settings.background }};
+    padding-block:
+      clamp(8px, 1.04vw, 20px)
+      clamp(40px, 4.17vw, 80px);
+  }
+  #shopify-section-{{ sid }} .rb-signup__panel {
+    box-sizing: border-box;
+    max-width: {{ section.settings.panel_width }}px;
+    margin-inline: auto;
+    padding: clamp(32px, 3.65vw, 70px) clamp(20px, 3.13vw, 60px);
+    border-radius: {{ section.settings.radius }}px;
+    background: {{ panel }};
+    color: {{ ink }};
+    text-align: center;
+  }
+
+  #shopify-section-{{ sid }} .rb-signup__head {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(8px, 0.83vw, 16px);
+  }
+  /* the panel carries its own colour, so the shared .rb-caps teal and its
+     cherry strong runs both have to give way here */
+  #shopify-section-{{ sid }} .rb-signup__eyebrow,
+  #shopify-section-{{ sid }} .rb-signup__eyebrow strong,
+  #shopify-section-{{ sid }} .rb-signup__eyebrow em {
+    color: {{ ink }};
+  }
+  #shopify-section-{{ sid }} .rb-signup__heading {
+    max-width: 22ch;
+    text-wrap: balance;
+  }
+  #shopify-section-{{ sid }} .rb-signup__heading em,
+  #shopify-section-{{ sid }} .rb-signup__heading i {
+    color: {{ section.settings.accent_color }};
+    font-style: italic;
+  }
+  #shopify-section-{{ sid }} .rb-signup__intro {
+    max-width: 46ch;
+    font-size: var(--rb-fs-body-sm);
+  }
+  #shopify-section-{{ sid }} .rb-signup__heading p,
+  #shopify-section-{{ sid }} .rb-signup__intro p,
+  #shopify-section-{{ sid }} .rb-signup__note p { margin: 0; }
+
+  /* One control height shared by the field and the button, because
+     .rb-btn--serif is shorter than a comfortable input and the two sit on the
+     same row. */
+  #shopify-section-{{ sid }} .rb-signup__form {
+    --rb-signup-h: clamp(46px, 3.44vw, 66px);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: clamp(10px, 0.83vw, 16px);
+    margin-top: clamp(22px, 2.29vw, 44px);
+  }
+  #shopify-section-{{ sid }} .rb-signup__field {
+    flex: 1 1 260px;
+    min-width: 0;
+    max-width: 360px;
+  }
+  #shopify-section-{{ sid }} .rb-signup__field input {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    min-height: var(--rb-signup-h);
+    padding: 0 clamp(18px, 1.46vw, 28px);
+    border: 1px solid {{ ink }};
+    border-radius: 999px;
+    background: transparent;
+    font-family: var(--rb-sans);
+    font-size: var(--rb-fs-btn-serif);
+    line-height: 1.2;
+    color: {{ ink }};
+    appearance: none;
+  }
+  #shopify-section-{{ sid }} .rb-signup__field input::placeholder {
+    color: {{ ink }};
+    opacity: 0.72;
+  }
+  #shopify-section-{{ sid }} .rb-signup__field input:focus {
+    outline: 2px solid {{ ink }};
+    outline-offset: 2px;
+  }
+  /* the placeholder is the only visible label; keep a real one for screen readers */
+  #shopify-section-{{ sid }} .rb-signup__vh {
+    position: absolute;
+    width: 1px; height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  #shopify-section-{{ sid }} .rb-signup__submit {
+    min-height: var(--rb-signup-h);
+    background: {{ ink }};
+    border-color: {{ ink }};
+    color: {{ panel }};
+  }
+  #shopify-section-{{ sid }} .rb-signup__submit:hover {
+    background: transparent;
+    color: {{ ink }};
+  }
+  #shopify-section-{{ sid }} .rb-signup__submit:focus-visible {
+    outline: 2px solid {{ ink }};
+  }
+
+  #shopify-section-{{ sid }} .rb-signup__note {
+    margin: clamp(12px, 1.04vw, 20px) auto 0;
+    max-width: 46ch;
+    font-size: var(--rb-fs-meta);
+    opacity: 0.86;
+  }
+  #shopify-section-{{ sid }} .rb-signup__msg {
+    margin: clamp(20px, 2.08vw, 40px) auto 0;
+    max-width: 40ch;
+    font-family: var(--rb-sans);
+    font-size: var(--rb-fs-body-sm);
+    line-height: 1.45;
+  }
+  #shopify-section-{{ sid }} .rb-signup__secondary {
+    margin-top: clamp(18px, 1.77vw, 34px);
+  }
+  #shopify-section-{{ sid }} .rb-signup__secondary a {
+    color: {{ ink }};
+    font-family: var(--rb-sans);
+    font-size: var(--rb-fs-body-sm);
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
+  }
+  #shopify-section-{{ sid }} .rb-signup__secondary a:hover { opacity: 0.75; }
+
+  @media screen and (max-width: 519px) {
+    #shopify-section-{{ sid }} .rb-signup__field {
+      flex: 1 1 100%;
+      max-width: none;
+    }
+    #shopify-section-{{ sid }} .rb-signup__submit { width: 100%; }
+  }
+</style>
+
+<div class="rb-section rb-signup">
+  <div class="rb-container">
+    <div class="rb-signup__panel" id="rb-signup-{{ sid }}">
+      <div class="rb-signup__head">
+        {%- if section.settings.eyebrow != blank -%}
+          <div class="rb-caps rb-signup__eyebrow">{{ section.settings.eyebrow }}</div>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <div class="rb-display rb-signup__heading">{{ section.settings.heading }}</div>
+        {%- endif -%}
+        {%- if section.settings.intro != blank -%}
+          <div class="rb-body rb-signup__intro">{{ section.settings.intro }}</div>
+        {%- endif -%}
+      </div>
+
+      {%- form 'customer', id: 'rb-signup-form', class: 'rb-signup__wrap' -%}
+        {%- if form.posted_successfully? -%}
+          <p class="rb-signup__msg" data-rb-signup-posted>
+            {{ section.settings.success_message | default: 'You are on the list. We will email you as soon as new workshops open.' }}
+          </p>
+        {%- else -%}
+          {%- if form.errors -%}
+            <p class="rb-signup__msg" data-rb-signup-posted>{{ form.errors | default_errors }}</p>
+          {%- endif -%}
+
+          <input type="hidden" name="contact[tags]" value="{{ section.settings.tag | escape }}">
+
+          <div class="rb-signup__form">
+            {%- if section.settings.show_name -%}
+              <div class="rb-signup__field">
+                <label class="rb-signup__vh" for="rb-signup-name-{{ sid }}">
+                  {{- section.settings.name_label -}}
+                </label>
+                <input
+                  type="text"
+                  id="rb-signup-name-{{ sid }}"
+                  name="contact[first_name]"
+                  placeholder="{{ section.settings.name_label | escape }}"
+                  autocomplete="given-name"
+                >
+              </div>
+            {%- endif -%}
+
+            <div class="rb-signup__field">
+              <label class="rb-signup__vh" for="rb-signup-email-{{ sid }}">
+                {{- section.settings.email_label -}}
+              </label>
+              <input
+                type="email"
+                id="rb-signup-email-{{ sid }}"
+                name="contact[email]"
+                placeholder="{{ section.settings.email_label | escape }}"
+                autocomplete="email"
+                autocorrect="off"
+                autocapitalize="off"
+                spellcheck="false"
+                required
+              >
+            </div>
+
+            <button type="submit" class="rb-btn rb-btn--serif rb-signup__submit">
+              {{- section.settings.submit_label | escape -}}
+            </button>
+          </div>
+
+          {%- if section.settings.note != blank -%}
+            <div class="rb-signup__note">{{ section.settings.note }}</div>
+          {%- endif -%}
+        {%- endif -%}
+      {%- endform -%}
+
+      {%- if section.settings.secondary_label != blank and section.settings.secondary_link != blank -%}
+        <p class="rb-signup__secondary">
+          <a href="{{ section.settings.secondary_link }}"{% if section.settings.secondary_link contains '//' %} target="_blank" rel="noopener"{% endif %}>
+            {{- section.settings.secondary_label | escape -}}
+          </a>
+        </p>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+<script>
+  /* Shopify's customer form redirects to the top of the page, so a visitor who
+     just signed up lands above the confirmation and sees nothing happen. */
+  (function () {
+    var panel = document.getElementById('rb-signup-{{ sid }}');
+    if (!panel || !panel.querySelector('[data-rb-signup-posted]')) return;
+    if (window.location.search.indexOf('customer_posted') === -1) return;
+    window.requestAnimationFrame(function () {
+      panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Rebrand signup",
+  "tag": "section",
+  "class": "rb-section-wrapper",
+  "settings": [
+    { "type": "richtext", "id": "eyebrow", "default": "<p>Watch this space</p>",
+      "label": "Eyebrow", "info": "Rendered uppercase." },
+    { "type": "richtext", "id": "heading",
+      "default": "<p>No workshops on the calendar right now.</p>",
+      "label": "Heading", "info": "Italic words take the accent colour." },
+    { "type": "richtext", "id": "intro",
+      "default": "<p>New one-off workshops are added every term. Leave your email and we will let you know the moment the next dates open for booking.</p>",
+      "label": "Intro" },
+    { "type": "header", "content": "Form" },
+    { "type": "checkbox", "id": "show_name", "default": false,
+      "label": "Ask for a first name",
+      "info": "One field signs more people up. Turn this on only if the studio wants to greet people by name." },
+    { "type": "text", "id": "name_label", "default": "First name", "label": "Name field label" },
+    { "type": "text", "id": "email_label", "default": "Email address", "label": "Email field label" },
+    { "type": "text", "id": "submit_label", "default": "Notify me", "label": "Button label" },
+    { "type": "text", "id": "tag", "default": "workshop-interest", "label": "Customer tag",
+      "info": "Every signup gets this tag in Shopify > Customers. Build the mailing segment from it." },
+    { "type": "richtext", "id": "note",
+      "default": "<p>Workshop dates only. Unsubscribe any time.</p>", "label": "Fine print" },
+    { "type": "text", "id": "success_message",
+      "default": "You are on the list. We will email you as soon as new workshops open.",
+      "label": "Success message" },
+    { "type": "header", "content": "Secondary link" },
+    { "type": "text", "id": "secondary_label", "label": "Link label",
+      "info": "Optional. A WhatsApp group invite, for example. Hidden until both fields are filled in." },
+    { "type": "url", "id": "secondary_link", "label": "Link" },
+    { "type": "header", "content": "Colour" },
+    { "type": "color", "id": "background", "default": "#ffffff", "label": "Section background" },
+    { "type": "color", "id": "panel_color", "default": "#b00e3f", "label": "Panel colour" },
+    { "type": "color", "id": "text_color", "default": "#ffffff", "label": "Panel text colour" },
+    { "type": "color", "id": "accent_color", "default": "#bea532", "label": "Heading italic colour" },
+    { "type": "header", "content": "Layout" },
+    { "type": "range", "id": "panel_width", "min": 700, "max": 1300, "step": 20,
+      "default": 1000, "unit": "px", "label": "Panel max width" },
+    { "type": "range", "id": "radius", "min": 0, "max": 40, "step": 2,
+      "default": 18, "unit": "px", "label": "Corner radius" }
+  ],
+  "presets": [{ "name": "Rebrand signup" }]
+}
+{% endschema %}
