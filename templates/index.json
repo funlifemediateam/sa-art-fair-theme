@@ -74,8 +74,8 @@
             "badge": "studio",
             "heading": "Make Art",
             "body": "<p>Hands-on art classes &amp; workshops for all levels: from beginners classes to masterclasses.<\/p>",
-            "button_label": "Visit our studio",
-            "button_link": "\/pages\/studio",
+            "button_label": "View our classes",
+            "button_link": "\/collections\/classes",
             "text_color": "#b00e3f",
             "button_bg": "#b00e3f",
             "button_text": "#ffffff",
@@ -98,7 +98,7 @@
           "settings": {
             "collection": "originals",
             "title": "",
-            "image": "shopify:\/\/shop_images\/saf-home-collection-2.jpg",
+            "image": "{{ block.settings.collection.image }}",
             "artist": "",
             "link": "",
             "button_label": "Browse Collection"
@@ -109,7 +109,7 @@
           "settings": {
             "collection": "limited-editions",
             "title": "",
-            "image": "shopify:\/\/shop_images\/saf-home-collection-1.jpg",
+            "image": "{{ block.settings.collection.image }}",
             "artist": "",
             "link": "",
             "button_label": "Browse Collection"
@@ -120,7 +120,7 @@
           "settings": {
             "collection": "art-under",
             "title": "",
-            "image": "shopify:\/\/shop_images\/saf-home-collection-3.jpg",
+            "image": "{{ block.settings.collection.image }}",
             "artist": "",
             "link": "",
             "button_label": "Browse Collection"
@@ -144,7 +144,7 @@
       "settings": {
         "contained": false,
         "radius": 0,
-        "image": "shopify:\/\/shop_images\/quiz_banner_SA_Art_Fair.webp",
+        "image": "shopify:\/\/shop_images\/quiz-banner-floral.webp",
         "band_height": 880,
         "min_height": 400,
         "mobile_ratio": "3 \/ 4",
@@ -180,7 +180,7 @@
     "contact": {
       "type": "rb-contact",
       "settings": {
-        "heading": "<p><em>Established<\/em> in the valley of the Cape Town.<\/p>",
+        "heading": "<p><em>Established<\/em> in the valley.<\/p>",
         "heading_color": "#1e1e1e",
         "heading_accent": "#bea532",
         "map_width": 50,
