@@ -115,6 +115,15 @@
           assign title = block.settings.title | default: col.title
           assign img = block.settings.image | default: col.featured_image
           assign url = block.settings.link | default: col.url
+          assign btn_url = block.settings.button_link | strip
+          if btn_url contains '@'
+            unless btn_url contains '/'
+              unless btn_url contains 'mailto:'
+                assign btn_url = 'mailto:' | append: btn_url
+              endunless
+            endunless
+          endif
+          assign btn_url = btn_url | default: url
         -%}
         <div class="rb-mc__card" {{ block.shopify_attributes }}>
           <a href="{{ url | default: '#' }}" class="rb-media rb-mc__media" tabindex="-1" aria-hidden="true">
@@ -145,7 +154,7 @@
 
           {%- if block.settings.button_label != blank -%}
             <div class="rb-mc__cta-row">
-              <a href="{{ url | default: '#' }}" class="rb-btn rb-btn--serif rb-btn--outline">
+              <a href="{{ btn_url | default: '#' }}" class="rb-btn rb-btn--serif rb-btn--outline">
                 {{- block.settings.button_label | escape -}}
               </a>
             </div>
@@ -188,7 +197,9 @@
           "default": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>",
           "label": "Body" },
         { "type": "url", "id": "link", "label": "Link override" },
-        { "type": "text", "id": "button_label", "default": "Browse", "label": "Button label" }
+        { "type": "text", "id": "button_label", "default": "Browse", "label": "Button label" },
+        { "type": "text", "id": "button_link", "label": "Button link override",
+          "info": "Only changes where the button goes. Accepts a normal URL, or an email address / mailto: link to turn it into an email button." }
       ]
     }
   ],
