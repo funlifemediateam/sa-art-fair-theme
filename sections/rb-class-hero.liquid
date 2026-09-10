@@ -1,8 +1,9 @@
 {% comment %}
   Rebrand class hero — the head of a single class page: a teal class-type
   line, the subject in coral IvyPresto italic, "With <teacher>" in roman
-  below it, a row of icon facts and a coral Book Now pill. Two images run off
-  the right edge beside it.
+  below it, a row of icon facts and a coral Book Now pill. One colour picture
+  fills the box beside it; "media_mode" can restore the comp's pair of images,
+  which run off the right edge with the second in black and white.
 
   Everything defaults out of the booking metafields this store already keeps
   on class products, so a class page is correct the moment it is assigned the
@@ -88,6 +89,28 @@
   endif
 -%}
 
+{%- comment -%}
+  2026-09-10, client: the class hero "needs to be one colour image". The pair
+  reads as a colour photo with a grey square stuck to it — the same note the
+  artist pages got, answered the same way (see media_mode on rb-person-hero and
+  rb-artist-cards): one picture, in colour, filling the box.
+
+  Kept as a setting rather than a deletion so Hanre's two-image comp is one
+  click away.
+
+  In single mode the class's own photo is the picture; a class with no photo of
+  its own falls back to its teacher's, rather than showing an empty box.
+{%- endcomment -%}
+{%- liquid
+  assign show_portrait = false
+  if section.settings.media_mode == 'pair' and img_b != blank
+    assign show_portrait = true
+  endif
+  if show_portrait == false and img_a == blank
+    assign img_a = img_b
+  endif
+-%}
+
 <style>
   {% comment %}
     The picture is the person hero's box, not this comp's — same width, same
@@ -162,12 +185,23 @@
     overflow: hidden;
     height: var(--rb-hero-media-h);
   }
-  #shopify-section-{{ sid }} .rb-ch__media .rb-media {
-    flex: 0 0 {{ section.settings.image_a_width }}%;
-    height: 100%;
-  }
-  #shopify-section-{{ sid }} .rb-ch__media .rb-media--b { flex: 0 0 auto; width: 60%; }
-  #shopify-section-{{ sid }} .rb-ch__media .rb-media--b img { filter: grayscale(1); }
+  #shopify-section-{{ sid }} .rb-ch__media .rb-media { height: 100%; }
+  {%- if show_portrait -%}
+    #shopify-section-{{ sid }} .rb-ch__media .rb-media { flex: 0 0 {{ section.settings.image_a_width }}%; }
+    #shopify-section-{{ sid }} .rb-ch__media .rb-media--b { flex: 0 0 auto; width: 60%; }
+    #shopify-section-{{ sid }} .rb-ch__media .rb-media--b img { filter: grayscale(1); }
+  {%- else -%}
+    {% comment %}
+      One picture, so it fills the box instead of bleeding off the edge. Class
+      photos are upright (1080x1350 on every live class) and this box is wide,
+      so a centred crop takes the head off — same focal-point fix, and the same
+      35% default, as the artist hero and the artist index cards.
+    {% endcomment %}
+    #shopify-section-{{ sid }} .rb-ch__media .rb-media { flex: 1 1 100%; }
+    #shopify-section-{{ sid }} .rb-ch__media .rb-media img {
+      object-position: {{ section.settings.photo_focal_x }}% {{ section.settings.photo_focal_y }}%;
+    }
+  {%- endif -%}
 
   @media screen and (max-width: 749px) {
     #shopify-section-{{ sid }} .rb-ch {
@@ -180,6 +214,13 @@
       padding-inline: var(--rb-gutter);
     }
     #shopify-section-{{ sid }} .rb-ch__media { height: auto; aspect-ratio: 16 / 9; }
+    {%- unless show_portrait -%}
+      {% comment %}
+        16/9 is right for a cropped pair; a person standing up survives an
+        upright box far better, and on one narrow column there is room for it.
+      {% endcomment %}
+      #shopify-section-{{ sid }} .rb-ch__media { aspect-ratio: 4 / 5; }
+    {%- endunless -%}
   }
 </style>
 
@@ -240,17 +281,22 @@
     <div class="rb-ch__media">
       <div class="rb-media">
         {%- if img_a != blank -%}
+          {%- if show_portrait -%}
+            {%- assign img_a_sizes = '(max-width: 749px) 100vw, 33vw' -%}
+          {%- else -%}
+            {%- assign img_a_sizes = '(max-width: 749px) 100vw, 52vw' -%}
+          {%- endif -%}
           {{
             img_a
             | image_url: width: 1600
-            | image_tag: widths: '400, 600, 900, 1200, 1600', sizes: '(max-width: 749px) 100vw, 33vw',
+            | image_tag: widths: '400, 600, 900, 1200, 1600', sizes: img_a_sizes,
               loading: 'eager', alt: img_a.alt | default: title
           }}
         {%- else -%}
           {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
         {%- endif -%}
       </div>
-      {%- if img_b != blank -%}
+      {%- if show_portrait -%}
         <div class="rb-media rb-media--b">
           {{
             img_b
@@ -294,12 +340,23 @@
     { "type": "url", "id": "button_link", "label": "Button link",
       "info": "Blank jumps to the booking widget further down the page." },
     { "type": "header", "content": "Images" },
-    { "type": "image_picker", "id": "image_a", "label": "Artwork",
-      "info": "Blank uses the product's featured image." },
+    { "type": "select", "id": "media_mode", "label": "What the picture shows", "default": "single",
+      "options": [
+        { "value": "single", "label": "One colour image" },
+        { "value": "pair", "label": "Class image with the teacher's photo beside it" }
+      ],
+      "info": "Class pages use one colour image. The pair is Hanre's original design — the teacher's photo runs off the right edge in black and white." },
+    { "type": "image_picker", "id": "image_a", "label": "Class image",
+      "info": "Blank uses the product's featured image, or the teacher's photo if the class has none." },
+    { "type": "range", "id": "photo_focal_x", "min": 0, "max": 100, "step": 1,
+      "default": 50, "unit": "%", "label": "Focal point — horizontal" },
+    { "type": "range", "id": "photo_focal_y", "min": 0, "max": 100, "step": 1,
+      "default": 35, "unit": "%", "label": "Focal point — vertical",
+      "info": "An upright photo is cropped into a wide box. Lower numbers keep the head." },
     { "type": "image_picker", "id": "image_b", "label": "Teacher portrait",
-      "info": "Blank uses the picture on this class's teacher collection. Rendered black and white, and cropped by the right edge as in the design." },
+      "info": "Only used by the pair. Blank uses the picture on this class's teacher collection." },
     { "type": "range", "id": "image_a_width", "min": 30, "max": 100, "step": 1,
-      "default": 62, "unit": "%", "label": "Artwork share of the image pair" },
+      "default": 62, "unit": "%", "label": "Class image share of the pair" },
     { "type": "header", "content": "Layout" },
     { "type": "range", "id": "text_width", "min": 30, "max": 70, "step": 1,
       "default": 48, "unit": "%", "label": "Text share of the row",
