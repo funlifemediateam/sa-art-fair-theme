@@ -32,16 +32,18 @@
 
       The first sentence is found with the same filter chain rb-person-hero
       uses, then removed by prefix rather than by rebuilding the string — the
-      two cannot drift apart that way, and a bio of a single sentence simply
-      leaves the band its heading.
+      two cannot drift apart that way.
+
+      A few bios are one long run-on sentence with nothing left to hand over.
+      Those keep the whole description: the hero cuts a long opening at 22
+      words, so the band still has more to say, and a band headed "More about
+      X" with nothing under it reads far worse than an overlapping first line.
     endcomment
     if section.settings.skip_first_sentence
       assign plain = collection.description | strip_html | strip | replace: '&nbsp;', ' '
       assign first = plain | split: '. ' | first | strip
       assign rest = plain | remove_first: first | remove_first: '. ' | strip
-      if rest == blank
-        assign body = ''
-      else
+      if rest != blank
         assign body = rest
       endif
     endif
