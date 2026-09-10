@@ -47,9 +47,13 @@
 
   comment
     The two comps put different things under the name: the teacher gets this
-    row of mediums, the artist gets a line of script. So "auto" shows the row
-    on a page that carries no script line, which is exactly the teacher pages,
-    and leaves the artist pages as their comp draws them.
+    row of mediums, the artist gets a line of script. "auto" therefore shows
+    the row only on a page that carries no script line.
+
+    The teacher pages are set to "always": the client asked for the artist
+    comp's script line on that side of the page as well, and the mediums are
+    the one thing on a teacher's page that says what they actually make, so
+    they carry both — script first, then the row, as the markup runs.
 
     Until 2026-09-10 the row was drawn only when the field above had been typed
     in by hand, so the mediums read off the collection were computed and then
@@ -75,8 +79,35 @@
       unless first contains '.'
         assign first = first | append: '.'
       endunless
-      assign script = first | truncate: 140
+      comment
+        A handful of bios open with a sentence of 200 characters or more, which
+        is a paragraph however it is set. Cutting on a word rather than at a
+        character count keeps the tail readable; anything shorter is left whole,
+        so the common case never loses its last word to a truncation.
+      endcomment
+      assign first_words = first | split: ' '
+      if first_words.size > 24
+        assign script = first | truncatewords: 22
+      else
+        assign script = first
+      endif
     endif
+  endif
+
+  comment
+    The comp's script line is 55 characters set over three lines. A real bio's
+    first sentence runs to twice that and, at the comp's size, towered to eight
+    lines of cursive down the left of the page. So the line steps down through
+    three sizes as it lengthens and takes a wider measure with it, which holds
+    every page at the comp's three-line shape instead of holding its type size.
+  endcomment
+  assign script_len = script | strip_html | size
+  assign script_tier = 1
+  if script_len > 70
+    assign script_tier = 2
+  endif
+  if script_len > 105
+    assign script_tier = 3
   endif
 
   assign show_tags = false
@@ -266,10 +297,21 @@
   #shopify-section-{{ sid }} .rb-ph__script {
     margin-top: clamp(12px, 1.25vw, 24px);
     color: {{ section.settings.script_color }};
-    font-size: clamp(19px, 2.08vw, 40px);
     line-height: 1.2;
-    /* the comp wraps this line three times inside the text block */
-    max-width: clamp(240px, 18.6vw, 357px);
+    /* the comp wraps this line three times inside the text block, and the
+       three steps below hold that shape as the sentence gets longer — see
+       script_tier above. Each pair is sized at the 1920 frame. */
+    {%- case script_tier -%}
+      {%- when 3 -%}
+        font-size: clamp(17px, 1.46vw, 28px);
+        max-width: clamp(280px, 27.1vw, 520px);
+      {%- when 2 -%}
+        font-size: clamp(18px, 1.77vw, 34px);
+        max-width: clamp(260px, 22.9vw, 440px);
+      {%- else -%}
+        font-size: clamp(19px, 2.08vw, 40px);
+        max-width: clamp(240px, 18.6vw, 357px);
+    {%- endcase -%}
     {% if section.settings.align == 'center' %}margin-inline: auto;{% endif %}
   }
   #shopify-section-{{ sid }} .rb-ph__script p { margin: 0; }
@@ -452,7 +494,7 @@
       "info": "Cedarville Cursive, as on the artist page." },
     { "type": "checkbox", "id": "script_from_description", "default": false,
       "label": "Fall back to the collection description",
-      "info": "Used on artist pages: with the script line blank, the FIRST SENTENCE of the collection description is set in the script face. Leave off wherever the description already appears further down the page." },
+      "info": "With the script line blank, the FIRST SENTENCE of the collection description is set in the script face. Used on artist and teacher pages. Where the description also appears further down the page, switch on 'Skip the first sentence' in that section so it is not said twice." },
     { "type": "text", "id": "tags", "label": "Tags",
       "info": "Comma separated, e.g. Abstract, Watercolour, Photography. Blank reads the mediums off this collection's own artwork tags." },
     { "type": "select", "id": "tags_mode", "label": "Show the tags", "default": "auto",
@@ -461,7 +503,7 @@
         { "value": "always", "label": "Always" },
         { "value": "never", "label": "Never" }
       ],
-      "info": "The teacher page carries this row and the artist page carries a script line instead, so 'auto' gives each comp what it draws." },
+      "info": "'Auto' hides the row wherever a script line is showing. Teacher pages are set to 'Always' — they carry the script line and the mediums together." },
     { "type": "header", "content": "Actions" },
     { "type": "url", "id": "social_url", "label": "Instagram link",
       "info": "Blank uses the Instagram already saved for this person in the admin app." },

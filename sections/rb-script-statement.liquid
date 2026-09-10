@@ -23,6 +23,28 @@
   assign body = section.settings.body
   if section.settings.use_collection_description and collection.description != blank
     assign body = collection.description
+
+    comment
+      A teacher page now opens with the first sentence of this same bio set in
+      the script face, the way the artist comp draws it. Printing the bio whole
+      again here would say that sentence twice within one screen, so the band
+      picks up where the hero left off.
+
+      The first sentence is found with the same filter chain rb-person-hero
+      uses, then removed by prefix rather than by rebuilding the string — the
+      two cannot drift apart that way, and a bio of a single sentence simply
+      leaves the band its heading.
+    endcomment
+    if section.settings.skip_first_sentence
+      assign plain = collection.description | strip_html | strip | replace: '&nbsp;', ' '
+      assign first = plain | split: '. ' | first | strip
+      assign rest = plain | remove_first: first | remove_first: '. ' | strip
+      if rest == blank
+        assign body = ''
+      else
+        assign body = rest
+      endif
+    endif
   endif
 -%}
 
@@ -86,6 +108,9 @@
     { "type": "checkbox", "id": "use_collection_description", "default": false,
       "label": "Use the collection description instead",
       "info": "On a teacher or artist page that is their bio." },
+    { "type": "checkbox", "id": "skip_first_sentence", "default": false,
+      "label": "Skip the first sentence",
+      "info": "Switch on where the hero above already sets the first sentence in the script face, so the page does not say it twice." },
     { "type": "header", "content": "Colour" },
     { "type": "color", "id": "background", "default": "#ffffff", "label": "Background" },
     { "type": "color", "id": "heading_color", "default": "#1e1e1e", "label": "Script" },
