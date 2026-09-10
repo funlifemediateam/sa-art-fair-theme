@@ -1,16 +1,83 @@
 {
   "sections": {
-    "main": {
-      "type": "collection-artist",
+    "hero": {
+      "type": "rb-person-hero",
       "settings": {
-        "artist_name": "Shelley Cowling",
-        "artist_role": "",
-        "artist_bio": "",
-        "artist_tags": ""
+        "name": "",
+        "script": "",
+        "tags": "Painting, Mixed Media",
+        "social_url": "",
+        "button_label": "See Portfolio",
+        "button_link": "",
+        "align": "left",
+        "text_width": 48,
+        "background": "#ffffff",
+        "name_color": "#e07468",
+        "script_color": "#1e1e1e",
+        "tag_color": "#0c3642",
+        "image": "",
+        "focal_x": 50,
+        "focal_y": 50,
+        "portrait": "",
+        "portrait_w": 40,
+        "portrait_ratio": "79 \/ 69",
+        "portrait_x": 52,
+        "portrait_y": 51,
+        "media_mode": "portrait",
+        "portrait_grayscale": false,
+        "photo_focal_x": 50,
+        "photo_focal_y": 35
+      }
+    },
+    "statement": {
+      "type": "rb-script-statement",
+      "settings": {
+        "heading": "<p>Teaching is <em>making, together.<\/em><\/p>",
+        "body": "",
+        "use_collection_description": true,
+        "background": "#ffffff",
+        "heading_color": "#1e1e1e",
+        "accent_color": "#e07468",
+        "body_color": "#1e1e1e",
+        "heading_width": 900,
+        "body_width": 640,
+        "padding_top": 150,
+        "padding_bottom": 160
+      }
+    },
+    "classes": {
+      "type": "rb-class-cards",
+      "settings": {
+        "collection": "",
+        "count": 12,
+        "only_classes": true,
+        "eyebrow": "<p>View classes by [teacher]<\/p>",
+        "eyebrow_name": "",
+        "teacher_filter": "",
+        "intro": "",
+        "intro_color": "#1e1e1e",
+        "by_prefix": "With",
+        "show_excerpt": true,
+        "button_label": "View Class",
+        "columns": 3,
+        "grid_width": 1300,
+        "image_ratio": "398 \/ 380",
+        "radius": 18,
+        "background": "#ffffff",
+        "pattern": "all_a",
+        "tone_a": "#e07468",
+        "tone_a_text": "#ffffff",
+        "tone_b": "#b00e3f",
+        "tone_b_text": "#ffffff",
+        "texture": 0,
+        "more_label": "Meet our teachers",
+        "more_link": "\/pages\/the-team"
       }
     }
   },
   "order": [
-    "main"
+    "hero",
+    "statement",
+    "classes"
   ]
 }

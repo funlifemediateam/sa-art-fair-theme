@@ -4,10 +4,15 @@
       "type": "rb-hero",
       "settings": {
         "fill": "image",
-        "image": "shopify://shop_images/saf-store-hero.jpg",
+        "background": "#505a43",
+        "texture": 100,
+        "image": "shopify:\/\/shop_images\/saf-studio-hero.jpg",
+        "image_blend": "normal",
+        "image_rotate": "0",
+        "video_mobile_fallback": true,
         "band_height": 720,
         "min_height": 340,
-        "mobile_ratio": "4 / 5",
+        "mobile_ratio": "4 \/ 5",
         "focal_x": 50,
         "focal_y": 50,
         "overlay_color": "#1e1e1e",
@@ -16,6 +21,7 @@
         "mark": "store",
         "mark_width": 190,
         "heading": "Collect Art",
+        "auto_heading": false,
         "heading_style": "page_title",
         "text_color": "#ffffff",
         "button_label": "",
@@ -28,16 +34,16 @@
         "show_mark": false,
         "eyebrow": "The Store",
         "eyebrow_color": "#bea532",
-        "heading": "<p>Buy from the artists <em>who create.</em></p>",
+        "heading": "<p>Buy from the artists <em>who create.<\/em><\/p>",
         "heading_color": "#505a43",
         "accent_color": "#bea532",
         "heading_width": 1100,
-        "body": "<p>Discover and collect original artworks from our local artists. Every piece here is made by someone in our community, and every sale goes back to the person who made it.</p>",
+        "body": "<p>Discover and collect original artworks from our local artists. Every piece here is made by someone in our community, and every sale goes back to the person who made it.<\/p>",
         "body_color": "#1e1e1e",
         "body_width": 860,
         "background": "#ffffff",
         "button_label": "Browse all art",
-        "button_link": "shopify://collections/gallery",
+        "button_link": "shopify:\/\/collections\/gallery",
         "padding_top": 150,
         "padding_bottom": 120
       }
@@ -50,11 +56,16 @@
         "layout": "grid",
         "per_page": 6,
         "columns": 3,
-        "image_ratio": "555 / 402",
+        "image_ratio": "555 \/ 402",
         "hover_label": "View Artwork",
+        "search_placeholder": "Search artworks, artists, mediums…",
+        "bar_color": "#f4f4f1",
+        "rail_title": "Filter By:",
+        "rail_width": 150,
         "card_button": "View Artwork",
         "more_label": "See all artworks",
-        "more_link": "shopify://collections/gallery",
+        "less_label": "See Less",
+        "more_link": "shopify:\/\/collections\/gallery",
         "background": "#ffffff",
         "heading_color": "#1e1e1e",
         "card_title_color": "#1e1e1e",
@@ -104,24 +115,46 @@
           }
         }
       },
-      "block_order": ["zara", "gaby", "karen"],
+      "block_order": [
+        "zara",
+        "gaby",
+        "karen"
+      ],
       "settings": {
+        "show_finder": false,
+        "finder_label": "Find an artist",
+        "search_placeholder": "Search by name or medium",
+        "show_name_list": true,
+        "empty_text": "No artists match that search.",
+        "finder_text_color": "#1e1e1e",
+        "finder_accent": "#b00e3f",
         "columns": 3,
         "grid_width": 1760,
-        "image_ratio": "555 / 402",
+        "image_ratio": "555 \/ 402",
         "radius": 20,
+        "meta_gap": 6,
+        "bio_lines": 4,
         "portrait_w": 42,
-        "portrait_ratio": "132 / 130",
+        "portrait_ratio": "132 \/ 130",
         "portrait_x": 49,
         "portrait_y": 50,
         "background": "#ffffff",
         "tone_a": "#9da887",
         "tone_a_text": "#ffffff",
+        "tone_a_name": "#505a43",
         "tone_a_meta": "#f2f4ec",
         "tone_b": "#505a43",
         "tone_b_text": "#dfe4d4",
+        "tone_b_name": "#9da887",
         "tone_b_meta": "#a5ad93",
-        "texture": 0
+        "texture": 0,
+        "panel_image_fit": "cover",
+        "panel_image_focal_x": 50,
+        "panel_image_focal_y": 50,
+        "panel_image_veil": 0,
+        "media_mode": "portrait",
+        "portrait_grayscale": false,
+        "photo_focal_y": 35
       }
     },
     "shop_by_colour": {
@@ -132,7 +165,7 @@
           "settings": {
             "collection": "warm-tones",
             "title": "Warm Tones",
-            "image": "shopify://shop_images/saf-home-collection-1.jpg",
+            "image": "shopify:\/\/shop_images\/saf-home-collection-1.jpg",
             "artist": "Reds, ochres and golds",
             "link": "",
             "button_label": "Browse Collection"
@@ -143,7 +176,7 @@
           "settings": {
             "collection": "cool-tones",
             "title": "Cool Tones",
-            "image": "shopify://shop_images/saf-home-collection-2.jpg",
+            "image": "shopify:\/\/shop_images\/saf-home-collection-2.jpg",
             "artist": "Blues, greens and greys",
             "link": "",
             "button_label": "Browse Collection"
@@ -154,14 +187,18 @@
           "settings": {
             "collection": "neutral-tones",
             "title": "Neutral Tones",
-            "image": "shopify://shop_images/saf-home-collection-3.jpg",
+            "image": "shopify:\/\/shop_images\/saf-home-collection-3.jpg",
             "artist": "Sand, stone and linen",
             "link": "",
             "button_label": "Browse Collection"
           }
         }
       },
-      "block_order": ["warm", "cool", "neutral"],
+      "block_order": [
+        "warm",
+        "cool",
+        "neutral"
+      ],
       "settings": {
         "eyebrow": "Shop by Colour",
         "eyebrow_color": "#bea532",
@@ -172,10 +209,12 @@
     "quiz": {
       "type": "rb-quiz-banner",
       "settings": {
-        "image": "shopify://shop_images/saf-home-quiz.jpg",
+        "contained": false,
+        "radius": 0,
+        "image": "shopify:\/\/shop_images\/saf-home-quiz.jpg",
         "band_height": 760,
         "min_height": 380,
-        "mobile_ratio": "3 / 4",
+        "mobile_ratio": "3 \/ 4",
         "focal_x": 50,
         "focal_y": 50,
         "overlay_color": "#1e1e1e",
@@ -186,7 +225,7 @@
         "subheading": "See how your personality can shape your journey as a collector.",
         "text_color": "#ffffff",
         "button_label": "Take the quiz",
-        "button_link": "shopify://collections/art-quiz"
+        "button_link": "shopify:\/\/collections\/art-quiz"
       }
     },
     "testimonials": {
@@ -195,57 +234,88 @@
         "q1": {
           "type": "quote",
           "settings": {
-            "quote": "<p>“There is a great need for a nurturing place where artists at all levels can learn new approaches and styles in different media. The Studio is a place where you can grow.”</p>",
+            "quote": "<p>“There is a great need for a nurturing place where artists at all levels can learn new approaches and styles in different media. The Studio is a place where you can grow.”<\/p>",
             "attribution": "- Michelle Alexander",
+            "quote_size": "auto",
             "background": "#e07468",
             "quote_color": "#0c3642",
-            "attr_color": "#0c3642"
+            "attr_color": "#0c3642",
+            "panel_image_fit": "cover",
+            "panel_image_focal_x": 50,
+            "panel_image_focal_y": 50,
+            "panel_image_veil": 0
           }
         },
         "q2": {
           "type": "quote",
           "settings": {
-            "quote": "<p>“Friday is now my favorite day of the week. Zara is a nurturing, gentle and inspiring teacher and I am learning so much and in a fun and lighthearted atmosphere. It’s a wonderful group of supportive and encouraging people. Everyone brings something different and meaningful to add to my creative process. I highly recommend it.”</p>",
+            "quote": "<p>“Friday is now my favorite day of the week. Zara is a nurturing, gentle and inspiring teacher and I am learning so much and in a fun and lighthearted atmosphere. It’s a wonderful group of supportive and encouraging people. Everyone brings something different and meaningful to add to my creative process. I highly recommend it.”<\/p>",
             "attribution": "- Dani Rubehiemer",
+            "quote_size": "auto",
             "background": "#b00e3f",
             "quote_color": "#e07468",
-            "attr_color": "#e07468"
+            "attr_color": "#e07468",
+            "panel_image_fit": "cover",
+            "panel_image_focal_x": 50,
+            "panel_image_focal_y": 50,
+            "panel_image_veil": 0
           }
         },
         "q3": {
           "type": "quote",
           "settings": {
-            "quote": "<p>“The SA Art Fair is such a special organisation that is run by the amazing duo; Georgina &amp; Bianca. The way that these 2 ladies support South African artists &amp; South African art in general, is just wonderful! The Studio is such a special spot too!!”</p>",
+            "quote": "<p>“The SA Art Fair is such a special organisation that is run by the amazing duo; Georgina &amp; Bianca. The way that these 2 ladies support South African artists &amp; South African art in general, is just wonderful! The Studio is such a special spot too!!”<\/p>",
             "attribution": "- Kate Mackenzie",
+            "quote_size": "auto",
             "background": "#0c3642",
             "quote_color": "#e07468",
-            "attr_color": "#e07468"
+            "attr_color": "#e07468",
+            "panel_image_fit": "cover",
+            "panel_image_focal_x": 50,
+            "panel_image_focal_y": 50,
+            "panel_image_veil": 0
           }
         },
         "q4": {
           "type": "quote",
           "settings": {
-            "quote": "<p>“I have been attending the watercolor classes at the SA Art Fair Studio this term and am absolutely loving them. I have been so impressed by what we have all been able to create in a few sessions. The class has students from all skill levels and if you are just there for the fun of it (like I am!), you never feel left behind or overwhelmed. It’s been nice to meet new faces and learn new watercolor techniques from an artist in a fun, welcoming environment. I can highly recommend this space for experienced artists and newbies who are looking for some creative ‘me time’.”</p>",
+            "quote": "<p>“I have been attending the watercolor classes at the SA Art Fair Studio this term and am absolutely loving them. I have been so impressed by what we have all been able to create in a few sessions. The class has students from all skill levels and if you are just there for the fun of it (like I am!), you never feel left behind or overwhelmed. It’s been nice to meet new faces and learn new watercolor techniques from an artist in a fun, welcoming environment. I can highly recommend this space for experienced artists and newbies who are looking for some creative ‘me time’.”<\/p>",
             "attribution": "- Tarryn Bartlett",
+            "quote_size": "auto",
             "background": "#e07468",
             "quote_color": "#0c3642",
-            "attr_color": "#0c3642"
+            "attr_color": "#0c3642",
+            "panel_image_fit": "cover",
+            "panel_image_focal_x": 50,
+            "panel_image_focal_y": 50,
+            "panel_image_veil": 0
           }
         },
         "q5": {
           "type": "quote",
           "settings": {
-            "quote": "<p>“Beautiful relaxing space to explore your artistic endeavours. Different courses for all levels and styles offered.”</p>",
+            "quote": "<p>“Beautiful relaxing space to explore your artistic endeavours. Different courses for all levels and styles offered.”<\/p>",
             "attribution": "- Gaby Blumberg",
+            "quote_size": "auto",
             "background": "#b00e3f",
             "quote_color": "#e07468",
-            "attr_color": "#e07468"
+            "attr_color": "#e07468",
+            "panel_image_fit": "cover",
+            "panel_image_focal_x": 50,
+            "panel_image_focal_y": 50,
+            "panel_image_veil": 0
           }
         }
       },
-      "block_order": ["q1", "q2", "q3", "q4", "q5"],
+      "block_order": [
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "q5"
+      ],
       "settings": {
-        "eyebrow": "<p>What people say about <strong>SA Art Fair</strong></p>",
+        "eyebrow": "<p>What people say about <strong>SA Art Fair<\/strong><\/p>",
         "show_arrows": true,
         "background": "#e6ddc6",
         "show_texture": true,
