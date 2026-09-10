@@ -40,7 +40,7 @@
         "image_ratio": "398 \/ 380",
         "radius": 18,
         "background": "#ffffff",
-        "pattern": "alternate",
+        "pattern": "all_a",
         "tone_a": "#e07468",
         "tone_a_text": "#ffffff",
         "tone_b": "#b00e3f",
