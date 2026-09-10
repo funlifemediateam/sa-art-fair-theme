@@ -8,7 +8,8 @@
 
   The portrait is a hard rectangle laid over the artwork with no radius and no
   border, positioned as a percentage of the media half so it keeps its place
-  as the band scales.
+  as the band scales. "media_mode" takes it off — see the comment above that
+  setting — which is what the live bands now do.
 {% endcomment %}
 
 {{ 'saf-rebrand.css' | asset_url | stylesheet_tag }}
@@ -89,6 +90,25 @@
         endif
       endfor
     endif
+  endif
+
+  comment
+    The comps set a black-and-white portrait into the artwork. The client has now
+    asked for that grey square gone everywhere it appears — the same note that
+    took it off the artist pages (rb-person-hero) and the class heroes
+    (rb-class-hero), answered the same way: one picture by default, the comp kept
+    one click away rather than deleted.
+
+    Falling back to the portrait matters here. Six of the eight live classes carry
+    a copy of their teacher's photo as the class image and the two pictures were
+    the same person either way; a class with no picture of its own would otherwise
+    lose its only image and render an empty grey box.
+  endcomment
+  if section.settings.media_mode != 'artwork_inset'
+    if art == blank
+      assign art = portrait
+    endif
+    assign portrait = blank
   endif
 
   assign show_a = false
@@ -325,17 +345,25 @@
     { "type": "range", "id": "panel_image_veil", "min": 0, "max": 100, "step": 5,
       "default": 0, "unit": "%", "label": "Panel colour over the image",
       "info": "Tints the image back towards the panel colour so the words keep their contrast." },
-    { "type": "header", "content": "Artwork" },
+    { "type": "header", "content": "Picture" },
+    { "type": "select", "id": "media_mode", "label": "What the picture shows", "default": "single",
+      "options": [
+        { "value": "single", "label": "One picture, no inset" },
+        { "value": "artwork_inset", "label": "A work with the portrait set into it (the design)" }
+      ],
+      "info": "The design lays a black-and-white portrait over the picture. 'One picture' drops it, as on the artist pages and class heroes. In class-teacher mode a class with no picture of its own then shows the teacher's photo." },
     { "type": "image_picker", "id": "image", "label": "Artwork" },
     { "type": "range", "id": "panel_width", "min": 30, "max": 70, "step": 1,
       "default": 50, "unit": "%", "label": "Panel share of the row" },
     { "type": "range", "id": "min_height", "min": 260, "max": 900, "step": 10,
       "default": 520, "unit": "px", "label": "Band height at 1920px wide" },
     { "type": "range", "id": "focal_x", "min": 0, "max": 100, "step": 1,
-      "default": 50, "unit": "%", "label": "Artwork focal point — horizontal" },
+      "default": 50, "unit": "%", "label": "Picture focal point — horizontal" },
     { "type": "range", "id": "focal_y", "min": 0, "max": 100, "step": 1,
-      "default": 50, "unit": "%", "label": "Artwork focal point — vertical" },
+      "default": 50, "unit": "%", "label": "Picture focal point — vertical",
+      "info": "The band is wide and the class photos are upright, so a centred crop can take the top of a head off. Around 35% keeps faces in frame." },
     { "type": "header", "content": "Portrait inset" },
+    { "type": "paragraph", "content": "Only used when the picture above is set to the design's work-with-inset." },
     { "type": "image_picker", "id": "portrait", "label": "Portrait",
       "info": "Rendered black and white, as in the design." },
     { "type": "range", "id": "portrait_w", "min": 15, "max": 70, "step": 1,
