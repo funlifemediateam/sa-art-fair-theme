@@ -26,6 +26,7 @@
       [level]    booking.skill_level
       [sessions] how many dates booking.session_dates holds
       [price]    the product price
+      [session_price] what one session of a term class costs
 
     Text with no placeholder in it is left exactly as written, so a one-off
     page can still spell the sentence out by hand.
@@ -45,7 +46,21 @@
     assign v_sessions = dates | split: ',' | size
   endif
 
-  assign heading = section.settings.heading | replace: '[class]', v_class | replace: '[teacher]', v_teacher | replace: '[time]', v_time | replace: '[level]', v_level | replace: '[sessions]', v_sessions | replace: '[price]', v_price
+  comment
+    [price] is the product price, which on a term class is the cheapest variant —
+    the deposit on the very last remaining session, a number worth showing nobody.
+    The per-session rate is the full term (the dearest variant, i.e. starting on
+    date one) split over the dates. A one-off has no term to divide, so it keeps
+    its own price.
+  endcomment
+  assign v_session_price = product.price | money_without_trailing_zeros
+  assign is_term = product.metafields.booking.is_term.value
+  assign is_one_off = product.metafields.booking.is_one_off.value
+  if is_term and is_one_off != true and v_sessions != '' and v_sessions > 0
+    assign v_session_price = product.price_max | divided_by: v_sessions | money_without_trailing_zeros
+  endif
+
+  assign heading = section.settings.heading | replace: '[class]', v_class | replace: '[teacher]', v_teacher | replace: '[time]', v_time | replace: '[level]', v_level | replace: '[sessions]', v_sessions | replace: '[session_price]', v_session_price | replace: '[price]', v_price
 -%}
 
 <style>
@@ -123,7 +138,7 @@
           if body == blank and block.settings.use_product_description
             assign body = product.description
           endif
-          assign body = body | replace: '[class]', v_class | replace: '[teacher]', v_teacher | replace: '[time]', v_time | replace: '[level]', v_level | replace: '[sessions]', v_sessions | replace: '[price]', v_price
+          assign body = body | replace: '[class]', v_class | replace: '[teacher]', v_teacher | replace: '[time]', v_time | replace: '[level]', v_level | replace: '[sessions]', v_sessions | replace: '[session_price]', v_session_price | replace: '[price]', v_price
         -%}
         {%- if block.settings.label != blank or body != blank -%}
           <div class="rb-cd__note" {{ block.shopify_attributes }}>
@@ -167,7 +182,7 @@
     { "type": "richtext", "id": "heading",
       "default": "<p>A guided <em>2 hour Watercolour</em> session.</p>",
       "label": "Statement",
-      "info": "Italic runs render coral, as in the design. Placeholders: [class] [teacher] [time] [level] [sessions] [price]." },
+      "info": "Italic runs render coral, as in the design. Placeholders: [class] [teacher] [time] [level] [sessions] [session_price] [price]." },
     { "type": "text", "id": "anchor", "default": "booking", "label": "Anchor id",
       "info": "The class hero's Book Now button jumps here." },
     { "type": "header", "content": "Button" },
@@ -192,7 +207,7 @@
       "settings": [
         { "type": "text", "id": "label", "default": "Description:", "label": "Label" },
         { "type": "richtext", "id": "body", "label": "Body",
-          "info": "Placeholders: [class] [teacher] [time] [level] [sessions] [price]." },
+          "info": "Placeholders: [class] [teacher] [time] [level] [sessions] [session_price] [price]." },
         { "type": "checkbox", "id": "use_product_description", "default": false,
           "label": "Fall back to the product description",
           "info": "Only useful on a product template." }
