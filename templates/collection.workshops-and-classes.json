@@ -32,7 +32,7 @@
         "teacher_filter": "",
         "intro": "<p>Every class and workshop currently taking bookings.</p>",
         "intro_color": "#1e1e1e",
-        "by_prefix": "By",
+        "by_prefix": "With",
         "show_excerpt": true,
         "button_label": "View Class",
         "columns": 3,

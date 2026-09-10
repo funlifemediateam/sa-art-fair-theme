@@ -54,7 +54,7 @@
         "teacher_filter": "",
         "intro": "",
         "intro_color": "#1e1e1e",
-        "by_prefix": "By",
+        "by_prefix": "With",
         "show_excerpt": true,
         "show_schedule": true,
         "show_price": true,
