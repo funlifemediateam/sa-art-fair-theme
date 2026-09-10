@@ -46,6 +46,17 @@
   assign tags = tag_source | split: ','
 
   comment
+    The two comps put different things under the name: the teacher gets this
+    row of mediums, the artist gets a line of script. So "auto" shows the row
+    on a page that carries no script line, which is exactly the teacher pages,
+    and leaves the artist pages as their comp draws them.
+
+    Until 2026-09-10 the row was drawn only when the field above had been typed
+    in by hand, so the mediums read off the collection were computed and then
+    thrown away — every teacher page but one showed a name and nothing else.
+  endcomment
+
+  comment
     The artist comp carries a short line of Cedarville script under the name.
     Its content in Figma is lorem, and leaving the field blank left 34 artist
     pages with nothing but a name. When "use the collection description" is on
@@ -66,6 +77,20 @@
       endunless
       assign script = first | truncate: 140
     endif
+  endif
+
+  assign show_tags = false
+  if tags.size > 0
+    case section.settings.tags_mode
+      when 'always'
+        assign show_tags = true
+      when 'never'
+        assign show_tags = false
+      else
+        if script == blank
+          assign show_tags = true
+        endif
+    endcase
   endif
 
   comment
@@ -133,6 +158,18 @@
   endif
 
   comment
+    The store already keeps per-person socials in the booking_app.socials shop
+    metafield, keyed by the handleized display name — the same key
+    snippets/social-links.liquid uses. Reading it here means an artist or
+    teacher page shows the right Instagram without anyone filling in 40
+    templates by hand.
+  endcomment
+  if name != blank
+    assign social_key = name | handleize
+    assign person_socials = shop.metafields.booking_app.socials.value[social_key]
+  endif
+
+  comment
     "See Portfolio" on a teacher page belongs on that person's ARTIST
     collection. Someone who both teaches and exhibits has two collections
     sharing one title — "Susan Orpen" as susan-orpen-1 (teacher) and
@@ -145,8 +182,11 @@
     first collection on one of this person's pieces that carries the same
     title under a different handle is the one wanted.
 
-    A teacher who does not exhibit resolves to nothing and the button is
-    dropped rather than left pointing at "#".
+    A teacher who sells nothing here but keeps a portfolio of their own falls
+    back to that site — Susan Orpen shows work at susanorpenfineart.co.za and
+    has no collection on this store, so without the fallback her page carries
+    her name and nothing else. A teacher with neither resolves to nothing and
+    the button is dropped rather than left pointing at "#".
   endcomment
   assign portfolio_url = section.settings.button_link
   if portfolio_url == blank and collection != blank
@@ -162,25 +202,21 @@
       endif
     endfor
   endif
+  if portfolio_url == blank and person_socials != blank
+    assign portfolio_url = person_socials.website
+  endif
+  assign portfolio_external = false
+  if portfolio_url contains '://'
+    assign portfolio_external = true
+  endif
   assign show_portfolio = false
   if section.settings.button_label != blank and portfolio_url != blank
     assign show_portfolio = true
   endif
 
-  comment
-    The store already keeps per-person socials in the booking_app.socials shop
-    metafield, keyed by the handleized display name — the same key
-    snippets/social-links.liquid uses. Reading it here means an artist or
-    teacher page shows the right Instagram without anyone filling in 40
-    templates by hand.
-  endcomment
   assign social_url = section.settings.social_url
-  if social_url == blank and name != blank
-    assign social_key = name | handleize
-    assign person_socials = shop.metafields.booking_app.socials.value[social_key]
-    if person_socials != blank
-      assign social_url = person_socials.instagram
-    endif
+  if social_url == blank and person_socials != blank
+    assign social_url = person_socials.instagram
   endif
 -%}
 
@@ -337,7 +373,7 @@
         <div class="rb-script rb-ph__script">{{ script }}</div>
       {%- endif -%}
 
-      {%- if tags.size > 0 and section.settings.tags != blank -%}
+      {%- if show_tags -%}
         <ul class="rb-ph__tags" role="list">
           {%- for tag in tags -%}
             <li class="rb-ph__tag">{{ tag | strip }}</li>
@@ -354,7 +390,8 @@
             </a>
           {%- endif -%}
           {%- if show_portfolio -%}
-            <a href="{{ portfolio_url }}" class="rb-btn rb-btn--plain rb-btn--outline">
+            <a href="{{ portfolio_url }}" class="rb-btn rb-btn--plain rb-btn--outline"
+               {% if portfolio_external %}target="_blank" rel="noopener"{% endif %}>
               {{- section.settings.button_label | escape -}}
             </a>
           {%- endif -%}
@@ -418,6 +455,13 @@
       "info": "Used on artist pages: with the script line blank, the FIRST SENTENCE of the collection description is set in the script face. Leave off wherever the description already appears further down the page." },
     { "type": "text", "id": "tags", "label": "Tags",
       "info": "Comma separated, e.g. Abstract, Watercolour, Photography. Blank reads the mediums off this collection's own artwork tags." },
+    { "type": "select", "id": "tags_mode", "label": "Show the tags", "default": "auto",
+      "options": [
+        { "value": "auto", "label": "Only where there is no script line" },
+        { "value": "always", "label": "Always" },
+        { "value": "never", "label": "Never" }
+      ],
+      "info": "The teacher page carries this row and the artist page carries a script line instead, so 'auto' gives each comp what it draws." },
     { "type": "header", "content": "Actions" },
     { "type": "url", "id": "social_url", "label": "Instagram link",
       "info": "Blank uses the Instagram already saved for this person in the admin app." },
