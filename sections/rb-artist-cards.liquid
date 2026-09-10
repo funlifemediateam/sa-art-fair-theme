@@ -165,6 +165,18 @@
     aspect-ratio: {{ section.settings.portrait_ratio }};
     transform: translate(-50%, -50%);
   }
+  /* When the card picture IS the artist's photo it fills the frame instead of
+     sitting in an inset. A portrait file cropped to a landscape card from the
+     centre cuts the top of a head, so the crop is biased upward. */
+  #shopify-section-{{ sid }} .rb-ac__media--photo > img {
+    object-position: 50% {{ section.settings.photo_focal_y }}%;
+  }
+  {%- if section.settings.portrait_grayscale -%}
+    #shopify-section-{{ sid }} .rb-ac__media--photo > img { filter: grayscale(1); }
+  {%- else -%}
+    /* .rb-inset img is black and white everywhere in the theme; opt this section out */
+    #shopify-section-{{ sid }} .rb-ac__portrait img { filter: none; }
+  {%- endif -%}
 
   #shopify-section-{{ sid }} .rb-ac__panel {
     flex: 1 1 auto;
@@ -393,17 +405,18 @@
           endif
 
           comment
-            The comp's card is one of the artist's WORKS with their
-            black-and-white portrait set into it — the same pairing as the
-            person hero, so it resolves the same way:
+            Two pictures are available for every card and resolve the same way
+            as they do on the person hero:
 
               portrait — the collection's own image, which in this store is
                          the photo of the person;
               artwork  — the first piece in the collection that is not that
                          same photo.
 
-            A collection holding nothing but the portrait shows it large with
-            no inset, because the same picture twice reads as a mistake.
+            "Card picture" then decides which of them the card shows. The comp
+            pairs them (a work with the portrait set into it); the client asked
+            for the plain artist photo instead, and either can be chosen back
+            in the editor without a deploy.
           endcomment
           assign art = block.settings.image
           assign portrait = block.settings.portrait
@@ -418,9 +431,44 @@
               endif
             endfor
           endif
-          if art == blank
-            assign art = portrait
-            assign portrait = blank
+
+          assign media_is_photo = false
+          case section.settings.media_mode
+            when 'portrait'
+              # the photo fills the card; an artist with no photo on file keeps
+              # their work rather than falling back to an empty frame
+              if portrait != blank
+                assign art = portrait
+                assign media_is_photo = true
+              endif
+              assign portrait = blank
+            when 'artwork'
+              if art == blank
+                assign art = portrait
+                assign media_is_photo = true
+              endif
+              assign portrait = blank
+            else
+              # the comp. A collection holding nothing but the portrait shows it
+              # large with no inset, because the same picture twice reads as a
+              # mistake.
+              if art == blank
+                assign art = portrait
+                assign media_is_photo = true
+                assign portrait = blank
+              endif
+          endcase
+
+          assign media_alt = ''
+          if media_is_photo
+            assign media_alt = name
+          endif
+
+          assign show_meta_row = false
+          if section.settings.show_meta
+            if block.settings.medium != blank or block.settings.place != blank
+              assign show_meta_row = true
+            endif
           endif
         -%}
         <article
@@ -430,7 +478,7 @@
           {{ block.shopify_attributes }}
         >
           <div class="rb-ac__body">
-            <div class="rb-ac__media">
+            <div class="rb-ac__media{% if media_is_photo %} rb-ac__media--photo{% endif %}">
               {%- if art != blank -%}
                 {{
                   art
@@ -439,7 +487,7 @@
                     widths: '380, 560, 800, 1200',
                     sizes: card_sizes,
                     loading: 'lazy',
-                    alt: ''
+                    alt: media_alt
                 }}
               {%- else -%}
                 {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
@@ -475,9 +523,11 @@
               {%- comment -%}
                 Each half of the meta row is rendered only when it has words in
                 it — a blank Place must not leave an empty span holding the
-                right-hand end of a space-between row.
+                right-hand end of a space-between row. The client asked for the
+                "Painter" / "Artist" line off the cards, so the whole row is
+                behind a switch and the wording is kept for a change of mind.
               {%- endcomment -%}
-              {%- if block.settings.medium != blank or block.settings.place != blank -%}
+              {%- if show_meta_row -%}
                 <p class="rb-meta rb-ac__meta">
                   {%- if block.settings.medium != blank -%}<span>{{ block.settings.medium }}</span>{%- endif -%}
                   {%- if block.settings.place != blank -%}<span>{{ block.settings.place }}</span>{%- endif -%}
@@ -619,7 +669,24 @@
     { "type": "range", "id": "bio_lines", "min": 0, "max": 10, "step": 1,
       "default": 4, "label": "Bio lines on a card",
       "info": "Every card in a row is as tall as the longest bio in it. 0 shows every bio in full and lets the rows run tall. Mobile always shows the full bio." },
-    { "type": "header", "content": "Portrait inset" },
+    { "type": "checkbox", "id": "show_meta", "default": true,
+      "label": "Show the medium / place row above the name",
+      "info": "Off hides the \"Painter\" line on every card without losing the wording." },
+    { "type": "header", "content": "Card picture" },
+    { "type": "select", "id": "media_mode", "label": "What each card shows", "default": "artwork_inset",
+      "options": [
+        { "value": "artwork_inset", "label": "A work with the photo set into it" },
+        { "value": "portrait", "label": "The artist's photo only" },
+        { "value": "artwork", "label": "A work only" }
+      ],
+      "info": "An artist with no photo on file keeps their work, so no card is ever left empty." },
+    { "type": "checkbox", "id": "portrait_grayscale", "default": true,
+      "label": "Show the photo in black and white" },
+    { "type": "range", "id": "photo_focal_y", "min": 0, "max": 100, "step": 5,
+      "default": 35, "unit": "%", "label": "Photo focal point — vertical",
+      "info": "Only used when the card shows the artist's photo: an upright photo is cropped to a wide card, and a centred crop can cut off the top of a head." },
+    { "type": "header", "content": "Portrait inset",
+      "info": "Only used when the card shows a work with the photo set into it." },
     { "type": "range", "id": "portrait_w", "min": 15, "max": 70, "step": 1,
       "default": 42, "unit": "%", "label": "Portrait width" },
     { "type": "text", "id": "portrait_ratio", "default": "132 / 130", "label": "Portrait aspect ratio" },
