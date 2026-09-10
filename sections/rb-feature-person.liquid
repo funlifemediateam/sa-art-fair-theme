@@ -108,6 +108,15 @@
     if art == blank
       assign art = portrait
     endif
+    comment
+      A teacher with no collection of their own never reached the fallbacks
+      above — the class image is only read inside them — so their band drew
+      Shopify's grey placeholder. Discover Watercolour (Shabana Sonday, no
+      collection yet) is the live case.
+    endcomment
+    if art == blank and section.settings.source == 'product_teacher'
+      assign art = product.featured_image
+    endif
     assign portrait = blank
   endif
 
