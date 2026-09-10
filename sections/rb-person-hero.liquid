@@ -11,6 +11,10 @@
 
   On a collection template the name and artwork default to the collection, so
   an artist or teacher collection is correct as soon as it gets the template.
+
+  The picture is the comp's artwork-plus-inset by default; "media_mode" can put
+  the artist's photo there on its own instead, which is what the artist pages
+  now do. See the comment above that setting.
 {% endcomment %}
 
 {{ 'saf-rebrand.css' | asset_url | stylesheet_tag }}
@@ -92,6 +96,40 @@
   if art == blank
     assign art = portrait
     assign portrait = blank
+  endif
+
+  comment
+    2026-09-10, client ("Individual Artist Page — remove grey squares and just
+    have artist photo"): the black-and-white inset reads as a grey square sitting
+    on the work. Same note they gave for the artists index, and the index cards
+    answered it the same way — see media_mode on rb-artist-cards.
+
+      artwork_inset — Hanre's comp, the work with the portrait set into it;
+      portrait      — the photo alone, filling the box, no inset;
+      artwork       — the work alone, no inset.
+
+    Kept as a setting rather than a deletion so the comp is one click away, and
+    so teacher pages (which still follow the comp) are not dragged along.
+
+    An artist with no photo keeps their artwork instead of an empty box — the
+    same rule the cards use, and Careisha Esperanza and Danielle Byrne rely on it.
+  endcomment
+  assign media_mode = section.settings.media_mode
+  if media_mode == 'portrait' and portrait != blank
+    assign hero_image = portrait
+    assign media_is_photo = true
+    assign show_inset = false
+  elsif media_mode == 'artwork' or media_mode == 'portrait'
+    assign hero_image = art
+    assign media_is_photo = false
+    assign show_inset = false
+  else
+    assign hero_image = art
+    assign media_is_photo = false
+    assign show_inset = true
+    if portrait == blank
+      assign show_inset = false
+    endif
   endif
 
   comment
@@ -248,6 +286,17 @@
     object-fit: cover;
     object-position: {{ section.settings.focal_x }}% {{ section.settings.focal_y }}%;
   }
+  {%- if media_is_photo -%}
+    {% comment %}
+      An upright photo cropped into this landscape box loses the top and bottom.
+      A centred crop takes the head off, so the photo gets its own focal point —
+      the same fix, and the same 35% default, as the artist index cards.
+    {% endcomment %}
+    #shopify-section-{{ sid }} .rb-ph__media > img {
+      object-position: {{ section.settings.photo_focal_x }}% {{ section.settings.photo_focal_y }}%;
+      filter: {% if section.settings.portrait_grayscale %}grayscale(1){% else %}none{% endif %};
+    }
+  {%- endif -%}
   #shopify-section-{{ sid }} .rb-ph__portrait {
     left: {{ section.settings.portrait_x }}%;
     top: {{ section.settings.portrait_y }}%;
@@ -266,6 +315,13 @@
     #shopify-section-{{ sid }} .rb-ph__name { max-width: none; }
     #shopify-section-{{ sid }} .rb-ph__script { max-width: none; }
     #shopify-section-{{ sid }} .rb-ph__media { height: auto; aspect-ratio: 4 / 3; }
+    {%- if media_is_photo -%}
+      {% comment %}
+        4/3 is right for a landscape work; a person standing up survives an
+        upright box far better, and on one narrow column there is room for it.
+      {% endcomment %}
+      #shopify-section-{{ sid }} .rb-ph__media { aspect-ratio: 4 / 5; }
+    {%- endif -%}
   }
 </style>
 
@@ -307,22 +363,28 @@
      </div>
     </div>
 
-    <div class="rb-ph__media">
-      {%- if art != blank -%}
+    <div class="rb-ph__media{% if media_is_photo %} rb-ph__media--photo{% endif %}">
+      {%- if hero_image != blank -%}
+        {%- liquid
+          assign media_alt = hero_image.alt | default: name
+          if media_is_photo
+            assign media_alt = name
+          endif
+        -%}
         {{
-          art
+          hero_image
           | image_url: width: 1920
           | image_tag:
             widths: '480, 700, 960, 1400, 1920',
             sizes: '(max-width: 749px) 100vw, 55vw',
             loading: 'eager',
-            alt: art.alt | default: name
+            alt: media_alt
         }}
       {%- else -%}
         {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
       {%- endif -%}
 
-      {%- if portrait != blank -%}
+      {%- if show_inset -%}
         <div class="rb-inset rb-ph__portrait">
           {{
             portrait
@@ -377,6 +439,22 @@
     { "type": "color", "id": "name_color", "default": "#e07468", "label": "Name" },
     { "type": "color", "id": "script_color", "default": "#1e1e1e", "label": "Script line" },
     { "type": "color", "id": "tag_color", "default": "#0c3642", "label": "Tags" },
+    { "type": "header", "content": "Picture" },
+    { "type": "select", "id": "media_mode", "label": "What the picture shows", "default": "artwork_inset",
+      "options": [
+        { "value": "artwork_inset", "label": "Artwork with the portrait inset" },
+        { "value": "portrait", "label": "Artist photo only" },
+        { "value": "artwork", "label": "Artwork only" }
+      ],
+      "info": "Artist pages use the photo. Someone with no photo on file keeps their artwork." },
+    { "type": "checkbox", "id": "portrait_grayscale", "default": true,
+      "label": "Black and white photo",
+      "info": "Applies to 'Artist photo only'. The inset in the first option is always black and white, as in the design." },
+    { "type": "range", "id": "photo_focal_x", "min": 0, "max": 100, "step": 1,
+      "default": 50, "unit": "%", "label": "Photo focal point — horizontal" },
+    { "type": "range", "id": "photo_focal_y", "min": 0, "max": 100, "step": 1,
+      "default": 35, "unit": "%", "label": "Photo focal point — vertical",
+      "info": "An upright photo is cropped into a wide box. Lower numbers keep the head." },
     { "type": "header", "content": "Artwork" },
     { "type": "image_picker", "id": "image", "label": "Artwork",
       "info": "Blank uses the first piece in the collection." },
