@@ -1,0 +1,88 @@
+{% comment %}
+  Teacher gallery — the data and assets behind the full-screen photo/video
+  gallery on a class page (client brief 2026-09-11: tap "Gallery" in the page
+  nav, or the class photo, and swipe through the teacher's work; videos play
+  muted as they come into view, with a sound button).
+
+  Outputs NOTHING unless the class's teacher has at least one ready photo or
+  video, so callers capture it and treat blank as "no gallery":
+
+    {%- capture rb_gal -%}{%- render 'rb-gallery', product: product -%}{%- endcapture -%}
+    {%- if rb_gal != blank -%} …render the trigger… {{ rb_gal }} {%- endif -%}
+
+  The list lives on the teacher's collection as booking_app.gallery
+  (list.file_reference), managed from the SA Booking Admin "Gallery" tab. The
+  teacher is found the same way the teacher band finds her
+  (snippets/rb-teacher-handle.liquid), so one gallery follows a teacher onto
+  every class she teaches.
+
+  More than one section on a page renders this (page nav, class hero), so the
+  data block and assets can appear twice; saf-rb-gallery.js reads the first
+  data block and only runs once.
+
+  A video still transcoding has no mp4 source yet and is left out until it
+  has one; the same goes for a photo without a URL.
+
+  Accepts: product.
+{% endcomment %}
+
+{%- liquid
+  assign rb_gal_list = nil
+  assign rb_gal_name = ''
+  assign rb_gal_count = 0
+  if product != blank
+    capture rb_gal_th
+      render 'rb-teacher-handle', product: product
+    endcapture
+    assign rb_gal_th = rb_gal_th | strip
+    if rb_gal_th != blank
+      assign rb_gal_col = collections[rb_gal_th]
+      assign rb_gal_list = rb_gal_col.metafields.booking_app.gallery.value
+      assign rb_gal_name = rb_gal_col.title
+    endif
+  endif
+-%}
+
+{%- capture rb_gal_json -%}
+  {%- for f in rb_gal_list -%}
+    {%- assign ar = f.aspect_ratio | default: 1 -%}
+    {%- if f.media_type == 'image' -%}
+      {%- assign src = f | image_url: width: 1600 -%}
+      {%- if src != blank -%}
+        {%- assign w800 = f | image_url: width: 800 -%}
+        {%- assign w1200 = f | image_url: width: 1200 -%}
+        {%- assign w2200 = f | image_url: width: 2200 -%}
+        {%- assign srcset = w800 | append: ' 800w, ' | append: w1200 | append: ' 1200w, ' | append: src | append: ' 1600w, ' | append: w2200 | append: ' 2200w' -%}
+        {%- assign thumb = f | image_url: width: 240 -%}
+        {%- if rb_gal_count > 0 -%},{%- endif -%}
+        {"type":"image","src":{{ src | json }},"srcset":{{ srcset | json }},"ar":{{ ar | json }},"thumb":{{ thumb | json }}}
+        {%- assign rb_gal_count = rb_gal_count | plus: 1 -%}
+      {%- endif -%}
+    {%- elsif f.media_type == 'video' -%}
+      {%- assign mp4 = '' -%}
+      {%- for s in f.sources -%}
+        {%- if s.mime_type == 'video/mp4' -%}
+          {%- assign mp4 = s.url -%}
+          {%- break -%}
+        {%- endif -%}
+      {%- endfor -%}
+      {%- if mp4 != blank -%}
+        {%- assign poster = '' -%}
+        {%- assign thumb = '' -%}
+        {%- if f.preview_image -%}
+          {%- assign poster = f.preview_image | image_url: width: 1600 -%}
+          {%- assign thumb = f.preview_image | image_url: width: 240 -%}
+        {%- endif -%}
+        {%- if rb_gal_count > 0 -%},{%- endif -%}
+        {"type":"video","src":{{ mp4 | json }},"poster":{{ poster | json }},"ar":{{ ar | json }},"thumb":{{ thumb | json }}}
+        {%- assign rb_gal_count = rb_gal_count | plus: 1 -%}
+      {%- endif -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endcapture -%}
+
+{%- if rb_gal_count > 0 -%}
+  <script type="application/json" data-rb-gallery>{"name":{{ rb_gal_name | json }},"items":[{{ rb_gal_json }}]}</script>
+  {{ 'saf-rb-gallery.css' | asset_url | stylesheet_tag }}
+  <script src="{{ 'saf-rb-gallery.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}

@@ -111,6 +111,14 @@
   endif
 -%}
 
+{%- comment -%}
+  2026-09-11: when the class's teacher has a gallery, the picture opens it
+  full-screen (same viewer as the page nav's "Gallery" link — see
+  snippets/rb-gallery.liquid). No gallery, no change: the picture stays a
+  plain picture.
+{%- endcomment -%}
+{%- capture rb_gal -%}{%- render 'rb-gallery', product: p -%}{%- endcapture -%}
+
 <style>
   {% comment %}
     The picture is the person hero's box, not this comp's — same width, same
@@ -186,6 +194,11 @@
     height: var(--rb-hero-media-h);
   }
   #shopify-section-{{ sid }} .rb-ch__media .rb-media { height: 100%; }
+  #shopify-section-{{ sid }} .rb-ch__media[data-rb-gallery-open] { cursor: zoom-in; }
+  #shopify-section-{{ sid }} .rb-ch__media[data-rb-gallery-open]:focus-visible {
+    outline: 2px solid {{ section.settings.teacher_color }};
+    outline-offset: -4px;
+  }
   {%- if show_portrait -%}
     #shopify-section-{{ sid }} .rb-ch__media .rb-media { flex: 0 0 {{ section.settings.image_a_width }}%; }
     #shopify-section-{{ sid }} .rb-ch__media .rb-media--b { flex: 0 0 auto; width: 60%; }
@@ -278,7 +291,16 @@
       {%- endif -%}
     </div>
 
-    <div class="rb-ch__media">
+    <div
+      class="rb-ch__media"
+      {%- if rb_gal != blank %}
+        data-rb-gallery-open
+        role="button"
+        tabindex="0"
+        aria-haspopup="dialog"
+        aria-label="Open the gallery{% if teacher != blank %} of {{ teacher | escape }}’s work{% endif %}"
+      {%- endif %}
+    >
       <div class="rb-media">
         {%- if img_a != blank -%}
           {%- if show_portrait -%}
@@ -309,6 +331,8 @@
     </div>
   </div>
 </div>
+
+{{- rb_gal -}}
 
 {% schema %}
 {

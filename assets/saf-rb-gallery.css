@@ -1,0 +1,347 @@
+/* ==========================================================================
+   Teacher gallery — full-screen viewer on class pages.
+   Markup is built by assets/saf-rb-gallery.js; data from snippets/rb-gallery.liquid.
+
+   Keagan's call (2026-09-11): full screen on a frosted LIGHT ground that
+   matches the rest of the theme, the class page blurred behind it — not the
+   usual black lightbox.
+   ========================================================================== */
+
+/* Scroll lock, set on <html> while open. The scrollbar's width is put back as
+   padding so the blurred page behind doesn't jump sideways. */
+html.rb-gal-open,
+html.rb-gal-open body {
+  overflow: hidden;
+}
+html.rb-gal-open body {
+  padding-right: var(--rb-gal-sbw, 0px);
+}
+
+/* Nothing live-looking floats over the gallery. */
+html.rb-gal-open .saf-whatsapp,
+html.rb-gal-open .rb-mobile-paths {
+  visibility: hidden;
+}
+
+.rb-gal {
+  --rb-gal-ink: var(--rb-ink, #1e1e1e);
+  position: fixed;
+  inset: 0;
+  z-index: 100000; /* above the booking modal (99990) and newsletter popup (99999) */
+  display: grid;
+  grid-template-rows: clamp(56px, 4.2vw, 80px) minmax(0, 1fr) auto;
+  color: var(--rb-gal-ink);
+  font-family: var(--rb-sans, 'Helvetica Neue', Arial, sans-serif);
+  /* The frost lives on this element itself: a backdrop-filter on a child of
+     something with opacity < 1 can only see that parent, so the blur would
+     vanish for the length of the fade-in. */
+  background: rgba(255, 255, 255, calc(0.86 * var(--rb-gal-fade, 1)));
+  -webkit-backdrop-filter: blur(24px) saturate(1.15);
+  backdrop-filter: blur(24px) saturate(1.15);
+  opacity: 0;
+  transition: opacity 0.22s ease;
+  overscroll-behavior: contain;
+  -webkit-tap-highlight-color: transparent;
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .rb-gal {
+    background: rgba(250, 250, 248, calc(0.97 * var(--rb-gal-fade, 1)));
+  }
+}
+.rb-gal[hidden] {
+  display: none;
+}
+.rb-gal:focus {
+  outline: none; /* focus parks on the dialog itself between slides */
+}
+.rb-gal.is-open {
+  opacity: 1;
+}
+
+/* --------------------------------------------------------------------------
+   Controls
+   -------------------------------------------------------------------------- */
+.rb-gal button {
+  margin: 0;
+  font: inherit;
+  color: inherit;
+}
+.rb-gal svg {
+  width: 48%;
+  height: 48%;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.rb-gal__close,
+.rb-gal__arrow,
+.rb-gal__sound,
+.rb-gal__play {
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--rb-gal-ink);
+  box-shadow: 0 2px 14px rgba(30, 30, 30, 0.14);
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease, opacity 0.15s ease;
+}
+.rb-gal__close:focus-visible,
+.rb-gal__arrow:focus-visible,
+.rb-gal__sound:focus-visible,
+.rb-gal__play:focus-visible,
+.rb-gal__thumb:focus-visible {
+  outline: 2px solid var(--rb-gal-ink);
+  outline-offset: 3px;
+}
+@media (hover: hover) {
+  .rb-gal__close:hover,
+  .rb-gal__arrow:hover,
+  .rb-gal__sound:hover,
+  .rb-gal__play:hover {
+    background: var(--rb-gal-ink);
+    color: #fff;
+  }
+}
+
+.rb-gal__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-inline: clamp(18px, 3.1vw, 60px) clamp(12px, 2.1vw, 40px);
+}
+.rb-gal__title {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  min-width: 0;
+  margin: 0;
+  font-size: clamp(13px, 0.94vw, 18px);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.rb-gal__name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.rb-gal__count {
+  flex: 0 0 auto;
+  color: rgba(30, 30, 30, 0.6);
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+}
+.rb-gal__close {
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+}
+
+/* --------------------------------------------------------------------------
+   Stage — a native scroll-snap track, one full-width slide per item
+   -------------------------------------------------------------------------- */
+.rb-gal__stage {
+  position: relative;
+  min-height: 0;
+  transform: translateY(var(--rb-gal-pull, 0px));
+  transition: transform 0.22s ease;
+}
+.rb-gal.is-dragging .rb-gal__stage {
+  transition: none;
+}
+.rb-gal__track {
+  display: flex;
+  height: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+  /* horizontal swipes stay the browser's; vertical drags are the swipe-to-close */
+  touch-action: pan-x;
+  scrollbar-width: none;
+}
+.rb-gal__track::-webkit-scrollbar {
+  display: none;
+}
+.rb-gal__slide {
+  flex: 0 0 100%;
+  height: 100%;
+  box-sizing: border-box;
+  padding: clamp(8px, 1.25vw, 24px) clamp(12px, 6.7vw, 128px);
+  display: grid;
+  place-items: center;
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+  /* the frame below sizes itself against this box */
+  container-type: size;
+}
+
+/* The frame is the photo/video's own shape, as large as fits: full width if
+   the item is wider than the space, full height if it's taller. */
+.rb-gal__frame {
+  position: relative;
+  width: min(100cqw, 100cqh * var(--rb-gal-ar, 1));
+  aspect-ratio: var(--rb-gal-ar, 1);
+  max-height: 100cqh;
+  background: rgba(30, 30, 30, 0.05);
+  box-shadow: 0 18px 50px rgba(30, 30, 30, 0.16);
+  transition: transform 0.22s ease;
+}
+@supports not (width: 1cqw) {
+  .rb-gal__frame {
+    width: 100%;
+    height: 100%;
+    background: none;
+    box-shadow: none;
+  }
+}
+.rb-gal:not(.is-open) .rb-gal__frame {
+  transform: scale(0.985);
+}
+.rb-gal__media {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+video.rb-gal__media {
+  cursor: pointer;
+}
+
+.rb-gal__sound {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  width: 44px;
+  height: 44px;
+}
+.rb-gal__play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 72px;
+  height: 72px;
+  transform: translate(-50%, -50%);
+}
+.rb-gal__play[hidden] {
+  display: none;
+}
+.rb-gal__play svg {
+  width: 40%;
+  height: 40%;
+  margin-left: 4px;
+  fill: currentColor;
+  stroke: none;
+}
+
+.rb-gal__arrow {
+  position: absolute;
+  top: 50%;
+  width: clamp(44px, 3.1vw, 60px);
+  height: clamp(44px, 3.1vw, 60px);
+  transform: translateY(-50%);
+}
+.rb-gal__arrow--prev {
+  left: clamp(12px, 2.1vw, 40px);
+}
+.rb-gal__arrow--next {
+  right: clamp(12px, 2.1vw, 40px);
+}
+.rb-gal__arrow:disabled {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* --------------------------------------------------------------------------
+   Thumbnails
+   -------------------------------------------------------------------------- */
+.rb-gal__thumbs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 10px clamp(18px, 3.1vw, 60px) max(14px, env(safe-area-inset-bottom));
+  scrollbar-width: none;
+}
+.rb-gal__thumbs::-webkit-scrollbar {
+  display: none;
+}
+/* centred while they fit, scrollable from the first one once they don't */
+.rb-gal__thumb:first-child {
+  margin-left: auto;
+}
+.rb-gal__thumb:last-child {
+  margin-right: auto;
+}
+.rb-gal__thumb {
+  position: relative;
+  flex: 0 0 auto;
+  width: clamp(48px, 4.2vw, 80px);
+  aspect-ratio: 1;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  background: rgba(30, 30, 30, 0.08);
+  opacity: 0.55;
+  cursor: pointer;
+  transition: opacity 0.15s ease, box-shadow 0.15s ease;
+}
+.rb-gal__thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.rb-gal__thumb[aria-selected='true'] {
+  opacity: 1;
+  box-shadow: 0 0 0 2px var(--rb-gal-ink);
+}
+@media (hover: hover) {
+  .rb-gal__thumb:hover {
+    opacity: 1;
+  }
+}
+.rb-gal__thumb-play {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.55));
+}
+.rb-gal__thumb-play svg {
+  width: 38%;
+  height: 38%;
+  fill: currentColor;
+  stroke: none;
+}
+
+/* --------------------------------------------------------------------------
+   Phones: the photo runs edge to edge, swiping replaces the arrows
+   -------------------------------------------------------------------------- */
+@media screen and (max-width: 749px) {
+  .rb-gal__slide {
+    padding: 4px 0;
+  }
+  .rb-gal__frame {
+    box-shadow: none;
+  }
+  .rb-gal__arrow {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rb-gal,
+  .rb-gal__stage,
+  .rb-gal__frame {
+    transition: none;
+  }
+}
