@@ -13,14 +13,70 @@
         "fact_size": "",
         "button_label": "Book Now",
         "button_link": "",
-        "image_a": "",
-        "image_b": "",
+        "media_mode": "single",
+        "image_a": "shopify:\/\/shop_images\/1.png",
+        "photo_focal_x": 50,
+        "photo_focal_y": 35,
         "image_a_width": 62,
         "text_width": 48,
         "background": "#ffffff",
         "title_color": "#e07468",
         "teacher_color": "#1e1e1e",
         "fact_color": "#1e1e1e"
+      }
+    },
+    "pagenav": {
+      "type": "rb-page-nav",
+      "blocks": {
+        "classes": {
+          "type": "link",
+          "settings": {
+            "label": "Classes",
+            "link": "shopify:\/\/collections\/classes"
+          }
+        },
+        "workshops": {
+          "type": "link",
+          "settings": {
+            "label": "Workshops",
+            "link": "shopify:\/\/collections\/workshops"
+          }
+        },
+        "teachers": {
+          "type": "link",
+          "settings": {
+            "label": "Meet the Teachers",
+            "link": "\/pages\/the-team"
+          }
+        },
+        "contact": {
+          "type": "link",
+          "settings": {
+            "label": "Contact",
+            "link": "\/pages\/contact"
+          }
+        },
+        "link_gallery": {
+          "type": "link",
+          "settings": {
+            "label": "Gallery"
+          }
+        }
+      },
+      "block_order": [
+        "classes",
+        "workshops",
+        "teachers",
+        "link_gallery",
+        "contact"
+      ],
+      "settings": {
+        "aria_label": "Studio navigation",
+        "align": "center",
+        "background": "#ffffff",
+        "text_color": "#1e1e1e",
+        "accent_color": "#b00e3f",
+        "rule_color": "#e0e0e0"
       }
     },
     "detail": {
@@ -99,17 +155,19 @@
         "button_text": "#ffffff",
         "button_radius": 60,
         "texture": 100,
-        "image": "",
+        "panel_image_fit": "cover",
+        "panel_image_focal_x": 50,
+        "panel_image_focal_y": 50,
+        "panel_image_veil": 0,
+        "media_mode": "single",
         "panel_width": 48,
         "min_height": 560,
         "focal_x": 50,
         "focal_y": 35,
-        "portrait": "",
         "portrait_w": 34,
         "portrait_ratio": "382 \/ 313",
         "portrait_x": 46,
-        "portrait_y": 40,
-        "media_mode": "single"
+        "portrait_y": 40
       }
     },
     "browse": {
@@ -123,6 +181,7 @@
         "teacher_filter": "",
         "intro": "<p>More from the studio calendar.<\/p>",
         "intro_color": "#1e1e1e",
+        "strip_teacher": true,
         "by_prefix": "With",
         "show_excerpt": true,
         "button_label": "View Class",
@@ -130,6 +189,17 @@
         "grid_width": 1300,
         "image_ratio": "398 \/ 380",
         "radius": 18,
+        "show_schedule": false,
+        "show_price": false,
+        "session_word": "a session",
+        "month_word": "a month",
+        "term_word": "the term",
+        "show_deposit": false,
+        "deposit_label": "Or hold your seat for",
+        "show_spaces": false,
+        "spaces_threshold": 8,
+        "spaces_label": "Only [n] spaces left",
+        "book_label": "",
         "background": "#ffffff",
         "pattern": "all_a",
         "tone_a": "#e07468",
@@ -137,55 +207,12 @@
         "tone_b": "#b00e3f",
         "tone_b_text": "#ffffff",
         "texture": 0,
+        "panel_image_fit": "cover",
+        "panel_image_focal_x": 50,
+        "panel_image_focal_y": 50,
+        "panel_image_veil": 0,
         "more_label": "See all classes",
         "more_link": "\/collections\/classes"
-      }
-    },
-    "pagenav": {
-      "type": "rb-page-nav",
-      "blocks": {
-        "classes": {
-          "type": "link",
-          "settings": {
-            "label": "Classes",
-            "link": "shopify:\/\/collections\/classes"
-          }
-        },
-        "workshops": {
-          "type": "link",
-          "settings": {
-            "label": "Workshops",
-            "link": "shopify:\/\/collections\/workshops"
-          }
-        },
-        "teachers": {
-          "type": "link",
-          "settings": {
-            "label": "Meet the Teachers",
-            "link": "\/pages\/the-team"
-          }
-        },
-        "contact": {
-          "type": "link",
-          "settings": {
-            "label": "Contact",
-            "link": "\/pages\/contact"
-          }
-        }
-      },
-      "block_order": [
-        "classes",
-        "workshops",
-        "teachers",
-        "contact"
-      ],
-      "settings": {
-        "aria_label": "Studio navigation",
-        "align": "center",
-        "background": "#ffffff",
-        "text_color": "#1e1e1e",
-        "accent_color": "#b00e3f",
-        "rule_color": "#e0e0e0"
       }
     }
   },

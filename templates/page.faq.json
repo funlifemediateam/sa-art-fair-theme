@@ -6,14 +6,21 @@
         "fill": "colour",
         "background": "#505a43",
         "texture": 100,
-        "band_height": 460,
-        "min_height": 240,
-        "mobile_ratio": "4 / 3",
+        "image": "shopify:\/\/shop_images\/tissuepaper_background__B00E3F_SA_Art_Fair.webp",
+        "image_blend": "normal",
+        "image_rotate": "0",
+        "band_height": 680,
+        "min_height": 260,
+        "mobile_ratio": "4 \/ 3",
+        "focal_x": 50,
+        "focal_y": 50,
+        "overlay_color": "#1e1e1e",
         "overlay_opacity": 0,
         "show_mark": true,
         "mark": "studio",
         "mark_width": 130,
         "heading": "Questions",
+        "auto_heading": false,
         "heading_style": "page_title",
         "text_color": "#ffffff",
         "button_label": "",
@@ -23,13 +30,56 @@
     "pagenav": {
       "type": "rb-page-nav",
       "blocks": {
-        "classes": { "type": "link", "settings": { "label": "Classes", "link": "shopify://collections/classes" } },
-        "workshops": { "type": "link", "settings": { "label": "Workshops", "link": "shopify://collections/workshops" } },
-        "teachers": { "type": "link", "settings": { "label": "Meet the Teachers", "link": "/pages/the-team" } },
-        "faq": { "type": "link", "settings": { "label": "FAQ", "link": "/pages/faq" } },
-        "contact": { "type": "link", "settings": { "label": "Contact", "link": "/pages/contact" } }
+        "classes": {
+          "type": "link",
+          "settings": {
+            "label": "Classes",
+            "link": "shopify:\/\/collections\/classes"
+          }
+        },
+        "workshops": {
+          "type": "link",
+          "settings": {
+            "label": "Workshops",
+            "link": "shopify:\/\/collections\/workshops"
+          }
+        },
+        "teachers": {
+          "type": "link",
+          "settings": {
+            "label": "Meet the Teachers",
+            "link": "\/pages\/the-team"
+          }
+        },
+        "faq": {
+          "type": "link",
+          "settings": {
+            "label": "FAQ",
+            "link": "\/pages\/faq"
+          }
+        },
+        "contact": {
+          "type": "link",
+          "settings": {
+            "label": "Contact",
+            "link": "\/pages\/contact"
+          }
+        },
+        "link_gallery": {
+          "type": "link",
+          "settings": {
+            "label": "Gallery"
+          }
+        }
       },
-      "block_order": ["classes", "workshops", "teachers", "faq", "contact"],
+      "block_order": [
+        "classes",
+        "workshops",
+        "teachers",
+        "faq",
+        "link_gallery",
+        "contact"
+      ],
       "settings": {
         "aria_label": "Studio navigation",
         "align": "center",
@@ -46,56 +96,56 @@
           "type": "qa",
           "settings": {
             "question": "What can I expect from a class?",
-            "answer": "<p>Our classes vary by medium, teacher and experience level, with options for both adults and children. Most classes meet weekly for around two hours, with up to 10 classes each term.</p>"
+            "answer": "<p>Our classes vary by medium, teacher and experience level, with options for both adults and children. Most classes meet weekly for around two hours, with up to 10 classes each term.<\/p>"
           }
         },
         "materials": {
           "type": "qa",
           "settings": {
             "question": "What materials do I need?",
-            "answer": "<p>Your teacher will share a materials list before your class, helping you gather everything you need to get creative — and keep creating at home.</p>"
+            "answer": "<p>Your teacher will share a materials list before your class, helping you gather everything you need to get creative — and keep creating at home.<\/p>"
           }
         },
         "booking": {
           "type": "qa",
           "settings": {
             "question": "How do I book a class?",
-            "answer": "<p>Find the class that feels right for you, choose your preferred day and time, and book your place online. Most classes welcome new students throughout the term, so you don’t always have to wait for the next one to begin.</p>"
+            "answer": "<p>Find the class that feels right for you, choose your preferred day and time, and book your place online. Most classes welcome new students throughout the term, so you don’t always have to wait for the next one to begin.<\/p>"
           }
         },
         "missed": {
           "type": "qa",
           "settings": {
             "question": "What happens if I miss a class?",
-            "answer": "<p>Life happens. If you miss a class, you can make it up by joining another suitable class — giving you a little more flexibility in your creative week.</p>"
+            "answer": "<p>Life happens. If you miss a class, you can make it up by joining another suitable class — giving you a little more flexibility in your creative week.<\/p>"
           }
         },
         "packages": {
           "type": "qa",
           "settings": {
             "question": "What payment options do I have?",
-            "answer": "<p>Depending on the class, you can choose to drop in, pay monthly or book for the full term. Pick the option that suits your schedule and how you want to create.</p>"
+            "answer": "<p>Depending on the class, you can choose to drop in, pay monthly or book for the full term. Pick the option that suits your schedule and how you want to create.<\/p>"
           }
         },
         "paying": {
           "type": "qa",
           "settings": {
             "question": "How do I pay?",
-            "answer": "<p>Everything is handled online, making it simple to book your place, choose your payment option and get straight to the creative part.</p>"
+            "answer": "<p>Everything is handled online, making it simple to book your place, choose your payment option and get straight to the creative part.<\/p>"
           }
         },
         "workshops_vs_classes": {
           "type": "qa",
           "settings": {
             "question": "What is the difference between a class and a workshop?",
-            "answer": "<p>Our termly classes are designed to make creativity part of your week — you meet with the same small group each week and work with one teacher over the term.</p><p>Our workshops are your chance to try something new without committing to a full term: relaxed, hands-on sessions exploring different mediums, techniques and creative ideas.</p>"
+            "answer": "<p>Our termly classes are designed to make creativity part of your week — you meet with the same small group each week and work with one teacher over the term.<\/p><p>Our workshops are your chance to try something new without committing to a full term: relaxed, hands-on sessions exploring different mediums, techniques and creative ideas.<\/p>"
           }
         },
         "beginner": {
           "type": "qa",
           "settings": {
             "question": "Do I need any experience?",
-            "answer": "<p>No. We run everything from beginners classes to masterclasses, and you don’t need to be an expert or an artist to belong here. Just bring your curiosity.</p>"
+            "answer": "<p>No. We run everything from beginners classes to masterclasses, and you don’t need to be an expert or an artist to belong here. Just bring your curiosity.<\/p>"
           }
         }
       },
@@ -111,7 +161,7 @@
       ],
       "settings": {
         "eyebrow": "Frequently asked",
-        "intro": "<p>Everything you need to know before you join a class or a workshop at the studio. Can’t find your answer? Send us a message below.</p>",
+        "intro": "<p>Everything you need to know before you join a class or a workshop at the studio. Can’t find your answer? Send us a message below.<\/p>",
         "open_first": false,
         "one_at_a_time": true,
         "width": 1100,
@@ -126,11 +176,11 @@
     "contact": {
       "type": "rb-contact",
       "settings": {
-        "heading": "<p><em>Still</em> have a question?</p>",
+        "heading": "<p><em>Still<\/em> have a question?<\/p>",
         "heading_color": "#1e1e1e",
         "heading_accent": "#bea532",
         "map_width": 50,
-        "map_embed": "https://maps.google.com/maps?q=SA+Art+Fair+Hout+Bay+Cape+Town&t=&z=13&ie=UTF8&iwloc=&output=embed",
+        "map_embed": "https:\/\/maps.google.com\/maps?q=SA+Art+Fair+Hout+Bay+Cape+Town&t=&z=13&ie=UTF8&iwloc=&output=embed",
         "map_alt": "Map to the SA Art Fair studio",
         "map_grayscale": 100,
         "form_label": "Get in touch",
