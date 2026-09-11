@@ -57,7 +57,7 @@
           }
         },
         "link_gallery": {
-          "type": "link",
+          "type": "gallery",
           "settings": {
             "label": "Gallery"
           }
