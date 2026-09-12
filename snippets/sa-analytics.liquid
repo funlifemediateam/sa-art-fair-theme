@@ -1,14 +1,102 @@
 {%- assign _sa_ga4  = shop.metafields.booking_app.ga4_measurement_id    | default: "" -%}
 {%- assign _sa_gads = shop.metafields.booking_app.gads_conversion_id    | default: "" -%}
 {%- assign _sa_fb   = shop.metafields.booking_app.fb_pixel_id           | default: "" -%}
+{%- if request.design_mode -%}{%- assign _sa_ga4 = "" -%}{%- assign _sa_gads = "" -%}{%- assign _sa_fb = "" -%}{%- endif -%}
 {%- if _sa_ga4 != "" -%}
 <script async src="https://www.googletagmanager.com/gtag/js?id={{ _sa_ga4 | escape }}"></script>
 <script>
+(function () {
   window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag("js", new Date());
-  gtag("config", "{{ _sa_ga4 | escape }}");
-  {%- if _sa_gads != "" -%}gtag("config", "{{ _sa_gads | escape }}");{%- endif -%}
+  function gtag() { dataLayer.push(arguments); }
+  window.gtag = window.gtag || gtag;
+  var currency = {{ cart.currency.iso_code | default: shop.currency | json }};
+  var variants = {}, viewedItem = null, cartItems = null, cartValue = 0;
+  {%- if template.name == "product" and product -%}
+  {%- for variant in product.variants -%}
+  variants[{{ variant.id | json }}] = { item_id: {{ variant.sku | default: variant.id | append: "" | json }}, item_name: {{ product.title | json }}, item_variant: {{ variant.title | json }}, item_brand: {{ product.vendor | json }}, item_category: {{ product.type | json }}, price: {{ variant.price | divided_by: 100.0 | json }} };
+  {%- endfor -%}
+  viewedItem = variants[{{ product.selected_or_first_available_variant.id | json }}];
+  {%- endif -%}
+  {%- if template.name == "cart" -%}
+  cartValue = {{ cart.total_price | divided_by: 100.0 | json }};
+  cartItems = [
+  {%- for line in cart.items -%}
+    { item_id: {{ line.sku | default: line.variant_id | append: "" | json }}, item_name: {{ line.product.title | json }}, item_variant: {{ line.variant.title | json }}, item_brand: {{ line.vendor | json }}, item_category: {{ line.product.type | json }}, price: {{ line.final_price | divided_by: 100.0 | json }}, quantity: {{ line.quantity | json }} },
+  {%- endfor -%}
+  ];
+  {%- endif -%}
+  function grant(analytics, marketing) {
+    var m = marketing ? "granted" : "denied";
+    return { analytics_storage: analytics ? "granted" : "denied", ad_storage: m, ad_user_data: m, ad_personalization: m };
+  }
+  var started = false, queued = [];
+  function track(name, params) {
+    if (started) gtag("event", name, params); else queued.push([name, params]);
+  }
+  function start() {
+    if (started) return;
+    started = true;
+    var cp = window.Shopify && window.Shopify.customerPrivacy;
+    gtag("consent", "default", cp ? grant(cp.analyticsProcessingAllowed(), cp.marketingAllowed()) : grant(true, true));
+    gtag("js", new Date());
+    gtag("config", {{ _sa_ga4 | json }});
+    {%- if _sa_gads != "" -%}gtag("config", {{ _sa_gads | json }});{%- endif -%}
+    if (viewedItem) gtag("event", "view_item", { currency: currency, value: viewedItem.price, items: [Object.assign({ quantity: 1 }, viewedItem)] });
+    if (cartItems && cartItems.length) gtag("event", "view_cart", { currency: currency, value: cartValue, items: cartItems });
+    queued.forEach(function (q) { gtag("event", q[0], q[1]); });
+    queued = [];
+  }
+  document.addEventListener("visitorConsentCollected", function (e) {
+    var d = e.detail || {};
+    gtag("consent", "update", grant(d.analyticsAllowed, d.marketingAllowed));
+  });
+  if (window.Shopify && typeof window.Shopify.loadFeatures === "function") {
+    window.Shopify.loadFeatures([{ name: "consent-tracking-api", version: "0.1" }], start);
+    setTimeout(start, 2000);
+  } else {
+    start();
+  }
+  function money(n) { return Math.round(n * 100) / 100; }
+  function addToCart(items) {
+    var value = items.reduce(function (sum, i) { return sum + i.price * i.quantity; }, 0);
+    track("add_to_cart", { currency: currency, value: money(value), items: items });
+  }
+  if (typeof window.fetch === "function") {
+    var nativeFetch = window.fetch;
+    window.fetch = function (input) {
+      var request = nativeFetch.apply(this, arguments);
+      var url = String((input && input.url) || input || "");
+      if (/\/cart\/add(\.js)?(\?|$)/.test(url)) {
+        request.then(function (res) { return res.ok ? res.clone().json() : null; }).then(function (data) {
+          var lines = data ? (data.items || (data.variant_id ? [data] : [])) : [];
+          if (!lines.length) return;
+          addToCart(lines.map(function (l) {
+            return { item_id: l.sku || String(l.variant_id), item_name: l.product_title, item_variant: l.variant_title, item_brand: l.vendor, item_category: l.product_type, price: (l.final_price != null ? l.final_price : l.price) / 100, quantity: l.quantity };
+          }));
+        }).catch(function () {});
+      }
+      return request;
+    };
+  }
+  document.addEventListener("submit", function (e) {
+    var form = e.target;
+    if (e.defaultPrevented || !form || !/\/cart\/add/.test(form.getAttribute("action") || "")) return;
+    var idField = form.elements.namedItem("id"), qtyField = form.elements.namedItem("quantity");
+    var item = idField && variants[idField.value];
+    if (!item) return;
+    var qty = Math.max(1, parseInt(qtyField && qtyField.value, 10) || 1);
+    addToCart([Object.assign({}, item, { quantity: qty })]);
+  });
+  var scrolled = false;
+  function onScroll() {
+    var el = document.documentElement;
+    if (scrolled || !started || (window.scrollY + window.innerHeight) / Math.max(el.scrollHeight, 1) < 0.9) return;
+    scrolled = true;
+    window.removeEventListener("scroll", onScroll);
+    gtag("event", "scroll", { percent_scrolled: 90 });
+  }
+  window.addEventListener("scroll", onScroll, { passive: true });
+})();
 </script>
 {%- endif -%}
 {%- if _sa_fb != "" -%}
