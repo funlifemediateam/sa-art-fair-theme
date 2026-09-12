@@ -70,7 +70,29 @@
     endif
   endif
 
-  assign img_a = section.settings.image_a | default: p.featured_image
+  comment
+    2026-09-12: the class page picture can now be chosen per class from the
+    booking app's Class tab, separately from the grid card photo, so a class
+    can lead its own page with one shot and the Classes grid with another.
+
+      booking.hero_image   this picture      (blank = the class's main photo)
+      booking.hero_focal   top|middle|bottom (blank = the tuned default below)
+
+    The editor setting still wins, so a hand-placed image on one page is never
+    overwritten by the app.
+  endcomment
+  assign img_a = section.settings.image_a | default: p.metafields.booking.hero_image.value | default: p.featured_image
+
+  assign focal_y = section.settings.photo_focal_y
+  assign focal_pick = p.metafields.booking.hero_focal.value | downcase | strip
+  case focal_pick
+    when 'top'
+      assign focal_y = 0
+    when 'middle'
+      assign focal_y = 50
+    when 'bottom'
+      assign focal_y = 100
+  endcase
 -%}
 
 {%- comment -%}
@@ -209,10 +231,13 @@
       photos are upright (1080x1350 on every live class) and this box is wide,
       so a centred crop takes the head off — same focal-point fix, and the same
       35% default, as the artist hero and the artist index cards.
+
+      booking.hero_focal overrides that default per class (see focal_y above),
+      which is how the booking app's top/middle/bottom choice reaches the page.
     {% endcomment %}
     #shopify-section-{{ sid }} .rb-ch__media .rb-media { flex: 1 1 100%; }
     #shopify-section-{{ sid }} .rb-ch__media .rb-media img {
-      object-position: {{ section.settings.photo_focal_x }}% {{ section.settings.photo_focal_y }}%;
+      object-position: {{ section.settings.photo_focal_x }}% {{ focal_y }}%;
     }
   {%- endif -%}
 
@@ -371,7 +396,7 @@
       ],
       "info": "Class pages use one colour image. The pair is Hanre's original design — the teacher's photo runs off the right edge in black and white." },
     { "type": "image_picker", "id": "image_a", "label": "Class image",
-      "info": "Blank uses the product's featured image, or the teacher's photo if the class has none." },
+      "info": "Blank uses the picture chosen in the booking app's Class tab, then the product's featured image, then the teacher's photo if the class has none." },
     { "type": "range", "id": "photo_focal_x", "min": 0, "max": 100, "step": 1,
       "default": 50, "unit": "%", "label": "Focal point — horizontal" },
     { "type": "range", "id": "photo_focal_y", "min": 0, "max": 100, "step": 1,

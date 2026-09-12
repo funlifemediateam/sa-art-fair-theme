@@ -86,6 +86,15 @@
     width: 100%;
     aspect-ratio: {{ section.settings.image_ratio }};
   }
+  {% comment %}
+    The card box is close to square while class photos are upright, so a
+    centred crop can take a head off. booking.cover_focal (set per class in the
+    booking app's Class tab) publishes top/middle/bottom as --rb-cc-focal on
+    the card itself; a class that has not been given one keeps the centre.
+  {% endcomment %}
+  #shopify-section-{{ sid }} .rb-cc__media img {
+    object-position: 50% var(--rb-cc-focal, 50%);
+  }
   #shopify-section-{{ sid }} .rb-cc__panel {
     flex: 1 1 auto;
     display: flex;
@@ -445,12 +454,39 @@
             endif
           endif
           assign shown = shown | plus: 1
+
+          comment
+            2026-09-12: the grid card photo is chosen per class in the booking
+            app's Class tab, separately from the picture that leads the class's
+            own page, so one class can show a strong square shot here and the
+            teacher's portrait there.
+
+              booking.cover_image   this photo        (blank = the main photo)
+              booking.cover_focal   top|middle|bottom (blank = centred)
+          endcomment
+          assign card_img = item.metafields.booking.cover_image.value | default: item.featured_image
+          assign card_focal = ''
+          assign focal_pick = item.metafields.booking.cover_focal.value | downcase | strip
+          case focal_pick
+            when 'top'
+              assign card_focal = '0%'
+            when 'middle'
+              assign card_focal = '50%'
+            when 'bottom'
+              assign card_focal = '100%'
+          endcase
         -%}
         <article class="rb-cc__card rb-cc__card--{{ tone }}">
-          <a href="{{ item.url }}" class="rb-media rb-cc__media" tabindex="-1" aria-hidden="true">
-            {%- if item.featured_image != blank -%}
+          <a
+            href="{{ item.url }}"
+            class="rb-media rb-cc__media"
+            tabindex="-1"
+            aria-hidden="true"
+            {%- if card_focal != blank %} style="--rb-cc-focal: {{ card_focal }}"{% endif -%}
+          >
+            {%- if card_img != blank -%}
               {{
-                item.featured_image
+                card_img
                 | image_url: width: 900
                 | image_tag:
                   widths: '260, 400, 600, 900',
