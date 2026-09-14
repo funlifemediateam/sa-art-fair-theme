@@ -40,6 +40,7 @@
     gtag("consent", "default", cp ? grant(cp.analyticsProcessingAllowed(), cp.marketingAllowed()) : grant(true, true));
     gtag("js", new Date());
     gtag("config", {{ _sa_ga4 | json }});
+    setTimeout(function () { if (document.visibilityState === "visible") gtag("event", "engaged_view"); }, 11000);
     {%- if _sa_gads != "" -%}gtag("config", {{ _sa_gads | json }});{%- endif -%}
     if (viewedItem) gtag("event", "view_item", { currency: currency, value: viewedItem.price, items: [Object.assign({ quantity: 1 }, viewedItem)] });
     if (cartItems && cartItems.length) gtag("event", "view_cart", { currency: currency, value: cartValue, items: cartItems });
