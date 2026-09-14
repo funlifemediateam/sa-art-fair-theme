@@ -73,7 +73,7 @@
   endcomment
   assign script = section.settings.script
   if script == blank and section.settings.script_from_description and collection.description != blank
-    assign plain = collection.description | strip_html | strip | replace: '&nbsp;', ' '
+    assign plain = collection.description | replace: '</p>', ' </p>' | replace: '<br', ' <br' | replace: '</li>', ' </li>' | strip_html | strip | replace: '&nbsp;', ' '
     assign first = plain | split: '. ' | first | strip
     if first != blank
       unless first contains '.'

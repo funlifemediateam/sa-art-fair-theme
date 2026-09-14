@@ -27,7 +27,8 @@
 
   {%- if has_content -%}
     {%- assign artist_name = artist_col.title -%}
-    {%- assign artist_bio = artist_col.description | strip_html | strip_newlines | strip | truncatewords: 42 -%}
+    {%- comment -%} paragraph and line ends are spaced out first, or a multi-paragraph bio from the booking app's rich text box reads "one.Two" {%- endcomment -%}
+    {%- assign artist_bio = artist_col.description | replace: '</p>', ' </p>' | replace: '<br', ' <br' | replace: '</li>', ' </li>' | strip_html | strip_newlines | strip | truncatewords: 42 -%}
 
     <div class="product__description rte">
       <p><strong>About {{ artist_name }}</strong></p>

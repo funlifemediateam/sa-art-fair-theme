@@ -227,6 +227,8 @@
     font-size: var(--rb-fs-body-sm);
   }
   #shopify-section-{{ sid }} .rb-ac__bio p { margin: 0; }
+  #shopify-section-{{ sid }} .rb-ac__bio ul,
+  #shopify-section-{{ sid }} .rb-ac__bio ol { margin: 0; padding-left: 1.25em; }
 
   {%- if section.settings.bio_lines > 0 -%}
     /* A row is as tall as its longest bio, and the bios are client copy of
@@ -736,7 +738,7 @@
         { "type": "text", "id": "place", "label": "Place",
           "info": "Blank by default — the client asked for the location line off the cards." },
         { "type": "richtext", "id": "bio", "label": "Bio override",
-          "info": "Blank uses the collection description." },
+          "info": "Blank uses the artist's own bio (the collection description), edited in the booking app's Artists tab or on the collection in Shopify admin." },
         { "type": "image_picker", "id": "image", "label": "Artwork override",
           "info": "Blank uses the first piece in the collection." },
         { "type": "image_picker", "id": "portrait", "label": "Portrait",

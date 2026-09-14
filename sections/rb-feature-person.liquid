@@ -167,6 +167,8 @@
     color: {{ section.settings.text_color }};
   }
   #shopify-section-{{ sid }} .rb-fp__body p { margin: 0; }
+  #shopify-section-{{ sid }} .rb-fp__body ul,
+  #shopify-section-{{ sid }} .rb-fp__body ol { margin: 0; padding-left: 1.25em; }
 
   /* the comp stacks the two CTAs, left aligned, square-ish not stadium */
   #shopify-section-{{ sid }} .rb-fp__ctas {
@@ -320,7 +322,12 @@
     { "type": "text", "id": "name", "default": "Kerry Sassen", "label": "Name" },
     { "type": "richtext", "id": "body",
       "default": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.</p>",
-      "label": "Body" },
+      "label": "Body",
+      "info": "On the Store page this is the same bio as the booking app's Featured Artist tab; saving either one updates it.",
+      "visible_if": "{{ section.settings.source == 'manual' }}" },
+    { "type": "paragraph",
+      "content": "The text is the class teacher's own bio, so each class shows the right one. To change the words, edit the teacher in the booking app (Teachers tab) or their collection in Shopify admin.",
+      "visible_if": "{{ section.settings.source == 'product_teacher' }}" },
     { "type": "text", "id": "button_a_label", "default": "Browse collection", "label": "Button A label" },
     { "type": "url", "id": "button_a_link", "label": "Button A link",
       "info": "Blank links to the teacher's own page in 'class teacher' mode. The button is hidden when there is nothing to link to." },

@@ -32,7 +32,10 @@
 
       The first sentence is found with the same filter chain rb-person-hero
       uses, then removed by prefix rather than by rebuilding the string — the
-      two cannot drift apart that way.
+      two cannot drift apart that way. The chain spaces out paragraph and line
+      ends before strip_html: bios are written in a rich text box now
+      (2026-09-14), and "one.</p><p>Two" would otherwise read "one.Two" and hide
+      the sentence break.
 
       A few bios are one long run-on sentence with nothing left to hand over.
       Those keep the whole description: the hero cuts a long opening at 22
@@ -40,7 +43,7 @@
       X" with nothing under it reads far worse than an overlapping first line.
     endcomment
     if section.settings.skip_first_sentence
-      assign plain = collection.description | strip_html | strip | replace: '&nbsp;', ' '
+      assign plain = collection.description | replace: '</p>', ' </p>' | replace: '<br', ' <br' | replace: '</li>', ' </li>' | strip_html | strip | replace: '&nbsp;', ' '
       assign first = plain | split: '. ' | first | strip
       assign rest = plain | remove_first: first | remove_first: '. ' | strip
       if rest != blank
@@ -81,6 +84,8 @@
     color: {{ section.settings.body_color }};
   }
   #shopify-section-{{ sid }} .rb-ss__body p { margin: 0; }
+  #shopify-section-{{ sid }} .rb-ss__body ul,
+  #shopify-section-{{ sid }} .rb-ss__body ol { margin: 0; padding-left: 1.25em; text-align: left; display: inline-block; }
 </style>
 
 <div class="rb-section rb-ss">
@@ -109,7 +114,7 @@
       "label": "Body" },
     { "type": "checkbox", "id": "use_collection_description", "default": false,
       "label": "Use the collection description instead",
-      "info": "On a teacher or artist page that is their bio." },
+      "info": "On a teacher or artist page that is their bio. To change the words, edit the person in the booking app (Artists or Teachers tab) or the collection in Shopify admin." },
     { "type": "checkbox", "id": "skip_first_sentence", "default": false,
       "label": "Skip the first sentence",
       "info": "Switch on where the hero above already sets the first sentence in the script face, so the page does not say it twice." },

@@ -7,8 +7,12 @@
   Watercolour session." treatment in the comp.
 
   Notes are blocks so a class can carry Description and Costs, or more, in the
-  order the client wants. Leaving a block's body blank on a product page falls
-  back to the product description when that block has the fallback ticked.
+  order the client wants. A block with "Show the class's own description"
+  ticked prints the product description, and its Body box is hidden in the
+  theme editor: every class shares one template, so words typed there would
+  replace the description on all of them at once. The description itself is
+  edited in the booking app's Class tab or on the product in Shopify admin
+  (2026-09-14).
   A blank label prints no label line — the class templates keep both blank, as
   the client does not want "Description:" or "Costs:" headings on the page.
 {% endcomment %}
@@ -112,6 +116,8 @@
     color: {{ section.settings.body_color }};
   }
   #shopify-section-{{ sid }} .rb-cd__body p { margin: 0; }
+  #shopify-section-{{ sid }} .rb-cd__body ul,
+  #shopify-section-{{ sid }} .rb-cd__body ol { margin: 0; padding-left: 1.25em; }
   #shopify-section-{{ sid }} .rb-cd__cta { margin-top: clamp(16px, 1.72vw, 33px); }
 
   @media screen and (max-width: 749px) {
@@ -137,7 +143,7 @@
       {%- for block in section.blocks -%}
         {%- liquid
           assign body = block.settings.body
-          if body == blank and block.settings.use_product_description
+          if block.settings.use_product_description
             assign body = product.description
           endif
           assign body = body | replace: '[class]', v_class | replace: '[teacher]', v_teacher | replace: '[time]', v_time | replace: '[level]', v_level | replace: '[sessions]', v_sessions | replace: '[session_price]', v_session_price | replace: '[price]', v_price
@@ -209,11 +215,15 @@
       "settings": [
         { "type": "text", "id": "label", "label": "Label",
           "info": "Leave blank for no label line above the note." },
-        { "type": "richtext", "id": "body", "label": "Body",
-          "info": "Placeholders: [class] [teacher] [time] [level] [sessions] [session_price] [price]." },
         { "type": "checkbox", "id": "use_product_description", "default": false,
-          "label": "Fall back to the product description",
-          "info": "Only useful on a product template." }
+          "label": "Show the class's own description",
+          "info": "Only useful on a product template." },
+        { "type": "paragraph",
+          "content": "Each class has its own description, and it shows here automatically. To change the words, edit the class in the booking app (Classes, then Edit, then About this class) or the product in Shopify admin.",
+          "visible_if": "{{ block.settings.use_product_description }}" },
+        { "type": "richtext", "id": "body", "label": "Body",
+          "info": "Placeholders: [class] [teacher] [time] [level] [sessions] [session_price] [price].",
+          "visible_if": "{{ block.settings.use_product_description == false }}" }
       ]
     }
   ],
