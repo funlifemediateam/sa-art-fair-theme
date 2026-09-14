@@ -29,7 +29,7 @@
         "description": {
           "type": "note",
           "settings": {
-            "label": "Description:",
+            "label": "",
             "body": "",
             "use_product_description": true
           }
@@ -37,7 +37,7 @@
         "costs": {
           "type": "note",
           "settings": {
-            "label": "Costs:",
+            "label": "",
             "body": "<p>[session_price] per session<\/p>",
             "use_product_description": false
           }

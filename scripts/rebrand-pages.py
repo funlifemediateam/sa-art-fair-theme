@@ -363,7 +363,7 @@ def class_product_template():
                     "description": {
                         "type": "note",
                         "settings": {
-                            "label": "Description:",
+                            "label": "",
                             "body": "",
                             "use_product_description": True,
                         },
@@ -371,7 +371,7 @@ def class_product_template():
                     "costs": {
                         "type": "note",
                         "settings": {
-                            "label": "Costs:",
+                            "label": "",
                             "body": "<p>From [price] — [sessions] sessions</p>",
                             "use_product_description": False,
                         },

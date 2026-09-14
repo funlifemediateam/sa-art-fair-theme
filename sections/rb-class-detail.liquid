@@ -8,7 +8,9 @@
 
   Notes are blocks so a class can carry Description and Costs, or more, in the
   order the client wants. Leaving a block's body blank on a product page falls
-  back to the product description for the block labelled Description.
+  back to the product description when that block has the fallback ticked.
+  A blank label prints no label line — the class templates keep both blank, as
+  the client does not want "Description:" or "Costs:" headings on the page.
 {% endcomment %}
 
 {{ 'saf-rebrand.css' | asset_url | stylesheet_tag }}
@@ -205,7 +207,8 @@
       "type": "note",
       "name": "Note",
       "settings": [
-        { "type": "text", "id": "label", "default": "Description:", "label": "Label" },
+        { "type": "text", "id": "label", "label": "Label",
+          "info": "Leave blank for no label line above the note." },
         { "type": "richtext", "id": "body", "label": "Body",
           "info": "Placeholders: [class] [teacher] [time] [level] [sessions] [session_price] [price]." },
         { "type": "checkbox", "id": "use_product_description", "default": false,

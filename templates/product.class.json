@@ -38,7 +38,7 @@
           "type": "note",
           "settings": {
             "label": "",
-            "body": "<p>[session_price] per session<\/p>",
+            "body": "<p>From [price] — [sessions] sessions<\/p>",
             "use_product_description": false
           }
         }
@@ -139,65 +139,10 @@
         "more_label": "See all classes",
         "more_link": "\/collections\/classes"
       }
-    },
-    "pagenav": {
-      "type": "rb-page-nav",
-      "blocks": {
-        "classes": {
-          "type": "link",
-          "settings": {
-            "label": "Classes",
-            "link": "shopify:\/\/collections\/classes"
-          }
-        },
-        "workshops": {
-          "type": "link",
-          "settings": {
-            "label": "Workshops",
-            "link": "shopify:\/\/collections\/workshops"
-          }
-        },
-        "teachers": {
-          "type": "link",
-          "settings": {
-            "label": "Meet the Teachers",
-            "link": "\/pages\/the-team"
-          }
-        },
-        "contact": {
-          "type": "link",
-          "settings": {
-            "label": "Contact",
-            "link": "\/pages\/contact"
-          }
-        },
-        "link_gallery": {
-          "type": "gallery",
-          "settings": {
-            "label": "Gallery"
-          }
-        }
-      },
-      "block_order": [
-        "classes",
-        "workshops",
-        "teachers",
-        "link_gallery",
-        "contact"
-      ],
-      "settings": {
-        "aria_label": "Studio navigation",
-        "align": "center",
-        "background": "#ffffff",
-        "text_color": "#1e1e1e",
-        "accent_color": "#b00e3f",
-        "rule_color": "#e0e0e0"
-      }
     }
   },
   "order": [
     "hero",
-    "pagenav",
     "detail",
     "booking",
     "teacher",

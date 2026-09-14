@@ -14,7 +14,6 @@
         "button_label": "Book Now",
         "button_link": "",
         "media_mode": "single",
-        "image_a": "shopify:\/\/shop_images\/1.png",
         "photo_focal_x": 50,
         "photo_focal_y": 35,
         "image_a_width": 62,
@@ -49,17 +48,17 @@
             "link": "\/pages\/the-team"
           }
         },
+        "link_gallery": {
+          "type": "gallery",
+          "settings": {
+            "label": "Gallery"
+          }
+        },
         "contact": {
           "type": "link",
           "settings": {
             "label": "Contact",
             "link": "\/pages\/contact"
-          }
-        },
-        "link_gallery": {
-          "type": "gallery",
-          "settings": {
-            "label": "Gallery"
           }
         }
       },
@@ -85,7 +84,7 @@
         "description": {
           "type": "note",
           "settings": {
-            "label": "Description:",
+            "label": "",
             "body": "",
             "use_product_description": true
           }
@@ -93,7 +92,7 @@
         "costs": {
           "type": "note",
           "settings": {
-            "label": "Costs:",
+            "label": "",
             "body": "<p>[session_price] per session<\/p>",
             "use_product_description": false
           }
