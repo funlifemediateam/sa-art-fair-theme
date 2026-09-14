@@ -105,6 +105,18 @@
     lose its only image and render an empty grey box.
   endcomment
   if section.settings.media_mode != 'artwork_inset'
+    comment
+      2026-09-14: on a class page the one picture is the TEACHER's profile photo —
+      her collection image, set in the booking app (Teachers tab, or the Class
+      tab's profile photo slot), the same picture her teacher page leads with.
+      The class's own photos belong to the class hero above; the client pointed
+      at Petronella's page showing the class photo here and her portrait up
+      top, the wrong way round. An Artwork picked in the theme editor still
+      wins, and the class photo stays the fallback for a teacher with no photo.
+    endcomment
+    if section.settings.source == 'product_teacher' and section.settings.image == blank and portrait != blank
+      assign art = portrait
+    endif
     if art == blank
       assign art = portrait
     endif
@@ -367,8 +379,9 @@
         { "value": "single", "label": "One picture, no inset" },
         { "value": "artwork_inset", "label": "A work with the portrait set into it (the design)" }
       ],
-      "info": "The design lays a black-and-white portrait over the picture. 'One picture' drops it, as on the artist pages and class heroes. In class-teacher mode a class with no picture of its own then shows the teacher's photo." },
-    { "type": "image_picker", "id": "image", "label": "Artwork" },
+      "info": "The design lays a black-and-white portrait over the picture. 'One picture' drops it, as on the artist pages and class heroes. In class-teacher mode the one picture is the teacher's profile photo (set in the booking app); a teacher with no photo shows the class photo." },
+    { "type": "image_picker", "id": "image", "label": "Artwork",
+      "info": "On a class page leave this blank to show the teacher's profile photo. A picture here replaces it on this page only." },
     { "type": "range", "id": "panel_width", "min": 30, "max": 70, "step": 1,
       "default": 50, "unit": "%", "label": "Panel share of the row" },
     { "type": "range", "id": "min_height", "min": 260, "max": 900, "step": 10,
