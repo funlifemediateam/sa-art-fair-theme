@@ -56,7 +56,12 @@
            "Live bounce rate" calculated metric in GA4 read it the same day (GA4 only computes its own
            Engaged sessions in the overnight run). Session id comes from the _ga_<ID> cookie. */
         var sid = "", prev = "", key = "saf_engaged_sid";
-        try { var m = document.cookie.match(new RegExp("_ga_" + {{ _sa_ga4 | json }}.replace(/^G-/, "") + "=GS\d\.\d\.s(\d+)")); sid = m ? m[1] : String(Math.floor(Date.now() / 1800000)); } catch (e) { sid = String(Math.floor(Date.now() / 1800000)); }
+        try {
+          var ck = "_ga_" + {{ _sa_ga4 | json }}.replace(/^G-/, "") + "=", all = document.cookie.split(";"), raw = "";
+          for (var i = 0; i < all.length; i++) { var s = all[i].replace(/^\s+/, ""); if (s.indexOf(ck) === 0) { raw = s.slice(ck.length); break; } }
+          sid = raw && raw.indexOf(".s") > -1 ? raw.split(".s")[1].split("$")[0] : "";
+        } catch (e) {}
+        if (!sid) sid = String(Math.floor(Date.now() / 1800000));
         try { prev = localStorage.getItem(key) || ""; } catch (e) {}
         if (prev === sid) return;
         try { localStorage.setItem(key, sid); } catch (e) {}
