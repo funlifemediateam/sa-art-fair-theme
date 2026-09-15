@@ -8,7 +8,7 @@
         "texture": 100,
         "band_height": 560,
         "min_height": 260,
-        "mobile_ratio": "4 / 3",
+        "mobile_ratio": "4 \/ 3",
         "focal_x": 50,
         "focal_y": 50,
         "overlay_opacity": 0,
@@ -29,11 +29,11 @@
         "show_mark": false,
         "eyebrow": "Bookings are open",
         "eyebrow_color": "#b00e3f",
-        "heading": "<p>Five classes. One term. <em>Starting 4 October.</em></p>",
+        "heading": "<p>Five classes. One term. <em>Starting 4 October.<\/em><\/p>",
         "heading_color": "#1e1e1e",
         "accent_color": "#b00e3f",
         "heading_width": 1100,
-        "body": "<p>Small groups, working artists teaching them, everything you need on the day. Choose the class that fits your week, then drop in, pay monthly or book the full term.</p>",
+        "body": "<p>Small groups, working artists teaching them, everything you need on the day. Choose the class that fits your week, then drop in, pay monthly or book the full term.<\/p>",
         "body_color": "#1e1e1e",
         "body_width": 760,
         "background": "#ffffff",
@@ -49,7 +49,7 @@
         "collection": "term-4",
         "count": 12,
         "only_classes": true,
-        "eyebrow": "<p>Term 4 classes</p>",
+        "eyebrow": "<p>Term 4 classes<\/p>",
         "eyebrow_name": "",
         "teacher_filter": "",
         "intro": "",
@@ -70,7 +70,7 @@
         "button_label": "View Class",
         "columns": 3,
         "grid_width": 1300,
-        "image_ratio": "398 / 380",
+        "image_ratio": "398 \/ 380",
         "radius": 18,
         "background": "#ffffff",
         "pattern": "all_a",
@@ -92,7 +92,7 @@
             "icon": "easel",
             "number": "1.",
             "title": "Picking A Class",
-            "notes": "<p><strong>What To Expect</strong>Our classes vary by medium, teacher and experience level, with options for both adults and children. Most classes meet weekly for around two hours, with up to 10 classes each term.</p><p><strong>Materials</strong>Your teacher will share a materials list before your class, helping you gather everything you need to get creative — and keep creating at home.</p>"
+            "notes": "<p><strong>What To Expect<\/strong>Our classes vary by medium, teacher and experience level, with options for both adults and children. Most classes meet weekly for around two hours, with up to 10 classes each term.<\/p><p><strong>Materials<\/strong>Your teacher will share a materials list before your class, helping you gather everything you need to get creative — and keep creating at home.<\/p>"
           }
         },
         "book": {
@@ -101,7 +101,7 @@
             "icon": "palette",
             "number": "2.",
             "title": "Booking A Class",
-            "notes": "<p><strong>Simple Online Booking</strong>Find the class that feels right for you, choose your preferred day and time, and book your place online. Most classes welcome new students throughout the term, so you don’t always have to wait for the next one to begin.</p><p><strong>Missed A Class?</strong>Life happens. If you miss a class, you can make it up by joining another suitable class — giving you a little more flexibility in your creative week.</p>"
+            "notes": "<p><strong>Simple Online Booking<\/strong>Find the class that feels right for you, choose your preferred day and time, and book your place online. Most classes welcome new students throughout the term, so you don’t always have to wait for the next one to begin.<\/p><p><strong>Missed A Class?<\/strong>Life happens. If you miss a class, you can make it up by joining another suitable class — giving you a little more flexibility in your creative week.<\/p>"
           }
         },
         "package": {
@@ -110,7 +110,7 @@
             "icon": "laptop",
             "number": "3.",
             "title": "Pick A Package",
-            "notes": "<p><strong>Choose What Works For You</strong>Depending on the class, you can choose to drop in, pay monthly or book for the full term. Pick the option that suits your schedule and how you want to create.</p><p><strong>Paying Online</strong>Everything is handled online, making it simple to book your place, choose your payment option and get straight to the creative part.</p>"
+            "notes": "<p><strong>Choose What Works For You<\/strong>Depending on the class, you can choose to drop in, pay monthly or book for the full term. Pick the option that suits your schedule and how you want to create.<\/p><p><strong>Paying Online<\/strong>Everything is handled online, making it simple to book your place, choose your payment option and get straight to the creative part.<\/p>"
           }
         }
       },
@@ -133,22 +133,22 @@
       "type": "rb-split-band",
       "settings": {
         "eyebrow": "Not sure which one?",
-        "heading": "<p>Tell us what you want to make, and we’ll point you at the <em>right class</em>.</p>",
+        "heading": "<p>Tell us what you want to make, and we’ll point you at the <em>right class<\/em>.<\/p>",
         "heading_font": "serif",
         "heading_width": 520,
-        "body": "<p>A quick message is enough. We’ll come back to you with the class that fits, and hold a place while you decide.</p>",
+        "body": "<p>A quick message is enough. We’ll come back to you with the class that fits, and hold a place while you decide.<\/p>",
         "align": "center",
         "button_label": "Ask us on WhatsApp",
-        "button_link": "https://wa.me/27724778807?text=Hi%2C%20I%27d%20like%20to%20ask%20about%20the%20Term%204%20classes",
+        "button_link": "https:\/\/wa.me\/27724778807?text=Hi%2C%20I%27d%20like%20to%20ask%20about%20the%20Term%204%20classes",
         "panel_color": "#505a43",
         "text_color": "#ffffff",
         "accent_color": "#bea532",
         "texture": 100,
-        "image": "shopify://shop_images/saf-studio-team.jpg",
+        "image": "shopify:\/\/shop_images\/saf-studio-team.jpg",
         "media_side": "right",
         "panel_width": 50,
         "min_height": 480,
-        "mobile_ratio": "4 / 3",
+        "mobile_ratio": "4 \/ 3",
         "focal_x": 50,
         "focal_y": 50
       }
@@ -225,11 +225,11 @@
         "p4"
       ],
       "settings": {
-        "eyebrow": "<p>Who you’ll be learning from</p>",
-        "intro": "<p>Every class is led by a working artist from the studio.</p>",
+        "eyebrow": "<p>Who you’ll be learning from<\/p>",
+        "intro": "<p>Every class is led by a working artist from the studio.<\/p>",
         "intro_color": "#1e1e1e",
         "columns": 5,
-        "image_ratio": "227 / 200",
+        "image_ratio": "227 \/ 200",
         "background": "#ffffff",
         "tone_a": "#b00e3f",
         "tone_a_text": "#ffffff",
@@ -237,7 +237,7 @@
         "tone_b_text": "#ffffff",
         "texture": 0,
         "more_label": "Meet all our teachers",
-        "more_link": "/pages/the-team"
+        "more_link": "\/pages\/the-team"
       }
     }
   },

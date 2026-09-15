@@ -188,7 +188,38 @@
         <div class="rb-body rb-split__body">{{ section.settings.body }}</div>
       {%- endif -%}
 
-      {%- if section.settings.button_label != blank -%}
+      {%- liquid
+        comment
+          A WhatsApp (wa.me) button goes through 'rb-safe-contact', so the number
+          is never in the page source, and only renders while Theme settings →
+          Contact details → "Show contact details on site" is ticked. Any other
+          link renders as before.
+        endcomment
+        assign split_link = section.settings.button_link | strip
+        assign split_is_wa = false
+        assign split_wa_number = ''
+        assign split_wa_message = ''
+        if split_link contains 'wa.me/'
+          assign split_is_wa = true
+          assign split_wa_rest = split_link | split: 'wa.me/' | last
+          assign split_wa_number = split_wa_rest | split: '?' | first | split: '/' | first
+          if split_wa_rest contains 'text='
+            assign split_wa_message = split_wa_rest | split: 'text=' | last | split: '&' | first | url_decode
+          endif
+        endif
+      -%}
+      {%- if section.settings.button_label != blank and split_is_wa -%}
+        {%- if settings.contact_details_visible and split_wa_number != blank -%}
+          {%- render 'rb-safe-contact',
+            type: 'whatsapp',
+            value: split_wa_number,
+            message: split_wa_message,
+            label: section.settings.button_label,
+            display: 'label',
+            class: 'rb-btn rb-btn--serif rb-btn--ghost rb-split__cta'
+          -%}
+        {%- endif -%}
+      {%- elsif section.settings.button_label != blank -%}
         <a
           href="{{ section.settings.button_link | default: '#' }}"
           class="rb-btn rb-btn--serif rb-btn--ghost rb-split__cta"
@@ -259,7 +290,8 @@
         { "value": "left", "label": "Left (Studio)" }
       ] },
     { "type": "text", "id": "button_label", "label": "Button label" },
-    { "type": "url", "id": "button_link", "label": "Button link" },
+    { "type": "url", "id": "button_link", "label": "Button link",
+      "info": "A WhatsApp link (wa.me/…) is scrape-protected and only shows while Theme settings → Contact details is ticked." },
     { "type": "header", "content": "Protea mark" },
     { "type": "checkbox", "id": "show_mark", "default": false,
       "label": "Show the small protea mark",
