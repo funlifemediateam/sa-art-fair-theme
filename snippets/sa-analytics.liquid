@@ -50,7 +50,18 @@
       if (!(window.google_tag_manager && window.google_tag_manager[{{ _sa_ga4 | json }}])) return;
       awake = true;
       try { window.dispatchEvent(new Event("focus")); document.dispatchEvent(new Event("focus")); } catch (e) {}
-      setTimeout(function () { if (document.visibilityState === "visible") gtag("event", "engaged_view"); }, 11000);
+      setTimeout(function () {
+        if (document.visibilityState !== "visible") return;
+        /* engaged_view carries engaged=1 once per GA4 session; the "Engaged (live)" custom metric and
+           "Live bounce rate" calculated metric in GA4 read it the same day (GA4 only computes its own
+           Engaged sessions in the overnight run). Session id comes from the _ga_<ID> cookie. */
+        var sid = "", prev = "", key = "saf_engaged_sid";
+        try { var m = document.cookie.match(new RegExp("_ga_" + {{ _sa_ga4 | json }}.replace(/^G-/, "") + "=GS\d\.\d\.s(\d+)")); sid = m ? m[1] : String(Math.floor(Date.now() / 1800000)); } catch (e) { sid = String(Math.floor(Date.now() / 1800000)); }
+        try { prev = localStorage.getItem(key) || ""; } catch (e) {}
+        if (prev === sid) return;
+        try { localStorage.setItem(key, sid); } catch (e) {}
+        gtag("event", "engaged_view", { engaged: 1 });
+      }, 11000);
     }
     var wakeTimer = setInterval(function () { wake(); if (awake) clearInterval(wakeTimer); }, 250);
     setTimeout(function () { clearInterval(wakeTimer); }, 30000);
