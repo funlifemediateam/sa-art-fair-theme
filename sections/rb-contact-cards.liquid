@@ -1,0 +1,294 @@
+{% comment %}
+  Rebrand contact cards — one card per side of the business, side by side, so
+  a visitor picks the right team before they reach the form below it.
+
+  No Figma comp exists for this; it is composed from the two-path band's
+  vocabulary (stadium badge, IvyPresto italic heading, pill) at card size.
+
+  Email and phone come from Theme settings → Contact by path — the same four
+  fields the footer, the drawer call button and the WhatsApp button read — so
+  a number changes in ONE place. A block's own email / phone fields override
+  that for this card only.
+
+  Colours follow the header pills: The Studio = cherry (Make Art), The Store =
+  moss (Buy Art), so each card matches the button that brought people here.
+
+  No bottom padding by default: on /pages/contact the rb-contact band below
+  brings its own top padding, and doubling it opened a gap.
+{% endcomment %}
+
+{{ 'saf-rebrand.css' | asset_url | stylesheet_tag }}
+
+{%- assign sid = section.id -%}
+
+<style>
+  #shopify-section-{{ sid }} .rb-ccards {
+    background: {{ section.settings.background }};
+    padding-top: clamp(48px, 6.25vw, 120px);
+    padding-bottom: {% if section.settings.space_below %}clamp(48px, 6.25vw, 120px){% else %}0{% endif %};
+  }
+  #shopify-section-{{ sid }} .rb-ccards__title {
+    margin: 0 0 clamp(24px, 3.02vw, 58px);
+    text-align: center;
+    color: inherit;
+  }
+  #shopify-section-{{ sid }} .rb-ccards__grid {
+    display: grid;
+    grid-template-columns: repeat({{ section.blocks.size | at_least: 1 }}, minmax(0, 1fr));
+    gap: clamp(16px, 2.08vw, 40px);
+  }
+  #shopify-section-{{ sid }} .rb-ccards__card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    box-sizing: border-box;
+    padding: clamp(32px, 3.65vw, 70px) clamp(20px, 2.6vw, 50px);
+    background: var(--rb-cc-bg);
+    color: var(--rb-cc-fg);
+  }
+  #shopify-section-{{ sid }} .rb-ccards__badge {
+    width: clamp(52px, 4.17vw, 80px);
+    margin-bottom: clamp(14px, 1.56vw, 30px);
+  }
+  /* color: inherit is load-bearing — base.css gives h2 an explicit ink colour,
+     which beats the card's inherited one and renders the name black on cherry */
+  #shopify-section-{{ sid }} .rb-ccards__heading {
+    margin: 0;
+    font-family: var(--rb-serif);
+    font-weight: 300;
+    font-style: italic;
+    font-size: var(--rb-fs-name);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    color: inherit;
+  }
+  #shopify-section-{{ sid }} .rb-ccards__body {
+    margin: clamp(10px, 1.04vw, 20px) 0 0;
+    max-width: 34ch;
+  }
+  #shopify-section-{{ sid }} .rb-ccards__body p { margin: 0; }
+
+  #shopify-section-{{ sid }} .rb-ccards__details {
+    width: 100%;
+    max-width: 420px;
+    margin: clamp(20px, 2.08vw, 40px) 0 0;
+    padding: clamp(18px, 1.88vw, 36px) 0 0;
+    border-top: 1px solid color-mix(in srgb, var(--rb-cc-fg) 35%, transparent);
+    list-style: none;
+  }
+  #shopify-section-{{ sid }} .rb-ccards__detail + .rb-ccards__detail {
+    margin-top: clamp(12px, 1.25vw, 24px);
+  }
+  #shopify-section-{{ sid }} .rb-ccards__label {
+    display: block;
+    margin: 0 0 2px;
+    font-family: var(--rb-sans);
+    font-weight: 600;
+    font-size: var(--rb-fs-meta);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    opacity: 0.8;
+  }
+  #shopify-section-{{ sid }} .rb-ccards__value {
+    font-family: var(--rb-sans);
+    font-size: var(--rb-fs-body-sm);
+    line-height: 1.35;
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+    overflow-wrap: anywhere;
+  }
+  #shopify-section-{{ sid }} .rb-ccards__value:hover { text-decoration-thickness: 2px; }
+
+  #shopify-section-{{ sid }} .rb-ccards__wa {
+    gap: 0.6em;
+    margin-top: clamp(20px, 2.08vw, 40px);
+    background: var(--rb-cc-btn-bg);
+    color: var(--rb-cc-btn-fg);
+    border-color: var(--rb-cc-btn-bg);
+  }
+  #shopify-section-{{ sid }} .rb-ccards__wa:hover {
+    background: transparent;
+    color: var(--rb-cc-btn-bg);
+  }
+  #shopify-section-{{ sid }} .rb-ccards__wa svg {
+    width: 1.35em;
+    height: 1.35em;
+    flex: none;
+    fill: currentColor;
+  }
+  /* the shared cherry focus ring vanishes on a cherry card */
+  #shopify-section-{{ sid }} .rb-ccards__card a:focus-visible {
+    outline: 2px solid var(--rb-cc-fg);
+    outline-offset: 3px;
+  }
+
+  @media screen and (max-width: 749px) {
+    #shopify-section-{{ sid }} .rb-ccards__grid { grid-template-columns: 1fr; }
+  }
+
+  {%- for block in section.blocks -%}
+    #shopify-section-{{ sid }} [data-blk="{{ block.id }}"] {
+      --rb-cc-bg: {{ block.settings.background }};
+      --rb-cc-fg: {{ block.settings.text_color }};
+      --rb-cc-btn-bg: {{ block.settings.button_bg }};
+      --rb-cc-btn-fg: {{ block.settings.button_text | default: block.settings.background }};
+    }
+  {%- endfor -%}
+</style>
+
+<div class="rb-section rb-ccards">
+  <div class="rb-container">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="rb-section-title rb-ccards__title">{{ section.settings.heading | escape }}</h2>
+    {%- endif -%}
+
+    <div class="rb-ccards__grid">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          if block.settings.side == 'store'
+            assign cc_email = settings.saf_contact_a_email
+            assign cc_phone = settings.saf_contact_a_phone
+            assign cc_badge = 'saf-badge-store.png'
+          else
+            assign cc_email = settings.saf_contact_b_email
+            assign cc_phone = settings.saf_contact_b_phone
+            assign cc_badge = 'saf-badge-studio.png'
+          endif
+          if block.settings.email != blank
+            assign cc_email = block.settings.email
+          endif
+          if block.settings.phone != blank
+            assign cc_phone = block.settings.phone
+          endif
+          assign cc_email = cc_email | strip
+          assign cc_phone = cc_phone | strip
+          assign cc_tel = cc_phone | remove: ' ' | remove: '-' | remove: '(' | remove: ')' | remove: '.'
+          assign cc_digits = cc_tel | remove: '+'
+          assign cc_wa_msg = block.settings.whatsapp_message | default: settings.saf_whatsapp_message
+        -%}
+        <div class="rb-ccards__card" data-blk="{{ block.id }}" {{ block.shopify_attributes }}>
+          {%- if section.settings.show_badge -%}
+            <img
+              src="{{ cc_badge | asset_url }}"
+              alt=""
+              width="253"
+              height="395"
+              class="rb-badge rb-ccards__badge"
+              loading="lazy"
+            >
+          {%- endif -%}
+
+          {%- if block.settings.heading != blank -%}
+            <h2 class="rb-ccards__heading">{{ block.settings.heading | escape }}</h2>
+          {%- endif -%}
+
+          {%- if block.settings.body != blank -%}
+            <div class="rb-body rb-ccards__body">{{ block.settings.body }}</div>
+          {%- endif -%}
+
+          {%- if cc_email != blank or cc_phone != blank -%}
+            <ul class="rb-ccards__details" role="list">
+              {%- if cc_email != blank -%}
+                <li class="rb-ccards__detail">
+                  <span class="rb-ccards__label">{{ block.settings.email_label | escape }}</span>
+                  <a class="rb-ccards__value" href="mailto:{{ cc_email }}">{{ cc_email | escape }}</a>
+                </li>
+              {%- endif -%}
+              {%- if cc_phone != blank -%}
+                <li class="rb-ccards__detail">
+                  <span class="rb-ccards__label">{{ block.settings.phone_label | escape }}</span>
+                  <a class="rb-ccards__value" href="tel:{{ cc_tel }}">{{ cc_phone | escape }}</a>
+                </li>
+              {%- endif -%}
+            </ul>
+          {%- endif -%}
+
+          {%- if block.settings.show_whatsapp and cc_digits != blank -%}
+            <a
+              class="rb-btn rb-ccards__wa"
+              href="https://wa.me/{{ cc_digits }}{% if cc_wa_msg != blank %}?text={{ cc_wa_msg | url_encode }}{% endif %}"
+              target="_blank"
+              rel="noopener"
+            >
+              <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+                <path d="M16.004 3.2c-7.06 0-12.8 5.74-12.8 12.8 0 2.256.59 4.46 1.712 6.404L3.2 28.8l6.57-1.712A12.74 12.74 0 0 0 16.004 28.8c7.06 0 12.8-5.74 12.8-12.8s-5.74-12.8-12.8-12.8zm0 23.424c-2.01 0-3.98-.54-5.7-1.562l-.408-.242-4.06 1.058 1.084-3.96-.266-.42a10.6 10.6 0 0 1-1.62-5.62c0-5.86 4.77-10.63 10.63-10.63 2.84 0 5.51 1.106 7.52 3.114a10.56 10.56 0 0 1 3.11 7.52c0 5.86-4.77 10.634-10.63 10.634zm5.83-7.96c-.32-.16-1.89-.932-2.182-1.038-.292-.106-.505-.16-.718.16-.213.32-.824 1.038-1.01 1.25-.186.214-.372.24-.692.08-.32-.16-1.35-.498-2.57-1.586-.95-.848-1.592-1.895-1.778-2.215-.186-.32-.02-.492.14-.652.144-.143.32-.372.48-.558.16-.186.213-.32.32-.532.107-.214.054-.4-.026-.56-.08-.16-.718-1.73-.984-2.37-.26-.622-.522-.538-.718-.548l-.612-.01c-.213 0-.56.08-.852.4-.292.32-1.117 1.092-1.117 2.662s1.143 3.088 1.303 3.302c.16.214 2.25 3.436 5.45 4.818.762.33 1.356.526 1.82.673.765.243 1.46.209 2.01.127.613-.092 1.89-.772 2.156-1.518.266-.746.266-1.386.186-1.518-.08-.133-.292-.213-.612-.373z"/>
+              </svg>
+              <span>{{ block.settings.whatsapp_label | escape }}</span>
+            </a>
+          {%- endif -%}
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Rebrand contact cards",
+  "tag": "section",
+  "class": "rb-section-wrapper",
+  "max_blocks": 3,
+  "settings": [
+    { "type": "paragraph",
+      "content": "One card per team. Emails and phone numbers come from Theme settings → Contact by path, so they stay in step with the footer and the WhatsApp button." },
+    { "type": "text", "id": "heading", "label": "Heading", "info": "Optional line above the cards." },
+    { "type": "checkbox", "id": "show_badge", "default": true, "label": "Show protea badge" },
+    { "type": "checkbox", "id": "space_below", "default": false, "label": "Add space below",
+      "info": "Leave off when the contact form band follows — it brings its own spacing." },
+    { "type": "color", "id": "background", "default": "#ffffff", "label": "Background" }
+  ],
+  "blocks": [
+    {
+      "type": "contact",
+      "name": "Contact card",
+      "settings": [
+        { "type": "select", "id": "side", "label": "Team", "default": "studio",
+          "info": "Picks the email, phone and badge from Theme settings → Contact by path.",
+          "options": [
+            { "value": "studio", "label": "The Studio (Make Art)" },
+            { "value": "store", "label": "The Store (Buy Art)" }
+          ] },
+        { "type": "text", "id": "heading", "default": "The Studio", "label": "Heading" },
+        { "type": "richtext", "id": "body",
+          "default": "<p>Classes, workshops and studio bookings.</p>",
+          "label": "What to contact this team about" },
+        { "type": "header", "content": "Details" },
+        { "type": "text", "id": "email", "label": "Email override",
+          "info": "Leave blank to use the team's email from Theme settings." },
+        { "type": "text", "id": "phone", "label": "Phone override",
+          "info": "Leave blank to use the team's phone from Theme settings. International format, e.g. +27 72 477 8807." },
+        { "type": "text", "id": "email_label", "default": "Email", "label": "Email label" },
+        { "type": "text", "id": "phone_label", "default": "Call", "label": "Phone label" },
+        { "type": "checkbox", "id": "show_whatsapp", "default": true, "label": "Show WhatsApp button",
+          "info": "Turn off if this team's number is not on WhatsApp." },
+        { "type": "text", "id": "whatsapp_label", "default": "WhatsApp us", "label": "WhatsApp button label" },
+        { "type": "text", "id": "whatsapp_message", "label": "WhatsApp pre-filled message",
+          "info": "Blank uses the message from Theme settings → WhatsApp button." },
+        { "type": "header", "content": "Colour" },
+        { "type": "color", "id": "background", "default": "#b00e3f", "label": "Card colour" },
+        { "type": "color", "id": "text_color", "default": "#ffffff", "label": "Text colour" },
+        { "type": "color", "id": "button_bg", "default": "#ffffff", "label": "Button background" },
+        { "type": "color", "id": "button_text", "label": "Button label colour",
+          "info": "Blank uses the card colour." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Rebrand contact cards",
+      "blocks": [
+        { "type": "contact" },
+        { "type": "contact", "settings": {
+          "side": "store",
+          "heading": "The Store",
+          "body": "<p>Buying art, orders and deliveries.</p>",
+          "background": "#505a43"
+        } }
+      ]
+    }
+  ]
+}
+{% endschema %}

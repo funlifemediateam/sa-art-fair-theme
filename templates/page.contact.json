@@ -1,34 +1,101 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
-    "main": {
-      "type": "main-page",
+    "hero": {
+      "type": "rb-hero",
       "settings": {
-        "padding_top": 36,
-        "padding_bottom": 36
+        "fill": "colour",
+        "background": "#0c3642",
+        "texture": 100,
+        "image": "shopify:\/\/shop_images\/tissuepaper_background__0f3642_SA_Art_Fair.webp",
+        "image_blend": "normal",
+        "image_rotate": "0",
+        "band_height": 560,
+        "min_height": 240,
+        "mobile_ratio": "4 \/ 3",
+        "focal_x": 50,
+        "focal_y": 50,
+        "overlay_color": "#1e1e1e",
+        "overlay_opacity": 0,
+        "show_mark": true,
+        "mark": "saaf",
+        "mark_width": 130,
+        "heading": "Contact",
+        "auto_heading": false,
+        "heading_style": "page_title",
+        "text_color": "#ffffff",
+        "button_label": "",
+        "button_link": ""
       }
     },
-    "form": {
-      "type": "contact-form",
+    "cards": {
+      "type": "rb-contact-cards",
+      "blocks": {
+        "studio": {
+          "type": "contact",
+          "settings": {
+            "side": "studio",
+            "heading": "The Studio",
+            "body": "<p>Classes, workshops and studio bookings.<\/p>",
+            "email_label": "Email",
+            "phone_label": "Call",
+            "show_whatsapp": true,
+            "whatsapp_label": "WhatsApp us",
+            "background": "#b00e3f",
+            "text_color": "#ffffff",
+            "button_bg": "#ffffff"
+          }
+        },
+        "store": {
+          "type": "contact",
+          "settings": {
+            "side": "store",
+            "heading": "The Store",
+            "body": "<p>Buying art, orders and deliveries.<\/p>",
+            "email_label": "Email",
+            "phone_label": "Call",
+            "show_whatsapp": true,
+            "whatsapp_label": "WhatsApp us",
+            "background": "#505a43",
+            "text_color": "#ffffff",
+            "button_bg": "#ffffff"
+          }
+        }
+      },
+      "block_order": [
+        "studio",
+        "store"
+      ],
       "settings": {
-        "heading": "",
-        "heading_size": "h1",
-        "color_scheme": "scheme-1",
-        "padding_top": 36,
-        "padding_bottom": 36
+        "show_badge": true,
+        "space_below": false,
+        "background": "#ffffff"
+      }
+    },
+    "contact": {
+      "type": "rb-contact",
+      "settings": {
+        "heading": "<p><em>Established<\/em> in the valley of the Cape Peninsula.<\/p>",
+        "heading_color": "#1e1e1e",
+        "heading_accent": "#bea532",
+        "map_width": 50,
+        "map_embed": "https:\/\/maps.google.com\/maps?q=SA+Art+Fair+Hout+Bay+Cape+Town&t=&z=13&ie=UTF8&iwloc=&output=embed",
+        "map_alt": "Map to the SA Art Fair studio",
+        "map_grayscale": 100,
+        "form_label": "Get in touch",
+        "name_label": "Name + Surname",
+        "email_label": "Email Address",
+        "message_label": "Message",
+        "submit_label": "Submit",
+        "success_message": "Thanks — we will be in touch shortly.",
+        "text_color": "#1e1e1e",
+        "rule_color": "#1e1e1e",
+        "background": "#ffffff"
       }
     }
   },
   "order": [
-    "main",
-    "form"
+    "hero",
+    "cards",
+    "contact"
   ]
 }
