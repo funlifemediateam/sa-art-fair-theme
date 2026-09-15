@@ -40,7 +40,24 @@
     gtag("consent", "default", cp ? grant(cp.analyticsProcessingAllowed(), cp.marketingAllowed()) : grant(true, true));
     gtag("js", new Date());
     gtag("config", {{ _sa_ga4 | json }});
-    setTimeout(function () { if (document.visibilityState === "visible") gtag("event", "engaged_view"); }, 11000);
+    /* GA4 only runs its engagement clock while the page reports keyboard focus. Meta/Instagram in-app
+       browsers (most of our traffic) never report it, so sessions never reached the 10s "engaged" mark
+       until the overnight batch and the live bounce rate read 100%. Once gtag has loaded, tell it the
+       page is focused whenever it is visible, then send engaged_view 11s later with the engaged flag set. */
+    var awake = false;
+    function wake() {
+      if (awake || document.visibilityState !== "visible") return;
+      if (!(window.google_tag_manager && window.google_tag_manager[{{ _sa_ga4 | json }}])) return;
+      awake = true;
+      try { window.dispatchEvent(new Event("focus")); document.dispatchEvent(new Event("focus")); } catch (e) {}
+      setTimeout(function () { if (document.visibilityState === "visible") gtag("event", "engaged_view"); }, 11000);
+    }
+    var wakeTimer = setInterval(function () { wake(); if (awake) clearInterval(wakeTimer); }, 250);
+    setTimeout(function () { clearInterval(wakeTimer); }, 30000);
+    document.addEventListener("visibilitychange", function () {
+      if (document.visibilityState !== "visible") return;
+      if (awake) { try { window.dispatchEvent(new Event("focus")); } catch (e) {} } else wake();
+    });
     {%- if _sa_gads != "" -%}gtag("config", {{ _sa_gads | json }});{%- endif -%}
     if (viewedItem) gtag("event", "view_item", { currency: currency, value: viewedItem.price, items: [Object.assign({ quantity: 1 }, viewedItem)] });
     if (cartItems && cartItems.length) gtag("event", "view_cart", { currency: currency, value: cartValue, items: cartItems });
