@@ -40,33 +40,46 @@
     gtag("consent", "default", cp ? grant(cp.analyticsProcessingAllowed(), cp.marketingAllowed()) : grant(true, true));
     gtag("js", new Date());
     gtag("config", {{ _sa_ga4 | json }});
-    /* GA4 only runs its engagement clock while the page reports keyboard focus. Meta/Instagram in-app
-       browsers (most of our traffic) never report it, so sessions never reached the 10s "engaged" mark
-       until the overnight batch and the live bounce rate read 100%. Once gtag has loaded, tell it the
-       page is focused whenever it is visible, then send engaged_view 11s later with the engaged flag set. */
+    /* GA4 marks a session "engaged" if it lasts 10s, OR reaches a 2nd page view, OR fires a key event —
+       but it only applies those rules itself in the overnight run, and its own 10s clock runs only while
+       the page reports keyboard focus, which Meta/Instagram in-app browsers (most of our traffic) never do.
+       So the live bounce rate read 100% all day. Below: once gtag has loaded, tell it the page is focused
+       whenever it is visible, and mark the session engaged the same day on either of GA4's own rules —
+       a 2nd page view (immediately) or 10s on the page. One engaged_view per session, carrying engaged=1
+       for the "Engaged (live)" custom metric. */
+    var _ga4id = {{ _sa_ga4 | json }};
+    function sessionId() {
+      try {
+        var ck = "_ga_" + _ga4id.replace(/^G-/, "") + "=", all = document.cookie.split(";"), raw = "";
+        for (var i = 0; i < all.length; i++) { var s = all[i].replace(/^\s+/, ""); if (s.indexOf(ck) === 0) { raw = s.slice(ck.length); break; } }
+        if (raw && raw.indexOf(".s") > -1) return raw.split(".s")[1].split("$")[0];
+      } catch (e) {}
+      return String(Math.floor(Date.now() / 1800000));
+    }
+    function markEngaged(ms) {
+      var sid = sessionId(), key = "saf_engaged_sid";
+      try { if (localStorage.getItem(key) === sid) return; localStorage.setItem(key, sid); } catch (e) {}
+      /* engagement_time_msec pushes GA4 past its own 10s bar so the session counts as engaged today,
+         not only after the overnight run. */
+      gtag("event", "engaged_view", ms ? { engaged: 1, engagement_time_msec: ms } : { engaged: 1 });
+    }
+    function countView() {
+      var sid = sessionId(), key = "saf_views_" + sid, n = 0;
+      try {
+        for (var i = localStorage.length - 1; i >= 0; i--) { var k = localStorage.key(i); if (k && k.indexOf("saf_views_") === 0 && k !== key) localStorage.removeItem(k); }
+        n = (parseInt(localStorage.getItem(key), 10) || 0) + 1;
+        localStorage.setItem(key, String(n));
+      } catch (e) { return; }
+      if (n >= 2) markEngaged(10001);
+    }
     var awake = false;
     function wake() {
       if (awake || document.visibilityState !== "visible") return;
-      if (!(window.google_tag_manager && window.google_tag_manager[{{ _sa_ga4 | json }}])) return;
+      if (!(window.google_tag_manager && window.google_tag_manager[_ga4id])) return;
       awake = true;
       try { window.dispatchEvent(new Event("focus")); document.dispatchEvent(new Event("focus")); } catch (e) {}
-      setTimeout(function () {
-        if (document.visibilityState !== "visible") return;
-        /* engaged_view carries engaged=1 once per GA4 session; the "Engaged (live)" custom metric and
-           "Live bounce rate" calculated metric in GA4 read it the same day (GA4 only computes its own
-           Engaged sessions in the overnight run). Session id comes from the _ga_<ID> cookie. */
-        var sid = "", prev = "", key = "saf_engaged_sid";
-        try {
-          var ck = "_ga_" + {{ _sa_ga4 | json }}.replace(/^G-/, "") + "=", all = document.cookie.split(";"), raw = "";
-          for (var i = 0; i < all.length; i++) { var s = all[i].replace(/^\s+/, ""); if (s.indexOf(ck) === 0) { raw = s.slice(ck.length); break; } }
-          sid = raw && raw.indexOf(".s") > -1 ? raw.split(".s")[1].split("$")[0] : "";
-        } catch (e) {}
-        if (!sid) sid = String(Math.floor(Date.now() / 1800000));
-        try { prev = localStorage.getItem(key) || ""; } catch (e) {}
-        if (prev === sid) return;
-        try { localStorage.setItem(key, sid); } catch (e) {}
-        gtag("event", "engaged_view", { engaged: 1 });
-      }, 11000);
+      countView();
+      setTimeout(function () { if (document.visibilityState === "visible") markEngaged(0); }, 11000);
     }
     var wakeTimer = setInterval(function () { wake(); if (awake) clearInterval(wakeTimer); }, 250);
     setTimeout(function () { clearInterval(wakeTimer); }, 30000);
