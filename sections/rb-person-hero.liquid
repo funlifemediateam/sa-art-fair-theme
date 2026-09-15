@@ -258,6 +258,58 @@
     assign show_portfolio = true
   endif
 
+  comment
+    "See Classes" is the mirror image, on an ARTIST page: someone who sells
+    work here and also teaches gets a button to their teacher page, but only
+    while one of their classes can actually be booked.
+
+    booking_app.artist_meta gives this artist's teacher collection id. Liquid
+    cannot fetch a collection by id, so the id is found on the classes
+    themselves: every class also sits in its teacher's collection. The live
+    classes are listed in classes (and workshops); classes-workshops is where
+    the booking app files them but it is not published to the storefront, so
+    it comes last and only counts if that ever changes. An artist the map
+    does not know yet falls back to a class collection with the same title
+    under another handle.
+
+    A teacher page never matches — its classes carry no second collection of
+    the same title, and the map is keyed by artist handles — so the button
+    stays off there, where the classes are already listed below.
+  endcomment
+  assign classes_url = ''
+  if section.settings.classes_label != blank and collection != blank
+    assign class_teacher_id = shop.metafields.booking_app.artist_meta.value[collection.handle].teacherId
+    assign class_sources = 'classes,workshops,classes-workshops' | split: ','
+    for class_source in class_sources
+      for class_item in collections[class_source].products
+        unless class_item.available
+          continue
+        endunless
+        for class_col in class_item.collections
+          if class_teacher_id != blank
+            if class_col.id == class_teacher_id
+              assign classes_url = class_col.url
+              break
+            endif
+          elsif class_col.handle != collection.handle and class_col.title == collection.title
+            assign classes_url = class_col.url
+            break
+          endif
+        endfor
+        if classes_url != blank
+          break
+        endif
+      endfor
+      if classes_url != blank
+        break
+      endif
+    endfor
+  endif
+  assign show_classes = false
+  if classes_url != blank
+    assign show_classes = true
+  endif
+
   assign social_url = section.settings.social_url
   if social_url == blank and person_socials != blank
     assign social_url = person_socials.instagram
@@ -436,7 +488,7 @@
         </ul>
       {%- endif -%}
 
-      {%- if social_url != blank or show_portfolio -%}
+      {%- if social_url != blank or show_portfolio or show_classes -%}
         <div class="rb-ph__actions">
           {%- if social_url != blank -%}
             <a href="{{ social_url }}" class="rb-ph__social"
@@ -448,6 +500,11 @@
             <a href="{{ portfolio_url }}" class="rb-btn rb-btn--plain rb-btn--outline"
                {% if portfolio_external %}target="_blank" rel="noopener"{% endif %}>
               {{- section.settings.button_label | escape -}}
+            </a>
+          {%- endif -%}
+          {%- if show_classes -%}
+            <a href="{{ classes_url }}" class="rb-btn rb-btn--plain rb-btn--outline">
+              {{- section.settings.classes_label | escape -}}
             </a>
           {%- endif -%}
         </div>
@@ -524,6 +581,8 @@
       "info": "The teacher page uses 'See Portfolio'." },
     { "type": "url", "id": "button_link", "label": "Button link",
       "info": "Blank goes to this teacher's own artist page when they have work on sale, otherwise to the website saved for them in the admin app. The button is hidden when there is neither." },
+    { "type": "text", "id": "classes_label", "label": "Classes button label", "default": "See Classes",
+      "info": "Artist pages. Shows only when this artist also teaches and has a class on sale, and goes to their teacher page. Blank hides it." },
     { "type": "header", "content": "Layout" },
     { "type": "select", "id": "align", "label": "Text alignment", "default": "left",
       "options": [
