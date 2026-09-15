@@ -202,28 +202,41 @@
 
   comment
     "See Portfolio" on a teacher page belongs on that person's ARTIST
-    collection. Someone who both teaches and exhibits has two collections
-    sharing one title — "Susan Orpen" as susan-orpen-1 (teacher) and
-    susan-orpen (artist).
+    collection. Someone who both teaches and sells work here has two
+    collections sharing one title — careshia-esperanza (teacher) and
+    careisha-esperanza (artist), zara-leigh-farinha-1 and -2.
 
-    Handleizing the title to find the twin looked obvious and was wrong:
-    "Zara-Leigh Farinha" handleizes to zara-leigh-farinha, which is a stale
-    collection, while her real artist page is zara-leigh. So the twin is found
-    through the work instead — the two collections share products, so the
-    first collection on one of this person's pieces that carries the same
-    title under a different handle is the one wanted.
+    The admin app already pairs them: booking_app.artist_meta maps every
+    artist collection handle to its teacher collection id, and is rebuilt
+    whenever a teacher or artist is added, removed or converted. That map is
+    read first. Handles can't be guessed (the two above differ by a spelling
+    and a suffix), and finding the twin through a shared product never fired
+    live: a teacher collection holds the classes, not the artwork, so Zara-Leigh
+    and Careshia both had work on sale and no button. The shared-product search
+    stays as a second try.
 
-    A teacher who sells nothing here but keeps a portfolio of their own falls
-    back to that site — Susan Orpen shows work at susanorpenfineart.co.za and
-    has no collection on this store, so without the fallback her page carries
-    her name and nothing else. A teacher with neither resolves to nothing and
-    the button is dropped rather than left pointing at "#".
+    Either way the artist collection must have something on sale, so the
+    button never opens an empty page. A teacher who sells nothing here but
+    keeps a portfolio of their own falls back to that site — Susan Orpen,
+    susanorpenfineart.co.za. A teacher with neither gets no button rather than
+    one pointing at "#".
   endcomment
   assign portfolio_url = section.settings.button_link
   if portfolio_url == blank and collection != blank
+    for pair in shop.metafields.booking_app.artist_meta.value
+      if pair[1].teacherId == collection.id and pair[0] != collection.handle
+        assign artist_twin = collections[pair[0]]
+        if artist_twin.products_count > 0
+          assign portfolio_url = artist_twin.url
+          break
+        endif
+      endif
+    endfor
+  endif
+  if portfolio_url == blank and collection != blank
     for item in collection.products limit: 4
       for sibling in item.collections
-        if sibling.handle != collection.handle and sibling.title == collection.title
+        if sibling.handle != collection.handle and sibling.title == collection.title and sibling.products_count > 0
           assign portfolio_url = sibling.url
           break
         endif
@@ -510,7 +523,7 @@
     { "type": "text", "id": "button_label", "label": "Button label",
       "info": "The teacher page uses 'See Portfolio'." },
     { "type": "url", "id": "button_link", "label": "Button link",
-      "info": "Blank looks for a collection with the same title — a teacher's own artist page. The button is hidden when there is none." },
+      "info": "Blank goes to this teacher's own artist page when they have work on sale, otherwise to the website saved for them in the admin app. The button is hidden when there is neither." },
     { "type": "header", "content": "Layout" },
     { "type": "select", "id": "align", "label": "Text alignment", "default": "left",
       "options": [
