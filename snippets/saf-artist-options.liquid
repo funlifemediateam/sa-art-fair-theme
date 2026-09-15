@@ -1,0 +1,44 @@
+{% comment %}
+  Artist <option> list for the artwork filters.
+
+  Shopify's `collection.all_vendors` is store-wide and includes every vendor
+  string ever saved — drafts, archived products and the "SA Art Fair" house
+  vendor on class products — so it drifts away from the artists the SA Booking
+  Admin app actually manages. Two rules keep it honest:
+
+    1. Named vendors in `hidden` never appear. Editable in the theme editor
+       ("Hide these artists"), so no code change is needed to hide someone.
+    2. `Artist <number>` placeholders left over from the theme build are
+       dropped automatically.
+
+  A third rule lives in assets/saf-rb-artworks.js: once the collection's
+  products are loaded it narrows this list to the artists who actually have
+  work on sale, so adding or removing an artist in the booking app updates
+  the front end on its own.
+
+  Accepts: vendors (array), hidden (comma-separated string)
+{% endcomment %}
+{%- liquid
+  assign hidden_list = hidden | default: '' | downcase | split: ','
+-%}
+{%- capture hidden_key -%}|{% for h in hidden_list %}{{ h | strip }}|{% endfor %}{%- endcapture -%}
+{%- for v in vendors -%}
+  {%- liquid
+    assign vkey = v | downcase | strip | prepend: '|' | append: '|'
+    assign skip = false
+    if hidden_key contains vkey
+      assign skip = true
+    endif
+    assign head = v | slice: 0, 7
+    if head == 'Artist '
+      assign tail = v | remove_first: 'Artist '
+      assign tail_num = tail | plus: 0 | append: ''
+      if tail_num == tail
+        assign skip = true
+      endif
+    endif
+  -%}
+  {%- unless skip -%}
+    <option value="{{ v | escape }}">{{ v | escape }}</option>
+  {%- endunless -%}
+{%- endfor -%}

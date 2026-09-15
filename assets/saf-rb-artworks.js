@@ -49,6 +49,9 @@
     var cardStyle = root.dataset.rbaCard || 'artwork';
     var viewLabel = root.dataset.rbaViewLabel || 'View Artwork';
     var perPage = parseInt(root.dataset.rbaPerPage, 10) || 12;
+    var hiddenArtists = (root.dataset.rbaHide || '').split(',')
+      .map(function (n) { return n.trim().toLowerCase(); })
+      .filter(Boolean);
     var moreLink = moreEl ? moreEl.querySelector('[data-rba-more-auto]') : null;
     var moreLabelText = moreLink ? moreLink.textContent : '';
     var lessLabelText = moreLink ? (moreLink.getAttribute('data-rba-less-label') || 'See Less') : '';
@@ -100,6 +103,7 @@
               };
             });
             loading = false;
+            syncArtistOptions();
             done();
           })
           .catch(function () {
@@ -109,6 +113,45 @@
           });
       }
       page(1);
+    }
+
+    /* ── Keep the artist list honest ──
+       `collection.all_vendors` in Liquid is store-wide: it carries vendors off
+       draft and archived products, so it offers artists whose work nobody can
+       buy. Once the collection is loaded we know exactly who has work on sale,
+       so the dropdown is rebuilt from that — which is what keeps the front end
+       in step with the SA Booking Admin app without anyone editing the theme.
+       The selected artist is kept even if they have dropped off the list, so a
+       shared ?artist= link never silently changes what it is showing. */
+    function syncArtistOptions() {
+      var selects = root.querySelectorAll('[data-rba-artist]');
+      if (!selects.length || !items) return;
+
+      var seen = {};
+      items.forEach(function (it) {
+        var v = (it.vendor || '').trim();
+        if (!v) return;
+        if (hiddenArtists.indexOf(v.toLowerCase()) >= 0) return;
+        seen[v] = true;
+      });
+      var names = Object.keys(seen).sort(function (a, b) { return a.localeCompare(b); });
+      if (!names.length) return;
+      if (state.artist && names.indexOf(state.artist) < 0) names.push(state.artist);
+
+      selects.forEach(function (sel) {
+        var current = [].map.call(sel.options, function (o) { return o.value; }).slice(1).join('\u0000');
+        if (current === names.join('\u0000')) return;
+        var first = sel.options[0];
+        sel.innerHTML = '';
+        sel.appendChild(first);
+        names.forEach(function (n) {
+          var o = document.createElement('option');
+          o.value = n;
+          o.textContent = n;
+          sel.appendChild(o);
+        });
+        sel.value = state.artist || '';
+      });
     }
 
     /* ── Match / sort ── */
@@ -366,6 +409,15 @@
 
     readParams();
     apply();
+
+    /* Nothing above fetches until a filter is touched. The artist dropdown has
+       to be correct before it is opened, so warm the collection once the page
+       is otherwise done — idle, after paint, and only when a dropdown exists. */
+    if (root.querySelector('[data-rba-artist]') && !items) {
+      var warm = function () { if (!items && !loading) load(function () {}); };
+      if (window.requestIdleCallback) window.requestIdleCallback(warm, { timeout: 3000 });
+      else setTimeout(warm, 1200);
+    }
   }
 
   function init(scope) {

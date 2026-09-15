@@ -40,6 +40,12 @@
   assign colour_list = colour_tags | remove_first: ',' | split: ','
 
   assign show_options = '12,24,48' | split: ','
+
+  comment
+    Names typed here never appear in the artist filter. The house vendor
+    "SA Art Fair" sits on the class products, not on artwork.
+  endcomment
+  assign hidden_artists = section.settings.hidden_artists
 -%}
 
 <style>
@@ -480,6 +486,7 @@
   data-rba-card="{% if layout == 'rail' %}collection{% else %}artwork{% endif %}"
   data-rba-view-label="{{ section.settings.hover_label | escape }}"
   data-rba-per-page="{{ per_page }}"
+  data-rba-hide="{{ hidden_artists | escape }}"
 >
   {%- if section.settings.heading != blank -%}
     <div class="rb-container">
@@ -501,9 +508,7 @@
         <span class="rb-aw__select-wrap">
           <select class="rb-aw__control" data-rba-artist aria-label="Artist">
             <option value="">All artists</option>
-            {%- for v in col.all_vendors -%}
-              <option value="{{ v | escape }}">{{ v }}</option>
-            {%- endfor -%}
+            {%- render 'saf-artist-options', vendors: col.all_vendors, hidden: hidden_artists -%}
           </select>
           {{ chevron }}
         </span>
@@ -708,6 +713,9 @@
     { "type": "header", "content": "Toolbar" },
     { "type": "text", "id": "search_placeholder", "default": "Search artworks, artists, mediums…",
       "label": "Search placeholder" },
+    { "type": "text", "id": "hidden_artists", "default": "SA Art Fair, Nicola von Bratt, Natasha Hendricks, Liesel van der Berg",
+      "label": "Hide these artists",
+      "info": "Comma-separated. These names never appear in the artist filter. Artists with no work on sale, and leftover \"Artist 1\" placeholders, are dropped automatically." },
     { "type": "color", "id": "bar_color", "default": "#f4f4f1", "label": "Toolbar strip colour" },
     { "type": "header", "content": "Side rail" },
     { "type": "text", "id": "rail_title", "default": "Filter By:", "label": "Rail title" },

@@ -530,9 +530,7 @@
       {%- if collection.all_vendors.size > 0 -%}
         <select data-gf-artist aria-label="Filter by artist" class="saf-af__select">
           <option value="">All artists</option>
-          {%- for v in collection.all_vendors -%}
-            <option value="{{ v | escape }}">{{ v | escape }}</option>
-          {%- endfor -%}
+          {%- render 'saf-artist-options', vendors: collection.all_vendors, hidden: section.settings.hidden_artists -%}
         </select>
       {%- endif -%}
 
@@ -694,9 +692,7 @@
         <p class="saf-sheet__label">Artist</p>
         <select data-gf-sheet-artist aria-label="Filter by artist" class="saf-af__select" style="width:100%">
           <option value="">All artists</option>
-          {%- for v in collection.all_vendors -%}
-            <option value="{{ v | escape }}">{{ v | escape }}</option>
-          {%- endfor -%}
+          {%- render 'saf-artist-options', vendors: collection.all_vendors, hidden: section.settings.hidden_artists -%}
         </select>
       {%- endif -%}
 
@@ -757,6 +753,9 @@
   "name": "Gallery Grid",
   "tag": "section",
   "settings": [
+    { "type": "text", "id": "hidden_artists", "default": "SA Art Fair, Nicola von Bratt, Natasha Hendricks, Liesel van der Berg",
+      "label": "Hide these artists",
+      "info": "Comma-separated. These names never appear in the artist filter." },
     {
       "type": "text",
       "id": "eyebrow",
