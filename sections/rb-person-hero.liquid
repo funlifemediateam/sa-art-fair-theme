@@ -215,31 +215,49 @@
     and Careshia both had work on sale and no button. The shared-product search
     stays as a second try.
 
-    Either way the artist collection must have something on sale, so the
-    button never opens an empty page. A teacher who sells nothing here but
+    Either way the artist collection must hold at least one ARTWORK. A class
+    doesn't count: the admin app's "Also an Artist" copies the teacher's
+    classes onto the new artist page, so a teacher with no art would otherwise
+    get a Portfolio button to a page listing only their class. A class is
+    anything with booking data, a class/workshop product type or a booking
+    template — the same test rb-class-cards uses. A teacher who sells nothing here but
     keeps a portfolio of their own falls back to that site — Susan Orpen,
     susanorpenfineart.co.za. A teacher with neither gets no button rather than
     one pointing at "#".
   endcomment
   assign portfolio_url = section.settings.button_link
-  if portfolio_url == blank and collection != blank
+  if portfolio_url == blank and collection != blank and section.settings.button_label != blank
+    assign twin_handles = ''
     for pair in shop.metafields.booking_app.artist_meta.value
       if pair[1].teacherId == collection.id and pair[0] != collection.handle
-        assign artist_twin = collections[pair[0]]
-        if artist_twin.products_count > 0
-          assign portfolio_url = artist_twin.url
-          break
-        endif
+        assign twin_handles = twin_handles | append: ',' | append: pair[0]
       endif
     endfor
-  endif
-  if portfolio_url == blank and collection != blank
     for item in collection.products limit: 4
       for sibling in item.collections
-        if sibling.handle != collection.handle and sibling.title == collection.title and sibling.products_count > 0
-          assign portfolio_url = sibling.url
-          break
+        if sibling.handle != collection.handle and sibling.title == collection.title
+          assign twin_handles = twin_handles | append: ',' | append: sibling.handle
         endif
+      endfor
+    endfor
+    assign twin_handles = twin_handles | remove_first: ',' | split: ','
+
+    for twin_handle in twin_handles
+      assign artist_twin = collections[twin_handle]
+      for twin_item in artist_twin.products limit: 12
+        assign twin_is_class = false
+        assign twin_type = twin_item.type | downcase
+        if twin_item.metafields.booking.instructor_name != blank or twin_item.metafields.booking.class_time != blank
+          assign twin_is_class = true
+        elsif twin_type contains 'class' or twin_type contains 'workshop'
+          assign twin_is_class = true
+        elsif twin_item.template_suffix contains 'booking'
+          assign twin_is_class = true
+        endif
+        unless twin_is_class
+          assign portfolio_url = artist_twin.url
+          break
+        endunless
       endfor
       if portfolio_url != blank
         break
