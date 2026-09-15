@@ -95,10 +95,14 @@
 -%}
 
 <style>
+  {% comment %} HIDDEN 2026-09-15 — client request, spam calls.
+  Restore by removing these comment tags. {% endcomment %}
+  {% comment %}
   /* The sticky header is its own stacking context, so the drawer's z-index is
      only relative to THIS value — not to the page. It has to clear the
      floating WhatsApp button (55) and the legacy mobile bar (60), while
      staying under the lead/newsletter popups (9999+). */
+  {% endcomment %}
   #shopify-section-{{ sid }} {
     position: relative;
     z-index: 70;
@@ -337,8 +341,16 @@
       }
       .rb-mobile-paths .rb-btn { flex: 1 1 0; min-width: 0; }
       body:has(.rb-mobile-paths) { padding-bottom: 78px; }
+      {% comment %} HIDDEN 2026-09-15 — client request, spam calls.
+      Restore by removing these comment tags. {% endcomment %}
+      {% comment %}
       /* keep the floating WhatsApp button clear of the bar */
       body:has(.rb-mobile-paths) .saf-whatsapp { bottom: 92px; }
+      {% endcomment %}
+      {%- if settings.contact_details_visible -%}
+        /* keep the protected floating button clear of the bar */
+        body:has(.rb-mobile-paths) .saf-whatsapp { bottom: 92px; }
+      {%- endif -%}
     {%- endif -%}
   }
 </style>

@@ -124,6 +124,15 @@
             endunless
           endif
           assign btn_url = btn_url | default: url
+
+          comment
+            An email button goes through 'rb-safe-contact' (below) so the
+            address is never in the page source.
+          endcomment
+          assign btn_email = ''
+          if btn_url contains 'mailto:'
+            assign btn_email = btn_url | remove_first: 'mailto:' | split: '?' | first
+          endif
         -%}
         <div class="rb-mc__card" {{ block.shopify_attributes }}>
           <a href="{{ url | default: '#' }}" class="rb-media rb-mc__media" tabindex="-1" aria-hidden="true">
@@ -154,9 +163,19 @@
 
           {%- if block.settings.button_label != blank -%}
             <div class="rb-mc__cta-row">
+              {%- if btn_email != blank -%}
+                {%- render 'rb-safe-contact',
+                  type: 'email',
+                  value: btn_email,
+                  label: block.settings.button_label,
+                  display: 'label',
+                  class: 'rb-btn rb-btn--serif rb-btn--outline'
+                -%}
+              {%- else -%}
               <a href="{{ btn_url | default: '#' }}" class="rb-btn rb-btn--serif rb-btn--outline">
                 {{- block.settings.button_label | escape -}}
               </a>
+              {%- endif -%}
             </div>
           {%- endif -%}
         </div>

@@ -1,0 +1,96 @@
+{% comment %}
+  A phone, WhatsApp or email link that a visitor sees and uses normally, but
+  whose number or address never sits in the page source in readable form.
+
+  The value is written out encoded in data-rbsc, and assets/rb-safe-contact.js
+  assembles the real tel: / wa.me / mailto: link on the visitor's first real
+  interaction (pointer move, touch, scroll, key press, click) — never on page
+  load, so a crawler that runs JavaScript but never interacts gets nothing
+  either. Until then the link shows `label` and points at the contact page,
+  which is also where it goes with JavaScript off.
+
+  Encoding: URL-safe base64, padding removed, every digit swapped for a
+  punctuation mark, then the whole string reversed. No digit, "@" or decodable
+  base64 is left in the attribute for a regex to find; the JS undoes the steps
+  in reverse order.
+
+  Never print the value anywhere else — not in an aria-label, a title, JSON-LD
+  or another attribute. Captions and tooltips use `label`.
+
+  Accepts:
+    type      'phone' (default) | 'whatsapp' | 'email'
+    value     the number or address as it should read on screen,
+              e.g. '+27 72 477 8807'. Blank renders nothing.
+    label     shown until the link is assembled, and the accessible name of an
+              icon-only link. Blank = 'Call us' / 'WhatsApp us' / 'Email us'.
+    display   'value' (default) — the label, then the real value once assembled
+              'label' — the label only, always (a "WhatsApp us" button)
+              'icon'  — icon only; the label becomes the aria-label and tooltip
+    class     CSS classes for the link
+    icon      'phone' | 'phone-outline' | 'email' | 'whatsapp', raw SVG markup,
+              or blank for none
+    message   WhatsApp only: the chat's pre-filled text
+    fallback  where the link points until assembled (default /pages/contact)
+
+  Example:
+    {%- render 'rb-safe-contact', type: 'email', value: rb_email, class: 'rb-footer__row', icon: 'email' -%}
+{% endcomment %}
+{%- assign rbsc_value = value | strip -%}
+{%- if rbsc_value != blank -%}
+  {%- liquid
+    case type
+      when 'email'
+        assign rbsc_kind = 'e'
+        assign rbsc_label = label | default: 'Email us'
+      when 'whatsapp'
+        assign rbsc_kind = 'w'
+        assign rbsc_label = label | default: 'WhatsApp us'
+      else
+        assign rbsc_kind = 'p'
+        assign rbsc_label = label | default: 'Call us'
+    endcase
+    assign rbsc_display = display | default: 'value'
+
+    assign rbsc_code = rbsc_value | base64_url_safe_encode | remove: '='
+    assign rbsc_code = rbsc_code | replace: '0', '~' | replace: '1', '!' | replace: '2', '*' | replace: '3', '(' | replace: '4', ')'
+    assign rbsc_code = rbsc_code | replace: '5', ',' | replace: '6', ';' | replace: '7', '$' | replace: '8', '^' | replace: '9', '|'
+    assign rbsc_code = rbsc_code | split: '' | reverse | join: ''
+  -%}
+  <a
+    href="{{ fallback | default: '/pages/contact' }}"
+    {%- if class != blank %} class="{{ class }}"{% endif %}
+    data-rbsc="{{ rbsc_code }}"
+    data-rbsc-kind="{{ rbsc_kind }}"
+    {%- if rbsc_kind == 'w' and message != blank %} data-rbsc-msg="{{ message | escape }}"{% endif %}
+    {%- if rbsc_display == 'value' %} data-rbsc-show{% endif %}
+    {%- if rbsc_display == 'icon' %} aria-label="{{ rbsc_label | escape }}" title="{{ rbsc_label | escape }}"{% endif %}
+  >
+    {%- if icon contains '<' -%}
+      {{ icon }}
+    {%- else -%}
+      {%- case icon -%}
+        {%- when 'phone' -%}
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M6.6 3h3l1.5 4-2 1.4a12 12 0 0 0 5.5 5.5l1.4-2 4 1.5v3a2 2 0 0 1-2.2 2A16.5 16.5 0 0 1 4.6 5.2 2 2 0 0 1 6.6 3z"></path>
+          </svg>
+        {%- when 'phone-outline' -%}
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+            <path d="M6.4 3.5h3l1.5 3.8-2 1.4a12.5 12.5 0 0 0 6.4 6.4l1.4-2 3.8 1.5v3a1.9 1.9 0 0 1-2.1 1.9A16.6 16.6 0 0 1 4.5 5.6 1.9 1.9 0 0 1 6.4 3.5z"></path>
+          </svg>
+        {%- when 'email' -%}
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+            <rect x="2.5" y="5" width="19" height="14" rx="2"></rect>
+            <path d="M3 6.5l9 6.5 9-6.5"></path>
+          </svg>
+        {%- when 'whatsapp' -%}
+          <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+            <path d="M16.004 3.2c-7.06 0-12.8 5.74-12.8 12.8 0 2.256.59 4.46 1.712 6.404L3.2 28.8l6.57-1.712A12.74 12.74 0 0 0 16.004 28.8c7.06 0 12.8-5.74 12.8-12.8s-5.74-12.8-12.8-12.8zm0 23.424c-2.01 0-3.98-.54-5.7-1.562l-.408-.242-4.06 1.058 1.084-3.96-.266-.42a10.6 10.6 0 0 1-1.62-5.62c0-5.86 4.77-10.63 10.63-10.63 2.84 0 5.51 1.106 7.52 3.114a10.56 10.56 0 0 1 3.11 7.52c0 5.86-4.77 10.634-10.63 10.634zm5.83-7.96c-.32-.16-1.89-.932-2.182-1.038-.292-.106-.505-.16-.718.16-.213.32-.824 1.038-1.01 1.25-.186.214-.372.24-.692.08-.32-.16-1.35-.498-2.57-1.586-.95-.848-1.592-1.895-1.778-2.215-.186-.32-.02-.492.14-.652.144-.143.32-.372.48-.558.16-.186.213-.32.32-.532.107-.214.054-.4-.026-.56-.08-.16-.718-1.73-.984-2.37-.26-.622-.522-.538-.718-.548l-.612-.01c-.213 0-.56.08-.852.4-.292.32-1.117 1.092-1.117 2.662s1.143 3.088 1.303 3.302c.16.214 2.25 3.436 5.45 4.818.762.33 1.356.526 1.82.673.765.243 1.46.209 2.01.127.613-.092 1.89-.772 2.156-1.518.266-.746.266-1.386.186-1.518-.08-.133-.292-.213-.612-.373z"/>
+          </svg>
+      {%- endcase -%}
+    {%- endif -%}
+    {%- unless rbsc_display == 'icon' -%}
+      <span data-rbsc-text>{{ rbsc_label | escape }}</span>
+    {%- endunless -%}
+  </a>
+  <script src="{{ 'rb-safe-contact.js' | asset_url }}" defer></script>
+{%- endif -%}

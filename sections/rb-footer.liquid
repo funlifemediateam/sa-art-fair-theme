@@ -169,6 +169,9 @@
     </div>
 
     <div class="rb-footer__contact">
+      {% comment %} REPLACED 2026-09-15 — the email now goes through 'rb-safe-contact'
+      (just below) so the address is never in the page source. Original markup kept as the record. {% endcomment %}
+      {% comment %}
       {%- if rb_email != blank -%}
         <a href="mailto:{{ rb_email }}" class="rb-footer__row">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
@@ -178,6 +181,13 @@
           {{ rb_email }}
         </a>
       {%- endif -%}
+      {% endcomment %}
+      {%- if rb_email != blank -%}
+        {%- render 'rb-safe-contact', type: 'email', value: rb_email, label: 'Email us', class: 'rb-footer__row', icon: 'email' -%}
+      {%- endif -%}
+      {% comment %} HIDDEN 2026-09-15 — client request, spam calls.
+      Restore by removing these comment tags. {% endcomment %}
+      {% comment %}
       {%- if rb_phone != blank -%}
         <a href="tel:{{ rb_phone | remove: ' ' }}" class="rb-footer__row">
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -185,6 +195,16 @@
           </svg>
           {{ rb_phone }}
         </a>
+      {%- endif -%}
+      {% endcomment %}
+
+      {%- comment -%}
+        Scrape-protected phone row: renders only while Theme settings → Contact
+        details → "Show contact details on site" is ticked. The commented-out
+        block above stays as the record of the original markup.
+      {%- endcomment -%}
+      {%- if settings.contact_details_visible and rb_phone != blank -%}
+        {%- render 'rb-safe-contact', type: 'phone', value: rb_phone, label: 'Call us', class: 'rb-footer__row', icon: 'phone' -%}
       {%- endif -%}
 
       {%- comment -%}

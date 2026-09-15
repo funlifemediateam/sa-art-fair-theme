@@ -4,8 +4,8 @@
     "theme_name": "Dawn",
     "theme_version": "15.5.0",
     "theme_author": "Shopify",
-    "theme_documentation_url": "https://help.shopify.com/manual/online-store/themes",
-    "theme_support_url": "https://support.shopify.com/"
+    "theme_documentation_url": "https:\/\/help.shopify.com\/manual\/online-store\/themes",
+    "theme_support_url": "https:\/\/support.shopify.com\/"
   },
   {
     "name": "t:settings_schema.logo.name",
@@ -1490,6 +1490,18 @@
     ]
   },
   {
+    "name": "Contact details",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "contact_details_visible",
+        "label": "Show contact details on site (scrape-protected)",
+        "info": "Off = phone numbers and WhatsApp are hidden sitewide. Emails always show. Everything shown is scrape-protected.",
+        "default": false
+      }
+    ]
+  },
+  {
     "name": "Contact by path",
     "settings": [
       {
@@ -1533,10 +1545,16 @@
         "type": "select",
         "id": "saf_contact_default",
         "label": "Pages belonging to neither side",
-        "info": "Home, cart, search, /pages/about and /pages/contact sit on neither side.",
+        "info": "Home, cart, search, \/pages\/about and \/pages\/contact sit on neither side.",
         "options": [
-          { "value": "b", "label": "Show the studio details" },
-          { "value": "a", "label": "Show the store details" }
+          {
+            "value": "b",
+            "label": "Show the studio details"
+          },
+          {
+            "value": "a",
+            "label": "Show the store details"
+          }
         ],
         "default": "b"
       },
@@ -1608,7 +1626,7 @@
       {
         "type": "text",
         "id": "saf_whatsapp_label",
-        "label": "Tooltip / accessible label",
+        "label": "Tooltip \/ accessible label",
         "default": "Chat with us on WhatsApp"
       }
     ]

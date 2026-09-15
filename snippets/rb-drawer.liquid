@@ -197,9 +197,25 @@
         shop record. With none of those set it falls back to the contact page
         rather than rendering a dead tel: link.
       endcomment
+      comment
+        HIDDEN 2026-09-15 — client request, spam calls.
+        Restore by removing these comment tags.
+      endcomment
+      comment
       assign side_phone = side_phone | strip
       assign phone_raw = side_phone | default: section.settings.phone_number | default: settings.saf_whatsapp_number | default: shop.phone
       assign phone_digits = phone_raw | remove: ' ' | remove: '(' | remove: ')' | remove: '-' | remove: '+'
+      endcomment
+
+      comment
+        Scrape-protected call button ('rb-safe-contact'): the same number chain
+        as the hidden assigns above, but only while Theme settings → Contact
+        details → "Show contact details on site" is ticked.
+      endcomment
+      assign safe_phone = ''
+      if settings.contact_details_visible
+        assign safe_phone = side_phone | strip | default: section.settings.phone_number | default: settings.saf_whatsapp_number | default: shop.phone
+      endif
 
       comment
         Label the button with the number only when a human typed one — here or
@@ -222,7 +238,16 @@
       {%- if section.settings.show_contact or section.settings.show_instagram -%}
         <div class="rb-drawer__icons">
           {%- if section.settings.show_contact -%}
-            {%- if phone_digits != blank -%}
+            {%- if safe_phone != blank -%}
+              {%- render 'rb-safe-contact',
+                type: 'phone',
+                value: safe_phone,
+                label: 'Call us',
+                display: 'icon',
+                icon: 'phone-outline',
+                class: 'rb-btn rb-btn--plain rb-btn--outline rb-drawer__icon-btn'
+              -%}
+            {%- elsif phone_digits != blank -%}
               <a
                 href="tel:+{{ phone_digits }}"
                 class="rb-btn rb-btn--plain rb-btn--outline rb-drawer__icon-btn"
@@ -292,6 +317,12 @@
         added). This keeps the page one tap away without a third pill.
       {%- endcomment -%}
       {%- if section.settings.contact_url != blank and phone_digits != blank -%}
+        <a href="{{ section.settings.contact_url }}">
+          {{- section.settings.contact_label | default: 'Contact' | escape -}}
+        </a>
+      {%- endif -%}
+      {%- comment -%} The same Contact link while the protected call button is showing. {%- endcomment -%}
+      {%- if section.settings.contact_url != blank and safe_phone != blank and phone_digits == blank -%}
         <a href="{{ section.settings.contact_url }}">
           {{- section.settings.contact_label | default: 'Contact' | escape -}}
         </a>

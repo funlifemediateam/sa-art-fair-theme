@@ -194,18 +194,38 @@
               {%- if cc_email != blank -%}
                 <li class="rb-ccards__detail">
                   <span class="rb-ccards__label">{{ block.settings.email_label | escape }}</span>
+                  {% comment %} REPLACED 2026-09-15 — the address now goes through 'rb-safe-contact'
+                  (just below) so it is never in the page source. Original markup kept as the record. {% endcomment %}
+                  {% comment %}
                   <a class="rb-ccards__value" href="mailto:{{ cc_email }}">{{ cc_email | escape }}</a>
+                  {% endcomment %}
+                  {%- render 'rb-safe-contact', type: 'email', value: cc_email, label: 'Email us', class: 'rb-ccards__value' -%}
                 </li>
               {%- endif -%}
+              {% comment %} HIDDEN 2026-09-15 — client request, spam calls.
+              Restore by removing these comment tags. {% endcomment %}
+              {% comment %}
               {%- if cc_phone != blank -%}
                 <li class="rb-ccards__detail">
                   <span class="rb-ccards__label">{{ block.settings.phone_label | escape }}</span>
                   <a class="rb-ccards__value" href="tel:{{ cc_tel }}">{{ cc_phone | escape }}</a>
                 </li>
               {%- endif -%}
+              {% endcomment %}
+              {%- comment -%} Scrape-protected Call row — only while Theme settings → Contact
+                details → "Show contact details on site" is ticked. {%- endcomment -%}
+              {%- if settings.contact_details_visible and cc_phone != blank -%}
+                <li class="rb-ccards__detail">
+                  <span class="rb-ccards__label">{{ block.settings.phone_label | escape }}</span>
+                  {%- render 'rb-safe-contact', type: 'phone', value: cc_phone, label: 'Call us', class: 'rb-ccards__value' -%}
+                </li>
+              {%- endif -%}
             </ul>
           {%- endif -%}
 
+          {% comment %} HIDDEN 2026-09-15 — client request, spam calls.
+          Restore by removing these comment tags. {% endcomment %}
+          {% comment %}
           {%- if block.settings.show_whatsapp and cc_digits != blank -%}
             <a
               class="rb-btn rb-ccards__wa"
@@ -218,6 +238,21 @@
               </svg>
               <span>{{ block.settings.whatsapp_label | escape }}</span>
             </a>
+          {%- endif -%}
+          {% endcomment %}
+
+          {%- comment -%} Scrape-protected WhatsApp button — only while Theme settings →
+            Contact details → "Show contact details on site" is ticked. {%- endcomment -%}
+          {%- if settings.contact_details_visible and block.settings.show_whatsapp and cc_digits != blank -%}
+            {%- render 'rb-safe-contact',
+              type: 'whatsapp',
+              value: cc_phone,
+              message: cc_wa_msg,
+              label: block.settings.whatsapp_label,
+              display: 'label',
+              icon: 'whatsapp',
+              class: 'rb-btn rb-ccards__wa'
+            -%}
           {%- endif -%}
         </div>
       {%- endfor -%}
