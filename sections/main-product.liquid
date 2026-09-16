@@ -206,9 +206,12 @@
                     {%- endif -%}
                   </p>
                 {%- when 'description' -%}
-                  {%- if product.description != blank -%}
+                  {%- comment -%} Artist intro paragraphs are left out when the About band below will say it: see the snippet. {%- endcomment -%}
+                  {%- capture description -%}{%- render 'product-description', product: product -%}{%- endcapture -%}
+                  {%- assign desc_left = description | strip -%}
+                  {%- if desc_left != blank -%}
                     <div class="product__description rte quick-add-hidden" {{ block.shopify_attributes }}>
-                      {{ product.description }}
+                      {{ description }}
                     </div>
                   {%- endif -%}
                 {%- when 'sku' -%}

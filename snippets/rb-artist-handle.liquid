@@ -27,6 +27,13 @@
   artist page is wanted, so "-1" is the LAST resort rather than the tie-break —
   the exact inverse of rb-teacher-handle.
 
+  The "-1" convention does not always hold. Careshia Esperanza's teacher page is
+  careshia-esperanza and her artist page careisha-esperanza, both titled the
+  same, and her artworks sit in both (2026-09-15), so her artwork pages opened
+  "About Careshia" with her class blurb. A title match on a collection carrying
+  the artist.group metafield (set on real artist pages only) beats every other
+  match for that reason.
+
   Collections that are catalogue machinery rather than people are skipped, or
   "gallery" would win on nearly every artwork.
 
@@ -45,6 +52,7 @@
   endcomment
   assign skip = ',gallery,all,frontpage,art-under,art-quiz,wishlist,warm-tones,cool-tones,neutral-tones,originals,limited-editions,artists,teachers,classes,workshops,workshops-classes,classes-workshops,workshops-and-classes,'
 
+  assign marked = ''
   assign found = ''
   assign twin = ''
   assign fallback = ''
@@ -68,6 +76,9 @@
     assign tail = c.handle | slice: -2, 2
 
     if hit
+      if marked == blank and c.metafields.artist.group != blank
+        assign marked = c.handle
+      endif
       if tail == '-1'
         if twin == blank
           assign twin = c.handle
@@ -81,10 +92,13 @@
   endfor
 
   comment
-    Order of confidence: a title match on a non-teacher handle, then the
-    teacher twin (still the right person), then any collection the piece is in
-    that is not catalogue machinery.
+    Order of confidence: a title match marked as an artist page, a title match
+    on a non-teacher handle, then the teacher twin (still the right person),
+    then any collection the piece is in that is not catalogue machinery.
   endcomment
+  if marked != blank
+    assign found = marked
+  endif
   if found == blank
     assign found = twin
   endif

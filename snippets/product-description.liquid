@@ -1,0 +1,55 @@
+{%- comment -%}
+  Outputs product.description for the product page, less any paragraph that
+  only introduces the artist. Capture it in the caller and skip the wrapper
+  when what is left is blank.
+
+  Artwork pages end with "About {artist}" (product-artist-band). Descriptions
+  copied from an artist's own docs tend to open with the same bio ("Jane Doe is
+  a Cape Town-based artist…") and an "Artist: Jane Doe" label, so the page told
+  you who the artist is twice. Keagan's rule (2026-09-16): once per page.
+
+  The band's own test is repeated here (not a class, an artist page to link
+  to, a bio on it), so nothing is dropped where the band would not stand in
+  for it. A paragraph holding a <br> is kept whole: "Artist: X<br>Medium: …"
+  is more than the label.
+
+  Accepts: product.
+{%- endcomment -%}
+{%- assign description = product.description -%}
+{%- assign artist_col = blank -%}
+{%- unless product.type == 'Class' or product.type == 'Workshop' or product.template_suffix contains 'booking' -%}
+  {%- if description contains '</p>' -%}
+    {%- capture artist_handle -%}{%- render 'rb-artist-handle', product: product -%}{%- endcapture -%}
+    {%- assign artist_handle = artist_handle | strip -%}
+    {%- assign artist_col = collections[artist_handle] -%}
+  {%- endif -%}
+{%- endunless -%}
+
+{%- if artist_col != blank and artist_col.title != blank and artist_col.description != blank -%}
+  {%- assign names = artist_col.title | append: '|' | append: product.vendor | downcase | split: '|' -%}
+  {%- assign ends_with_p = description | strip | slice: -4, 4 -%}
+  {%- assign parts = description | split: '</p>' -%}
+  {%- for part in parts -%}
+    {%- assign part_last = forloop.last -%}
+    {%- assign intro = false -%}
+    {%- unless part contains '<br' -%}
+      {%- assign text = part | strip_html | replace: '&nbsp;', ' ' | strip | downcase -%}
+      {%- for name in names -%}
+        {%- assign name = name | strip -%}
+        {%- if name == blank -%}{%- continue -%}{%- endif -%}
+        {%- assign lead = name | append: ' is ' -%}
+        {%- assign label = 'artist: ' | append: name -%}
+        {%- assign head = text | slice: 0, lead.size -%}
+        {%- if head == lead or text == label -%}
+          {%- assign intro = true -%}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endunless -%}
+    {%- unless intro -%}
+      {{- part -}}
+      {%- unless part_last and ends_with_p != '</p>' -%}</p>{%- endunless -%}
+    {%- endunless -%}
+  {%- endfor -%}
+{%- else -%}
+  {{- description -}}
+{%- endif -%}

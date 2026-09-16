@@ -37,21 +37,26 @@
       (2026-09-14), and "one.</p><p>Two" would otherwise read "one.Two" and hide
       the sentence break.
 
-      A few bios are one long run-on sentence with nothing left to hand over.
-      Those keep the whole description: the hero cuts a long opening at 22
-      words, so the band still has more to say, and a band headed "More about
-      X" with nothing under it reads far worse than an overlapping first line.
+      A few bios are a single sentence, so there is nothing left to hand over.
+      Those used to print the whole description again, which put the same
+      sentence on the page twice (Anina Deetlefs, Kristi Marié). Keagan's rule
+      (2026-09-16) is that a person's bio never appears twice on a page, so the
+      band now stands down entirely: no body, and no "More about X" heading
+      over nothing. It comes back by itself once the bio gains a second sentence.
     endcomment
     if section.settings.skip_first_sentence
       assign plain = collection.description | replace: '</p>', ' </p>' | replace: '<br', ' <br' | replace: '</li>', ' </li>' | strip_html | strip | replace: '&nbsp;', ' '
       assign first = plain | split: '. ' | first | strip
       assign rest = plain | remove_first: first | remove_first: '. ' | strip
-      if rest != blank
-        assign body = rest
+      assign body = rest
+      if rest == blank
+        assign nothing_new = true
       endif
     endif
   endif
 -%}
+
+{%- unless nothing_new -%}
 
 <style>
   #shopify-section-{{ sid }} .rb-ss {
@@ -98,6 +103,7 @@
     {%- endif -%}
   </div>
 </div>
+{%- endunless -%}
 
 {% schema %}
 {
@@ -117,7 +123,7 @@
       "info": "On a teacher or artist page that is their bio. To change the words, edit the person in the booking app (Artists or Teachers tab) or the collection in Shopify admin." },
     { "type": "checkbox", "id": "skip_first_sentence", "default": false,
       "label": "Skip the first sentence",
-      "info": "Switch on where the hero above already sets the first sentence in the script face, so the page does not say it twice." },
+      "info": "Switch on where the hero above already sets the first sentence in the script face, so the page does not say it twice. A one-sentence bio has nothing left to add, so the band hides until the bio is longer." },
     { "type": "header", "content": "Colour" },
     { "type": "color", "id": "background", "default": "#ffffff", "label": "Background" },
     { "type": "color", "id": "heading_color", "default": "#1e1e1e", "label": "Script" },
