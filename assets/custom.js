@@ -147,10 +147,12 @@
 
   /* ── Booking: per-product cart timer banners ── */
   function initBookingTimers() {
-    /* Show expired toast if we just reloaded after a timer expiry */
-    if (sessionStorage.getItem('sa_bk_expired')) {
+    /* Show expired toast if we just reloaded after a timer expiry (the /cart
+       page reloads; the value is the class URL for "Book again", or '1') */
+    var justExpired = sessionStorage.getItem('sa_bk_expired');
+    if (justExpired) {
       sessionStorage.removeItem('sa_bk_expired');
-      showExpiredToast();
+      showExpiredToast(justExpired);
     }
 
     /* Migrate legacy single-key timer to per-product object */
@@ -181,11 +183,22 @@
 
         var toRemove  = {};   /* cart keys scheduled for removal */
         var productIds = Object.keys(timersObj);
+        var expiredUrl = '';  /* "Book again" target for the expiry toast */
 
         /* 1. Process existing timers */
         productIds.forEach(function (pid) {
           var data = timersObj[pid];
           var rem  = (data.end || 0) - Date.now();
+
+          /* Remember the class page for "Book again" (additive field; the widget
+             may overwrite the entry on a new add — it is re-captured here) */
+          if (!data.url) {
+            cart.items.some(function (item) {
+              if (String(item.product_id) !== String(pid) || !item.url) return false;
+              data.url = item.url.split('?')[0];
+              return true;
+            });
+          }
 
           var timerKeys = [];
           if (data.cartKeys && Array.isArray(data.cartKeys)) {
@@ -195,8 +208,12 @@
           var stillInCart = timerKeys.length === 0 || timerKeys.some(function (k) { return cartKeySet[k]; });
 
           if (rem <= 0 || !stillInCart) {
-            if (rem <= 0) timerKeys.forEach(function (k) { toRemove[k] = true; });
+            if (rem <= 0) {
+              timerKeys.forEach(function (k) { toRemove[k] = true; });
+              if (!expiredUrl && data.url) expiredUrl = data.url;
+            }
             delete timersObj[pid];
+            sessionStorage.removeItem('sa_bk_collapsed_' + pid);
           } else {
             showTimerBanner(pid, data, data.end);
           }
@@ -230,16 +247,27 @@
         var removeKeys = Object.keys(toRemove);
         if (!removeKeys.length) return;
 
-        sessionStorage.setItem('sa_bk_expired', '1');
-        Promise.all(removeKeys.map(function (k) {
+        var removals = Promise.all(removeKeys.map(function (k) {
           return fetch('/cart/change.js', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ id: k, quantity: 0 })
           }).catch(function () {});
-        }))
-          .then(function () { window.location.reload(); })
-          .catch(function () { window.location.reload(); });
+        }));
+
+        /* The cart page lists the lines, so it reloads (toast after reload).
+           Everywhere else: update the header count and show the toast in place. */
+        if (window.location.pathname.indexOf('/cart') === 0) {
+          sessionStorage.setItem('sa_bk_expired', expiredUrl || '1');
+          removals
+            .then(function () { window.location.reload(); })
+            .catch(function () { window.location.reload(); });
+          return;
+        }
+        removals.then(function () {
+          updateCartCount();
+          showExpiredToast(expiredUrl);
+        });
       })
       .catch(function () {
         /* Cart check failed — at least show banners for active timers */
@@ -271,6 +299,7 @@
     var bannerId = 'sa-bk-banner-' + productId;
     if (document.getElementById(bannerId)) return;
 
+    var collapseKey = 'sa_bk_collapsed_' + productId;
     var container = getOrCreateBannerContainer();
     var banner    = document.createElement('div');
     banner.id        = bannerId;
@@ -280,24 +309,35 @@
         '<div class="bk-banner-left">',
           '<span class="bk-banner-timer"></span>',
           '<span class="bk-banner-text">',
-            '<strong>' + (data.title || 'Booking') + '</strong>' + (data.session ? ' &mdash; ' + data.session : '') + '<br>',
-            'Your spot is reserved — checkout before the timer runs out.',
+            '<strong>' + (data.title || 'Booking') + '</strong>',
+            (data.session ? '<span class="bk-banner-sep"> &mdash; </span><span class="bk-banner-session">' + data.session + '</span>' : ''),
+            '<br>',
+            '<span class="bk-banner-msg">Your spot is reserved — checkout before the timer runs out.</span>',
           '</span>',
         '</div>',
         '<div class="bk-banner-actions">',
           '<a href="/checkout" class="bk-banner-checkout">Checkout now &rarr;</a>',
-          '<button class="bk-banner-dismiss" aria-label="Dismiss">&times;</button>',
+          '<button class="bk-banner-dismiss" aria-label="Minimise">&times;</button>',
         '</div>',
-      '</div>'
+      '</div>',
+      '<a href="/checkout" class="bk-banner-pill"><span class="bk-banner-pill-timer"></span> &middot; Checkout &rarr;</a>'
     ].join('');
+
+    /* Minimised earlier this session: render straight into the pill */
+    if (sessionStorage.getItem(collapseKey)) banner.classList.add('bk-collapsed');
 
     container.appendChild(banner);
 
+    /* rAF does not run in a background tab, so the timeout makes sure the bar
+       never sits off-screen with the timer ticking */
     requestAnimationFrame(function () {
       requestAnimationFrame(function () { banner.classList.add('bk-banner-in'); });
     });
+    setTimeout(function () { banner.classList.add('bk-banner-in'); }, 60);
 
-    var timerEl = banner.querySelector('.bk-banner-timer');
+    var timerEl     = banner.querySelector('.bk-banner-timer');
+    var pillTimerEl = banner.querySelector('.bk-banner-pill-timer');
+    var msgEl       = banner.querySelector('.bk-banner-msg');
 
     function tick() {
       var rem = endTime - Date.now();
@@ -309,15 +349,32 @@
         delete timers[productId];
         if (Object.keys(timers).length) localStorage.setItem('sa_bk_timers', JSON.stringify(timers));
         else localStorage.removeItem('sa_bk_timers');
-        banner.remove();
-        sessionStorage.setItem('sa_bk_expired', '1');
-        removeHeldCartItems(data)
-          .then(function () { window.location.reload(); })
-          .catch(function () { window.location.reload(); });
+        sessionStorage.removeItem(collapseKey);
+
+        var onCart = window.location.pathname.indexOf('/cart') === 0;
+        var removed = removeHeldCartItems(data).catch(function () {});
+
+        banner.classList.remove('bk-banner-in');
+        setTimeout(function () { banner.remove(); }, 400);
+
+        if (onCart) {
+          /* The cart page lists the lines, so it reloads; the toast follows the reload */
+          sessionStorage.setItem('sa_bk_expired', data.url || '1');
+          removed.then(function () { window.location.reload(); });
+        } else {
+          removed.then(function () { updateCartCount(); });
+          showExpiredToast(data.url);
+        }
       } else {
-        if (timerEl) {
-          timerEl.textContent = fmtMs(rem);
-          timerEl.style.color = rem < 120000 ? '#e05c5c' : '';
+        var t = fmtMs(rem);
+        var urgent = rem < 120000;
+        if (timerEl) timerEl.textContent = t;
+        if (pillTimerEl) pillTimerEl.textContent = t;
+        banner.classList.toggle('bk-urgent', urgent);
+        if (msgEl) {
+          msgEl.textContent = urgent
+            ? 'Hurry — ' + t + ' left to checkout.'
+            : 'Your spot is reserved — checkout before the timer runs out.';
         }
       }
     }
@@ -325,10 +382,26 @@
     tick();
     var iv = setInterval(tick, 1000);
 
-    /* Dismiss hides the banner but keeps the interval alive so expiry still fires */
+    /* × minimises to the pill (for the rest of this browser session); the
+       interval stays alive so expiry still fires */
     banner.querySelector('.bk-banner-dismiss').addEventListener('click', function () {
-      banner.remove();
+      banner.classList.add('bk-collapsed');
+      sessionStorage.setItem(collapseKey, '1');
     });
+  }
+
+  /* Header cart count after held lines are removed without a reload
+     (same bubble markup the booking widget updates) */
+  function updateCartCount() {
+    return fetch('/cart.js')
+      .then(function (r) { return r.json(); })
+      .then(function (cart) {
+        document.querySelectorAll('.cart-count-bubble').forEach(function (bubble) {
+          bubble.querySelectorAll('span').forEach(function (s) { s.textContent = cart.item_count; });
+          bubble.style.display = cart.item_count ? '' : 'none';
+        });
+      })
+      .catch(function () {});
   }
 
   function removeHeldCartItems(data) {
@@ -348,18 +421,25 @@
     }));
   }
 
-  function showExpiredToast() {
+  function showExpiredToast(url) {
+    if (document.getElementById('sa-bk-expired')) return;
     var toast = document.createElement('div');
     toast.id = 'sa-bk-expired';
+    toast.setAttribute('role', 'status');
     toast.innerHTML = 'Your booking reservation expired. <a href="/collections/workshops-classes">Book again &rarr;</a>';
+    /* Back to the class they held, when we know it (same-site paths only) */
+    if (typeof url === 'string' && url.charAt(0) === '/' && url.charAt(1) !== '/') {
+      toast.querySelector('a').setAttribute('href', url);
+    }
     document.body.appendChild(toast);
     requestAnimationFrame(function () {
       requestAnimationFrame(function () { toast.classList.add('bk-show'); });
     });
+    setTimeout(function () { toast.classList.add('bk-show'); }, 60);
     setTimeout(function () {
       toast.style.opacity = '0';
       setTimeout(function () { toast.remove(); }, 400);
-    }, 7000);
+    }, 10000);
   }
 
   function initCartRemoveFallback() {

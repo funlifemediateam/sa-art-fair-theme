@@ -45,6 +45,11 @@
 }
 
 /* ── Booking: per-product cart timer banners ── */
+/* Brand coral bar, cherry type, Afacad. Type sizes are px on purpose: this
+   theme's html font-size is 62.5% x body_scale 120 = 12px, so rem here runs
+   25% small (see the note at the top of saf-rebrand.css). 21.6 / 15.2 / 14.4 /
+   12.8px are the intended 1.35 / .95 / .9 / .8rem at a 16px root; 14.4px also
+   matches the site's cherry "VIEW OUR CLASSES" .rb-btn. */
 #sa-bk-banner-container {
   position: fixed;
   bottom: 0;
@@ -53,13 +58,17 @@
   z-index: 9999;
   display: flex;
   flex-direction: column-reverse;
+  pointer-events: none; /* the full-width strip must never block taps... */
 }
+#sa-bk-banner-container > * { pointer-events: auto; } /* ...only the banners do */
 .sa-bk-banner {
-  background: #0f4a52;
-  color: #eeefeb;
+  background: var(--rb-coral, #e27b70);
+  color: var(--rb-cherry, #b00e3f);
+  font-family: var(--rb-sans, "Afacad", "Helvetica Neue", Arial, sans-serif);
+  letter-spacing: normal;
   padding: 0;
-  box-shadow: 0 -4px 24px rgba(0,0,0,0.25);
-  border-top: 1px solid rgba(255,255,255,0.07);
+  box-shadow: 0 -4px 24px rgba(30, 30, 30, 0.18);
+  border-top: 1px solid rgba(176, 14, 63, 0.18);
   transform: translateY(100%);
   transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -69,89 +78,215 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 12px 20px;
-  max-width: 1400px;
+  padding: 12px 20px calc(12px + env(safe-area-inset-bottom, 0px));
+  max-width: var(--rb-container, 1400px);
   margin: 0 auto;
   flex-wrap: wrap;
+  box-sizing: border-box;
 }
 .bk-banner-left {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   flex: 1;
   min-width: 0;
 }
 .bk-banner-timer {
-  font-size: 1.1rem;
-  font-weight: 800;
-  color: #d2d241;
-  letter-spacing: 0.02em;
+  font-size: 21.6px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--rb-cherry, #b00e3f);
+  padding: 4px 0;
+  border-radius: 999px;
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
 }
 .bk-banner-text {
-  font-size: 0.82rem;
-  line-height: 1.4;
-  color: rgba(238, 239, 235,0.85);
+  font-size: 15.2px;
+  line-height: 1.35;
+  color: var(--rb-ink, #1e1e1e);
   min-width: 0;
 }
-.bk-banner-text strong { color: #eeefeb; }
+.bk-banner-text strong {
+  color: var(--rb-cherry, #b00e3f);
+  font-weight: 700;
+}
 .bk-banner-actions {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 6px;
   flex-shrink: 0;
 }
 .bk-banner-checkout {
   display: inline-flex;
   align-items: center;
-  padding: 9px 20px;
-  background: #d2d241;
-  color: #1d1c21;
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
+  justify-content: center;
+  padding: 10px 22px;
+  background: var(--rb-cherry, #b00e3f);
+  color: #fff;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 14.4px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   text-decoration: none;
-  border-radius: 3px;
   white-space: nowrap;
   transition: background 0.18s;
 }
-.bk-banner-checkout:hover { background: #b9b832; color: #1d1c21; }
+.bk-banner-checkout:hover { background: #8d0b32; color: #fff; }
 .bk-banner-dismiss {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  min-height: 40px;
+  padding: 0;
   background: none;
   border: none;
-  color: rgba(238, 239, 235,0.45);
+  color: rgba(176, 14, 63, 0.6);
   cursor: pointer;
-  font-size: 1.2rem;
+  font-family: inherit;
+  font-size: 26px;
   line-height: 1;
-  padding: 4px;
   transition: color 0.15s;
 }
-.bk-banner-dismiss:hover { color: rgba(238, 239, 235,0.8); }
+.bk-banner-dismiss:hover { color: var(--rb-cherry, #b00e3f); }
+
+/* Urgent (< 2 min): timer turns into a cherry chip and pulses */
+.sa-bk-banner.bk-urgent .bk-banner-timer {
+  background: var(--rb-cherry, #b00e3f);
+  color: #fff;
+  padding: 4px 12px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .sa-bk-banner.bk-urgent .bk-banner-timer,
+  .sa-bk-banner.bk-urgent .bk-banner-pill {
+    animation: sa-bk-pulse 1.2s ease-in-out infinite;
+  }
+}
+@keyframes sa-bk-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.75; }
+}
+
+/* Collapsed (× pressed): only the bottom-right pill shows. transform must be
+   `none` here, not translateY(0): any transform makes the banner the containing
+   block for the position:fixed pill, which would then sit off-screen. */
+.bk-banner-pill { display: none; }
+.sa-bk-banner.bk-collapsed {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  transform: none;
+  transition: none;
+}
+.sa-bk-banner.bk-collapsed .bk-banner-inner { display: none; }
+.sa-bk-banner.bk-collapsed .bk-banner-pill {
+  position: fixed;
+  right: 16px;
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  background: var(--rb-cherry, #b00e3f);
+  color: #fff;
+  border-radius: 999px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.22);
+  font-family: inherit;
+  font-size: 14.4px;
+  font-weight: 600;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.sa-bk-banner.bk-collapsed .bk-banner-pill:hover { background: #8d0b32; color: #fff; }
+/* Keep the pill clear of the floating WhatsApp button and the mobile path-CTA
+   bar (both switchable in Theme settings; the pill takes their corner). */
+body:has(.saf-whatsapp) .sa-bk-banner.bk-collapsed .bk-banner-pill { right: 88px; }
 
 /* ── Booking expired toast ── */
 #sa-bk-expired {
   position: fixed;
-  bottom: 20px;
+  bottom: calc(20px + env(safe-area-inset-bottom, 0px));
   left: 50%;
   transform: translateX(-50%) translateY(80px);
   z-index: 9999;
-  background: #0f4a52;
-  color: #eeefeb;
+  background: var(--rb-coral, #e27b70);
+  color: var(--rb-cherry, #b00e3f);
+  font-family: var(--rb-sans, "Afacad", "Helvetica Neue", Arial, sans-serif);
+  letter-spacing: normal;
   padding: 14px 22px;
   border-radius: 6px;
-  font-size: 0.85rem;
-  box-shadow: 0 8px 28px rgba(0,0,0,0.25);
+  border: 1px solid rgba(176, 14, 63, 0.18);
+  font-size: 15.2px;
+  line-height: 1.35;
+  box-shadow: 0 8px 28px rgba(30, 30, 30, 0.18);
   transition: transform 0.35s cubic-bezier(0.4,0,0.2,1), opacity 0.35s;
   opacity: 0;
   white-space: nowrap;
 }
 #sa-bk-expired.bk-show { transform: translateX(-50%) translateY(0); opacity: 1; }
-#sa-bk-expired a { color: #d2d241; text-decoration: underline; }
+#sa-bk-expired a { color: var(--rb-cherry, #b00e3f); font-weight: 600; text-decoration: underline; }
 
+@media screen and (max-width: 989px) {
+  body:has(.saf-whatsapp) .sa-bk-banner.bk-collapsed .bk-banner-pill { right: 80px; }
+  body:has(.saf-mobile-ctas) .sa-bk-banner.bk-collapsed .bk-banner-pill {
+    bottom: calc(5.8rem + 16px + env(safe-area-inset-bottom, 0px));
+  }
+  /* the CTA bar below already pads for the home indicator */
+  body:has(.saf-mobile-ctas) .bk-banner-inner { padding-bottom: 12px; }
+}
+@media screen and (max-width: 749px) {
+  /* Brand "Buy Art / Make Art" bar from rb-header (59px + home indicator):
+     the pill and toast sit above it instead of on its buttons */
+  body:has(.rb-mobile-paths) .sa-bk-banner.bk-collapsed .bk-banner-pill,
+  body:has(.rb-mobile-paths) #sa-bk-expired {
+    bottom: calc(75px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+/* Mobile: row 1 = title (one line) + session, × top-right; row 2 = timer + Checkout.
+   display:contents lifts the timer, text and buttons out of their wrappers so
+   they can be placed on one grid without changing the markup. */
 @media (max-width: 599px) {
-  .bk-banner-inner { padding: 10px 14px; }
-  .bk-banner-text { font-size: 0.74rem; }
+  .bk-banner-inner {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas:
+      "text  text     dismiss"
+      "timer checkout checkout";
+    align-items: center;
+    column-gap: 12px;
+    row-gap: 8px;
+    padding: 10px 14px calc(10px + env(safe-area-inset-bottom, 0px));
+  }
+  body:has(.saf-mobile-ctas) .bk-banner-inner { padding-bottom: 10px; }
+  .bk-banner-left,
+  .bk-banner-actions { display: contents; }
+  .bk-banner-text { grid-area: text; font-size: 15.2px; }
+  .bk-banner-text strong {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .bk-banner-sep,
+  .bk-banner-text br,
+  .bk-banner-msg { display: none; }
+  .bk-banner-session {
+    display: block;
+    font-size: 12.8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .bk-banner-timer { grid-area: timer; justify-self: start; }
+  .bk-banner-checkout { grid-area: checkout; flex: 1; text-align: center; }
+  .bk-banner-dismiss { grid-area: dismiss; align-self: start; margin: -8px -8px 0 0; }
   #sa-bk-expired { white-space: normal; max-width: calc(100vw - 32px); text-align: center; }
 }
 
