@@ -147,6 +147,11 @@
 
   /* ── Booking: per-product cart timer banners ── */
   function initBookingTimers() {
+    /* Publish the mobile Buy/Make bar + hold bar heights for custom.css */
+    syncBarHeights();
+    window.addEventListener('resize', syncBarHeights, { passive: true });
+    window.addEventListener('orientationchange', syncBarHeights);
+
     /* Show expired toast if we just reloaded after a timer expiry (the /cart
        page reloads; the value is the class URL for "Book again", or '1') */
     var justExpired = sessionStorage.getItem('sa_bk_expired');
@@ -291,6 +296,7 @@
       c = document.createElement('div');
       c.id = 'sa-bk-banner-container';
       document.body.appendChild(c);
+      if ('ResizeObserver' in window) new ResizeObserver(syncBarHeights).observe(c);
     }
     return c;
   }
@@ -327,6 +333,7 @@
     if (sessionStorage.getItem(collapseKey)) banner.classList.add('bk-collapsed');
 
     container.appendChild(banner);
+    syncBarHeights();
 
     /* rAF does not run in a background tab, so the timeout makes sure the bar
        never sits off-screen with the timer ticking */
@@ -355,7 +362,7 @@
         var removed = removeHeldCartItems(data).catch(function () {});
 
         banner.classList.remove('bk-banner-in');
-        setTimeout(function () { banner.remove(); }, 400);
+        setTimeout(function () { banner.remove(); syncBarHeights(); }, 400);
 
         if (onCart) {
           /* The cart page lists the lines, so it reloads; the toast follows the reload */
@@ -370,7 +377,10 @@
         var urgent = rem < 120000;
         if (timerEl) timerEl.textContent = t;
         if (pillTimerEl) pillTimerEl.textContent = t;
-        banner.classList.toggle('bk-urgent', urgent);
+        if (urgent !== banner.classList.contains('bk-urgent')) {
+          banner.classList.toggle('bk-urgent', urgent);
+          syncBarHeights();
+        }
         if (msgEl) {
           msgEl.textContent = urgent
             ? 'Hurry — ' + t + ' left to checkout.'
@@ -387,7 +397,26 @@
     banner.querySelector('.bk-banner-dismiss').addEventListener('click', function () {
       banner.classList.add('bk-collapsed');
       sessionStorage.setItem(collapseKey, '1');
+      syncBarHeights();
     });
+  }
+
+  /* On phones the theme's fixed Buy Art / Make Art bar (.rb-mobile-paths) sits
+     at the bottom; custom.css stacks the hold bar on top of it and pads the page
+     using these two heights. The expanded-banner total also matches what
+     whatsapp.js publishes under the same name when the WhatsApp button is on. */
+  function syncBarHeights() {
+    var paths = document.querySelector('.rb-mobile-paths');
+    var pathsH = paths && getComputedStyle(paths).display === 'flex' ? paths.offsetHeight : 0;
+    var bannerH = 0;
+    var c = document.getElementById('sa-bk-banner-container');
+    if (c) {
+      Array.prototype.forEach.call(c.querySelectorAll('.sa-bk-banner'), function (b) {
+        if (!b.classList.contains('bk-collapsed')) bannerH += b.offsetHeight;
+      });
+    }
+    document.documentElement.style.setProperty('--rb-mobile-paths-h', pathsH + 'px');
+    document.documentElement.style.setProperty('--saf-bk-banner-h', bannerH + 'px');
   }
 
   /* Header cart count after held lines are removed without a reload

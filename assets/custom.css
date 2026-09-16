@@ -241,12 +241,20 @@ body:has(.saf-whatsapp) .sa-bk-banner.bk-collapsed .bk-banner-pill { right: 88px
   body:has(.saf-mobile-ctas) .bk-banner-inner { padding-bottom: 12px; }
 }
 @media screen and (max-width: 749px) {
-  /* Brand "Buy Art / Make Art" bar from rb-header (59px + home indicator):
-     the pill and toast sit above it instead of on its buttons */
+  /* Brand "Buy Art / Make Art" bar from rb-header. custom.js publishes its real
+     height (--rb-mobile-paths-h, 0 when hidden) and the expanded hold bars'
+     height (--saf-bk-banner-h): the hold bar stacks directly on top of the path
+     bar, the pill and toast float 16px above it, and the page keeps room for both. */
+  #sa-bk-banner-container { bottom: var(--rb-mobile-paths-h, 0px); }
+  /* the path bar below already pads for the home indicator */
+  body:has(.rb-mobile-paths) .bk-banner-inner { padding-bottom: 12px; }
   body:has(.rb-mobile-paths) .sa-bk-banner.bk-collapsed .bk-banner-pill,
   body:has(.rb-mobile-paths) #sa-bk-expired {
-    bottom: calc(75px + env(safe-area-inset-bottom, 0px));
+    bottom: calc(var(--rb-mobile-paths-h, 75px) + 16px);
   }
+  /* `html` outranks rb-header's own body:has(.rb-mobile-paths){padding-bottom:78px},
+     which is printed later in <body> and would otherwise win the tie */
+  html body:has(.rb-mobile-paths) { padding-bottom: calc(78px + var(--saf-bk-banner-h, 0px)); }
 }
 
 /* Mobile: row 1 = title (one line) + session, × top-right; row 2 = timer + Checkout.
@@ -262,12 +270,13 @@ body:has(.saf-whatsapp) .sa-bk-banner.bk-collapsed .bk-banner-pill { right: 88px
     align-items: center;
     column-gap: 12px;
     row-gap: 8px;
-    padding: 10px 14px calc(10px + env(safe-area-inset-bottom, 0px));
+    padding: 8px 14px calc(10px + env(safe-area-inset-bottom, 0px));
   }
-  body:has(.saf-mobile-ctas) .bk-banner-inner { padding-bottom: 10px; }
+  body:has(.saf-mobile-ctas) .bk-banner-inner,
+  body:has(.rb-mobile-paths) .bk-banner-inner { padding-bottom: 10px; }
   .bk-banner-left,
   .bk-banner-actions { display: contents; }
-  .bk-banner-text { grid-area: text; font-size: 15.2px; }
+  .bk-banner-text { grid-area: text; font-size: 14.4px; }
   .bk-banner-text strong {
     display: block;
     white-space: nowrap;
@@ -284,8 +293,15 @@ body:has(.saf-whatsapp) .sa-bk-banner.bk-collapsed .bk-banner-pill { right: 88px
     overflow: hidden;
     text-overflow: ellipsis;
   }
-  .bk-banner-timer { grid-area: timer; justify-self: start; }
-  .bk-banner-checkout { grid-area: checkout; flex: 1; text-align: center; }
+  .bk-banner-timer { grid-area: timer; justify-self: start; font-size: 13px; }
+  .bk-banner-checkout {
+    grid-area: checkout;
+    flex: 1;
+    text-align: center;
+    height: 36px;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
   .bk-banner-dismiss { grid-area: dismiss; align-self: start; margin: -8px -8px 0 0; }
   #sa-bk-expired { white-space: normal; max-width: calc(100vw - 32px); text-align: center; }
 }
