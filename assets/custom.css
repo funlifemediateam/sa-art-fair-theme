@@ -95,8 +95,9 @@
   font-size: 21.6px;
   font-weight: 700;
   line-height: 1;
-  color: var(--rb-cherry, #b00e3f);
-  padding: 4px 0;
+  background: var(--rb-cherry, #b00e3f);
+  color: #fff;
+  padding: 4px 12px;
   border-radius: 999px;
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
@@ -154,12 +155,7 @@
 }
 .bk-banner-dismiss:hover { color: var(--rb-cherry, #b00e3f); }
 
-/* Urgent (< 2 min): timer turns into a cherry chip and pulses */
-.sa-bk-banner.bk-urgent .bk-banner-timer {
-  background: var(--rb-cherry, #b00e3f);
-  color: #fff;
-  padding: 4px 12px;
-}
+/* Urgent (< 2 min): the timer chip (and the collapsed pill) pulse */
 @media (prefers-reduced-motion: no-preference) {
   .sa-bk-banner.bk-urgent .bk-banner-timer,
   .sa-bk-banner.bk-urgent .bk-banner-pill {
@@ -284,15 +280,16 @@ body:has(.saf-whatsapp) .sa-bk-banner.bk-collapsed .bk-banner-pill { right: 88px
     text-overflow: ellipsis;
   }
   .bk-banner-sep,
-  .bk-banner-text br,
-  .bk-banner-msg { display: none; }
-  .bk-banner-session {
+  .bk-banner-text br { display: none; }
+  .bk-banner-session,
+  .bk-banner-msg {
     display: block;
     font-size: 12.8px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
+  .bk-banner-msg { color: var(--rb-ink, #1e1e1e); }
   .bk-banner-timer { grid-area: timer; justify-self: start; font-size: 13px; }
   .bk-banner-checkout {
     grid-area: checkout;
