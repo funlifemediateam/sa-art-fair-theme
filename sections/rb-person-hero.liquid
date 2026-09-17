@@ -341,6 +341,17 @@
   endif
 
   assign social_url = section.settings.social_url
+  comment
+    The "Instagram link" field below is an off-site link like any other, so
+    the switch governs it too — otherwise typing a handle into the theme
+    editor would quietly defeat it.
+  endcomment
+  if social_url != blank
+    unless settings.show_artist_external_links
+      assign social_url = ''
+      assign artist_links_hidden = true
+    endunless
+  endif
   if social_url == blank and person_socials != blank
     if settings.show_artist_external_links
       assign social_url = person_socials.instagram
