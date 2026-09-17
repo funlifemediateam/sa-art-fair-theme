@@ -118,8 +118,13 @@
         + '</div>'
       : '';
 
+    /* The two hairlines carry display:block for a reason: they are empty
+       divs, and base.css hides every `div:empty` outright. Inline flex/height
+       can't undo that — `display` has to be set inline to beat the
+       stylesheet — so without it both rules collapse to 0x0 and "or" sits
+       alone against the left edge. Don't drop it as redundant. */
     var divider = GOOGLE_ID
-      ? '<div id="sa-popup-or" style="display:flex;align-items:center;gap:10px;margin:4px 0 16px"><div style="flex:1;height:1px;background:#ebe5df"></div><span style="font-size:.7rem;color:#bbb;font-weight:600;text-transform:uppercase;letter-spacing:.06em">or</span><div style="flex:1;height:1px;background:#ebe5df"></div></div>'
+      ? '<div id="sa-popup-or" style="display:flex;align-items:center;gap:10px;margin:4px 0 16px"><div style="display:block;flex:1;height:1px;background:#ebe5df"></div><span style="font-size:.7rem;color:#bbb;font-weight:600;text-transform:uppercase;letter-spacing:.06em">or</span><div style="display:block;flex:1;height:1px;background:#ebe5df"></div></div>'
       : '';
 
     modal.innerHTML = '<div id="sa-popup-body">'
