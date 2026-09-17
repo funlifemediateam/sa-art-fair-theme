@@ -30,12 +30,13 @@
       again here would say that sentence twice within one screen, so the band
       picks up where the hero left off.
 
-      The first sentence is found with the same filter chain rb-person-hero
-      uses, then removed by prefix rather than by rebuilding the string — the
-      two cannot drift apart that way. The chain spaces out paragraph and line
-      ends before strip_html: bios are written in a rich text box now
-      (2026-09-14), and "one.</p><p>Two" would otherwise read "one.Two" and hide
-      the sentence break.
+      The first sentence is removed by prefix rather than by rebuilding the
+      string, and since 2026-09-18 it is found by the shared snippet rather
+      than by a second copy of the hero's filter chain, so the two cannot drift
+      apart. The snippet spaces out paragraph and line ends before strip_html:
+      bios are written in a rich text box now (2026-09-14), and
+      "one.</p><p>Two" would otherwise read "one.Two" and hide the sentence
+      break.
 
       A few bios are a single sentence, so there is nothing left to hand over.
       Those used to print the whole description again, which put the same
@@ -44,14 +45,28 @@
       band now stands down entirely: no body, and no "More about X" heading
       over nothing. It comes back by itself once the bio gains a second sentence.
     endcomment
-    if section.settings.skip_first_sentence
-      assign plain = collection.description | replace: '</p>', ' </p>' | replace: '<br', ' <br' | replace: '</li>', ' </li>' | strip_html | strip | replace: '&nbsp;', ' '
-      assign first = plain | split: '. ' | first | strip
-      assign rest = plain | remove_first: first | remove_first: '. ' | strip
-      assign body = rest
-      if rest == blank
-        assign nothing_new = true
-      endif
+    assign skip_first = section.settings.skip_first_sentence
+  endif
+-%}
+{%- if skip_first -%}
+  {%- comment -%}
+    Where the first sentence ends is asked once, in
+    snippets/rb-first-sentence.liquid, and the hero asks the same question of
+    the same snippet. It used to be worked out here with its own copy of the
+    filter chain, which is how Careshia Esperanza's page came to open "CARESHIA
+    ESPERANZA STEENKAMP (b." up top and carry on "1991) is a South African
+    self-taught artist" down here: two copies of one rule, disagreeing.
+  {%- endcomment -%}
+  {%- capture rest -%}
+    {%- render 'rb-first-sentence', description: collection.description, part: 'rest' -%}
+  {%- endcapture -%}
+{%- endif -%}
+{%- liquid
+  if skip_first
+    assign rest = rest | strip
+    assign body = rest
+    if rest == blank
+      assign nothing_new = true
     endif
   endif
 -%}

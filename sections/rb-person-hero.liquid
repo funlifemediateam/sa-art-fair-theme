@@ -72,27 +72,25 @@
     in rb-script-statement further down) do not say the same thing twice.
   endcomment
   assign script = section.settings.script
-  if script == blank and section.settings.script_from_description and collection.description != blank
-    assign plain = collection.description | replace: '</p>', ' </p>' | replace: '<br', ' <br' | replace: '</li>', ' </li>' | strip_html | strip | replace: '&nbsp;', ' '
-    assign first = plain | split: '. ' | first | strip
-    if first != blank
-      unless first contains '.'
-        assign first = first | append: '.'
-      endunless
-      comment
-        A handful of bios open with a sentence of 200 characters or more, which
-        is a paragraph however it is set. Cutting on a word rather than at a
-        character count keeps the tail readable; anything shorter is left whole,
-        so the common case never loses its last word to a truncation.
-      endcomment
-      assign first_words = first | split: ' '
-      if first_words.size > 24
-        assign script = first | truncatewords: 22
-      else
-        assign script = first
-      endif
-    endif
-  endif
+-%}
+{%- if script == blank and section.settings.script_from_description and collection.description != blank -%}
+  {%- comment -%}
+    The opening sentence, whole. Where it breaks is decided in one place,
+    snippets/rb-first-sentence.liquid, because rb-script-statement further down
+    the page starts where this leaves off and the two must agree exactly.
+
+    Until 2026-09-18 a sentence over 24 words was cut to 22 with truncatewords,
+    which put a literal "…" on seven pages and lost the tail for good: the
+    statement band removes the WHOLE first sentence, so the words trimmed here
+    were printed nowhere. Length is now handled by the type scale below, which
+    steps down instead of cutting.
+  {%- endcomment -%}
+  {%- capture script -%}
+    {%- render 'rb-first-sentence', description: collection.description, part: 'first' -%}
+  {%- endcapture -%}
+{%- endif -%}
+{%- liquid
+  assign script = script | strip
 
   comment
     The comp's script line is 55 characters set over three lines. A real bio's
@@ -100,6 +98,13 @@
     lines of cursive down the left of the page. So the line steps down through
     three sizes as it lengthens and takes a wider measure with it, which holds
     every page at the comp's three-line shape instead of holding its type size.
+
+    A fourth step was added on 2026-09-18, when the sentence stopped being cut
+    at 22 words: the longest opening sentence in the store is now 226 characters
+    (Zara-Leigh Farinha), where before nothing reached this far. It is the last
+    step there is. 17px is the floor on both desktop and mobile — the script
+    face is hard to read below that — so a sentence longer than tier 4 expects
+    simply makes the hero taller, which is the intended trade.
   endcomment
   assign script_len = script | strip_html | size
   assign script_tier = 1
@@ -108,6 +113,9 @@
   endif
   if script_len > 105
     assign script_tier = 3
+  endif
+  if script_len > 175
+    assign script_tier = 4
   endif
 
   assign show_tags = false
@@ -412,6 +420,12 @@
        three steps below hold that shape as the sentence gets longer — see
        script_tier above. Each pair is sized at the 1920 frame. */
     {%- case script_tier -%}
+      {%- when 4 -%}
+        /* The last step. 17px is the floor on every width: past here the hero
+           grows taller rather than the script getting smaller. ~600px at 23px
+           holds the measure near 60 characters a line. */
+        font-size: clamp(17px, 1.20vw, 23px);
+        max-width: clamp(300px, 31.3vw, 600px);
       {%- when 3 -%}
         font-size: clamp(17px, 1.46vw, 28px);
         max-width: clamp(280px, 27.1vw, 520px);

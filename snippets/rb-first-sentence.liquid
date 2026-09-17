@@ -1,0 +1,210 @@
+{%- comment -%}
+  One answer to "where does this person's bio break in two?".
+
+  A person page prints the bio twice over, in two halves: the hero sets the
+  opening sentence in the script face, and rb-script-statement picks up from
+  there in the body face. Both used to work the break out for themselves with
+  the same filter chain copied into each file. That is two answers to one
+  question, free to disagree the moment either is edited — and when they do
+  disagree the page either repeats a clause or drops one. So the question is
+  asked here, once.
+
+  Usage:
+    {%- capture bio_first -%}
+      {%- render 'rb-first-sentence', description: collection.description, part: 'first' -%}
+    {%- endcapture -%}
+    {%- capture bio_rest -%}
+      {%- render 'rb-first-sentence', description: collection.description, part: 'rest' -%}
+    {%- endcapture -%}
+
+  "first" is always a whole sentence, ending on its own full stop. It is never
+  shortened and never gains an ellipsis: length is a matter for the type scale
+  in rb-person-hero, not for this snippet. "rest" is everything after it, or
+  blank when the bio is a single sentence.
+
+  Liquid has no regular expressions, so a full stop that does not end a
+  sentence is found by listing the cases and hiding its full stop behind a
+  sentinel until the split is done:
+
+    Mrs. Jane / St. George's / e.g. / i.e. / Ph.D.   the abbreviation list
+    J. R. Meyer / ZARA LEE (b. 1991)                 a lone initial
+    R1 500.50 / 30.5 cm                              already safe: a decimal
+                                                     point has no space after it
+    "Art. Life." she says                            a bio opening on a quote
+                                                     keeps the quote whole
+
+  Sentences may also end on ! or ?, and on a full stop tucked inside a closing
+  quotation mark. Where the bio has paragraphs the break is looked for in the
+  FIRST paragraph only, so a short opening line is not welded onto the one
+  below it.
+{%- endcomment -%}
+
+{%- liquid
+  assign sent_mark = '‡'
+  assign para_mark = '¶'
+  assign split_mark = '‖'
+
+  assign src = description | default: ''
+
+  comment
+    Paragraph ends become a marker before the tags go, so the shape of the bio
+    survives strip_html. <br> is a line break inside a paragraph, not the end
+    of one, so it becomes a space the way it always has.
+  endcomment
+  assign src = src | replace: '</p>', para_mark | replace: '</div>', para_mark | replace: '</li>', para_mark
+  assign src = src | replace: '</h1>', para_mark | replace: '</h2>', para_mark | replace: '</h3>', para_mark
+  assign src = src | replace: '</blockquote>', para_mark
+  assign src = src | replace: '<br>', ' ' | replace: '<br/>', ' ' | replace: '<br />', ' ' | replace: '<br', ' <br'
+  assign plain = src | strip_html
+
+  comment
+    strip_html leaves entities as they were written, and the rich text editor
+    writes plenty of them. They have to come back before any of the matching
+    below, or "Jones &amp; Co. make her frames" never meets the abbreviation
+    list. &amp; is undone last so an already-escaped entity is not unescaped
+    a second time.
+  endcomment
+  assign plain = plain | replace: '&nbsp;', ' ' | replace: '&#160;', ' '
+  assign plain = plain | replace: '&lt;', '<' | replace: '&gt;', '>'
+  assign plain = plain | replace: '&quot;', '"' | replace: '&#34;', '"' | replace: '&#39;', "'"
+  assign plain = plain | replace: '&rsquo;', '’' | replace: '&lsquo;', '‘'
+  assign plain = plain | replace: '&ldquo;', '“' | replace: '&rdquo;', '”'
+  assign plain = plain | replace: '&mdash;', '—' | replace: '&ndash;', '–' | replace: '&hellip;', '…'
+  assign plain = plain | replace: '&amp;', '&'
+  assign plain = plain | newline_to_br | replace: '<br />', ' ' | replace: '	', ' '
+
+  # Collapse runs of spaces, and of empty paragraphs, without a regex.
+  assign plain = plain | replace: '  ', ' ' | replace: '  ', ' ' | replace: '  ', ' '
+  assign plain = plain | replace: '  ', ' ' | replace: '  ', ' ' | replace: '  ', ' '
+  assign plain = plain | replace: ' ¶', para_mark | replace: '¶ ', para_mark
+  assign plain = plain | replace: '¶¶', para_mark | replace: '¶¶', para_mark | replace: '¶¶', para_mark
+  assign plain = plain | strip
+
+  # The flat bio, paragraph markers spent, is what "rest" is measured against.
+  assign flat = plain | replace: para_mark, ' ' | replace: '  ', ' ' | strip
+
+  # The break is looked for in the first paragraph that has anything in it.
+  assign para = ''
+  assign chunks = plain | split: para_mark
+  for chunk in chunks
+    assign candidate = chunk | strip
+    if candidate != blank
+      assign para = candidate
+      break
+    endif
+  endfor
+-%}
+
+{%- liquid
+  if para == blank
+    assign first_out = ''
+  else
+    comment
+      Hide every full stop that is not the end of a sentence. Leading space so
+      a bio opening on "Dr. " is matched by the same rule as one mid-sentence.
+    endcomment
+    assign work = para | prepend: ' '
+    comment
+      Anchored on a space or an opening bracket, never bare: "r." is on no list
+      precisely because an unanchored "r. " also matches the end of "her." and
+      of "colour.", which silently welds two sentences into one. Single letters
+      are the initials loop's job below, and that loop is anchored the same way.
+    endcomment
+    assign abbr = 'Mr,Mrs,Ms,Miss,Dr,Prof,Rev,Hon,St,Sr,Jr,vs,etc,e.g,i.e,cf,approx,est,ca,No,Ave,Rd,Blvd,Mt,Ft,Inc,Ltd,Co,Dept,Univ,Fig,Vol,pp,ed,fl,Ph.D,B.A,M.A,B.F.A,M.F.A,Hons,Jan,Feb,Mar,Apr,Jun,Jul,Aug,Sept,Sep,Oct,Nov,Dec' | split: ','
+    for a in abbr
+      assign hit = ' ' | append: a | append: '. '
+      assign fix = ' ' | append: a | append: sent_mark | append: ' '
+      assign work = work | replace: hit, fix
+      assign hit = '(' | append: a | append: '. '
+      assign fix = '(' | append: a | append: sent_mark | append: ' '
+      assign work = work | replace: hit, fix
+    endfor
+
+    comment
+      A lone initial: "J. R. Meyer", and the birth year in "ZARA LEE (b. 1991)".
+      Only a single letter standing on its own counts, so "Cape Town. Her work"
+      is untouched.
+    endcomment
+    assign letters = 'A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z' | split: ','
+    for L in letters
+      assign hit = ' ' | append: L | append: '. '
+      assign fix = ' ' | append: L | append: sent_mark | append: ' '
+      assign work = work | replace: hit, fix
+      assign hit = '(' | append: L | append: '. '
+      assign fix = '(' | append: L | append: sent_mark | append: ' '
+      assign work = work | replace: hit, fix
+    endfor
+
+    # A full stop inside a closing quote still ends the sentence.
+    assign work = work | replace: '." ', '."‖' | replace: '.” ', '.”‖' | replace: ".' ", ".'‖" | replace: '.’ ', '.’‖'
+    assign work = work | replace: '!" ', '!"‖' | replace: '!” ', '!”‖' | replace: "!' ", "!'‖" | replace: '!’ ', '!’‖'
+    assign work = work | replace: '?" ', '?"‖' | replace: '?” ', '?”‖' | replace: "?' ", "?'‖" | replace: '?’ ', '?’‖'
+    assign work = work | replace: '. ', '.‖' | replace: '! ', '!‖' | replace: '? ', '?‖'
+
+    assign first_out = work | split: split_mark | first | replace: sent_mark, '.' | strip
+  endif
+-%}
+
+{%- liquid
+  comment
+    A bio that opens on a quotation keeps the whole quotation, however many
+    full stops are inside it, plus the terminator that follows the closing mark.
+  endcomment
+  if para != blank and first_out != blank
+    assign opener = para | slice: 0, 1
+    assign closer = ''
+    if opener == '"'
+      assign closer = '"'
+    elsif opener == '“'
+      assign closer = '”'
+    elsif opener == "'"
+      assign closer = "'"
+    elsif opener == '‘'
+      assign closer = '’'
+    endif
+    if closer != blank
+      assign after = para | remove_first: opener
+      if after contains closer
+        assign quoted = after | split: closer | first | prepend: opener | append: closer
+        assign qlen = quoted | size
+        assign tail = para | slice: qlen, 1
+        if tail == '.' or tail == '!' or tail == '?'
+          assign quoted = quoted | append: tail
+        endif
+        assign qsize = quoted | size
+        assign fsize = first_out | size
+        if qsize > fsize
+          assign first_out = quoted
+        endif
+      endif
+    endif
+  endif
+
+  # A bio with no terminator at all still reads as a finished line.
+  assign core = first_out
+  if first_out != blank
+    assign last = first_out | slice: -1, 1
+    unless last == '.' or last == '!' or last == '?' or last == '”' or last == '’' or last == '"' or last == "'"
+      assign first_out = first_out | append: '.'
+    endunless
+  endif
+
+  comment
+    "rest" is the flat bio with the opening sentence taken off its front by
+    prefix, never rebuilt, so the two halves cannot drift apart.
+  endcomment
+  assign rest_out = ''
+  if flat != blank and first_out != blank
+    if flat contains first_out
+      assign rest_out = flat | remove_first: first_out | strip
+    else
+      assign rest_out = flat | remove_first: core | strip
+      assign lead = rest_out | slice: 0, 1
+      if lead == '.' or lead == '!' or lead == '?'
+        assign rest_out = rest_out | remove_first: lead | strip
+      endif
+    endif
+  endif
+-%}
+
+{%- if part == 'rest' -%}{{ rest_out }}{%- else -%}{{ first_out }}{%- endif -%}
