@@ -53,6 +53,12 @@
   #shopify-section-{{ sid }} .rb-contact__heading {
     color: {{ section.settings.heading_color }};
     text-wrap: balance;
+    /* Let the heading run into the column's right padding (same clamp as
+       .rb-contact__col). The display size scales with the column, so
+       "Established in Cape Town." filled it to within 4px, and a classic 15px
+       scrollbar (Windows, or a Mac with a mouse) wrapped it onto two lines at
+       every desktop width. */
+    margin-right: calc(-1 * clamp(20px, 10.26vw, 197px));
   }
   #shopify-section-{{ sid }} .rb-contact__heading em,
   #shopify-section-{{ sid }} .rb-contact__heading i {
@@ -161,6 +167,7 @@
     #shopify-section-{{ sid }} .rb-contact__col {
       padding-inline: var(--rb-gutter);
     }
+    #shopify-section-{{ sid }} .rb-contact__heading { margin-right: 0; }
   }
 </style>
 
