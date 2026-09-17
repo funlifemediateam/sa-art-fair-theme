@@ -1679,5 +1679,17 @@
         "default": "Join our list for first access to new artists, exhibitions and exclusive works — and take 10% off your first purchase."
       }
     ]
+  },
+  {
+    "name": "Artist & teacher links",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "show_artist_external_links",
+        "label": "Show artist & teacher external links (Instagram, websites)",
+        "info": "Off keeps visitors on saartfair.co.za. Does not affect SA Art Fair's own social links in the header and footer.",
+        "default": false
+      }
+    ]
   }
 ]

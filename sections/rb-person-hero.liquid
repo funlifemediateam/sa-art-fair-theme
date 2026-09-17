@@ -264,8 +264,20 @@
       endif
     endfor
   endif
+  comment
+    "Artist & teacher links" in Theme settings is the one switch that keeps
+    visitors on saartfair.co.za. With it off the person's own website never
+    becomes the "See Portfolio" target, so the button is never emitted —
+    nothing is hidden with CSS. SA Art Fair's own socials in the header and
+    footer come from a different metafield and are not affected.
+  endcomment
+  assign artist_links_hidden = false
   if portfolio_url == blank and person_socials != blank
-    assign portfolio_url = person_socials.website
+    if settings.show_artist_external_links
+      assign portfolio_url = person_socials.website
+    elsif person_socials.website != blank
+      assign artist_links_hidden = true
+    endif
   endif
   assign portfolio_external = false
   if portfolio_url contains '://'
@@ -330,7 +342,11 @@
 
   assign social_url = section.settings.social_url
   if social_url == blank and person_socials != blank
-    assign social_url = person_socials.instagram
+    if settings.show_artist_external_links
+      assign social_url = person_socials.instagram
+    elsif person_socials.instagram != blank
+      assign artist_links_hidden = true
+    endif
   endif
 -%}
 
@@ -422,6 +438,11 @@
     margin-top: clamp(14px, 1.46vw, 28px);
     {% if section.settings.align == 'center' %}justify-content: center;{% endif %}
   }
+  /* Set only when "Artist & teacher links" is off and that left one button
+     standing on its own — see the actions row in the markup below. */
+  #shopify-section-{{ sid }} .rb-ph__actions--gated {
+    justify-content: center;
+  }
   #shopify-section-{{ sid }} .rb-ph__social {
     display: inline-flex;
     flex: 0 0 auto;
@@ -506,8 +527,26 @@
         </ul>
       {%- endif -%}
 
+      {%- liquid
+        comment
+          With the switch off, a row that used to pair the Instagram icon with
+          an on-site button is left holding that button alone. Centre the
+          survivor — but only where a link was actually removed, so rows that
+          have always carried a single button keep the alignment they have now.
+        endcomment
+        assign actions_left = 0
+        if social_url != blank
+          assign actions_left = actions_left | plus: 1
+        endif
+        if show_portfolio
+          assign actions_left = actions_left | plus: 1
+        endif
+        if show_classes
+          assign actions_left = actions_left | plus: 1
+        endif
+      -%}
       {%- if social_url != blank or show_portfolio or show_classes -%}
-        <div class="rb-ph__actions">
+        <div class="rb-ph__actions{% if artist_links_hidden and actions_left == 1 %} rb-ph__actions--gated{% endif %}">
           {%- if social_url != blank -%}
             <a href="{{ social_url }}" class="rb-ph__social"
                target="_blank" rel="noopener" aria-label="{{ name | escape }} on Instagram">
