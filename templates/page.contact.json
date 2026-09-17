@@ -9,6 +9,7 @@
         "image": "shopify:\/\/shop_images\/tissuepaper_background__0f3642_SA_Art_Fair.webp",
         "image_blend": "normal",
         "image_rotate": "0",
+        "video_mobile_fallback": true,
         "band_height": 560,
         "min_height": 240,
         "mobile_ratio": "4 \/ 3",
@@ -36,13 +37,17 @@
             "side": "studio",
             "heading": "The Studio",
             "body": "<p>Classes, workshops and studio bookings.<\/p>",
+            "email": "",
+            "phone": "",
             "email_label": "Email",
             "phone_label": "Call",
             "show_whatsapp": true,
             "whatsapp_label": "WhatsApp us",
+            "whatsapp_message": "",
             "background": "#b00e3f",
             "text_color": "#ffffff",
-            "button_bg": "#ffffff"
+            "button_bg": "#ffffff",
+            "button_text": ""
           }
         },
         "store": {
@@ -51,13 +56,17 @@
             "side": "store",
             "heading": "The Store",
             "body": "<p>Buying art, orders and deliveries.<\/p>",
+            "email": "",
+            "phone": "",
             "email_label": "Email",
             "phone_label": "Call",
             "show_whatsapp": true,
             "whatsapp_label": "WhatsApp us",
+            "whatsapp_message": "",
             "background": "#505a43",
             "text_color": "#ffffff",
-            "button_bg": "#ffffff"
+            "button_bg": "#ffffff",
+            "button_text": ""
           }
         }
       },
@@ -66,6 +75,7 @@
         "store"
       ],
       "settings": {
+        "heading": "",
         "show_badge": true,
         "space_below": false,
         "background": "#ffffff"
@@ -74,7 +84,7 @@
     "contact": {
       "type": "rb-contact",
       "settings": {
-        "heading": "<p><em>Established<\/em> in the valley of the Cape Peninsula.<\/p>",
+        "heading": "<p><em>Established<\/em> in Cape Town.<\/p>",
         "heading_color": "#1e1e1e",
         "heading_accent": "#bea532",
         "map_width": 50,

@@ -166,7 +166,7 @@
     "contact": {
       "type": "rb-contact",
       "settings": {
-        "heading": "<p><em>Established</em> in the valley of the Cape Peninsula.</p>",
+        "heading": "<p><em>Established</em> in Cape Town.</p>",
         "heading_color": "#1e1e1e",
         "heading_accent": "#bea532",
         "map_width": 50,
