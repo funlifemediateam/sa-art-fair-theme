@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "hero": {
@@ -6,12 +15,12 @@
         "fill": "colour",
         "background": "#0F3642",
         "texture": 100,
-        "image": "shopify:\/\/shop_images\/tissuepaper_background__0f3642_SA_Art_Fair.webp",
+        "image": "shopify://shop_images/tissuepaper_background__0f3642_SA_Art_Fair.webp",
         "image_blend": "normal",
         "image_rotate": "0",
         "band_height": 680,
         "min_height": 260,
-        "mobile_ratio": "4 \/ 3",
+        "mobile_ratio": "4 / 3",
         "focal_x": 50,
         "focal_y": 50,
         "overlay_color": "#1e1e1e",
@@ -31,7 +40,7 @@
           "type": "collection_bg",
           "settings": {
             "collection": "warm-tones",
-            "image": "shopify:\/\/shop_images\/tissuepaper_background__E07468_SA_Art_Fair.webp",
+            "image": "shopify://shop_images/tissuepaper_background__E07468_SA_Art_Fair.webp",
             "background": "#e07468",
             "image_blend": "inherit",
             "image_rotate": "inherit"
@@ -41,7 +50,7 @@
           "type": "collection_bg",
           "settings": {
             "collection": "cool-tones",
-            "image": "shopify:\/\/shop_images\/tissuepaper_background__0f3642_SA_Art_Fair.webp",
+            "image": "shopify://shop_images/tissuepaper_background__0f3642_SA_Art_Fair.webp",
             "background": "#0f3642",
             "image_blend": "inherit",
             "image_rotate": "inherit"
@@ -51,7 +60,7 @@
           "type": "collection_bg",
           "settings": {
             "collection": "neutral-tones",
-            "image": "shopify:\/\/shop_images\/tissuepaper_background_SA_Art_Fair.webp",
+            "image": "shopify://shop_images/tissuepaper_background_SA_Art_Fair.webp",
             "background": "#505a43",
             "image_blend": "inherit",
             "image_rotate": "inherit"
@@ -72,7 +81,7 @@
         "layout": "toolbar",
         "per_page": 24,
         "columns": 4,
-        "image_ratio": "1 \/ 1",
+        "image_ratio": "1 / 1",
         "hover_label": "View Artwork",
         "search_placeholder": "Search artworks, artists, mediums…",
         "bar_color": "#f4f4f1",

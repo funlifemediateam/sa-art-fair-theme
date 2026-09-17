@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "art_quiz": {
@@ -10,7 +19,7 @@
         "accent_color": "#f26b52",
         "min_height": 85,
         "api_url": "https://sa-art-fair-admin.vercel.app",
-        "meta_text": "14 artworks · 1 minute"
+        "meta_text": "14 artworks \u00b7 1 minute"
       }
     }
   },

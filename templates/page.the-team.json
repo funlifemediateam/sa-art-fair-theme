@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "hero": {
@@ -6,12 +15,12 @@
         "fill": "colour",
         "background": "#b00e3f",
         "texture": 100,
-        "image": "shopify://shop_images/tissuepaper_background__B00E3F_SA_Art_Fair.webp",
+        "image": "shopify:\/\/shop_images\/tissuepaper_background__B00E3F_SA_Art_Fair.webp",
         "image_blend": "normal",
         "image_rotate": "0",
         "band_height": 680,
         "min_height": 260,
-        "mobile_ratio": "4 / 3",
+        "mobile_ratio": "4 \/ 3",
         "focal_x": 50,
         "focal_y": 50,
         "overlay_color": "#1e1e1e",
@@ -30,7 +39,7 @@
     "founders": {
       "type": "rb-founders",
       "settings": {
-        "image": "shopify://shop_images/saf-home-founders.png",
+        "image": "shopify:\/\/shop_images\/saf-home-founders.png",
         "image_width": 475,
         "show_stamp": true,
         "stamp_width": 175,
@@ -50,29 +59,7 @@
           "type": "person",
           "settings": {
             "collection": "susan-orpen-1",
-            "name": "",
-            "role": "Art Classes",
-            "link": "",
-            "button_label": "Learn More",
-            "tone": "auto"
-          }
-        },
-        "p1": {
-          "type": "person",
-          "settings": {
-            "collection": "shelley-cowling-1",
-            "name": "",
-            "role": "Art Classes",
-            "link": "",
-            "button_label": "Learn More",
-            "tone": "auto"
-          }
-        },
-        "p2": {
-          "type": "person",
-          "settings": {
-            "collection": "jacqui-sundelson-1",
-            "name": "",
+            "name": "Susan Orpen",
             "role": "Art Classes",
             "link": "",
             "button_label": "Learn More",
@@ -83,7 +70,7 @@
           "type": "person",
           "settings": {
             "collection": "janice-grant-1",
-            "name": "",
+            "name": "Janice Grant",
             "role": "Art Classes",
             "link": "",
             "button_label": "Learn More",
@@ -94,6 +81,17 @@
           "type": "person",
           "settings": {
             "collection": "zara-leigh-farinha-1",
+            "name": "Zara-Leigh Farinha",
+            "role": "Art Classes",
+            "link": "",
+            "button_label": "Learn More",
+            "tone": "auto"
+          }
+        },
+        "careshia-esperanza": {
+          "type": "person",
+          "settings": {
+            "collection": "careshia-esperanza",
             "name": "",
             "role": "Art Classes",
             "link": "",
@@ -101,10 +99,10 @@
             "tone": "auto"
           }
         },
-        "p5": {
+        "petronella": {
           "type": "person",
           "settings": {
-            "collection": "teacher-1",
+            "collection": "petronella",
             "name": "",
             "role": "Art Classes",
             "link": "",
@@ -112,10 +110,10 @@
             "tone": "auto"
           }
         },
-        "p6": {
+        "chloe": {
           "type": "person",
           "settings": {
-            "collection": "teacher-2",
+            "collection": "chloe",
             "name": "",
             "role": "Art Classes",
             "link": "",
@@ -123,142 +121,10 @@
             "tone": "auto"
           }
         },
-        "p7": {
+        "shabana-sonday": {
           "type": "person",
           "settings": {
-            "collection": "teacher-3",
-            "name": "",
-            "role": "Art Classes",
-            "link": "",
-            "button_label": "Learn More",
-            "tone": "auto"
-          }
-        },
-        "p8": {
-          "type": "person",
-          "settings": {
-            "collection": "teacher-4",
-            "name": "",
-            "role": "Art Classes",
-            "link": "",
-            "button_label": "Learn More",
-            "tone": "auto"
-          }
-        },
-        "p9": {
-          "type": "person",
-          "settings": {
-            "collection": "teacher-5",
-            "name": "",
-            "role": "Art Classes",
-            "link": "",
-            "button_label": "Learn More",
-            "tone": "auto"
-          }
-        },
-        "p10": {
-          "type": "person",
-          "settings": {
-            "collection": "teacher-6",
-            "name": "",
-            "role": "Art Classes",
-            "link": "",
-            "button_label": "Learn More",
-            "tone": "auto"
-          }
-        },
-        "p11": {
-          "type": "person",
-          "settings": {
-            "collection": "teacher-7",
-            "name": "",
-            "role": "Art Classes",
-            "link": "",
-            "button_label": "Learn More",
-            "tone": "auto"
-          }
-        },
-        "p12": {
-          "type": "person",
-          "settings": {
-            "collection": "teacher-8",
-            "name": "",
-            "role": "Art Classes",
-            "link": "",
-            "button_label": "Learn More",
-            "tone": "auto"
-          }
-        },
-        "p13": {
-          "type": "person",
-          "settings": {
-            "collection": "teacher-9",
-            "name": "",
-            "role": "Art Classes",
-            "link": "",
-            "button_label": "Learn More",
-            "tone": "auto"
-          }
-        },
-        "p14": {
-          "type": "person",
-          "settings": {
-            "collection": "teacher-10",
-            "name": "",
-            "role": "Art Classes",
-            "link": "",
-            "button_label": "Learn More",
-            "tone": "auto"
-          }
-        },
-        "p15": {
-          "type": "person",
-          "settings": {
-            "collection": "teacher-11",
-            "name": "",
-            "role": "Art Classes",
-            "link": "",
-            "button_label": "Learn More",
-            "tone": "auto"
-          }
-        },
-        "p16": {
-          "type": "person",
-          "settings": {
-            "collection": "teacher-12",
-            "name": "",
-            "role": "Art Classes",
-            "link": "",
-            "button_label": "Learn More",
-            "tone": "auto"
-          }
-        },
-        "p17": {
-          "type": "person",
-          "settings": {
-            "collection": "teacher-13",
-            "name": "",
-            "role": "Art Classes",
-            "link": "",
-            "button_label": "Learn More",
-            "tone": "auto"
-          }
-        },
-        "p18": {
-          "type": "person",
-          "settings": {
-            "collection": "teacher-14",
-            "name": "",
-            "role": "Art Classes",
-            "link": "",
-            "button_label": "Learn More",
-            "tone": "auto"
-          }
-        },
-        "p19": {
-          "type": "person",
-          "settings": {
-            "collection": "teacher-15",
+            "collection": "shabana-sonday",
             "name": "",
             "role": "Art Classes",
             "link": "",
@@ -269,32 +135,19 @@
       },
       "block_order": [
         "p0",
-        "p1",
-        "p2",
         "p3",
         "p4",
-        "p5",
-        "p6",
-        "p7",
-        "p8",
-        "p9",
-        "p10",
-        "p11",
-        "p12",
-        "p13",
-        "p14",
-        "p15",
-        "p16",
-        "p17",
-        "p18",
-        "p19"
+        "careshia-esperanza",
+        "petronella",
+        "chloe",
+        "shabana-sonday"
       ],
       "settings": {
-        "eyebrow": "<p>Meet our teachers</p>",
-        "intro": "<p>The artists who teach the studio's classes and workshops.</p>",
+        "eyebrow": "<p>Meet our teachers<\/p>",
+        "intro": "<p>The artists who teach the studio's classes and workshops.<\/p>",
         "intro_color": "#1e1e1e",
         "columns": 4,
-        "image_ratio": "227 / 200",
+        "image_ratio": "227 \/ 200",
         "background": "#ffffff",
         "tone_a": "#b00e3f",
         "tone_a_text": "#ffffff",

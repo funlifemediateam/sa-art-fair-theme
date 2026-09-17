@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "hero": {
@@ -23,6 +32,10 @@
         "portrait_ratio": "79 \/ 69",
         "portrait_x": 47,
         "portrait_y": 52,
+        "media_mode": "portrait",
+        "portrait_grayscale": false,
+        "photo_focal_x": 50,
+        "photo_focal_y": 35,
         "script_from_description": true
       }
     },
@@ -52,6 +65,7 @@
         "heading": "<p>More about <em>Zara-Leigh<\/em>.<\/p>",
         "body": "",
         "use_collection_description": true,
+        "skip_first_sentence": true,
         "background": "#e2ead7",
         "heading_color": "#1e1e1e",
         "accent_color": "#505a43",

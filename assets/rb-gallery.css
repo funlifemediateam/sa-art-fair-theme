@@ -1,0 +1,415 @@
+/* ==========================================================================
+   Class gallery lightbox — markup from sections/rb-class-gallery.liquid,
+   behaviour in assets/rb-gallery.js.
+
+   Client brief 2026-09-16: one large picture inside a translucent white mat on
+   a dark blurred backdrop, with a small scrollable thumbnail carousel beneath.
+   Every colour, padding and radius below reads a CSS variable that the section
+   writes from its theme-editor settings, so the look is editable without
+   touching this file.
+   ========================================================================== */
+
+/* Scroll lock, set on <html> while the lightbox is open. The scrollbar's width
+   is put back as padding so the page behind does not jump sideways. */
+html.rb-clsgal-open,
+html.rb-clsgal-open body {
+  overflow: hidden;
+}
+html.rb-clsgal-open body {
+  padding-right: var(--rb-clsgal-sbw, 0px);
+}
+/* nothing live-looking floats over the lightbox */
+html.rb-clsgal-open .saf-whatsapp,
+html.rb-clsgal-open .rb-mobile-paths {
+  visibility: hidden;
+}
+
+.rb-clsgal {
+  position: fixed;
+  inset: 0;
+  z-index: 100000; /* over the booking modal (99990) and newsletter popup (99999) */
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  /* The ONE column must be exactly the screen's width. Left implicit, it is an
+     `auto` track, which grows to its content's min-content width — and the
+     track's min-content is every slide's side padding added up (the slides
+     are size containers, so padding is all they contribute). Nine pictures
+     made the column ~1660px inside a 1440px screen, which shoved the picture
+     ~110px right and put the close button and right arrow off-screen
+     (fixed 2026-09-16). minmax(0, 1fr) caps it at the container. */
+  grid-template-columns: minmax(0, 1fr);
+  font-family: var(--rb-sans, 'Helvetica Neue', Arial, sans-serif);
+  color: #fff;
+  background: var(--rb-clsgal-backdrop, rgba(18, 18, 20, 0.82));
+  -webkit-backdrop-filter: blur(18px) saturate(1.1);
+  backdrop-filter: blur(18px) saturate(1.1);
+  opacity: 0;
+  transition: opacity 0.22s ease;
+  overscroll-behavior: contain;
+  -webkit-tap-highlight-color: transparent;
+}
+.rb-clsgal[hidden] {
+  display: none;
+}
+.rb-clsgal.is-open {
+  opacity: 1;
+}
+.rb-clsgal:focus {
+  outline: none; /* focus parks here between slides */
+}
+
+/* --------------------------------------------------------------------------
+   Top bar
+   -------------------------------------------------------------------------- */
+.rb-clsgal__bar {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: clamp(10px, 1.1vw, 18px) clamp(12px, 2.1vw, 40px) clamp(10px, 1.1vw, 18px) clamp(18px, 3.1vw, 60px);
+}
+.rb-clsgal__title {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  min-width: 0;
+  margin: 0;
+  font-size: clamp(12px, 0.9vw, 17px);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.rb-clsgal__name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.rb-clsgal__count {
+  flex: 0 0 auto;
+  color: rgba(255, 255, 255, 0.62);
+  font-variant-numeric: tabular-nums;
+}
+
+.rb-clsgal button {
+  margin: 0;
+  font: inherit;
+  color: inherit;
+}
+.rb-clsgal svg {
+  width: 48%;
+  height: 48%;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.rb-clsgal__close,
+.rb-clsgal__arrow {
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease, opacity 0.15s ease;
+}
+/* Solid white on the dark backdrop, 48px: impossible to miss, easy to hit with a thumb.
+   Written as `.rb-clsgal .rb-clsgal__close` on purpose: the button reset above
+   (`.rb-clsgal button { color: inherit }`) outranks a single class, and inherited
+   white on a white button drew an empty circle with no X in it. */
+.rb-clsgal .rb-clsgal__close {
+  flex: 0 0 auto;
+  width: 48px;
+  height: 48px;
+  background: #fff;
+  color: #1e1e1e;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+}
+.rb-clsgal__close svg {
+  stroke-width: 2.2;
+}
+@media (hover: hover) {
+  .rb-clsgal .rb-clsgal__close:hover {
+    background: rgba(255, 255, 255, 0.82);
+    color: #1e1e1e;
+  }
+}
+@media (hover: hover) {
+  .rb-clsgal__close:hover,
+  .rb-clsgal__arrow:hover {
+    background: #fff;
+    color: #1e1e1e;
+  }
+}
+.rb-clsgal__close:focus-visible,
+.rb-clsgal__arrow:focus-visible,
+.rb-clsgal__thumb:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+
+/* --------------------------------------------------------------------------
+   Stage — one native scroll-snap track, a mat per picture
+   -------------------------------------------------------------------------- */
+.rb-clsgal__stage {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  transform: translateY(var(--rb-clsgal-pull, 0px));
+  transition: transform 0.22s ease;
+}
+.rb-clsgal.is-dragging .rb-clsgal__stage {
+  transition: none;
+}
+.rb-clsgal__track {
+  display: flex;
+  height: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+  /* the browser keeps horizontal swiping; vertical drags are swipe-to-close */
+  touch-action: pan-x;
+  scrollbar-width: none;
+}
+.rb-clsgal__track::-webkit-scrollbar {
+  display: none;
+}
+.rb-clsgal__slide {
+  flex: 0 0 100%;
+  height: 100%;
+  box-sizing: border-box;
+  padding: clamp(6px, 1vw, 20px) clamp(10px, 6.4vw, 124px);
+  display: grid;
+  /* Explicit tracks for the same reason as the outer grid: an implicit `auto`
+     track sized itself to the mat's intrinsic width, not the slide, so on a
+     phone the mat centred inside a column wider than the screen and sat 40px
+     right. minmax(0, 1fr) pins the area to the slide's content box. */
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+  place-items: center;
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+  container-type: size; /* the mat sizes itself against this box */
+  cursor: zoom-out; /* the dark area around a picture closes the gallery */
+}
+.rb-clsgal__mat {
+  cursor: auto;
+}
+
+/* The mat hugs the picture's own shape: as wide as fits, or as tall as fits. */
+.rb-clsgal__mat {
+  position: relative;
+  box-sizing: border-box;
+  padding: var(--rb-clsgal-mat-pad, clamp(12px, 2.2vw, 28px));
+  width: min(100cqw, calc((100cqh - 2 * var(--rb-clsgal-mat-pad, 20px)) * var(--rb-clsgal-ar, 1.5) + 2 * var(--rb-clsgal-mat-pad, 20px)));
+  max-width: 100%;
+  max-height: 100cqh;
+  background: var(--rb-clsgal-mat, rgba(255, 255, 255, 0.88));
+  border-radius: var(--rb-clsgal-radius, 2px);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+  transition: transform 0.22s ease;
+}
+@supports not (width: 1cqw) {
+  .rb-clsgal__mat {
+    width: auto;
+    max-width: 100%;
+    max-height: 100%;
+  }
+}
+.rb-clsgal:not(.is-open) .rb-clsgal__mat {
+  transform: scale(0.985);
+}
+.rb-clsgal__frame {
+  position: relative;
+  aspect-ratio: var(--rb-clsgal-ar, 1.5);
+  max-height: calc(100cqh - 2 * var(--rb-clsgal-mat-pad, 20px));
+  overflow: hidden;
+}
+.rb-clsgal__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+/* A video sits in the same mat as a photo; the frame is already its shape, so
+   nothing letterboxes. The dark ground only shows before the poster loads. */
+.rb-clsgal__video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #111;
+}
+.rb-clsgal__video[hidden] {
+  display: none;
+}
+/* focus is handed back to the video after a click on its controls; show a ring
+   for keyboard users only */
+.rb-clsgal__video:focus:not(:focus-visible) {
+  outline: none;
+}
+.rb-clsgal__video:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+.rb-clsgal__vfail {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: #111;
+}
+.rb-clsgal__vfail[hidden] {
+  display: none;
+}
+.rb-clsgal__vfail img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.55;
+}
+.rb-clsgal__vfail p {
+  position: relative;
+  margin: 0;
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.72);
+  color: #fff;
+  font-size: clamp(13px, 0.9vw, 15px);
+  text-align: center;
+}
+
+.rb-clsgal__caption {
+  margin: 10px 2px 0;
+  color: #1e1e1e;
+  font-size: clamp(12px, 0.86vw, 15px);
+  line-height: 1.45;
+  text-align: center;
+}
+.rb-clsgal__caption:empty {
+  display: none;
+}
+
+.rb-clsgal__arrow {
+  position: absolute;
+  top: 50%;
+  width: clamp(44px, 3.1vw, 58px);
+  height: clamp(44px, 3.1vw, 58px);
+  transform: translateY(-50%);
+}
+.rb-clsgal__arrow--prev {
+  left: clamp(10px, 1.9vw, 36px);
+}
+.rb-clsgal__arrow--next {
+  right: clamp(10px, 1.9vw, 36px);
+}
+.rb-clsgal__arrow:disabled {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* --------------------------------------------------------------------------
+   Thumbnail carousel
+   -------------------------------------------------------------------------- */
+.rb-clsgal__thumbs {
+  min-width: 0;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 10px clamp(18px, 3.1vw, 60px) max(14px, env(safe-area-inset-bottom));
+  scrollbar-width: none;
+}
+.rb-clsgal__thumbs::-webkit-scrollbar {
+  display: none;
+}
+/* centred while they fit, scrolling from the first once they do not */
+.rb-clsgal__thumb:first-child {
+  margin-left: auto;
+}
+.rb-clsgal__thumb:last-child {
+  margin-right: auto;
+}
+.rb-clsgal__thumb {
+  position: relative;
+  flex: 0 0 auto;
+  width: var(--rb-clsgal-thumb, 64px);
+  aspect-ratio: 1;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  border-radius: var(--rb-clsgal-radius, 2px);
+  background: rgba(255, 255, 255, 0.12);
+  opacity: 0.6;
+  cursor: pointer;
+  transition: opacity 0.15s ease, box-shadow 0.15s ease;
+}
+.rb-clsgal__thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* a play badge on a video's poster frame, so it reads as a video at a glance */
+.rb-clsgal__thumb-play {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+.rb-clsgal .rb-clsgal__thumb-play svg {
+  width: 42%;
+  height: 42%;
+  fill: #fff;
+  stroke: none;
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.7));
+}
+.rb-clsgal__thumb[aria-selected='true'] {
+  opacity: 1;
+  box-shadow: 0 0 0 2px #b00e3f;
+}
+@media (hover: hover) {
+  .rb-clsgal__thumb:hover {
+    opacity: 1;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Phones: the mat keeps its edge, swiping replaces the arrows
+   -------------------------------------------------------------------------- */
+@media screen and (max-width: 749px) {
+  .rb-clsgal__slide {
+    padding: 6px 10px;
+  }
+  .rb-clsgal__arrow {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rb-clsgal,
+  .rb-clsgal__stage,
+  .rb-clsgal__mat {
+    transition: none;
+  }
+}
+
+/* The class hero picture becomes a way in; rb-gallery.js adds this class only
+   once it knows the page really has a gallery. */
+.rb-ch__media.rb-clsgal-trigger {
+  cursor: zoom-in;
+}
+.rb-ch__media.rb-clsgal-trigger:focus-visible {
+  outline: 2px solid #1e1e1e;
+  outline-offset: -4px;
+}

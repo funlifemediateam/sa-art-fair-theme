@@ -1,0 +1,241 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero": {
+      "type": "rb-class-hero",
+      "settings": {
+        "eyebrow": "",
+        "title": "",
+        "strip_teacher": true,
+        "teacher_prefix": "With",
+        "teacher": "",
+        "fact_time": "",
+        "fact_level": "",
+        "fact_size": "",
+        "button_label": "Book Now",
+        "button_link": "",
+        "media_mode": "single",
+        "photo_focal_x": 50,
+        "photo_focal_y": 35,
+        "image_a_width": 62,
+        "text_width": 48,
+        "background": "#ffffff",
+        "title_color": "#e07468",
+        "teacher_color": "#1e1e1e",
+        "fact_color": "#1e1e1e",
+        "image_a": "shopify:\/\/shop_images\/PETRONELLA-8.jpg"
+      }
+    },
+    "pagenav": {
+      "type": "rb-page-nav",
+      "blocks": {
+        "classes": {
+          "type": "link",
+          "settings": {
+            "label": "Classes",
+            "link": "shopify:\/\/collections\/classes"
+          }
+        },
+        "workshops": {
+          "type": "link",
+          "settings": {
+            "label": "Workshops",
+            "link": "shopify:\/\/collections\/workshops"
+          }
+        },
+        "teachers": {
+          "type": "link",
+          "settings": {
+            "label": "Meet the Teachers",
+            "link": "\/pages\/the-team"
+          }
+        },
+        "link_gallery": {
+          "type": "gallery",
+          "settings": {
+            "label": "Gallery"
+          }
+        },
+        "contact": {
+          "type": "link",
+          "settings": {
+            "label": "Contact",
+            "link": "\/pages\/contact"
+          }
+        }
+      },
+      "block_order": [
+        "classes",
+        "workshops",
+        "teachers",
+        "link_gallery",
+        "contact"
+      ],
+      "settings": {
+        "aria_label": "Studio navigation",
+        "align": "center",
+        "background": "#ffffff",
+        "text_color": "#1e1e1e",
+        "accent_color": "#b00e3f",
+        "rule_color": "#e0e0e0"
+      }
+    },
+    "detail": {
+      "type": "rb-class-detail",
+      "blocks": {
+        "description": {
+          "type": "note",
+          "settings": {
+            "label": "",
+            "body": "",
+            "use_product_description": true
+          }
+        },
+        "costs": {
+          "type": "note",
+          "settings": {
+            "label": "",
+            "body": "<p>[session_price] per session<\/p>",
+            "use_product_description": false
+          }
+        }
+      },
+      "block_order": [
+        "description",
+        "costs"
+      ],
+      "settings": {
+        "heading": "<p>A guided <em>[class]<\/em> session.<\/p>",
+        "anchor": "booking",
+        "button_label": "Make a Booking",
+        "button_link": "",
+        "heading_width": 46,
+        "show_rule": true,
+        "background": "#ffffff",
+        "heading_color": "#1e1e1e",
+        "accent_color": "#e07468",
+        "label_color": "#1e1e1e",
+        "body_color": "#1e1e1e",
+        "rule_color": "#c9c9c9"
+      }
+    },
+    "booking": {
+      "type": "apps",
+      "blocks": {
+        "booking_widget": {
+          "type": "shopify:\/\/apps\/sa-booking-admin\/blocks\/booking-widget\/019effec-1823-75cb-82db-853f80a4249c",
+          "settings": {
+            "class_product": "",
+            "eyebrow": "Book Your Spot",
+            "hold_minutes": 15
+          }
+        }
+      },
+      "block_order": [
+        "booking_widget"
+      ],
+      "settings": {
+        "include_margins": true
+      }
+    },
+    "teacher": {
+      "type": "rb-feature-person",
+      "settings": {
+        "source": "product_teacher",
+        "eyebrow": "Teacher",
+        "name": "",
+        "body": "",
+        "button_a_label": "See Teachers Page",
+        "button_a_link": "",
+        "button_b_label": "See Artist Page",
+        "button_b_link": "",
+        "panel_color": "#e07468",
+        "text_color": "#ffffff",
+        "eyebrow_color": "#1e1e1e",
+        "button_bg": "#b00e3f",
+        "button_text": "#ffffff",
+        "button_radius": 60,
+        "texture": 100,
+        "panel_image_fit": "cover",
+        "panel_image_focal_x": 50,
+        "panel_image_focal_y": 50,
+        "panel_image_veil": 0,
+        "media_mode": "single",
+        "panel_width": 48,
+        "min_height": 560,
+        "focal_x": 50,
+        "focal_y": 35,
+        "portrait_w": 34,
+        "portrait_ratio": "382 \/ 313",
+        "portrait_x": 46,
+        "portrait_y": 40
+      }
+    },
+    "browse": {
+      "type": "rb-class-cards",
+      "settings": {
+        "collection": "classes",
+        "count": 6,
+        "only_classes": true,
+        "eyebrow": "<p>Browse our classes<\/p>",
+        "eyebrow_name": "",
+        "teacher_filter": "",
+        "intro": "<p>More from the studio calendar.<\/p>",
+        "intro_color": "#1e1e1e",
+        "strip_teacher": true,
+        "by_prefix": "With",
+        "show_excerpt": true,
+        "button_label": "View Class",
+        "columns": 3,
+        "grid_width": 1300,
+        "image_ratio": "398 \/ 380",
+        "radius": 18,
+        "show_schedule": false,
+        "show_price": false,
+        "session_word": "a session",
+        "month_word": "a month",
+        "term_word": "the term",
+        "show_deposit": false,
+        "deposit_label": "Or hold your seat for",
+        "show_spaces": false,
+        "spaces_threshold": 8,
+        "spaces_label": "Only [n] spaces left",
+        "book_label": "",
+        "background": "#ffffff",
+        "pattern": "all_a",
+        "tone_a": "#e07468",
+        "tone_a_text": "#ffffff",
+        "tone_b": "#b00e3f",
+        "tone_b_text": "#ffffff",
+        "texture": 0,
+        "panel_image_fit": "cover",
+        "panel_image_focal_x": 50,
+        "panel_image_focal_y": 50,
+        "panel_image_veil": 0,
+        "more_label": "See all classes",
+        "more_link": "\/collections\/classes"
+      }
+    },
+    "class_gallery": {
+      "type": "rb-class-gallery",
+      "settings": {}
+    }
+  },
+  "order": [
+    "hero",
+    "pagenav",
+    "class_gallery",
+    "detail",
+    "booking",
+    "teacher",
+    "browse"
+  ]
+}

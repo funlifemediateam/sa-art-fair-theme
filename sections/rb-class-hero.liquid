@@ -125,12 +125,19 @@
 -%}
 
 {%- comment -%}
-  2026-09-11: when the class's teacher has a gallery, the picture opens it
-  full-screen (same viewer as the page nav's "Gallery" link — see
-  snippets/rb-gallery.liquid). No gallery, no change: the picture stays a
-  plain picture.
+  2026-09-16: a tap on the picture opens the class gallery, the same viewer the
+  page nav's "Gallery" item opens — see sections/rb-class-gallery.liquid.
+
+  The marker below is all this section says about it. Whether there is a
+  gallery at all is decided in one place (the gallery section, which knows
+  about the class's own pictures and its teacher's), and assets/rb-gallery.js
+  turns this marker into a real button only when there is one. Sections cannot
+  read each other's variables, so doing it here as well would be a second
+  answer to the same question, free to disagree.
+
+  Replaces the 2026-09-11 version, which rendered snippets/rb-gallery.liquid
+  itself for the teacher-only gallery.
 {%- endcomment -%}
-{%- capture rb_gal -%}{%- render 'rb-gallery', product: p -%}{%- endcapture -%}
 
 <style>
   {% comment %}
@@ -307,16 +314,7 @@
       {%- endif -%}
     </div>
 
-    <div
-      class="rb-ch__media"
-      {%- if rb_gal != blank %}
-        data-rb-gallery-open
-        role="button"
-        tabindex="0"
-        aria-haspopup="dialog"
-        aria-label="Open the gallery{% if teacher != blank %} of {{ teacher | escape }}’s work{% endif %}"
-      {%- endif %}
-    >
+    <div class="rb-ch__media" data-rb-gallery-hero>
       <div class="rb-media">
         {%- if img_a != blank -%}
           {%- if show_portrait -%}
@@ -347,8 +345,6 @@
     </div>
   </div>
 </div>
-
-{{- rb_gal -}}
 
 {% schema %}
 {

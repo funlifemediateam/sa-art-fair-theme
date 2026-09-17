@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "hero": {
@@ -6,13 +15,13 @@
         "fill": "image",
         "background": "#505a43",
         "texture": 100,
-        "image": "shopify:\/\/shop_images\/The_Store_cover_image_SA_Artwork.webp",
+        "image": "shopify://shop_images/The_Store_cover_image_SA_Artwork.webp",
         "image_blend": "normal",
         "image_rotate": "0",
         "video_mobile_fallback": true,
         "band_height": 870,
         "min_height": 340,
-        "mobile_ratio": "4 \/ 5",
+        "mobile_ratio": "4 / 5",
         "focal_x": 50,
         "focal_y": 46,
         "overlay_color": "#1e1e1e",
@@ -33,7 +42,7 @@
       "disabled": true,
       "settings": {
         "eyebrow": "",
-        "heading": "<p><em>Space<\/em> is<br\/>the breath<br\/>of <em>art.<\/em><\/p>",
+        "heading": "<p><em>Space</em> is<br/>the breath<br/>of <em>art.</em></p>",
         "heading_font": "serif",
         "heading_width": 560,
         "heading_scale": 120,
@@ -53,11 +62,11 @@
         "panel_image_focal_x": 50,
         "panel_image_focal_y": 50,
         "panel_image_veil": 0,
-        "image": "shopify:\/\/shop_images\/saf-store-featured-art.jpg",
+        "image": "shopify://shop_images/saf-store-featured-art.jpg",
         "media_side": "right",
         "panel_width": 50,
         "min_height": 610,
-        "mobile_ratio": "4 \/ 3",
+        "mobile_ratio": "4 / 3",
         "focal_x": 50,
         "focal_y": 50
       }
@@ -70,7 +79,7 @@
         "layout": "toolbar",
         "per_page": 9,
         "columns": 3,
-        "image_ratio": "1 \/ 1",
+        "image_ratio": "1 / 1",
         "hover_label": "View Artwork",
         "search_placeholder": "Search artworks, artists, mediums…",
         "bar_color": "#f4f4f1",
@@ -78,6 +87,7 @@
         "rail_width": 150,
         "card_button": "Browse Collection",
         "more_label": "See More…",
+        "less_label": "See Less",
         "more_link": "",
         "background": "#ffffff",
         "heading_color": "#505a43",
@@ -91,11 +101,11 @@
         "source": "manual",
         "eyebrow": "Featured Artist",
         "name": "Gaby Blumberg",
-        "body": "<p>Cape Town-based artist Gabriele Blumberg paints intuitively, layering colour, texture and gesture to explore memory and the landscapes that shape us. Her piece Dissolving Memory won a SASA Award in 2026.<\/p>",
+        "body": "<p>Cape Town-based artist Gabriele Blumberg paints intuitively, layering colour, texture and gesture to explore memory and the landscapes that shape us. Her piece Dissolving Memory won a SASA Award in 2026.</p>",
         "button_a_label": "Browse Collection",
-        "button_a_link": "shopify:\/\/collections\/gaby-blumberg",
+        "button_a_link": "shopify://collections/gaby-blumberg",
         "button_b_label": "See Artist Page",
-        "button_b_link": "shopify:\/\/collections\/gaby-blumberg",
+        "button_b_link": "shopify://collections/gaby-blumberg",
         "panel_color": "#a2ad8e",
         "text_color": "#ffffff",
         "eyebrow_color": "#505a43",
@@ -107,14 +117,13 @@
         "panel_image_focal_x": 50,
         "panel_image_focal_y": 50,
         "panel_image_veil": 0,
-        "image": "shopify:\/\/shop_images\/1ptPzu8pW4xCA-8Fg4FGeotX77vZco4dG__Blumberg_Dissolving_Memory_92x92_framed_16500_____gabriele_B.jpg",
+        "image": "shopify://shop_images/featured-portrait-gaby-blumberg-1788539086828.jpg",
         "panel_width": 48,
         "min_height": 850,
         "focal_x": 50,
         "focal_y": 50,
-        "portrait": "shopify:\/\/shop_images\/featured-portrait-gaby-blumberg-1788539086828.jpg",
         "portrait_w": 40,
-        "portrait_ratio": "397 \/ 346",
+        "portrait_ratio": "397 / 346",
         "portrait_x": 49,
         "portrait_y": 51
       }
@@ -128,7 +137,7 @@
             "collection": "warm-tones",
             "title": "Warm Tones",
             "label": "Reds, ochres and golds",
-            "image": "shopify:\/\/shop_images\/saf-home-collection-1.jpg",
+            "image": "shopify://shop_images/saf-home-collection-1.jpg",
             "swatch": "#e07468"
           }
         },
@@ -138,7 +147,7 @@
             "collection": "cool-tones",
             "title": "Cool Tones",
             "label": "Blues, greens and greys",
-            "image": "shopify:\/\/shop_images\/saf-home-collection-2.jpg",
+            "image": "shopify://shop_images/saf-home-collection-2.jpg",
             "swatch": "#0c3642"
           }
         },
@@ -148,7 +157,7 @@
             "collection": "neutral-tones",
             "title": "Neutral Tones",
             "label": "Sand, stone and linen",
-            "image": "shopify:\/\/shop_images\/saf-home-collection-3.jpg",
+            "image": "shopify://shop_images/saf-home-collection-3.jpg",
             "swatch": "#bea532"
           }
         }
@@ -171,11 +180,11 @@
         "rule_color": "#d5cbb2",
         "image_position": "left",
         "media_width": 48,
-        "image_ratio": "8 \/ 5",
-        "mobile_ratio": "4 \/ 5",
+        "image_ratio": "8 / 5",
+        "mobile_ratio": "4 / 5",
         "hover_label": "Browse Collection",
         "view_all_label": "View All Art",
-        "view_all_url": "shopify:\/\/collections\/gallery",
+        "view_all_url": "shopify://collections/gallery",
         "button_style": "outline",
         "background": "#ffffff",
         "texture": 0,
@@ -191,7 +200,7 @@
         "show_mark": true,
         "eyebrow": "",
         "eyebrow_color": "#b00e3f",
-        "heading": "<p>Lorem ipsum dolor sit amet, consectetur <em>adipiscing elit.<\/em><\/p>",
+        "heading": "<p>Lorem ipsum dolor sit amet, consectetur <em>adipiscing elit.</em></p>",
         "heading_color": "#1e1e1e",
         "accent_color": "#505a43",
         "heading_width": 900,
@@ -210,10 +219,10 @@
       "settings": {
         "contained": true,
         "radius": 24,
-        "image": "shopify:\/\/shop_images\/quiz_banner_SA_Art_Fair.webp",
+        "image": "shopify://shop_images/quiz-banner-floral.webp",
         "band_height": 830,
         "min_height": 340,
-        "mobile_ratio": "3 \/ 4",
+        "mobile_ratio": "3 / 4",
         "focal_x": 50,
         "focal_y": 50,
         "overlay_color": "#1e1e1e",
@@ -224,7 +233,7 @@
         "subheading": "See how your personality can shape your journey as a collector.",
         "text_color": "#ffffff",
         "button_label": "Take The Quiz",
-        "button_link": "shopify:\/\/collections\/art-quiz"
+        "button_link": "shopify://collections/art-quiz"
       }
     }
   },

@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "hero": {
@@ -8,7 +17,7 @@
         "texture": 100,
         "band_height": 690,
         "min_height": 260,
-        "mobile_ratio": "4 / 3",
+        "mobile_ratio": "4 \/ 3",
         "focal_x": 50,
         "focal_y": 50,
         "overlay_opacity": 0,
@@ -27,17 +36,17 @@
         "collection": "",
         "count": 24,
         "only_classes": true,
-        "eyebrow": "<p>Everything on at the studio</p>",
+        "eyebrow": "<p>Everything on at the studio<\/p>",
         "eyebrow_name": "",
         "teacher_filter": "",
-        "intro": "<p>Every class and workshop currently taking bookings.</p>",
+        "intro": "<p>Every class and workshop currently taking bookings.<\/p>",
         "intro_color": "#1e1e1e",
         "by_prefix": "With",
         "show_excerpt": true,
         "button_label": "View Class",
         "columns": 3,
         "grid_width": 1300,
-        "image_ratio": "398 / 380",
+        "image_ratio": "398 \/ 380",
         "radius": 18,
         "background": "#ffffff",
         "pattern": "all_a",
@@ -161,11 +170,11 @@
         "p7"
       ],
       "settings": {
-        "eyebrow": "<p>Meet our teachers</p>",
-        "intro": "<p>Every class is led by a working artist from the studio.</p>",
+        "eyebrow": "<p>Meet our teachers<\/p>",
+        "intro": "<p>Every class is led by a working artist from the studio.<\/p>",
         "intro_color": "#1e1e1e",
         "columns": 4,
-        "image_ratio": "227 / 200",
+        "image_ratio": "227 \/ 200",
         "background": "#ffffff",
         "tone_a": "#b00e3f",
         "tone_a_text": "#ffffff",
@@ -173,7 +182,7 @@
         "tone_b_text": "#ffffff",
         "texture": 0,
         "more_label": "Meet all our teachers",
-        "more_link": "/pages/the-team"
+        "more_link": "\/pages\/the-team"
       }
     }
   },

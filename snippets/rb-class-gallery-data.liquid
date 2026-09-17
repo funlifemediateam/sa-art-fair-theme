@@ -1,0 +1,171 @@
+{% comment %}
+  Class gallery — where the pictures come from, decided in ONE place.
+
+  Client brief 2026-09-16: a class page gets a "Gallery" tab that opens a
+  lightbox. The pictures belong to the CLASS, so they are managed per class in
+  the booking app and stored on the product itself; a class that has none falls
+  back to its teacher's set; a class with neither shows no tab at all.
+
+  Precedence, first non-empty wins, never merged:
+
+    1. product.metafields.booking.gallery   json array, order = display order
+       [{ "id":"g_ab12", "type":"image", "src":"https://cdn.shopify.com/…",
+          "w":2000, "h":1333, "alt":"", "caption":"" }]
+    2. the teacher's collection, booking_app.gallery (list.file_reference) —
+       the store the 2026-09-11 teacher gallery already uses, reused as-is so
+       there is no third place for images. The teacher is found the way the
+       teacher band finds her (snippets/rb-teacher-handle.liquid).
+    3. nothing — the caller renders no gallery and no tab.
+
+  Outputs NOTHING when there is nothing to show, so the caller can treat blank
+  as "no gallery":
+
+    {%- capture gal -%}{%- render 'rb-class-gallery-data', product: product -%}{%- endcapture -%}
+    {%- if gal != blank -%} …lightbox… {%- endif -%}
+
+  What it prints is a JSON object: { "source": "class|teacher", "name": "…",
+  "items": [ { src, srcset, w, h, ar, alt, caption, thumb } ] }.
+
+  Sizes come from the CDN's own ?width= renditions, and every item carries its
+  aspect ratio so the mat can be drawn before the photo arrives — no reflow.
+
+  Accepts: product.
+{% endcomment %}
+
+{%- liquid
+  assign gal_items = ''
+  assign gal_count = 0
+  assign gal_source = ''
+  assign gal_name = ''
+-%}
+
+{%- comment -%} 1 — the class's own pictures {%- endcomment -%}
+{%- capture gal_class_items -%}
+  {%- assign class_list = product.metafields.booking.gallery.value -%}
+  {%- for item in class_list -%}
+    {%- liquid
+      assign w = item.w | plus: 0
+      assign h = item.h | plus: 0
+      assign ar = 1.5
+      if w > 0 and h > 0
+        assign ar = w | times: 1.0 | divided_by: h
+      endif
+      assign src = item.src | strip
+    -%}
+    {%- comment -%}
+      A video (2026-09-16) is only ever stored once Shopify has finished it, so it
+      always has renditions and a preview frame; anything without both is skipped
+      rather than drawn as a black box.
+    {%- endcomment -%}
+    {%- if item.type == 'video' -%}
+      {%- assign poster = item.poster | strip -%}
+      {%- assign n_sources = 0 -%}
+      {%- capture video_sources -%}
+        {%- for s in item.sources -%}
+          {%- if s.url contains 'cdn.shopify.com' -%}
+            {%- if n_sources > 0 -%},{%- endif -%}
+            {"url":{{ s.url | json }},"type":{{ s.mimeType | json }},"h":{{ s.height | default: 0 | json }}}
+            {%- assign n_sources = n_sources | plus: 1 -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endcapture -%}
+      {%- if n_sources > 0 and poster contains 'cdn.shopify.com' -%}
+        {%- assign pbase = poster | split: '?' | first -%}
+        {%- if gal_count > 0 -%},{%- endif -%}
+        {"type":"video","sources":[{{ video_sources }}],"poster":{{ pbase | append: '?width=1400' | json }},"thumb":{{ pbase | append: '?width=200' | json }},"ar":{{ ar | json }},"alt":{{ item.alt | default: '' | json }},"caption":{{ item.caption | default: '' | json }}}
+        {%- assign gal_count = gal_count | plus: 1 -%}
+      {%- endif -%}
+    {%- elsif src != blank and src contains 'cdn.shopify.com' -%}
+      {%- assign base = src | split: '?' | first -%}
+      {%- capture srcset -%}
+        {{ base }}?width=600 600w, {{ base }}?width=900 900w, {{ base }}?width=1400 1400w, {{ base }}?width=2000 2000w
+      {%- endcapture -%}
+      {%- if gal_count > 0 -%},{%- endif -%}
+      {
+        "type": "image",
+        "src": {{ base | append: '?width=1400' | json }},
+        "srcset": {{ srcset | strip | json }},
+        "thumb": {{ base | append: '?width=200' | json }},
+        "ar": {{ ar | json }},
+        "alt": {{ item.alt | default: '' | json }},
+        "caption": {{ item.caption | default: '' | json }}
+      }
+      {%- assign gal_count = gal_count | plus: 1 -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endcapture -%}
+
+{%- liquid
+  if gal_count > 0
+    assign gal_items = gal_class_items
+    assign gal_source = 'class'
+    assign gal_name = product.title
+  endif
+-%}
+
+{%- comment -%} 2 — failing that, the teacher's own set {%- endcomment -%}
+{%- if gal_count == 0 -%}
+  {%- capture teacher_handle -%}{%- render 'rb-teacher-handle', product: product -%}{%- endcapture -%}
+  {%- assign teacher_handle = teacher_handle | strip -%}
+  {%- if teacher_handle != blank -%}
+    {%- assign teacher_col = collections[teacher_handle] -%}
+    {%- capture gal_teacher_items -%}
+      {%- for f in teacher_col.metafields.booking_app.gallery.value -%}
+        {%- if f.media_type == 'image' -%}
+          {%- assign src = f | image_url: width: 1400 -%}
+          {%- if src != blank -%}
+            {%- assign w600 = f | image_url: width: 600 -%}
+            {%- assign w900 = f | image_url: width: 900 -%}
+            {%- assign w2000 = f | image_url: width: 2000 -%}
+            {%- assign srcset = w600 | append: ' 600w, ' | append: w900 | append: ' 900w, ' | append: src | append: ' 1400w, ' | append: w2000 | append: ' 2000w' -%}
+            {%- assign thumb = f | image_url: width: 200 -%}
+            {%- if gal_count > 0 -%},{%- endif -%}
+            {
+              "type": "image",
+              "src": {{ src | json }},
+              "srcset": {{ srcset | json }},
+              "thumb": {{ thumb | json }},
+              "ar": {{ f.aspect_ratio | default: 1.5 | json }},
+              "alt": {{ f.alt | default: '' | json }},
+              "caption": ""
+            }
+            {%- assign gal_count = gal_count | plus: 1 -%}
+          {%- endif -%}
+        {%- comment -%}
+          Teacher galleries have held videos since 2026-09-11 (the admin's teacher
+          tab takes them), but until 2026-09-16 this loop kept images only, so
+          they were silently left out. A video still processing has no preview
+          frame or renditions yet and is skipped until it does.
+        {%- endcomment -%}
+        {%- elsif f.media_type == 'video' and f.preview_image -%}
+          {%- assign n_sources = 0 -%}
+          {%- capture video_sources -%}
+            {%- for s in f.sources -%}
+              {%- if n_sources > 0 -%},{%- endif -%}
+              {"url":{{ s.url | json }},"type":{{ s.mime_type | json }},"h":{{ s.height | default: 0 | json }}}
+              {%- assign n_sources = n_sources | plus: 1 -%}
+            {%- endfor -%}
+          {%- endcapture -%}
+          {%- if n_sources > 0 -%}
+            {%- assign poster = f.preview_image | image_url: width: 1400 -%}
+            {%- assign thumb = f.preview_image | image_url: width: 200 -%}
+            {%- if gal_count > 0 -%},{%- endif -%}
+            {"type":"video","sources":[{{ video_sources }}],"poster":{{ poster | json }},"thumb":{{ thumb | json }},"ar":{{ f.aspect_ratio | default: 1.78 | json }},"alt":{{ f.alt | default: '' | json }},"caption":""}
+            {%- assign gal_count = gal_count | plus: 1 -%}
+          {%- endif -%}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endcapture -%}
+    {%- liquid
+      if gal_count > 0
+        assign gal_items = gal_teacher_items
+        assign gal_source = 'teacher'
+        assign gal_name = teacher_col.title
+      endif
+    -%}
+  {%- endif -%}
+{%- endif -%}
+
+{%- if gal_count > 0 -%}
+  {"source":{{ gal_source | json }},"name":{{ gal_name | json }},"items":[{{ gal_items }}]}
+{%- endif -%}

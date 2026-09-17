@@ -25,18 +25,7 @@
 {%- liquid
   assign sid = section.id
   assign here = request.path | downcase
-  assign rb_gal = ''
-  assign has_gallery_block = false
-  for block in section.blocks
-    if block.type == 'gallery'
-      assign has_gallery_block = true
-      break
-    endif
-  endfor
 -%}
-{%- if has_gallery_block -%}
-  {%- capture rb_gal -%}{%- render 'rb-gallery', product: product -%}{%- endcapture -%}
-{%- endif -%}
 
 <style>
   #shopify-section-{{ sid }} .rb-pnav {
@@ -104,21 +93,20 @@
     <ul class="rb-pnav__list" role="list">
       {%- for block in section.blocks -%}
         {%- if block.type == 'gallery' -%}
-          {%- assign gallery_label = block.settings.label | default: 'Gallery' -%}
-          {%- if rb_gal != blank -%}
-            <li {{ block.shopify_attributes }}>
-              <button type="button" data-rb-gallery-open aria-haspopup="dialog">
-                {{- gallery_label | escape -}}
-              </button>
-            </li>
-          {%- elsif request.design_mode -%}
-            {%- comment -%} Editor only: say why the link is missing on this page. {%- endcomment -%}
-            <li {{ block.shopify_attributes }}>
-              <span class="rb-pnav__off" title="Hidden on this page: its teacher has no gallery yet">
-                {{- gallery_label | escape -}}
-              </span>
-            </li>
-          {%- endif -%}
+          {%- comment -%}
+            Ships HIDDEN. Whether this class has a gallery is decided once, by
+            sections/rb-class-gallery.liquid (the class's own pictures, else its
+            teacher's, else none) — and a section cannot read another section's
+            variables, so asking the question again here would be a second
+            answer free to disagree with the lightbox. assets/rb-gallery.js
+            unhides this item only when that section has printed a gallery, so a
+            class without one never shows a tab.
+          {%- endcomment -%}
+          <li {{ block.shopify_attributes }} data-rb-gallery-tab hidden>
+            <button type="button" data-rb-gallery-open aria-haspopup="dialog">
+              {{- block.settings.label | default: 'Gallery' | escape -}}
+            </button>
+          </li>
           {%- continue -%}
         {%- endif -%}
         {%- liquid
@@ -140,8 +128,6 @@
     </ul>
   </div>
 </nav>
-
-{{- rb_gal -}}
 
 {% schema %}
 {

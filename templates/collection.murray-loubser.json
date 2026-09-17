@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "hero": {
@@ -5,6 +14,7 @@
       "settings": {
         "name": "",
         "script": "",
+        "script_from_description": true,
         "tags": "",
         "social_url": "",
         "button_label": "",
@@ -15,15 +25,16 @@
         "name_color": "#505a43",
         "script_color": "#1e1e1e",
         "tag_color": "#0c3642",
-        "image": "",
         "focal_x": 50,
         "focal_y": 50,
-        "portrait": "",
-        "portrait_w": 39,
+        "portrait_w": 15,
         "portrait_ratio": "79 \/ 69",
         "portrait_x": 47,
         "portrait_y": 52,
-        "script_from_description": true
+        "media_mode": "portrait",
+        "portrait_grayscale": false,
+        "photo_focal_x": 50,
+        "photo_focal_y": 35
       }
     },
     "artworks": {
@@ -36,10 +47,14 @@
         "columns": 3,
         "image_ratio": "17 \/ 14",
         "hover_label": "View Artwork",
+        "search_placeholder": "Search artworks, artists, mediums…",
+        "bar_color": "#f4f4f1",
         "rail_title": "Filter By:",
         "rail_width": 150,
         "card_button": "Browse Collection",
         "more_label": "",
+        "less_label": "See Less",
+        "more_link": "",
         "background": "#ffffff",
         "heading_color": "#505a43",
         "card_title_color": "#1e1e1e",
@@ -52,6 +67,7 @@
         "heading": "<p>More about <em>Murray<\/em>.<\/p>",
         "body": "",
         "use_collection_description": true,
+        "skip_first_sentence": true,
         "background": "#e2ead7",
         "heading_color": "#1e1e1e",
         "accent_color": "#505a43",

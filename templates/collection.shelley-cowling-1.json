@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "hero": {
@@ -5,7 +14,9 @@
       "settings": {
         "name": "",
         "script": "",
+        "script_from_description": true,
         "tags": "Painting, Mixed Media",
+        "tags_mode": "always",
         "social_url": "",
         "button_label": "See Portfolio",
         "button_link": "",
@@ -35,6 +46,7 @@
         "heading": "<p>Teaching is <em>making, together.<\/em><\/p>",
         "body": "",
         "use_collection_description": true,
+        "skip_first_sentence": true,
         "background": "#ffffff",
         "heading_color": "#1e1e1e",
         "accent_color": "#e07468",

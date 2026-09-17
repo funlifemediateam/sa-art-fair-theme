@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "hero": {
@@ -6,12 +15,13 @@
         "fill": "colour",
         "background": "#e07468",
         "texture": 100,
-        "image": "shopify://shop_images/tissuepaper_background__E07468_SA_Art_Fair.webp",
+        "image": "shopify:\/\/shop_images\/tissuepaper_background__E07468_SA_Art_Fair.webp",
         "image_blend": "normal",
         "image_rotate": "0",
+        "video_mobile_fallback": true,
         "band_height": 680,
         "min_height": 260,
-        "mobile_ratio": "4 / 3",
+        "mobile_ratio": "4 \/ 3",
         "focal_x": 50,
         "focal_y": 50,
         "overlay_color": "#1e1e1e",
@@ -33,17 +43,17 @@
         "collection": "",
         "count": 24,
         "only_classes": true,
-        "eyebrow": "<p>Browse our classes</p>",
+        "eyebrow": "<p>Browse our classes<\/p>",
         "eyebrow_name": "",
         "teacher_filter": "",
-        "intro": "<p>Weekly and term classes at the studio in Hout Bay.</p>",
+        "intro": "<p>Ongoing weekly classes at The Studio in Hout Bay<\/p>",
         "intro_color": "#1e1e1e",
         "by_prefix": "With",
         "show_excerpt": true,
         "button_label": "View Class",
         "columns": 3,
         "grid_width": 1300,
-        "image_ratio": "398 / 380",
+        "image_ratio": "398 \/ 380",
         "radius": 18,
         "show_schedule": false,
         "show_price": false,
@@ -88,7 +98,7 @@
         "p1": {
           "type": "person",
           "settings": {
-            "collection": "shelley-cowling-1",
+            "collection": "janice-grant-1",
             "name": "",
             "role": "Art Classes",
             "link": "",
@@ -99,7 +109,7 @@
         "p2": {
           "type": "person",
           "settings": {
-            "collection": "jacqui-sundelson-1",
+            "collection": "zara-leigh-farinha-1",
             "name": "",
             "role": "Art Classes",
             "link": "",
@@ -110,7 +120,7 @@
         "p3": {
           "type": "person",
           "settings": {
-            "collection": "janice-grant-1",
+            "collection": "careshia-esperanza",
             "name": "",
             "role": "Art Classes",
             "link": "",
@@ -121,7 +131,7 @@
         "p4": {
           "type": "person",
           "settings": {
-            "collection": "zara-leigh-farinha-1",
+            "collection": "petronella",
             "name": "",
             "role": "Art Classes",
             "link": "",
@@ -132,7 +142,7 @@
         "p5": {
           "type": "person",
           "settings": {
-            "collection": "teacher-1",
+            "collection": "chloe",
             "name": "",
             "role": "Art Classes",
             "link": "",
@@ -143,18 +153,7 @@
         "p6": {
           "type": "person",
           "settings": {
-            "collection": "teacher-2",
-            "name": "",
-            "role": "Art Classes",
-            "link": "",
-            "button_label": "Learn More",
-            "tone": "auto"
-          }
-        },
-        "p7": {
-          "type": "person",
-          "settings": {
-            "collection": "teacher-3",
+            "collection": "shabana-sonday",
             "name": "",
             "role": "Art Classes",
             "link": "",
@@ -170,15 +169,14 @@
         "p3",
         "p4",
         "p5",
-        "p6",
-        "p7"
+        "p6"
       ],
       "settings": {
-        "eyebrow": "<p>Meet our teachers</p>",
-        "intro": "<p>Every class is led by a working artist from the studio.</p>",
+        "eyebrow": "<p>Meet our teachers<\/p>",
+        "intro": "<p>Every class is led by a working artist from the studio.<\/p>",
         "intro_color": "#1e1e1e",
         "columns": 4,
-        "image_ratio": "227 / 200",
+        "image_ratio": "227 \/ 200",
         "background": "#ffffff",
         "tone_a": "#b00e3f",
         "tone_a_text": "#ffffff",
@@ -190,7 +188,7 @@
         "panel_image_focal_y": 50,
         "panel_image_veil": 0,
         "more_label": "Meet all our teachers",
-        "more_link": "/pages/the-team"
+        "more_link": "\/pages\/the-team"
       }
     }
   },

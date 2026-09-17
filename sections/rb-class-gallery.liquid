@@ -1,0 +1,90 @@
+{% comment %}
+  Class gallery — the lightbox behind the "Gallery" item in the class page nav
+  and behind a tap on the class hero picture.
+
+  This section owns the whole feature on the page: it decides whether there is
+  a gallery at all (snippets/rb-class-gallery-data.liquid), prints the pictures
+  as JSON, and loads the viewer (assets/rb-gallery.js + rb-gallery.css). The
+  nav item ships hidden and the hero picture ships inert; the script switches
+  them on only when this section has actually printed a gallery, so a class
+  with no pictures can never show a tab that opens nothing.
+
+  Pictures are managed per class in the booking app (Classes → a class →
+  Gallery). NOTHING is added here: the settings below are the look of the
+  lightbox only, by the client's instruction on 2026-09-16.
+
+  Sits on a class template, right after the page nav.
+{% endcomment %}
+
+{%- liquid
+  assign sid = section.id
+  assign gal = ''
+  if section.settings.gallery_enabled
+    capture gal
+      render 'rb-class-gallery-data', product: product
+    endcapture
+    assign gal = gal | strip
+  endif
+
+  assign mat_alpha = section.settings.mat_opacity | divided_by: 100.0
+  assign backdrop_alpha = section.settings.backdrop_opacity | divided_by: 100.0
+-%}
+
+{%- if gal != blank -%}
+  {{ 'rb-gallery.css' | asset_url | stylesheet_tag }}
+  <style>
+    /* The viewer is appended to <body>, outside this section, so its look is
+       carried on :root rather than on #shopify-section-{{ sid }}. */
+    :root {
+      --rb-clsgal-mat: {{ section.settings.mat_color | color_modify: 'alpha', mat_alpha }};
+      --rb-clsgal-mat-pad: {{ section.settings.mat_padding }}px;
+      --rb-clsgal-backdrop: {{ section.settings.backdrop_color | color_modify: 'alpha', backdrop_alpha }};
+      --rb-clsgal-thumb: {{ section.settings.thumb_size }}px;
+      --rb-clsgal-radius: {{ section.settings.corner_radius }}px;
+    }
+  </style>
+
+  <script type="application/json" data-rb-class-gallery data-captions="{{ section.settings.show_captions }}">
+    {{- gal -}}
+  </script>
+  <script src="{{ 'rb-gallery.js' | asset_url }}" defer="defer"></script>
+
+{%- elsif request.design_mode -%}
+  {%- comment -%}
+    A section that prints nothing cannot be selected in the theme editor, and
+    "why is there no Gallery tab" is the first question this raises.
+  {%- endcomment -%}
+  <div class="rb-section" style="padding: 14px var(--rb-gutter); font-family: var(--rb-sans); font-size: 14px; color: #6b6b6b; background: #f4f2ee;">
+    {%- if section.settings.gallery_enabled -%}
+      Gallery: nothing to show on this class yet. Add pictures in the booking app under
+      Classes → this class → Gallery, or the class falls back to its teacher’s pictures.
+      Visitors see no Gallery tab until then.
+    {%- else -%}
+      Gallery: switched off for this class. Turn “Show the gallery on this class” back on to use it.
+    {%- endif -%}
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Rebrand class gallery",
+  "tag": "section",
+  "class": "rb-section-wrapper",
+  "settings": [
+    { "type": "paragraph", "content": "The pop-up gallery for this class. Pictures are managed in the booking app (Classes → this class → Gallery); a class with none falls back to its teacher’s pictures, and with neither the Gallery tab does not appear. These settings are the look of the pop-up only." },
+    { "type": "checkbox", "id": "gallery_enabled", "default": true, "label": "Show the gallery on this class" },
+    { "type": "checkbox", "id": "show_captions", "default": true, "label": "Show captions" },
+    { "type": "header", "content": "Mat" },
+    { "type": "color", "id": "mat_color", "default": "#ffffff", "label": "Mat colour" },
+    { "type": "range", "id": "mat_opacity", "min": 40, "max": 100, "step": 1, "default": 88, "unit": "%", "label": "Mat opacity" },
+    { "type": "range", "id": "mat_padding", "min": 0, "max": 48, "step": 2, "default": 20, "unit": "px", "label": "Mat padding" },
+    { "type": "range", "id": "corner_radius", "min": 0, "max": 24, "step": 1, "default": 2, "unit": "px", "label": "Corner radius" },
+    { "type": "header", "content": "Backdrop" },
+    { "type": "color", "id": "backdrop_color", "default": "#121214", "label": "Backdrop colour" },
+    { "type": "range", "id": "backdrop_opacity", "min": 40, "max": 100, "step": 1, "default": 82, "unit": "%", "label": "Backdrop opacity" },
+    { "type": "header", "content": "Thumbnails" },
+    { "type": "range", "id": "thumb_size", "min": 40, "max": 120, "step": 4, "default": 64, "unit": "px", "label": "Thumbnail size" }
+  ],
+  "presets": [{ "name": "Rebrand class gallery" }]
+}
+{% endschema %}

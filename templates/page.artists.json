@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "hero": {
@@ -6,524 +15,266 @@
         "fill": "colour",
         "background": "#505a43",
         "texture": 100,
-        "band_height": 690,
+        "image": "shopify://shop_images/tissuepaper_background_SA_Art_Fair.webp",
+        "image_blend": "normal",
+        "image_rotate": "270",
+        "band_height": 680,
         "min_height": 260,
         "mobile_ratio": "4 / 3",
+        "focal_x": 50,
+        "focal_y": 50,
+        "overlay_color": "#1e1e1e",
         "overlay_opacity": 0,
         "show_mark": true,
         "mark": "saaf",
         "mark_width": 130,
         "heading": "Discover a collection of local <em>artists and their work</em>, all part of the creative ecosystem we’re building together.",
+        "auto_heading": false,
         "heading_style": "statement",
-        "text_color": "#ffffff"
+        "text_color": "#ffffff",
+        "button_label": "",
+        "button_link": ""
       }
     },
     "artists": {
       "type": "rb-artist-cards",
       "blocks": {
-        "susan": {
+        "anina-deetlefs": {
           "type": "artist",
           "settings": {
-            "collection": "susan-orpen",
-            "name": "",
-            "medium": "Watercolour · Acrylic · Mixed Media",
-            "place": "Hout Bay, Western Cape",
-            "bio": "",
+            "collection": "anina-deetlefs",
+            "name": "Anina Deetlefs",
+            "medium": "Painter",
+            "place": "",
+            "bio": "<p>Anina Deetlefs is a South African fine artist exploring the connection between women and nature through vibrant portraits, botanical forms and expressive linework inspired by the Cape's indigenous flora.</p>",
             "link": "",
-            "button_label": "See Collections",
+            "button_label": "",
             "tone": "auto"
           }
         },
-        "kerri": {
+        "careisha-esperanza": {
           "type": "artist",
           "settings": {
-            "collection": "kerri-sassen",
-            "name": "",
-            "medium": "Abstract · Mixed Media · Art Therapy",
-            "place": "Hout Bay, Western Cape",
-            "bio": "",
+            "collection": "careisha-esperanza",
+            "name": "Careisha Esperanza",
+            "medium": "Painter",
+            "place": "",
+            "bio": "<p>A South African self-taught artist based in Cape Town, capturing movement, flow and feminine form through bold colour and definitive line work.</p>",
             "link": "",
-            "button_label": "See Collections",
+            "button_label": "",
             "tone": "auto"
           }
         },
-        "zara": {
+        "gaby-blumberg": {
           "type": "artist",
           "settings": {
-            "collection": "zara-leigh",
-            "name": "",
-            "medium": "Abstract Acrylic · Oil · Large Format",
-            "place": "Hout Bay, Western Cape",
-            "bio": "",
+            "collection": "gaby-blumberg",
+            "name": "Gaby Blumberg",
+            "medium": "Painter",
+            "place": "",
+            "bio": "<p>Cape Town-based artist Gabriele Blumberg draws inspiration from nature and human experience, creating expressive paintings that explore memory, emotion and the changing landscapes within and around us.</p>",
             "link": "",
-            "button_label": "See Collections",
+            "button_label": "",
             "tone": "auto"
           }
         },
-        "amara": {
+        "zara-leigh-farinha-2": {
           "type": "artist",
           "settings": {
-            "collection": "amara-dube",
-            "name": "",
-            "medium": "Oil · Figurative · Portrait",
-            "place": "Hout Bay, Western Cape",
-            "bio": "",
+            "collection": "zara-leigh-farinha-2",
+            "name": "Zara-Leigh Farinha",
+            "medium": "Painter",
+            "place": "",
+            "bio": "<p>Zara Leigh Farinha is an intuitive artist and much-loved studio teacher whose expressive paintings embrace colour, emotion, spontaneity and the joy of simply creating.</p>",
             "link": "",
-            "button_label": "See Collections",
+            "button_label": "",
             "tone": "auto"
           }
         },
-        "liesel": {
+        "danielle-byrne": {
           "type": "artist",
           "settings": {
-            "collection": "liesel-van-der-berg",
-            "name": "",
-            "medium": "Ceramics · Sculpture · Mixed Media",
-            "place": "Hout Bay, Western Cape",
-            "bio": "",
+            "collection": "danielle-byrne",
+            "name": "Danielle Byrne",
+            "medium": "Painter",
+            "place": "",
+            "bio": "<p>Danielle Byrne is a Cape Town artist creating vibrant abstract paintings inspired by colour, light, nature and lived experience, inviting viewers into dreamlike worlds shaped by memory and emotion.</p>",
             "link": "",
-            "button_label": "See Collections",
-            "tone": "auto"
+            "button_label": "",
+            "tone": "auto",
+            "image": "shopify://shop_images/danielle-byrne-viewfinder-card.jpg"
           }
         },
-        "natasha": {
+        "kristi-marie": {
           "type": "artist",
           "settings": {
-            "collection": "natasha-hendricks",
-            "name": "",
-            "medium": "Printmaking · Photography · Collage",
-            "place": "Hout Bay, Western Cape",
-            "bio": "",
-            "link": "",
-            "button_label": "See Collections",
-            "tone": "auto"
-          }
-        },
-        "artist-1": {
-          "type": "artist",
-          "settings": {
-            "collection": "artist-1",
-            "name": "",
+            "collection": "kristi-marie",
+            "name": "Kristi Marié",
             "medium": "Artist",
-            "place": "Hout Bay, Western Cape",
-            "bio": "",
+            "place": "",
+            "bio": "<p>An artist exploring the emotional connection between landscape and memory, translating South Africa's shifting coastlines, mountains and urban spaces into evocative works of colour and form.</p>",
             "link": "",
-            "button_label": "See Collections",
+            "button_label": "",
+            "tone": "auto",
+            "image": "shopify://shop_images/kristi-marie-campsview-card.jpg"
+          }
+        },
+        "karen-van-huyssteen": {
+          "type": "artist",
+          "settings": {
+            "collection": "karen-van-huyssteen",
+            "name": "Karen van Huyssteen",
+            "medium": "Painter",
+            "place": "",
+            "bio": "<p>Karen van Huyssteen is a South African artist whose lifelong love of creativity blends figurative and abstract elements in joyful, expressive works.</p>",
+            "link": "",
+            "button_label": "",
             "tone": "auto"
           }
         },
-        "artist-10": {
+        "mark-molenaar": {
           "type": "artist",
           "settings": {
-            "collection": "artist-10",
-            "name": "",
-            "medium": "Artist",
-            "place": "Hout Bay, Western Cape",
-            "bio": "",
+            "collection": "mark-molenaar",
+            "name": "Mark Molenaar",
+            "medium": "Painter",
+            "place": "",
+            "bio": "<p>Mark Molenaar is a South African painter and sculptor working primarily in oil and cast resin, shaped by his enduring connection to the ocean and local wildlife.</p>",
             "link": "",
-            "button_label": "See Collections",
+            "button_label": "",
             "tone": "auto"
           }
         },
-        "artist-11": {
+        "leigh-stokes": {
           "type": "artist",
           "settings": {
-            "collection": "artist-11",
-            "name": "",
-            "medium": "Artist",
-            "place": "Hout Bay, Western Cape",
-            "bio": "",
+            "collection": "leigh-stokes",
+            "name": "Leigh Stokes",
+            "medium": "Painter",
+            "place": "",
+            "bio": "<p>Leigh Stokes is a self-taught artist based in the Southern Drakensberg, KwaZulu-Natal, drawing inspiration from the rural landscapes, wildlife and people of her region.</p>",
             "link": "",
-            "button_label": "See Collections",
+            "button_label": "",
             "tone": "auto"
           }
         },
-        "artist-12": {
+        "michelle-van-reenen": {
           "type": "artist",
           "settings": {
-            "collection": "artist-12",
-            "name": "",
-            "medium": "Artist",
-            "place": "Hout Bay, Western Cape",
-            "bio": "",
+            "collection": "michelle-van-reenen",
+            "name": "Michelle Van Reenen",
+            "medium": "Painter",
+            "place": "",
+            "bio": "<p>Michelle van Reenen is a South African painter based in Kommetjie, Cape Town, creating original paintings and limited edition prints rooted in colour, memory and intuition.</p>",
             "link": "",
-            "button_label": "See Collections",
+            "button_label": "",
+            "tone": "auto",
+            "image": "shopify://shop_images/michelle-van-reenen-golden-card.jpg"
+          }
+        },
+        "nicola-von-bratt": {
+          "type": "artist",
+          "settings": {
+            "collection": "nicola-von-bratt",
+            "name": "Nicola von Bratt",
+            "medium": "Painter",
+            "place": "",
+            "bio": "<p>Nicola von Bratt is a Cape Town-based fine artist whose tactile, story-driven abstract and mixed-media works serve as physical anchors in an increasingly digital world.</p>",
+            "link": "",
+            "button_label": "",
+            "tone": "auto"
+          },
+          "disabled": true
+        },
+        "sara-elliot": {
+          "type": "artist",
+          "settings": {
+            "collection": "sara-elliot",
+            "name": "Sara Elliot",
+            "medium": "Painter",
+            "place": "",
+            "bio": "<p>A Durban-based artist who sees the world in yellow, Sara celebrates South Africa through bright, joyful watercolours inspired by travel, nostalgia and the beauty of everyday moments.</p>",
+            "link": "",
+            "button_label": "",
             "tone": "auto"
           }
         },
-        "artist-13": {
+        "murray-loubser": {
           "type": "artist",
           "settings": {
-            "collection": "artist-13",
-            "name": "",
-            "medium": "Artist",
-            "place": "Hout Bay, Western Cape",
-            "bio": "",
+            "collection": "murray-loubser",
+            "name": "Murray Loubser",
+            "medium": "Mixed media artist",
+            "place": "",
+            "bio": "<p>Murray Loubser is a self-taught multidisciplinary artist and professional Red Bull BMX athlete whose art practice explores the relationship between colour, nature, image, writing and material.</p>",
             "link": "",
-            "button_label": "See Collections",
+            "button_label": "",
             "tone": "auto"
           }
         },
-        "artist-14": {
+        "lauren-ratcliffe": {
           "type": "artist",
           "settings": {
-            "collection": "artist-14",
-            "name": "",
-            "medium": "Artist",
-            "place": "Hout Bay, Western Cape",
-            "bio": "",
-            "link": "",
-            "button_label": "See Collections",
-            "tone": "auto"
-          }
-        },
-        "artist-15": {
-          "type": "artist",
-          "settings": {
-            "collection": "artist-15",
-            "name": "",
-            "medium": "Artist",
-            "place": "Hout Bay, Western Cape",
-            "bio": "",
-            "link": "",
-            "button_label": "See Collections",
-            "tone": "auto"
-          }
-        },
-        "artist-16": {
-          "type": "artist",
-          "settings": {
-            "collection": "artist-16",
-            "name": "",
-            "medium": "Artist",
-            "place": "Hout Bay, Western Cape",
-            "bio": "",
-            "link": "",
-            "button_label": "See Collections",
-            "tone": "auto"
-          }
-        },
-        "artist-17": {
-          "type": "artist",
-          "settings": {
-            "collection": "artist-17",
-            "name": "",
-            "medium": "Artist",
-            "place": "Hout Bay, Western Cape",
-            "bio": "",
-            "link": "",
-            "button_label": "See Collections",
-            "tone": "auto"
-          }
-        },
-        "artist-18": {
-          "type": "artist",
-          "settings": {
-            "collection": "artist-18",
-            "name": "",
-            "medium": "Artist",
-            "place": "Hout Bay, Western Cape",
-            "bio": "",
-            "link": "",
-            "button_label": "See Collections",
-            "tone": "auto"
-          }
-        },
-        "artist-19": {
-          "type": "artist",
-          "settings": {
-            "collection": "artist-19",
-            "name": "",
-            "medium": "Artist",
-            "place": "Hout Bay, Western Cape",
-            "bio": "",
-            "link": "",
-            "button_label": "See Collections",
-            "tone": "auto"
-          }
-        },
-        "artist-2": {
-          "type": "artist",
-          "settings": {
-            "collection": "artist-2",
-            "name": "",
-            "medium": "Artist",
-            "place": "Hout Bay, Western Cape",
-            "bio": "",
-            "link": "",
-            "button_label": "See Collections",
-            "tone": "auto"
-          }
-        },
-        "artist-20": {
-          "type": "artist",
-          "settings": {
-            "collection": "artist-20",
-            "name": "",
-            "medium": "Artist",
-            "place": "Hout Bay, Western Cape",
-            "bio": "",
-            "link": "",
-            "button_label": "See Collections",
-            "tone": "auto"
-          }
-        },
-        "artist-21": {
-          "type": "artist",
-          "settings": {
-            "collection": "artist-21",
-            "name": "",
-            "medium": "Artist",
-            "place": "Hout Bay, Western Cape",
-            "bio": "",
-            "link": "",
-            "button_label": "See Collections",
-            "tone": "auto"
-          }
-        },
-        "artist-22": {
-          "type": "artist",
-          "settings": {
-            "collection": "artist-22",
-            "name": "",
-            "medium": "Artist",
-            "place": "Hout Bay, Western Cape",
-            "bio": "",
-            "link": "",
-            "button_label": "See Collections",
-            "tone": "auto"
-          }
-        },
-        "artist-23": {
-          "type": "artist",
-          "settings": {
-            "collection": "artist-23",
-            "name": "",
-            "medium": "Artist",
-            "place": "Hout Bay, Western Cape",
-            "bio": "",
-            "link": "",
-            "button_label": "See Collections",
-            "tone": "auto"
-          }
-        },
-        "artist-24": {
-          "type": "artist",
-          "settings": {
-            "collection": "artist-24",
-            "name": "",
-            "medium": "Artist",
-            "place": "Hout Bay, Western Cape",
-            "bio": "",
-            "link": "",
-            "button_label": "See Collections",
-            "tone": "auto"
-          }
-        },
-        "artist-25": {
-          "type": "artist",
-          "settings": {
-            "collection": "artist-25",
-            "name": "",
-            "medium": "Artist",
-            "place": "Hout Bay, Western Cape",
-            "bio": "",
-            "link": "",
-            "button_label": "See Collections",
-            "tone": "auto"
-          }
-        },
-        "artist-3": {
-          "type": "artist",
-          "settings": {
-            "collection": "artist-3",
-            "name": "",
-            "medium": "Artist",
-            "place": "Hout Bay, Western Cape",
-            "bio": "",
-            "link": "",
-            "button_label": "See Collections",
-            "tone": "auto"
-          }
-        },
-        "artist-4": {
-          "type": "artist",
-          "settings": {
-            "collection": "artist-4",
-            "name": "",
-            "medium": "Artist",
-            "place": "Hout Bay, Western Cape",
-            "bio": "",
-            "link": "",
-            "button_label": "See Collections",
-            "tone": "auto"
-          }
-        },
-        "artist-5": {
-          "type": "artist",
-          "settings": {
-            "collection": "artist-5",
-            "name": "",
-            "medium": "Artist",
-            "place": "Hout Bay, Western Cape",
-            "bio": "",
-            "link": "",
-            "button_label": "See Collections",
-            "tone": "auto"
-          }
-        },
-        "artist-6": {
-          "type": "artist",
-          "settings": {
-            "collection": "artist-6",
-            "name": "",
-            "medium": "Artist",
-            "place": "Hout Bay, Western Cape",
-            "bio": "",
-            "link": "",
-            "button_label": "See Collections",
-            "tone": "auto"
-          }
-        },
-        "artist-7": {
-          "type": "artist",
-          "settings": {
-            "collection": "artist-7",
-            "name": "",
-            "medium": "Artist",
-            "place": "Hout Bay, Western Cape",
-            "bio": "",
-            "link": "",
-            "button_label": "See Collections",
-            "tone": "auto"
-          }
-        },
-        "artist-8": {
-          "type": "artist",
-          "settings": {
-            "collection": "artist-8",
-            "name": "",
-            "medium": "Artist",
-            "place": "Hout Bay, Western Cape",
-            "bio": "",
-            "link": "",
-            "button_label": "See Collections",
-            "tone": "auto"
-          }
-        },
-        "artist-9": {
-          "type": "artist",
-          "settings": {
-            "collection": "artist-9",
-            "name": "",
-            "medium": "Artist",
-            "place": "Hout Bay, Western Cape",
-            "bio": "",
-            "link": "",
-            "button_label": "See Collections",
-            "tone": "auto"
-          }
-        },
-        "jacqui-sundelson": {
-          "type": "artist",
-          "settings": {
-            "collection": "jacqui-sundelson",
-            "name": "",
-            "medium": "Artist",
-            "place": "Hout Bay, Western Cape",
-            "bio": "",
-            "link": "",
-            "button_label": "See Collections",
-            "tone": "auto"
-          }
-        },
-        "janice-grant": {
-          "type": "artist",
-          "settings": {
-            "collection": "janice-grant",
-            "name": "",
-            "medium": "Artist",
-            "place": "Hout Bay, Western Cape",
-            "bio": "",
-            "link": "",
-            "button_label": "See Collections",
-            "tone": "auto"
-          }
-        },
-        "shelley-cowling": {
-          "type": "artist",
-          "settings": {
-            "collection": "shelley-cowling",
-            "name": "",
-            "medium": "Artist",
-            "place": "Hout Bay, Western Cape",
-            "bio": "",
-            "link": "",
-            "button_label": "See Collections",
-            "tone": "auto"
+            "tone": "auto",
+            "collection": "lauren-ratcliffe",
+            "name": "Lauren Ratcliffe",
+            "medium": "Painter",
+            "bio": "<p>Lauren Ratcliffe is a Cape Town based contemporary artist whose work explores the emotional life of the spaces we inhabit and the objects we live alongside. Originally from the Eastern Cape, she now works full time from her studio at Sidetrack Studios in Cape Town.</p><p>Working across oil, acrylic, ink and mixed media, Lauren is drawn to interiors, chairs, vessels and everyday objects as carriers of presence, memory and human connection. Her paintings are less concerned with faithfully describing these objects than with capturing what seems to linger around them: the trace of a person, the familiarity of home, a remembered moment, or the quiet feeling held within a room.</p><p>Her practice has become increasingly loose and intuitive, combining bold colour, layered surfaces, expressive marks and areas that blur, disappear or remain unresolved. She is interested in the tension between recognition and abstraction, allowing just enough information for an image to emerge while leaving space for the viewer’s own memories and associations.</p><p>Building on 15 years of experience in psychology, leadership and people development, Lauren brings a longstanding curiosity about people and connection into her work. She is fascinated by the way ordinary objects can become silent witnesses to our lives and how the spaces we inhabit quietly absorb our stories.</p><p>At the heart of Lauren’s practice is an interest in the life between things: the invisible relationships between people, objects and spaces, and the small, often overlooked moments that make a place feel like home.</p><p>Warm, playful and sometimes quietly nostalgic, her work invites us to slow down, look again and find meaning in the ordinary.</p>"
           }
         }
       },
       "block_order": [
-        "susan",
-        "kerri",
-        "zara",
-        "amara",
-        "liesel",
-        "natasha",
-        "artist-1",
-        "artist-10",
-        "artist-11",
-        "artist-12",
-        "artist-13",
-        "artist-14",
-        "artist-15",
-        "artist-16",
-        "artist-17",
-        "artist-18",
-        "artist-19",
-        "artist-2",
-        "artist-20",
-        "artist-21",
-        "artist-22",
-        "artist-23",
-        "artist-24",
-        "artist-25",
-        "artist-3",
-        "artist-4",
-        "artist-5",
-        "artist-6",
-        "artist-7",
-        "artist-8",
-        "artist-9",
-        "jacqui-sundelson",
-        "janice-grant",
-        "shelley-cowling"
+        "anina-deetlefs",
+        "careisha-esperanza",
+        "gaby-blumberg",
+        "zara-leigh-farinha-2",
+        "danielle-byrne",
+        "kristi-marie",
+        "karen-van-huyssteen",
+        "mark-molenaar",
+        "leigh-stokes",
+        "michelle-van-reenen",
+        "nicola-von-bratt",
+        "sara-elliot",
+        "murray-loubser",
+        "lauren-ratcliffe"
       ],
       "settings": {
-        "columns": 3,
-        "grid_width": 1760,
-        "image_ratio": "555 / 402",
-        "radius": 20,
-        "portrait_w": 42,
-        "portrait_ratio": "132 / 130",
-        "portrait_x": 49,
-        "portrait_y": 50,
-        "background": "#ffffff",
-        "tone_a": "#9da887",
-        "tone_a_text": "#ffffff",
-        "tone_a_meta": "#f2f4ec",
-        "tone_b": "#505a43",
-        "tone_b_text": "#dfe4d4",
-        "tone_b_meta": "#a5ad93",
-        "texture": 100,
         "show_finder": true,
         "finder_label": "Find an artist",
-        "search_placeholder": "Search by name or medium",
+        "search_placeholder": "Search by name",
         "show_name_list": true,
         "empty_text": "No artists match that search.",
         "finder_text_color": "#1e1e1e",
-        "finder_accent": "#b00e3f"
+        "finder_accent": "#b00e3f",
+        "columns": 4,
+        "grid_width": 1760,
+        "image_ratio": "555 / 402",
+        "radius": 20,
+        "meta_gap": 6,
+        "bio_lines": 4,
+        "portrait_w": 39,
+        "portrait_ratio": "109 / 130",
+        "portrait_x": 49,
+        "portrait_y": 48,
+        "background": "#ffffff",
+        "tone_a": "#9da887",
+        "tone_a_text": "#ffffff",
+        "tone_a_name": "#505a43",
+        "tone_a_meta": "#f2f4ec",
+        "tone_b": "#505a43",
+        "tone_b_text": "#dfe4d4",
+        "tone_b_name": "#9da887",
+        "tone_b_meta": "#a5ad93",
+        "texture": 0,
+        "panel_image_fit": "cover",
+        "panel_image_focal_x": 50,
+        "panel_image_focal_y": 50,
+        "panel_image_veil": 0,
+        "media_mode": "portrait",
+        "portrait_grayscale": false,
+        "photo_focal_y": 35,
+        "show_meta": false
       }
     }
   },

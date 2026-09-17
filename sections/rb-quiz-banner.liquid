@@ -156,16 +156,16 @@
       {%- endif -%}
 
       {%- if section.settings.heading != blank -%}
-        <h2 class="rb-quiz__heading">{{ section.settings.heading | escape }}</h2>
+        <h2 class="rb-quiz__heading">{{ 'Get the SA Art Fair letter' }}</h2>
       {%- endif -%}
 
       {%- if section.settings.subheading != blank -%}
-        <p class="rb-body rb-quiz__sub">{{ section.settings.subheading | escape }}</p>
+        <p class="rb-body rb-quiz__sub">{{ 'One letter a month: new work in the gallery, term dates before they go public, and invitations to the studio.' }}</p>
       {%- endif -%}
 
       {%- if section.settings.button_label != blank -%}
-        <a href="{{ section.settings.button_link | default: '#' }}" class="rb-btn rb-btn--white rb-quiz__cta">
-          {{- section.settings.button_label | escape -}}
+        <a href="{{ '/pages/newsletter' }}" class="rb-btn rb-btn--white rb-quiz__cta">
+          {{- 'Sign up for our newsletter' -}}
         </a>
       {%- endif -%}
     </div>
