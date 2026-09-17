@@ -186,7 +186,7 @@
     } catch (e) {}
   }
 
-  var overlay, modal;
+  var overlay, modal, outsideClick = null;
 
   function remove() {
     if (modal)   { modal.style.opacity = '0'; modal.style.transform = 'translate(-50%, calc(-50% + 10px))'; }
@@ -196,6 +196,7 @@
       if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay);
       document.removeEventListener('keydown', onKey);
     }, 240);
+    if (outsideClick) { document.removeEventListener('click', outsideClick, true); outsideClick = null; }
   }
 
   function dismiss() { remove(); }
@@ -259,7 +260,6 @@
 
     overlay = document.createElement('div');
     overlay.className = 'saf-nl-overlay';
-    overlay.addEventListener('click', dismiss);
     document.body.appendChild(overlay);
 
     modal = document.createElement('div');
@@ -295,6 +295,13 @@
 
     document.getElementById('saf-nl-close').addEventListener('click', dismiss);
     document.addEventListener('keydown', onKey);
+
+    /* Click anywhere outside the card to dismiss. Bound on the next frame so
+       the click that led here can't close it immediately. */
+    setTimeout(function () {
+      outsideClick = function (e) { if (modal && !modal.contains(e.target)) dismiss(); };
+      document.addEventListener('click', outsideClick, true);
+    }, 0);
 
     document.getElementById('saf-nl-form').addEventListener('submit', function (e) {
       e.preventDefault();

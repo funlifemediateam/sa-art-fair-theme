@@ -13,9 +13,98 @@
   var API_URL      = window.__saLeadApiUrl     || 'https://sa-art-fair-admin.vercel.app';
   var GOOGLE_ID    = window.__saGoogleClientId || '';
   var PAGE         = window.__saPopupPage      || 'other';
-  var DARK         = '#1d1c21';
-  var ORANGE       = '#0f4a52';
-  var RUST         = '#0f4a52';
+
+  /* ── Look ──
+     Everything visual lives in one injected stylesheet rather than in inline
+     styles, because hover, focus and the @supports test for backdrop-filter
+     cannot be expressed inline. Colours and families come from the rebrand
+     tokens in saf-rebrand.css via var(), with the 2026-08 values as
+     fallbacks, so this card follows the brand if those ever change.
+
+     NOTE: 1rem = 12px on this theme (html 62.5% x body scale 120), which is
+     why every size below is in px. The old inline styles were written for a
+     16px root and rendered a quarter too small. */
+  var STYLE_ID = 'sa-popup-styles';
+
+  function injectStyles() {
+    if (document.getElementById(STYLE_ID)) return;
+    var css = [
+      /* Invisible catcher. No dark scrim: the page stays visible and usable
+         behind the card, and an outside click still dismisses (see below). */
+      '#sa-lead-popup-overlay{position:fixed;inset:0;z-index:99998;background:transparent;pointer-events:none}',
+
+      '#sa-lead-popup{position:fixed;bottom:24px;right:24px;z-index:99999;box-sizing:border-box;',
+      'width:calc(100vw - 32px);max-width:400px;padding:26px 24px 20px;',
+      'background:#fff;color:var(--rb-ink,#1e1e1e);',
+      'font-family:var(--rb-sans,"Afacad","Helvetica Neue",Arial,sans-serif);',
+      'border:1px solid rgba(30,30,30,.08);border-radius:14px;',
+      'box-shadow:0 18px 60px rgba(30,30,30,.28);',
+      'opacity:0;transform:translateY(12px);transition:opacity .22s,transform .22s}',
+
+      /* Frosted only where it is supported; solid white everywhere else, so
+         the fallback is the readable one. Only the BACKGROUND is translucent
+         — text, inputs and buttons are children and stay fully opaque. */
+      '@supports ((backdrop-filter:blur(14px)) or (-webkit-backdrop-filter:blur(14px))){',
+      '#sa-lead-popup{background:rgba(255,255,255,.82);',
+      '-webkit-backdrop-filter:blur(14px) saturate(120%);backdrop-filter:blur(14px) saturate(120%);',
+      'border-color:rgba(255,255,255,.55);box-shadow:0 18px 60px rgba(30,30,30,.34)}}',
+
+      '#sa-popup-close{position:absolute;top:10px;right:12px;width:34px;height:34px;display:flex;',
+      'align-items:center;justify-content:center;background:none;border:none;cursor:pointer;',
+      'color:rgba(30,30,30,.45);border-radius:50%}',
+      '#sa-popup-close:hover{color:var(--rb-ink,#1e1e1e);background:rgba(30,30,30,.06)}',
+
+      '.sa-pop__eyebrow{margin:0 0 10px;font-size:12px;font-weight:700;letter-spacing:.14em;',
+      'text-transform:uppercase;color:var(--rb-cherry,#b00e3f)}',
+      '.sa-pop__heading{margin:0 0 8px;font-family:var(--rb-serif,"IvyPresto Display","Playfair Display",Georgia,serif);',
+      'font-size:26px;font-weight:400;line-height:1.15;color:var(--rb-ink,#1e1e1e)}',
+      '.sa-pop__body{margin:0 0 18px;font-size:15px;line-height:1.55;color:rgba(30,30,30,.72)}',
+
+      '#sa-popup-google-wrap{margin-bottom:10px}',
+      '#sa-popup-google{display:flex;justify-content:center}',
+      '.sa-pop__or{display:flex;align-items:center;gap:10px;margin:4px 0 16px}',
+      /* base.css hides every `div:empty`, and these two rules ARE empty divs.
+         An inline display would work but two classes (0,2,0) also outrank
+         `div:empty` (0,1,1), which keeps it in the stylesheet. */
+      '.sa-pop__or .sa-pop__rule{display:block;flex:1;height:1px;background:rgba(30,30,30,.14)}',
+      '.sa-pop__or-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(30,30,30,.7)}',
+
+      '.sa-pop__fields{margin-bottom:10px}',
+      '.sa-pop__input{width:100%;box-sizing:border-box;padding:12px 14px;background:#fff;',
+      'border:1.5px solid rgba(30,30,30,.18);border-radius:10px;',
+      'font-family:inherit;font-size:15px;color:var(--rb-ink,#1e1e1e);outline:none;',
+      'transition:border-color .15s ease,box-shadow .15s ease}',
+      '.sa-pop__input + .sa-pop__input{margin-top:8px}',
+      '.sa-pop__input::placeholder{color:rgba(30,30,30,.55)}',
+      '.sa-pop__input:focus{border-color:var(--rb-coral,#e27b70);box-shadow:0 0 0 3px rgba(226,123,112,.22)}',
+      '#sa-popup-err{display:none;margin:6px 0 0;font-size:13px;color:var(--rb-cherry,#b00e3f)}',
+
+      '#sa-popup-submit{width:100%;padding:14px;cursor:pointer;border:none;border-radius:999px;',
+      'background:var(--rb-cherry,#b00e3f);color:#fff;font-family:inherit;font-size:14px;',
+      'font-weight:700;letter-spacing:.08em;text-transform:uppercase;transition:background .18s ease}',
+      '#sa-popup-submit:hover{background:#8f0b33}',
+      '#sa-popup-submit:focus-visible{outline:3px solid var(--rb-coral,#e27b70);outline-offset:2px}',
+
+      /* These three were .5/.42/.45 and failed WCAG AA even on a white
+         page; over a dark photo the frosted card lifts to about #d1d1d1,
+         where they were worse. Do not lighten them again. */
+      '.sa-pop__fine{margin:10px 0 0;font-size:12px;color:rgba(30,30,30,.7);text-align:center}',
+
+      '.sa-pop__thanks{text-align:center;padding:16px 0 6px}',
+      '.sa-pop__tick{width:54px;height:54px;margin:0 auto 16px;border-radius:50%;',
+      'background:var(--rb-cherry,#b00e3f);color:#fff;display:flex;align-items:center;justify-content:center}',
+      '.sa-pop__thanks .sa-pop__heading{margin:0 0 8px;font-size:22px}',
+      '.sa-pop__thanks .sa-pop__body{margin:0}',
+
+      '@media screen and (max-width:480px){',
+      '#sa-lead-popup{right:16px;left:16px;bottom:16px;width:auto;padding:24px 20px 18px}',
+      '.sa-pop__heading{font-size:23px}}'
+    ].join('');
+    var el = document.createElement('style');
+    el.id = STYLE_ID;
+    el.textContent = css;
+    document.head.appendChild(el);
+  }
 
   /* ── Settings ──
      These are the pop-up exactly as it behaved on 17 Sep 2026, and they are
@@ -44,6 +133,7 @@
 
   var shown = false;
   var timer = null;
+  var outsideClick = null;
   var loadedAt = Date.now();
   var settled  = false;   /* settings have landed (or been given up on) */
 
@@ -121,6 +211,7 @@
   function dismiss() {
     shown = true;
     clearTimeout(timer);
+    if (outsideClick) { document.removeEventListener('click', outsideClick, true); outsideClick = null; }
     lsSet(STORAGE_KEY, String(Date.now()));
     var modal = document.getElementById('sa-lead-popup');
     if (modal) {
@@ -129,10 +220,7 @@
       setTimeout(function () { if (modal.parentNode) modal.parentNode.removeChild(modal); }, 220);
     }
     var overlay = document.getElementById('sa-lead-popup-overlay');
-    if (overlay) {
-      overlay.style.opacity = '0';
-      setTimeout(function () { if (overlay.parentNode) overlay.parentNode.removeChild(overlay); }, 220);
-    }
+    if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay);
   }
 
   /* Google could not be offered: take the button slot AND its "or" divider
@@ -250,12 +338,12 @@
   function showThanks(name) {
     var body = document.getElementById('sa-popup-body');
     if (!body) return;
-    body.innerHTML = '<div style="text-align:center;padding:20px 0">'
-      + '<div style="width:52px;height:52px;border-radius:50%;background:' + ORANGE + ';margin:0 auto 18px;display:flex;align-items:center;justify-content:center">'
-      + '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>'
+    body.innerHTML = '<div class="sa-pop__thanks">'
+      + '<div class="sa-pop__tick">'
+      + '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>'
       + '</div>'
-      + '<h3 style="margin:0 0 10px;font-size:1.2rem;font-weight:700;color:' + DARK + '">' + esc(S.copy.thanksHeading) + (name ? ', ' + esc(name.split(' ')[0]) : '') + '.</h3>'
-      + '<p style="margin:0;font-size:0.9rem;color:#666;line-height:1.6">' + esc(S.copy.thanksBody) + '</p>'
+      + '<h3 class="sa-pop__heading">' + esc(S.copy.thanksHeading) + (name ? ', ' + esc(name.split(' ')[0]) : '') + '.</h3>'
+      + '<p class="sa-pop__body">' + esc(S.copy.thanksBody) + '</p>'
       + '</div>';
     setTimeout(dismiss, 2400);
   }
@@ -264,26 +352,21 @@
     shown = true;
     ssSet(CLAIM_KEY, 'lead');   /* this visit is ours */
 
+    injectStyles();
+
+    /* No dark scrim any more. The overlay is kept as an invisible,
+       click-through layer so nothing that referenced it breaks; dismissing on
+       an outside click is now a document listener, which leaves the page
+       genuinely usable behind the card rather than merely visible. */
     var overlay = document.createElement('div');
     overlay.id = 'sa-lead-popup-overlay';
-    overlay.style.cssText = 'position:fixed;inset:0;z-index:99998;background:rgba(0,0,0,.45);opacity:0;transition:opacity .22s';
-    overlay.addEventListener('click', dismiss);
     document.body.appendChild(overlay);
 
     var modal = document.createElement('div');
     modal.id = 'sa-lead-popup';
     modal.setAttribute('role', 'dialog');
-    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-modal', 'false');
     modal.setAttribute('aria-label', 'Stay in the loop with SA Art Fair');
-    modal.style.cssText = [
-      'position:fixed;bottom:24px;right:24px;z-index:99999',
-      'width:100%;max-width:400px',
-      'background:#fff;border-radius:8px',
-      'box-shadow:0 12px 48px rgba(0,0,0,.22)',
-      'padding:28px 24px 20px',
-      'opacity:0;transform:translateY(12px)',
-      'transition:opacity .22s,transform .22s'
-    ].join(';');
 
     /* Google renders its own official button into this slot once the GSI
        script has loaded. Both this and the divider are hidden if that fails —
@@ -291,43 +374,45 @@
     var googleOn = GOOGLE_ID && S.google;
 
     var googleSlot = googleOn
-      ? '<div id="sa-popup-google-wrap" style="margin-bottom:9px">'
-        + '<div id="sa-popup-google" style="display:flex;justify-content:center"></div>'
-        + '</div>'
+      ? '<div id="sa-popup-google-wrap"><div id="sa-popup-google"></div></div>'
       : '';
 
-    /* The two hairlines carry display:block for a reason: they are empty
-       divs, and base.css hides every `div:empty` outright. Inline flex/height
-       can't undo that — `display` has to be set inline to beat the
-       stylesheet — so without it both rules collapse to 0x0 and "or" sits
-       alone against the left edge. Don't drop it as redundant. */
     var divider = googleOn
-      ? '<div id="sa-popup-or" style="display:flex;align-items:center;gap:10px;margin:4px 0 16px"><div style="display:block;flex:1;height:1px;background:#ebe5df"></div><span style="font-size:.7rem;color:#bbb;font-weight:600;text-transform:uppercase;letter-spacing:.06em">or</span><div style="display:block;flex:1;height:1px;background:#ebe5df"></div></div>'
+      ? '<div id="sa-popup-or" class="sa-pop__or">'
+        + '<div class="sa-pop__rule"></div>'
+        + '<span class="sa-pop__or-label">or</span>'
+        + '<div class="sa-pop__rule"></div></div>'
       : '';
 
     modal.innerHTML = '<div id="sa-popup-body">'
-      + '<button id="sa-popup-close" aria-label="Close" style="position:absolute;top:12px;right:14px;background:none;border:none;cursor:pointer;width:30px;height:30px;display:flex;align-items:center;justify-content:center;color:#aaa;border-radius:50%">'
+      + '<button id="sa-popup-close" aria-label="Close">'
       + '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>'
       + '</button>'
-      + '<p style="font-size:.68rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:' + RUST + ';margin:0 0 10px">' + esc(S.copy.eyebrow) + '</p>'
-      + '<h3 style="margin:0 0 8px;font-size:1.15rem;font-weight:700;line-height:1.3;color:' + DARK + '">' + esc(S.copy.heading) + '</h3>'
-      + '<p style="margin:0 0 20px;font-size:.85rem;color:#777;line-height:1.6">' + esc(S.copy.body) + '</p>'
+      + '<p class="sa-pop__eyebrow">' + esc(S.copy.eyebrow) + '</p>'
+      + '<h3 class="sa-pop__heading">' + esc(S.copy.heading) + '</h3>'
+      + '<p class="sa-pop__body">' + esc(S.copy.body) + '</p>'
       + googleSlot + divider
-      + '<div style="margin-bottom:10px">'
-      + '<input id="sa-popup-name" type="text" placeholder="Your name (optional)" autocomplete="name" style="width:100%;padding:10px 13px;border:1.5px solid #e5ddd7;border-radius:3px;font-size:.88rem;color:' + DARK + ';outline:none;margin-bottom:8px;box-sizing:border-box">'
-      + '<input id="sa-popup-email" type="email" placeholder="your@email.com" autocomplete="email" style="width:100%;padding:10px 13px;border:1.5px solid #e5ddd7;border-radius:3px;font-size:.88rem;color:' + DARK + ';outline:none;box-sizing:border-box">'
-      + '<p id="sa-popup-err" style="display:none;color:#c0392b;font-size:.75rem;margin:5px 0 0">Please enter a valid email address.</p>'
+      + '<div class="sa-pop__fields">'
+      + '<input id="sa-popup-name" class="sa-pop__input" type="text" placeholder="Your name (optional)" autocomplete="name">'
+      + '<input id="sa-popup-email" class="sa-pop__input" type="email" placeholder="your@email.com" autocomplete="email">'
+      + '<p id="sa-popup-err">Please enter a valid email address.</p>'
       + '</div>'
-      + '<button id="sa-popup-submit" style="width:100%;padding:12px;background:' + DARK + ';color:#fff;border:none;cursor:pointer;border-radius:2px;font-size:.8rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase">' + esc(S.copy.button) + '</button>'
-      + '<p style="margin:10px 0 0;font-size:.67rem;color:#bbb;text-align:center">No spam. Unsubscribe anytime.</p>'
+      + '<button id="sa-popup-submit">' + esc(S.copy.button) + '</button>'
+      + '<p class="sa-pop__fine">No spam. Unsubscribe anytime.</p>'
       + '</div>';
 
     document.body.appendChild(modal);
 
+    /* Click anywhere outside the card to dismiss. Bound on the next frame so
+       the click or keypress that led here can't close it immediately. */
+    setTimeout(function () {
+      outsideClick = function (e) { if (!modal.contains(e.target)) dismiss(); };
+      document.addEventListener('click', outsideClick, true);
+    }, 0);
+
     /* Animate in */
     requestAnimationFrame(function () {
       requestAnimationFrame(function () {
-        overlay.style.opacity = '1';
         modal.style.opacity   = '1';
         modal.style.transform = 'translateY(0)';
       });
@@ -371,7 +456,7 @@
         var w = Math.max(200, Math.min(400, Math.round(slot.getBoundingClientRect().width) || 352));
         google.accounts.id.renderButton(slot, {
           type: 'standard', theme: 'outline', size: 'large',
-          text: 'continue_with', shape: 'rectangular',
+          text: 'continue_with', shape: 'pill',
           logo_alignment: 'center', width: w
         });
         /* renderButton fails SILENTLY when the origin is not authorised — it
