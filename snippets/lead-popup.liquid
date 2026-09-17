@@ -1,7 +1,40 @@
+{%- comment -%}
+  "Stay in the loop." pop-up. Its settings live in the booking admin's Popup
+  tab (shop metafield booking_app.popup_settings) and are fetched by
+  assets/lead-popup.js; the same values are baked into that file as fallbacks,
+  so the pop-up still works if the app is unreachable.
+
+  Which kind of page this is gets worked out here, in Liquid, rather than
+  guessed from the URL in JavaScript. The basket is skipped outright — a
+  visitor part-way through paying is never interrupted. Checkout is hosted by
+  Shopify and never renders theme snippets, so it excludes itself.
+{%- endcomment -%}
+{%- unless request.page_type == 'cart' -%}
 {%- assign _sa_quiz_url = shop.metafields.booking_app.quiz_api_url | default: 'https://sa-art-fair-admin.vercel.app' -%}
 {%- assign _sa_google   = shop.metafields.booking_app.google_client_id | default: '' -%}
+{%- assign _sa_page = 'other' -%}
+{%- case request.page_type -%}
+  {%- when 'index' -%}
+    {%- assign _sa_page = 'home' -%}
+  {%- when 'product' -%}
+    {%- if product.type == 'Class' or product.type == 'Workshop' -%}
+      {%- assign _sa_page = 'class' -%}
+    {%- else -%}
+      {%- assign _sa_page = 'artwork' -%}
+    {%- endif -%}
+  {%- when 'collection' -%}
+    {%- if collection.handle contains 'class' or collection.handle contains 'workshop' -%}
+      {%- assign _sa_page = 'class' -%}
+    {%- else -%}
+      {%- assign _sa_page = 'artwork' -%}
+    {%- endif -%}
+  {%- when 'blog', 'article' -%}
+    {%- assign _sa_page = 'blog' -%}
+{%- endcase -%}
 <script>
   window.__saLeadApiUrl      = {{ _sa_quiz_url | json }};
   window.__saGoogleClientId  = {{ _sa_google   | json }};
+  window.__saPopupPage       = {{ _sa_page     | json }};
 </script>
 <script src="{{ 'lead-popup.js' | asset_url }}" defer></script>
+{%- endunless -%}
