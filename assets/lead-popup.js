@@ -5,7 +5,8 @@
   var SIGNED_KEY   = 'sa_lead_popup_signed';    /* they already joined, here */
   var SEEN_KEY     = 'sa_lead_popup_seen';      /* this browser has been before */
   var NEWVISIT_KEY = 'sa_lead_popup_newvisit';  /* session: started as a new visitor */
-  var COUNT_KEY    = 'sa_lead_popup_counted';   /* session: impression already counted */
+  var CLAIM_KEY    = 'sa_popup_claimed';        /* session: which card went first */
+  var COUNT_KEY    = 'sa_popup_counted_lead';   /* session: impression counted */
   var CACHE_KEY    = 'sa_popup_settings';       /* session: settings + when fetched */
   var CACHE_MS     = 10 * 60 * 1000;
   var FETCH_MS     = 4000;                      /* give up and use the defaults */
@@ -93,17 +94,27 @@
     return p.indexOf('/cart') === 0 || p.indexOf('/checkout') !== -1 || p.indexOf('/challenge') !== -1;
   }
 
+  /* Only one card per visit. Whichever is due first claims the visit; the
+     other stays down until a later one. Also refuses to open on top of the
+     other card or the quiz, whatever the flag says. */
+  function claimedByOther() {
+    var who = ssGet(CLAIM_KEY);
+    if (who && who !== 'lead') return true;
+    return !!(document.getElementById('saf-nl-body') || document.getElementById('sa-quiz-overlay'));
+  }
+
   function shouldShow() {
     if (shown) return false;
     if (!S.enabled) return false;
     if (onExcludedPage()) return false;
-    if (document.getElementById('sa-quiz-overlay')) return false;
     if (!S.pages[PAGE]) return false;
+    if (claimedByOther()) return false;
     if (S.audience.newVisitorsOnly && !isNewVisitor) return false;
     if (S.audience.skipSignedUp && lsGet(SIGNED_KEY)) return false;
     if (S.audience.skipMidBooking && (holdActive() || holdBarShowing())) return false;
     var ts = parseInt(lsGet(STORAGE_KEY) || '0', 10);
-    if (ts && Date.now() - ts < S.timing.dismissDays * 86400000) return false;
+    /* 0 days means never show it to them again */
+    if (ts && (S.timing.dismissDays === 0 || Date.now() - ts < S.timing.dismissDays * 86400000)) return false;
     return true;
   }
 
@@ -152,16 +163,17 @@
      appear LATER than it would have on the defaults, never sooner. */
 
   function mergeSettings(raw) {
-    if (!raw || typeof raw !== 'object') return;
+    var src = raw && typeof raw === 'object' ? raw.lead : null;
+    if (!src || typeof src !== 'object') return;
     ['timing', 'pages', 'audience', 'copy'].forEach(function (group) {
-      if (!raw[group] || typeof raw[group] !== 'object') return;
+      if (!src[group] || typeof src[group] !== 'object') return;
       Object.keys(S[group]).forEach(function (k) {
-        var v = raw[group][k];
+        var v = src[group][k];
         if (typeof v === typeof S[group][k] && !(typeof v === 'string' && !v)) S[group][k] = v;
       });
     });
-    if (typeof raw.enabled === 'boolean') S.enabled = raw.enabled;
-    if (typeof raw.google === 'boolean') S.google = raw.google;
+    if (typeof src.enabled === 'boolean') S.enabled = src.enabled;
+    if (typeof src.google === 'boolean') S.google = src.google;
   }
 
   function settingsSettled() {
@@ -170,29 +182,42 @@
     armTriggers();
   }
 
-  function loadSettings() {
+  /* One request and one session cache, shared with newsletter-popup.js: both
+     scripts are deferred, so whichever runs first starts the fetch and the
+     other joins it rather than asking again. */
+  function fetchSettings() {
+    if (window.__saPopupSettings) return window.__saPopupSettings;
     var cached = ssGet(CACHE_KEY);
     if (cached) {
       try {
         var c = JSON.parse(cached);
-        if (c && Date.now() - c.at < CACHE_MS) { mergeSettings(c.v); settingsSettled(); return; }
+        if (c && Date.now() - c.at < CACHE_MS) {
+          window.__saPopupSettings = Promise.resolve(c.v);
+          return window.__saPopupSettings;
+        }
       } catch (e) {}
     }
-    var done = false;
-    var giveUp = setTimeout(function () { if (!done) { done = true; settingsSettled(); } }, FETCH_MS);
-    fetch(API_URL + '/api/popup-settings', { headers: { 'Accept': 'application/json' } })
-      .then(function (r) { return r.ok ? r.json() : null; })
-      .then(function (v) {
-        if (done) return;
-        done = true; clearTimeout(giveUp);
-        if (v) { mergeSettings(v); ssSet(CACHE_KEY, JSON.stringify({ at: Date.now(), v: v })); }
-        settingsSettled();
-      })
-      .catch(function () {
-        if (done) return;
-        done = true; clearTimeout(giveUp);
-        settingsSettled();   /* the baked-in defaults stand */
-      });
+    window.__saPopupSettings = new Promise(function (resolve) {
+      var done = false;
+      var giveUp = setTimeout(function () { if (!done) { done = true; resolve(null); } }, FETCH_MS);
+      fetch(API_URL + '/api/popup-settings', { headers: { 'Accept': 'application/json' } })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (v) {
+          if (done) return;
+          done = true; clearTimeout(giveUp);
+          if (v) ssSet(CACHE_KEY, JSON.stringify({ at: Date.now(), v: v }));
+          resolve(v);
+        })
+        .catch(function () { if (!done) { done = true; clearTimeout(giveUp); resolve(null); } });
+    });
+    return window.__saPopupSettings;
+  }
+
+  function loadSettings() {
+    fetchSettings().then(function (v) {
+      if (v) mergeSettings(v);
+      settingsSettled();
+    });
   }
 
   /* ── Impressions ──
@@ -202,7 +227,7 @@
     if (ssGet(COUNT_KEY)) return;
     ssSet(COUNT_KEY, '1');
     var url = API_URL + '/api/popup-impression';
-    var body = JSON.stringify({ page: PAGE });
+    var body = JSON.stringify({ popup: 'lead', page: PAGE });
     try {
       if (navigator.sendBeacon && navigator.sendBeacon(url, new Blob([body], { type: 'application/json' }))) return;
     } catch (e) {}
@@ -237,6 +262,7 @@
 
   function createPopup() {
     shown = true;
+    ssSet(CLAIM_KEY, 'lead');   /* this visit is ours */
 
     var overlay = document.createElement('div');
     overlay.id = 'sa-lead-popup-overlay';

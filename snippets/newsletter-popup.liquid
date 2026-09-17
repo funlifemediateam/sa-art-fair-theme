@@ -1,26 +1,24 @@
 {%- comment -%}
-  Newsletter signup popup offering a first-order discount.
+  "Get 10% off your first order" — the second of the two storefront pop-ups.
 
-  All copy + behaviour come from Theme settings → Newsletter popup, so no
-  client data lives in code. Renders nothing unless enabled.
+  Its settings now live in the booking admin's Popup tab (shop metafield
+  booking_app.popup_settings, the `offer` half), NOT in Theme settings, so the
+  two cards are controlled from one place. The script decides for itself
+  whether to show, and it ships off.
 
-  Gentle by design (see newsletter-popup.js): fires once per visitor
-  (localStorage), easy to dismiss, never on cart/checkout/booking flows, and
-  never competes with the quiz lead popup (lead-popup.js) — if that popup has
-  fired or is still eligible this session, this one waits for a future visit.
+  `settings.saf_newsletter_enabled` is therefore no longer read. It is left in
+  the theme rather than removed, so nothing that referenced it breaks; changing
+  it now does nothing.
+
+  The basket is skipped outright — a visitor part-way through paying is never
+  interrupted. Checkout is hosted by Shopify and never renders theme snippets,
+  so it excludes itself. Which kind of page this is comes from
+  window.__saPopupPage, set by snippets/lead-popup.liquid.
 {%- endcomment -%}
-{%- if settings.saf_newsletter_enabled -%}
+{%- unless request.page_type == 'cart' -%}
   {%- assign _nl_api = shop.metafields.booking_app.quiz_api_url | default: 'https://sa-art-fair-admin.vercel.app' -%}
   <script>
-    window.__safNewsletter = {
-      apiUrl:  {{ _nl_api | json }},
-      delayMs: {{ settings.saf_newsletter_delay | default: 12 | times: 1000 | json }},
-      code:    {{ settings.saf_newsletter_code | default: '' | json }},
-      offer:   {{ settings.saf_newsletter_discount_label | default: '' | json }},
-      heading: {{ settings.saf_newsletter_heading | default: '' | json }},
-      body:    {{ settings.saf_newsletter_body | default: '' | json }},
-      shop:    {{ shop.name | json }}
-    };
+    window.__safNewsletter = { apiUrl: {{ _nl_api | json }} };
   </script>
   <script src="{{ 'newsletter-popup.js' | asset_url }}" defer></script>
-{%- endif -%}
+{%- endunless -%}
