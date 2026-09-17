@@ -5,7 +5,6 @@
   var DISMISS_DAYS = 30;
   var API_URL      = window.__saLeadApiUrl     || 'https://sa-art-fair-admin.vercel.app';
   var GOOGLE_ID    = window.__saGoogleClientId || '';
-  var FB_ID        = window.__saFbAppId        || '';
   var DARK         = '#1d1c21';
   var ORANGE       = '#0f4a52';
   var RUST         = '#0f4a52';
@@ -40,27 +39,25 @@
     }
   }
 
+  /* Google could not be offered: take the button slot AND its "or" divider
+     away, so the card falls back cleanly to email only. */
+  function hideGoogleArea() {
+    var wrap = document.getElementById('sa-popup-google-wrap');
+    var or   = document.getElementById('sa-popup-or');
+    if (wrap) wrap.style.display = 'none';
+    if (or)   or.style.display   = 'none';
+  }
+
   function loadGSI() {
-    if (window.google && window.google.accounts) return Promise.resolve();
+    if (window.google && window.google.accounts && window.google.accounts.id) return Promise.resolve();
     return new Promise(function (resolve, reject) {
-      var s = document.createElement('script');
+      var s = document.getElementById('sa-gsi-script');
+      if (s) { s.addEventListener('load', resolve); s.addEventListener('error', reject); return; }
+      s = document.createElement('script');
+      s.id  = 'sa-gsi-script';
       s.src = 'https://accounts.google.com/gsi/client';
       s.async = true; s.defer = true;
       s.onload = resolve; s.onerror = reject;
-      document.head.appendChild(s);
-    });
-  }
-
-  function loadFBSDK() {
-    if (window.FB) return Promise.resolve();
-    return new Promise(function (resolve) {
-      window.fbAsyncInit = function () {
-        FB.init({ appId: FB_ID, version: 'v18.0', cookie: true, xfbml: false });
-        resolve();
-      };
-      var s = document.createElement('script');
-      s.src = 'https://connect.facebook.net/en_US/sdk.js';
-      s.async = true; s.defer = true;
       document.head.appendChild(s);
     });
   }
@@ -112,20 +109,17 @@
       'transition:opacity .22s,transform .22s'
     ].join(';');
 
-    var googleBtn = GOOGLE_ID
-      ? '<button id="sa-popup-google" style="width:100%;padding:11px 16px;background:#fff;border:1.5px solid #dadce0;border-radius:3px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;font-size:.88rem;font-weight:500;color:#3c4043;margin-bottom:9px">'
-        + '<svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>'
-        + 'Continue with Google</button>'
+    /* Google renders its own official button into this slot once the GSI
+       script has loaded. Both this and the divider are hidden if that fails —
+       a visitor must never see a button that does nothing. */
+    var googleSlot = GOOGLE_ID
+      ? '<div id="sa-popup-google-wrap" style="margin-bottom:9px">'
+        + '<div id="sa-popup-google" style="display:flex;justify-content:center"></div>'
+        + '</div>'
       : '';
 
-    var fbBtn = FB_ID
-      ? '<button id="sa-popup-facebook" style="width:100%;padding:11px 16px;background:#1877f2;border:none;border-radius:3px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;font-size:.88rem;font-weight:600;color:#fff;margin-bottom:9px">'
-        + '<svg width="16" height="16" viewBox="0 0 24 24" fill="#fff"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047v-2.66c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.97h-1.513c-1.491 0-1.956.931-1.956 1.886v2.265h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>'
-        + 'Continue with Facebook</button>'
-      : '';
-
-    var divider = (googleBtn || fbBtn)
-      ? '<div style="display:flex;align-items:center;gap:10px;margin:4px 0 16px"><div style="flex:1;height:1px;background:#ebe5df"></div><span style="font-size:.7rem;color:#bbb;font-weight:600;text-transform:uppercase;letter-spacing:.06em">or</span><div style="flex:1;height:1px;background:#ebe5df"></div></div>'
+    var divider = GOOGLE_ID
+      ? '<div id="sa-popup-or" style="display:flex;align-items:center;gap:10px;margin:4px 0 16px"><div style="flex:1;height:1px;background:#ebe5df"></div><span style="font-size:.7rem;color:#bbb;font-weight:600;text-transform:uppercase;letter-spacing:.06em">or</span><div style="flex:1;height:1px;background:#ebe5df"></div></div>'
       : '';
 
     modal.innerHTML = '<div id="sa-popup-body">'
@@ -135,7 +129,7 @@
       + '<p style="font-size:.68rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:' + RUST + ';margin:0 0 10px">SA Art Fair</p>'
       + '<h3 style="margin:0 0 8px;font-size:1.15rem;font-weight:700;line-height:1.3;color:' + DARK + '">Stay in the loop.</h3>'
       + '<p style="margin:0 0 20px;font-size:.85rem;color:#777;line-height:1.6">Be first to know about new artists, exhibitions and exclusive works.</p>'
-      + googleBtn + fbBtn + divider
+      + googleSlot + divider
       + '<div style="margin-bottom:10px">'
       + '<input id="sa-popup-name" type="text" placeholder="Your name (optional)" autocomplete="name" style="width:100%;padding:10px 13px;border:1.5px solid #e5ddd7;border-radius:3px;font-size:.88rem;color:' + DARK + ';outline:none;margin-bottom:8px;box-sizing:border-box">'
       + '<input id="sa-popup-email" type="email" placeholder="your@email.com" autocomplete="email" style="width:100%;padding:10px 13px;border:1.5px solid #e5ddd7;border-radius:3px;font-size:.88rem;color:' + DARK + ';outline:none;box-sizing:border-box">'
@@ -172,47 +166,37 @@
       submitLead(email.trim(), name.trim(), 'popup');
     });
 
-    /* Google sign-in */
-    var gBtn = document.getElementById('sa-popup-google');
-    if (gBtn && GOOGLE_ID) {
-      gBtn.addEventListener('click', function () {
-        gBtn.disabled = true; gBtn.textContent = 'Connecting…';
-        loadGSI().then(function () {
-          google.accounts.id.initialize({
-            client_id: GOOGLE_ID,
-            callback: function (resp) {
-              try {
-                var parts   = resp.credential.split('.');
-                var payload = JSON.parse(atob(parts[1].replace(/-/g, '+').replace(/_/g, '/')));
-                submitLead(payload.email, payload.name || '', 'google');
-              } catch (e) { gBtn.disabled = false; gBtn.textContent = 'Continue with Google'; }
-            },
-            ux_mode: 'popup',
-            cancel_on_tap_outside: true
-          });
-          google.accounts.id.prompt(function (n) {
-            if (n.isNotDisplayed() || n.isSkippedMoment()) { gBtn.disabled = false; gBtn.textContent = 'Continue with Google'; }
-          });
-        }).catch(function () { gBtn.disabled = false; gBtn.textContent = 'Continue with Google'; });
-      });
-    }
-
-    /* Facebook login */
-    var fbBtnEl = document.getElementById('sa-popup-facebook');
-    if (fbBtnEl && FB_ID) {
-      fbBtnEl.addEventListener('click', function () {
-        fbBtnEl.disabled = true; fbBtnEl.textContent = 'Connecting…';
-        loadFBSDK().then(function () {
-          FB.login(function (resp) {
-            if (resp.status === 'connected') {
-              FB.api('/me', { fields: 'name,email' }, function (user) {
-                if (user && user.email) { submitLead(user.email, user.name || '', 'facebook'); }
-                else { fbBtnEl.disabled = false; fbBtnEl.textContent = 'Continue with Facebook'; }
-              });
-            } else { fbBtnEl.disabled = false; fbBtnEl.textContent = 'Continue with Facebook'; }
-          }, { scope: 'email' });
-        }).catch(function () { fbBtnEl.disabled = false; fbBtnEl.textContent = 'Continue with Facebook'; });
-      });
+    /* Google sign-in — Google's own rendered button, no One Tap prompt */
+    if (GOOGLE_ID) {
+      loadGSI().then(function () {
+        var slot = document.getElementById('sa-popup-google');
+        if (!slot) return;                       /* dismissed while loading */
+        google.accounts.id.initialize({
+          client_id: GOOGLE_ID,
+          callback: function (resp) {
+            try {
+              var parts   = resp.credential.split('.');
+              var payload = JSON.parse(atob(parts[1].replace(/-/g, '+').replace(/_/g, '/')));
+              submitLead(payload.email, payload.name || '', 'google');
+            } catch (e) { hideGoogleArea(); }
+          },
+          cancel_on_tap_outside: true
+        });
+        /* Measured, not fixed: the modal is 400px wide on a desktop (352px of
+           content) but narrower on a phone, and renderButton only accepts
+           200–400. */
+        var w = Math.max(200, Math.min(400, Math.round(slot.getBoundingClientRect().width) || 352));
+        google.accounts.id.renderButton(slot, {
+          type: 'standard', theme: 'outline', size: 'large',
+          text: 'continue_with', shape: 'rectangular',
+          logo_alignment: 'center', width: w
+        });
+        /* renderButton fails SILENTLY when the origin is not authorised — it
+           just leaves the slot empty — so check rather than trust. */
+        setTimeout(function () {
+          if (!slot.firstElementChild || !slot.offsetHeight) hideGoogleArea();
+        }, 1200);
+      }).catch(hideGoogleArea);
     }
 
     /* Enter key on email field */
