@@ -1,0 +1,136 @@
+{% comment %}
+  Does this teacher also sell work here? Outputs the URL and the title of her
+  artist collection, or nothing at all.
+
+  {% render %} cannot hand variables back to its caller, so this echoes one
+  string — "<url>|<title>" — exactly the way snippets/rb-teacher-handle.liquid
+  echoes a handle. Capture it and split it in the caller:
+
+    {%- capture rb_ac -%}
+      {%- render 'rb-artist-collection', teacher_name: instr, product: product -%}
+    {%- endcapture -%}
+    {%- liquid
+      assign rb_ac = rb_ac | strip
+      assign rb_artist_url = ''
+      assign rb_artist_name = ''
+      if rb_ac != blank
+        assign rb_artist_url = rb_ac | split: '|' | first
+        assign rb_artist_name = rb_ac | split: '|' | last
+      endif
+    -%}
+
+  Why it exists: /pages/the-team now sends a visitor straight to the class, so
+  the class page's "See Teachers Page" button pointed back at a collection they
+  had already been through. A teacher who also exhibits has somewhere better to
+  send them — her own work.
+
+  Resolution, in order:
+
+    1. booking.artist_collection on the product. A handle typed against the
+       class always wins; nothing below can overrule it.
+    2. the catalogue, matched on the VENDOR of the collection's first product.
+       Vendor rather than handle because the handles are not trustworthy:
+       Careshia's teacher collection is "careshia-esperanza" and her artist one
+       is "careisha-esperanza" — one letter apart, and guessing lands on the
+       wrong page.
+    3. nothing, which is the answer for most teachers.
+
+  Two departures from the obvious version of pass 2, both forced by the live
+  catalogue (checked 2026-09-18):
+
+  * The collection's TITLE narrows the field before any product is read. Every
+    artist collection here is titled with the artist's name, so this is both a
+    fair filter and the cheap one: of 39 collections, at most two ever load a
+    product. Without it every non-empty collection would.
+
+  * Name matching falls back to the SURNAME, as rb-teacher-handle already does,
+    because the catalogue spells people differently in different places. The
+    class credits "Zara Farinha"; her work is filed under "Zara-Leigh Farinha".
+    Whole-string matching alone would lose her.
+
+  A collection whose first product is a Class is a teacher collection, not an
+  artist one, and is skipped — that is what keeps a teacher who does not
+  exhibit (Susan, Janice, Petronella, Chloe, Shabana) resolving to nothing.
+  The largest qualifying collection wins, so a stray one-off never beats the
+  real body of work.
+
+  The title also has to survive being joined with "|", which is why no
+  collection title here may contain that character.
+
+  Accepts: teacher_name (string), product (optional, for the override).
+{% endcomment %}
+
+{%- liquid
+  assign ac_name = teacher_name | strip
+  assign ac_out = ''
+
+  comment
+    1. The manual override. Read off the product so one class can be pinned to
+       a collection this snippet would never have found.
+  endcomment
+  assign ac_manual = product.metafields.booking.artist_collection | strip
+  if ac_manual != blank
+    assign ac_col = collections[ac_manual]
+    comment
+      collections[unknown] is nil, and nil.all_products_count > 0 is a render
+      error rather than a false — hence the nested test on the handle first.
+      Liquid evaluates `and` right to left, so a one-line guard would not have
+      protected the comparison.
+    endcomment
+    if ac_col.handle != blank
+      assign ac_out = ac_col.url | append: '|' | append: ac_col.title
+    endif
+  endif
+
+  comment
+    2. Find it. ac_best holds the size of the best match so far, so the biggest
+       qualifying collection is the one that survives the loop.
+  endcomment
+  if ac_out == blank and ac_name != blank
+    assign ac_low = ac_name | downcase | strip
+    assign ac_surname = ac_low | split: ' ' | last
+    assign ac_best = 0
+
+    for c in collections limit: 250
+      if c.all_products_count == 0
+        continue
+      endif
+
+      assign ac_title = c.title | downcase | strip
+      assign ac_title_hit = false
+      if ac_title == ac_low
+        assign ac_title_hit = true
+      elsif ac_surname != blank and ac_title contains ac_surname
+        assign ac_title_hit = true
+      endif
+      unless ac_title_hit
+        continue
+      endunless
+
+      comment
+        The only product read anywhere in this snippet.
+      endcomment
+      assign ac_first = c.products.first
+      if ac_first.type == 'Class'
+        continue
+      endif
+
+      assign ac_vendor = ac_first.vendor | downcase | strip
+      assign ac_vendor_hit = false
+      if ac_vendor == ac_low
+        assign ac_vendor_hit = true
+      elsif ac_surname != blank and ac_vendor != blank and ac_vendor contains ac_surname
+        assign ac_vendor_hit = true
+      endif
+
+      if ac_vendor_hit
+        if c.all_products_count > ac_best
+          assign ac_best = c.all_products_count
+          assign ac_out = c.url | append: '|' | append: c.title
+        endif
+      endif
+    endfor
+  endif
+
+  echo ac_out
+-%}

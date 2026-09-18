@@ -21,6 +21,14 @@
   missing, unreadable, or has nobody to show. That fallback is the whole point:
   the Studio page and every other wall using this section are untouched, and an
   empty save can never empty a page.
+
+  2026-09-18 — "Learn More" skips the middle step. A card pointing at a teacher
+  collection that holds exactly one class now points at the class itself, so
+  the visitor lands where they were always heading instead of on a page with a
+  single tile on it. The card's own href is what gets read, so this works the
+  same whether the wall came from the blocks or from the app, and a teacher
+  with two classes (Janice) or none keeps her collection — there the collection
+  is the useful page.
 {% endcomment %}
 
 {{ 'saf-rebrand.css' | asset_url | stylesheet_tag }}
@@ -229,6 +237,21 @@
         {%- liquid
           assign name = pg_m.name
           assign url = pg_m.link
+          # Straight to the class — see the twin of this in the blocks loop
+          # below, and the note at the top of the file.
+          if url contains '/collections/'
+            assign pg_rest = url | split: '/collections/' | last | split: '?' | first | split: '#' | first
+            assign pg_seg = pg_rest | split: '/'
+            if pg_seg.size == 1
+              assign pg_col = collections[pg_seg.first]
+              if pg_col.handle != blank
+                assign pg_classes = pg_col.products | where: 'type', 'Class'
+                if pg_classes.size == 1
+                  assign url = pg_classes.first.url
+                endif
+              endif
+            endif
+          endif
           # Shopify writes its own CDN links protocol-relative and the rest of
           # this page is full of them; the app stores the full https address, so
           # the scheme comes off here. escape comes LAST and guards the attribute
@@ -304,6 +327,34 @@
           assign name = block.settings.name | default: col.title
           assign img = block.settings.image | default: col.featured_image
           assign url = block.settings.link | default: col.url
+          comment
+            Straight to the class. Deliberately reads `url` rather than `col`,
+            so a card with a hand-typed collection link behaves like one that
+            took the collection from the block — and a card pointing anywhere
+            else is left alone. Twin of the loop above.
+          endcomment
+          if url contains '/collections/'
+            assign pg_rest = url | split: '/collections/' | last | split: '?' | first | split: '#' | first
+            assign pg_seg = pg_rest | split: '/'
+            comment
+              One segment only. A collection URL ends at the handle; anything
+              with a further path on it is a product inside the collection, and
+              that is not ours to redirect.
+            endcomment
+            if pg_seg.size == 1
+              assign pg_col = collections[pg_seg.first]
+              comment
+                collections[unknown] is nil, and reading a count off nil is a
+                render error — so the handle is tested first, in its own if.
+              endcomment
+              if pg_col.handle != blank
+                assign pg_classes = pg_col.products | where: 'type', 'Class'
+                if pg_classes.size == 1
+                  assign url = pg_classes.first.url
+                endif
+              endif
+            endif
+          endif
         -%}
         <div class="rb-pg__card" data-blk="{{ block.id }}" {{ block.shopify_attributes }}>
           <a href="{{ url | default: '#' }}" class="rb-media rb-pg__media" tabindex="-1" aria-hidden="true">
