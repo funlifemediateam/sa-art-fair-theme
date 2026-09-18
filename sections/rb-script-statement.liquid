@@ -104,6 +104,10 @@
     color: {{ section.settings.body_color }};
   }
   #shopify-section-{{ sid }} .rb-ss__body p { margin: 0; }
+  /* Only between paragraphs, so a one-paragraph bio — which is all but two of
+     them — keeps the exact spacing it had when this printed a bare text node.
+     Set on the gap rather than on every p for that reason. */
+  #shopify-section-{{ sid }} .rb-ss__body p + p { margin-top: 1.15em; }
   #shopify-section-{{ sid }} .rb-ss__body ul,
   #shopify-section-{{ sid }} .rb-ss__body ol { margin: 0; padding-left: 1.25em; text-align: left; display: inline-block; }
 </style>

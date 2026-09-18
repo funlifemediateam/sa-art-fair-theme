@@ -80,9 +80,6 @@
   assign plain = plain | replace: '¶¶', para_mark | replace: '¶¶', para_mark | replace: '¶¶', para_mark
   assign plain = plain | strip
 
-  # The flat bio, paragraph markers spent, is what "rest" is measured against.
-  assign flat = plain | replace: para_mark, ' ' | replace: '  ', ' ' | strip
-
   # The break is looked for in the first paragraph that has anything in it.
   assign para = ''
   assign chunks = plain | split: para_mark
@@ -190,21 +187,47 @@
   endif
 
   comment
-    "rest" is the flat bio with the opening sentence taken off its front by
-    prefix, never rebuilt, so the two halves cannot drift apart.
+    "rest" is the bio with the opening sentence taken off its front by prefix,
+    never rebuilt, so the two halves cannot drift apart. The cut is made
+    against the marked-up copy, not the flattened one, because the paragraphs
+    have to survive it — the opening sentence always sits inside the first
+    paragraph, so removing it by prefix leaves the markers untouched.
   endcomment
-  assign rest_out = ''
-  if flat != blank and first_out != blank
-    if flat contains first_out
-      assign rest_out = flat | remove_first: first_out | strip
+  assign rest_src = ''
+  if plain != blank and first_out != blank
+    if plain contains first_out
+      assign rest_src = plain | remove_first: first_out
     else
-      assign rest_out = flat | remove_first: core | strip
-      assign lead = rest_out | slice: 0, 1
+      assign rest_src = plain | remove_first: core
+      assign lead = rest_src | strip | slice: 0, 1
       if lead == '.' or lead == '!' or lead == '?'
-        assign rest_out = rest_out | remove_first: lead | strip
+        assign rest_src = rest_src | strip | remove_first: lead
       endif
     endif
   endif
+
+  comment
+    Each surviving paragraph is printed as its own <p>. Until 2026-09-18 the
+    band flattened them into one block, which turned a six-paragraph bio
+    (Lauren Ratcliffe) into a wall of text. <p> rather than <br> so the spacing
+    is real paragraph spacing the stylesheet can set — see "p + p" in
+    rb-script-statement.
+
+    The text is escaped on the way in: it has already been through strip_html,
+    so the only markup here is the wrapper this loop adds, and a stray "<" or
+    "&" in a bio can never reach the page as markup.
+
+    A bio of one paragraph yields exactly one <p>, which the band styles with
+    margin 0 — indistinguishable from the bare text node it used to print.
+  endcomment
+  assign rest_out = ''
+  assign rest_parts = rest_src | split: para_mark
+  for chunk in rest_parts
+    assign piece = chunk | strip | escape
+    if piece != blank
+      assign rest_out = rest_out | append: '<p>' | append: piece | append: '</p>'
+    endif
+  endfor
 -%}
 
 {%- if part == 'rest' -%}{{ rest_out }}{%- else -%}{{ first_out }}{%- endif -%}
