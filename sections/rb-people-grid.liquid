@@ -9,6 +9,18 @@
 
   Each card reads from a collection (that is how teachers are modelled in this
   store) and every field can be overridden per card.
+
+  2026-09-18 — "Where the people come from" can now be the booking app instead
+  of these blocks. On "app" the wall is drawn from shop.metafields.booking_app.team
+  (the admin's Team tab): the members of one group, visible ones only, in the
+  order the array has them. Everything else — classes, element order, image
+  sizing, the tone alternation — is the same markup either way, so this is a
+  swap of data and nothing else.
+
+  The blocks stay where they are and are what renders whenever the metafield is
+  missing, unreadable, or has nobody to show. That fallback is the whole point:
+  the Studio page and every other wall using this section are untouched, and an
+  empty save can never empty a page.
 {% endcomment %}
 
 {{ 'saf-rebrand.css' | asset_url | stylesheet_tag }}
@@ -16,7 +28,47 @@
 {%- liquid
   assign sid = section.id
   assign cols = section.settings.columns
+
+  assign pg_app = false
+  assign pg_people = ''
+  assign pg_settings = ''
+  if section.settings.data_source == 'app'
+    assign pg_team = shop.metafields.booking_app.team.value
+    if pg_team != blank and pg_team.members != blank
+      assign pg_want = section.settings.app_group | default: 'teachers'
+      assign pg_rows = pg_team.members | where: 'group', pg_want
+      assign pg_n = 0
+      for pg_m in pg_rows
+        if pg_m.visible
+          assign pg_n = pg_n | plus: 1
+        endif
+      endfor
+      if pg_n > 0
+        assign pg_app = true
+        assign pg_people = pg_rows
+        assign pg_settings = pg_team.settings
+      endif
+    endif
+  endif
+
+  assign pg_eyebrow = section.settings.eyebrow
+  assign pg_intro = section.settings.intro
+  if pg_app
+    if pg_settings.teachersHeading != blank
+      assign pg_eyebrow = pg_settings.teachersHeading | escape | replace: '&#39;', "'" | prepend: '<p>' | append: '</p>'
+    endif
+    if pg_settings.teachersIntro != blank
+      assign pg_intro = pg_settings.teachersIntro | escape | replace: '&#39;', "'" | prepend: '<p>' | append: '</p>'
+    endif
+  endif
 -%}
+
+{%- comment -%}
+  The headings above are escaped because anything reaching a shop metafield is
+  data, not markup — but an apostrophe is put back, because "the studio's
+  classes" is what the page has always said and &#39; would be a difference in
+  the HTML for no difference on screen.
+{%- endcomment -%}
 
 <style>
   #shopify-section-{{ sid }} .rb-pg {
@@ -103,6 +155,30 @@
     #shopify-section-{{ sid }} .rb-pg__grid { grid-template-columns: 1fr; }
   }
 
+  {%- if pg_app -%}
+    {%- assign pg_i = 0 -%}
+    {%- for pg_m in pg_people -%}
+      {%- unless pg_m.visible -%}{%- continue -%}{%- endunless -%}
+      {%- liquid
+        assign m = pg_i | modulo: 2
+        if m == 0
+          assign panel_bg = section.settings.tone_a
+          assign panel_fg = section.settings.tone_a_text
+        else
+          assign panel_bg = section.settings.tone_b
+          assign panel_fg = section.settings.tone_b_text
+        endif
+        assign pg_i = pg_i | plus: 1
+      -%}
+    #shopify-section-{{ sid }} [data-blk="{{ pg_m.id }}"] .rb-pg__panel {
+      background: {{ panel_bg }};
+      color: {{ panel_fg }};
+      /* the veil over a panel background image is this card's own tone, so it
+         is declared here rather than passed into the snippet */
+      --rb-paper-veil: {{ panel_bg }};
+    }
+    {%- endfor -%}
+  {%- else -%}
   {%- for block in section.blocks -%}
     {%- liquid
       assign tone = block.settings.tone
@@ -130,22 +206,110 @@
       --rb-paper-veil: {{ panel_bg }};
     }
   {%- endfor -%}
+  {%- endif -%}
 </style>
 
 <div class="rb-section rb-pg">
   <div class="rb-container">
-    {%- if section.settings.eyebrow != blank or section.settings.intro != blank -%}
+    {%- if pg_eyebrow != blank or pg_intro != blank -%}
       <div class="rb-pg__head">
-        {%- if section.settings.eyebrow != blank -%}
-          <div class="rb-caps">{{ section.settings.eyebrow }}</div>
+        {%- if pg_eyebrow != blank -%}
+          <div class="rb-caps">{{ pg_eyebrow }}</div>
         {%- endif -%}
-        {%- if section.settings.intro != blank -%}
-          <div class="rb-body rb-pg__intro">{{ section.settings.intro }}</div>
+        {%- if pg_intro != blank -%}
+          <div class="rb-body rb-pg__intro">{{ pg_intro }}</div>
         {%- endif -%}
       </div>
     {%- endif -%}
 
     <div class="rb-pg__grid">
+      {%- if pg_app -%}
+      {%- for pg_m in pg_people -%}
+        {%- unless pg_m.visible -%}{%- continue -%}{%- endunless -%}
+        {%- liquid
+          assign name = pg_m.name
+          assign url = pg_m.link
+          # Shopify writes its own CDN links protocol-relative, and the rest of
+          # this page is full of them; the app stores the full https address, so
+          # the scheme comes off here rather than being lost on the way in.
+          assign photo = pg_m.photo | remove_first: 'https:'
+          assign sep = '?'
+          if photo contains '?'
+            assign sep = '&'
+          endif
+          assign photo_src = photo | append: sep | append: 'width=900'
+          # The stored size, scaled to the 900 wide copy the src asks for, so the
+          # space is reserved before the picture lands and nothing shifts.
+          # `plus: 0` first: a member saved before sizes were stored has none,
+          # and Liquid refuses to compare nil with a number.
+          assign photo_w = pg_m.photoW | plus: 0
+          assign photo_n = pg_m.photoH | plus: 0
+          assign photo_h = 0
+          if photo_w > 0 and photo_n > 0
+            assign half = photo_w | divided_by: 2
+            assign photo_h = photo_n | times: 900 | plus: half | divided_by: photo_w
+          endif
+        -%}
+        {%- comment -%}
+          data-blk carries the member's id here and a block id on the blocks
+          path. It is a CSS hook for this card's tone and nothing else.
+        {%- endcomment -%}
+        <div class="rb-pg__card" data-blk="{{ pg_m.id }}" >
+          <a href="{{ url | default: '#' }}" class="rb-media rb-pg__media" tabindex="-1" aria-hidden="true">
+            {%- if pg_m.photo != blank -%}
+              {%- if photo_h > 0 -%}
+                {{
+                  photo_src
+                  | image_tag:
+                    widths: '260, 380, 560, 900',
+                    sizes: '(max-width: 519px) 90vw, (max-width: 989px) 45vw, 23vw',
+                    loading: 'lazy',
+                    alt: pg_m.alt,
+                    width: 900,
+                    height: photo_h
+                }}
+              {%- else -%}
+                {{
+                  photo_src
+                  | image_tag:
+                    widths: '260, 380, 560, 900',
+                    sizes: '(max-width: 519px) 90vw, (max-width: 989px) 45vw, 23vw',
+                    loading: 'lazy',
+                    alt: pg_m.alt
+                }}
+              {%- endif -%}
+            {%- else -%}
+              {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+            {%- endif -%}
+          </a>
+
+          <div class="rb-pg__panel rb-paper">
+            {%- render 'rb-panel-image',
+              image: section.settings.panel_image,
+              fit: section.settings.panel_image_fit,
+              focal_x: section.settings.panel_image_focal_x,
+              focal_y: section.settings.panel_image_focal_y,
+              veil_opacity: section.settings.panel_image_veil,
+              sizes: '(max-width: 519px) 90vw, (max-width: 989px) 45vw, 23vw',
+              widths: '260, 380, 560, 900',
+              width: 900
+            -%}
+
+            {%- if name != blank -%}
+              <p class="rb-pg__name">{{ name | escape }}</p>
+            {%- endif -%}
+            {%- if pg_m.role != blank -%}
+              <p class="rb-pg__role">{{ pg_m.role | escape }}</p>
+            {%- endif -%}
+            {%- if pg_m.linkLabel != blank -%}
+              <a href="{{ url | default: '#' }}" class="rb-btn rb-btn--ghost rb-pg__cta">
+                {{- pg_m.linkLabel | escape -}}
+              </a>
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endfor -%}
+      {%- else -%}
       {%- for block in section.blocks -%}
         {%- liquid
           assign col = collections[block.settings.collection]
@@ -196,6 +360,7 @@
           </div>
         </div>
       {%- endfor -%}
+      {%- endif -%}
     </div>
 
     {%- comment -%}
@@ -221,6 +386,19 @@
   "class": "rb-section-wrapper",
   "max_blocks": 24,
   "settings": [
+    { "type": "select", "id": "data_source", "label": "Where the people come from", "default": "blocks",
+      "options": [
+        { "value": "blocks", "label": "The blocks below (theme editor)" },
+        { "value": "app", "label": "The booking app’s Team tab" }
+      ],
+      "info": "“The booking app” draws this wall from the Team tab. If the app has nobody to show, the blocks below render instead — so the page is never empty." },
+    { "type": "select", "id": "app_group", "label": "Which group from the app", "default": "teachers",
+      "options": [
+        { "value": "teachers", "label": "Teachers" },
+        { "value": "studio",   "label": "Studio" },
+        { "value": "founders", "label": "Founders" }
+      ],
+      "info": "Only used when the people come from the app." },
     { "type": "richtext", "id": "eyebrow", "default": "<p>Meet our teachers</p>",
       "label": "Eyebrow",
       "info": "Rendered uppercase. Bold runs render cherry, the rest teal." },

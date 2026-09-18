@@ -6,11 +6,39 @@
   The polaroid framing (stacked paper, slight rotation) is baked into the
   supplied PNG, so swapping the image means supplying a photo already framed
   that way.
+
+  2026-09-18 — "Where the words come from" can now be the booking app instead of
+  the fields below. On "app" the script line, the sign-off and the polaroid come
+  from shop.metafields.booking_app.team.settings (the admin's Team tab → Page
+  copy). Anything the app leaves blank keeps using the field below it, and if
+  the metafield is missing altogether the band renders exactly as it always has.
 {% endcomment %}
 
 {{ 'saf-rebrand.css' | asset_url | stylesheet_tag }}
 
-{%- assign sid = section.id -%}
+{%- liquid
+  assign sid = section.id
+
+  assign fd_heading = section.settings.heading
+  assign fd_signature = section.settings.signature
+  assign fd_photo = ''
+  if section.settings.data_source == 'app'
+    assign fd_team = shop.metafields.booking_app.team.value
+    assign fd_cfg = fd_team.settings
+    if fd_cfg.foundersText != blank
+      assign fd_heading = fd_cfg.foundersText
+    endif
+    if fd_cfg.foundersSignature != blank
+      assign fd_signature = fd_cfg.foundersSignature
+    endif
+    if fd_cfg.foundersImage != blank
+      # Shopify writes its own CDN links protocol-relative and the app stores
+      # the full https address; the scheme comes off here so this photo is
+      # served exactly like every other picture on the page.
+      assign fd_photo = fd_cfg.foundersImage | remove_first: 'https:'
+    endif
+  endif
+-%}
 
 <style>
   #shopify-section-{{ sid }} .rb-founders {
@@ -101,7 +129,20 @@
 <div class="rb-section rb-founders">
   <div class="rb-container rb-founders__grid">
     <div class="rb-founders__media">
-      {%- if section.settings.image != blank -%}
+      {%- if fd_photo != blank -%}
+        {%- assign fd_sep = '?' -%}
+        {%- if fd_photo contains '?' -%}{%- assign fd_sep = '&' -%}{%- endif -%}
+        {{
+          fd_photo
+          | append: fd_sep
+          | append: 'width=1200'
+          | image_tag:
+            widths: '360, 480, 700, 940, 1200',
+            sizes: '(max-width: 899px) 80vw, 30vw',
+            loading: 'lazy',
+            alt: fd_signature
+        }}
+      {%- elsif section.settings.image != blank -%}
         {{
           section.settings.image
           | image_url: width: 1200
@@ -116,8 +157,12 @@
       {%- endif -%}
 
       {%- if section.settings.show_stamp -%}
+        {%- assign fd_stamp = 'saf-stamp-gold.png' | asset_url -%}
+        {%- if section.settings.data_source == 'app' and fd_cfg.foundersStampImage != blank -%}
+          {%- assign fd_stamp = fd_cfg.foundersStampImage | remove_first: 'https:' -%}
+        {%- endif -%}
         <img
-          src="{{ 'saf-stamp-gold.png' | asset_url }}"
+          src="{{ fd_stamp }}"
           alt=""
           width="329"
           height="336"
@@ -128,8 +173,8 @@
     </div>
 
     <div class="rb-founders__text">
-      {%- if section.settings.heading != blank -%}
-        <h2 class="rb-script rb-founders__heading">{{ section.settings.heading | escape }}</h2>
+      {%- if fd_heading != blank -%}
+        <h2 class="rb-script rb-founders__heading">{{ fd_heading | escape }}</h2>
       {%- endif -%}
 
       <div class="rb-founders__cols">
@@ -141,8 +186,8 @@
         {%- endif -%}
       </div>
 
-      {%- if section.settings.signature != blank -%}
-        <p class="rb-script rb-founders__sign">{{ section.settings.signature | escape }}</p>
+      {%- if fd_signature != blank -%}
+        <p class="rb-script rb-founders__sign">{{ fd_signature | escape }}</p>
       {%- endif -%}
     </div>
   </div>
@@ -154,6 +199,12 @@
   "tag": "section",
   "class": "rb-section-wrapper",
   "settings": [
+    { "type": "select", "id": "data_source", "label": "Where the words come from", "default": "blocks",
+      "options": [
+        { "value": "blocks", "label": "The fields below (theme editor)" },
+        { "value": "app", "label": "The booking app’s Team tab" }
+      ],
+      "info": "“The booking app” reads the script line, the sign-off and the photo from the Team tab’s Page copy. Anything left blank there keeps using the field below." },
     { "type": "image_picker", "id": "image", "label": "Polaroid image",
       "info": "The polaroid frame is part of the supplied artwork, not a CSS effect." },
     { "type": "range", "id": "image_width", "min": 280, "max": 700, "step": 5,
