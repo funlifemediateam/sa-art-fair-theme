@@ -229,15 +229,17 @@
         {%- liquid
           assign name = pg_m.name
           assign url = pg_m.link
-          # Shopify writes its own CDN links protocol-relative, and the rest of
+          # Shopify writes its own CDN links protocol-relative and the rest of
           # this page is full of them; the app stores the full https address, so
-          # the scheme comes off here rather than being lost on the way in.
-          assign photo = pg_m.photo | remove_first: 'https:'
-          assign sep = '?'
-          if photo contains '?'
-            assign sep = '&'
+          # the scheme comes off here. escape comes LAST and guards the attribute
+          # the address lands in — appending to an already-escaped string escapes
+          # the appended part a second time, which is how &amp;amp; happens.
+          assign p_base = pg_m.photo | remove_first: 'https:'
+          assign p_sep = '?'
+          if p_base contains '?'
+            assign p_sep = '&'
           endif
-          assign photo_src = photo | append: sep | append: 'width=900'
+          assign p_pre = p_base | append: p_sep | append: 'width=' | escape
           # The stored size, scaled to the 900 wide copy the src asks for, so the
           # space is reserved before the picture lands and nothing shifts.
           # `plus: 0` first: a member saved before sizes were stored has none,
@@ -251,34 +253,20 @@
           endif
         -%}
         {%- comment -%}
+          The <img> below is written out by hand. image_tag and image_url both
+          refuse a plain URL — they want a Shopify image object, and a member's
+          photo is only ever an address — so this reproduces exactly what
+          image_tag emits on the blocks path, down to the newline it leaves
+          after the tag. That is what keeps the two paths' HTML identical.
+
           data-blk carries the member's id here and a block id on the blocks
           path. It is a CSS hook for this card's tone and nothing else.
         {%- endcomment -%}
         <div class="rb-pg__card" data-blk="{{ pg_m.id }}" >
           <a href="{{ url | default: '#' }}" class="rb-media rb-pg__media" tabindex="-1" aria-hidden="true">
             {%- if pg_m.photo != blank -%}
-              {%- if photo_h > 0 -%}
-                {{
-                  photo_src
-                  | image_tag:
-                    widths: '260, 380, 560, 900',
-                    sizes: '(max-width: 519px) 90vw, (max-width: 989px) 45vw, 23vw',
-                    loading: 'lazy',
-                    alt: pg_m.alt,
-                    width: 900,
-                    height: photo_h
-                }}
-              {%- else -%}
-                {{
-                  photo_src
-                  | image_tag:
-                    widths: '260, 380, 560, 900',
-                    sizes: '(max-width: 519px) 90vw, (max-width: 989px) 45vw, 23vw',
-                    loading: 'lazy',
-                    alt: pg_m.alt
-                }}
-              {%- endif -%}
-            {%- else -%}
+              <img src="{{ p_pre }}900" alt="{{ pg_m.alt | escape }}" srcset="{{ p_pre }}260 260w, {{ p_pre }}380 380w, {{ p_pre }}560 560w, {{ p_pre }}900 900w"{% if photo_h > 0 %} width="900" height="{{ photo_h }}"{% endif %} loading="lazy" sizes="(max-width: 519px) 90vw, (max-width: 989px) 45vw, 23vw">
+{% else -%}
               {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
             {%- endif -%}
           </a>
