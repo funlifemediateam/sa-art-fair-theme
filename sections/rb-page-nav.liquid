@@ -18,13 +18,59 @@
   teacher has a gallery — see snippets/rb-gallery.liquid — so the same block
   can sit in every class template and on the FAQ page without ever showing a
   dead link.
+
+  An "Artwork by …" item (2026-09-18) is added by this section rather than by a
+  block, for the same reason the Gallery tab hides itself: it is only true of
+  some class pages. It appears when the class's teacher also sells work here,
+  and is absent everywhere else — including /pages/faq, which has no product in
+  scope and never reaches the lookup at all.
 {% endcomment %}
 
 {{ 'saf-rebrand.css' | asset_url | stylesheet_tag }}
 
+{%- comment -%}
+  Ask the catalogue once, and only on a class page. `product` is nil on
+  /pages/faq and on every collection page this bar also sits on, so both tests
+  below fail there and the snippet is never rendered.
+{%- endcomment -%}
+{%- capture pnav_artist -%}
+  {%- if section.settings.show_artwork_tab and product.type == 'Class' -%}
+    {%- render 'rb-artist-collection',
+      teacher_name: product.metafields.booking.instructor_name,
+      product: product
+    -%}
+  {%- endif -%}
+{%- endcapture -%}
+
 {%- liquid
   assign sid = section.id
   assign here = request.path | downcase
+
+  assign pnav_artist = pnav_artist | strip
+  assign pnav_art_url = ''
+  assign pnav_art_label = ''
+  assign show_art = false
+
+  if pnav_artist != blank
+    assign pnav_art_url = pnav_artist | split: '|' | first
+    assign pnav_art_name = pnav_artist | split: '|' | last
+
+    comment
+      The label is a setting so it can be retyped, with {{ first_name }} left
+      in it as a stand-in for whoever this class belongs to — one label, every
+      class. The name comes from the artist collection rather than from the
+      class credit because the two disagree: the class says "Zara Farinha",
+      her work is filed under "Zara-Leigh Farinha", and the tab is pointing at
+      the work.
+    endcomment
+    assign pnav_first = pnav_art_name | split: ' ' | first
+    assign pnav_art_label = section.settings.artwork_tab_label | default: 'Artwork by {{ first_name }}'
+    assign pnav_art_label = pnav_art_label | replace: '{{ first_name }}', pnav_first | replace: '{{first_name}}', pnav_first | strip
+
+    if pnav_art_url != blank and pnav_art_label != blank
+      assign show_art = true
+    endif
+  endif
 -%}
 
 <style>
@@ -92,6 +138,19 @@
   <div class="rb-pnav__scroll">
     <ul class="rb-pnav__list" role="list">
       {%- for block in section.blocks -%}
+        {%- comment -%}
+          Sits before the last block, which is how the Gallery tab ends up
+          second from the end too — Contact is always the item that closes the
+          bar. Rendered here rather than as a block because whether it exists
+          is a fact about the class, not something to be set per template, and
+          because max_blocks is full at 8.
+        {%- endcomment -%}
+        {%- if show_art and forloop.last -%}
+          <li>
+            <a href="{{ pnav_art_url }}">{{ pnav_art_label | escape }}</a>
+          </li>
+          {%- assign show_art = false -%}
+        {%- endif -%}
         {%- if block.type == 'gallery' -%}
           {%- comment -%}
             Ships HIDDEN. Whether this class has a gallery is decided once, by
@@ -125,6 +184,15 @@
           </li>
         {%- endif -%}
       {%- endfor -%}
+      {%- comment -%}
+        Only reached by a bar with no blocks at all, which no live template has
+        — but a bar that has something to say should still say it.
+      {%- endcomment -%}
+      {%- if show_art -%}
+        <li>
+          <a href="{{ pnav_art_url }}">{{ pnav_art_label | escape }}</a>
+        </li>
+      {%- endif -%}
     </ul>
   </div>
 </nav>
@@ -147,7 +215,14 @@
     { "type": "color", "id": "background", "default": "#ffffff", "label": "Background" },
     { "type": "color", "id": "text_color", "default": "#1e1e1e", "label": "Text" },
     { "type": "color", "id": "accent_color", "default": "#b00e3f", "label": "Hover + current" },
-    { "type": "color", "id": "rule_color", "default": "#e0e0e0", "label": "Rules" }
+    { "type": "color", "id": "rule_color", "default": "#e0e0e0", "label": "Rules" },
+    { "type": "header", "content": "Artwork tab" },
+    { "type": "checkbox", "id": "show_artwork_tab", "default": true,
+      "label": "Link to the teacher's own artwork",
+      "info": "On a class page whose teacher also sells work here, adds one more item pointing at her collection. Teachers who do not sell work never show it, and neither does any page without a class on it." },
+    { "type": "text", "id": "artwork_tab_label", "default": "Artwork by {{ first_name }}",
+      "label": "Artwork tab label",
+      "info": "{{ first_name }} is replaced with the teacher's first name, so one label serves every class." }
   ],
   "blocks": [
     {

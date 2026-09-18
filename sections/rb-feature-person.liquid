@@ -20,6 +20,19 @@
   {%- endif -%}
 {%- endcapture -%}
 
+{%- comment -%}
+  Class-teacher mode only. The Store's Featured Artist band is "manual" and is
+  not affected by anything below.
+{%- endcomment -%}
+{%- capture rb_artist_pair -%}
+  {%- if section.settings.source == 'product_teacher' -%}
+    {%- render 'rb-artist-collection',
+      teacher_name: product.metafields.booking.instructor_name,
+      product: product
+    -%}
+  {%- endif -%}
+{%- endcapture -%}
+
 {%- liquid
   assign sid = section.id
   assign panel_pct = section.settings.panel_width
@@ -71,9 +84,12 @@
         assign art = blank
       endif
     endif
-    if link_a == blank
-      assign link_a = teacher_col.url
-    endif
+    comment
+      Button A used to fall back to the teacher's own collection. Since
+      2026-09-18 the card on /pages/the-team goes straight to the class, so
+      that collection is the page the visitor has just come through — the
+      button was sending them backwards. It is retargeted below instead.
+    endcomment
 
     comment
       Button B is "See Artist Page" — the same person's artist collection.
@@ -89,6 +105,31 @@
           break
         endif
       endfor
+    endif
+  endif
+
+  comment
+    Where button A goes on a class page. Two answers, both forwards:
+    the teacher's own work when she sells here, and the teachers page when she
+    does not — never back to the collection the visitor arrived through.
+
+    Only when the theme editor has left the link blank. Anything typed into
+    button A on a template still wins, here as everywhere else in this section.
+    Outside class-teacher mode none of this runs.
+  endcomment
+  assign label_a = section.settings.button_a_label
+  assign rb_artist_pair = rb_artist_pair | strip
+
+  if section.settings.source == 'product_teacher'
+    if section.settings.button_a_link == blank
+      if rb_artist_pair != blank
+        assign link_a = rb_artist_pair | split: '|' | first
+        assign artist_name = rb_artist_pair | split: '|' | last
+        assign artist_first = artist_name | split: ' ' | first
+        assign label_a = 'View ' | append: artist_first | append: '’s Artwork'
+      else
+        assign link_a = '/pages/the-team'
+      endif
     endif
   endif
 
@@ -133,7 +174,7 @@
   endif
 
   assign show_a = false
-  if section.settings.button_a_label != blank and link_a != blank
+  if label_a != blank and link_a != blank
     assign show_a = true
   endif
   assign show_b = false
@@ -271,7 +312,7 @@
         <div class="rb-fp__ctas">
           {%- if show_a -%}
             <a href="{{ link_a }}" class="rb-btn">
-              {{- section.settings.button_a_label | escape -}}
+              {{- label_a | escape -}}
             </a>
           {%- endif -%}
           {%- if show_b -%}
