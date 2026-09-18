@@ -56,16 +56,27 @@
     assign pnav_art_name = pnav_artist | split: '|' | last
 
     comment
-      The label is a setting so it can be retyped, with {{ first_name }} left
-      in it as a stand-in for whoever this class belongs to — one label, every
-      class. The name comes from the artist collection rather than from the
-      class credit because the two disagree: the class says "Zara Farinha",
-      her work is filed under "Zara-Leigh Farinha", and the tab is pointing at
-      the work.
+      The label is a setting so it can be retyped, with [first name] left in it
+      as a stand-in for whoever this class belongs to — one label, every class.
+      The name comes from the artist collection rather than from the class
+      credit because the two disagree: the class says "Zara Farinha", her work
+      is filed under "Zara-Leigh Farinha", and the tab points at the work.
+
+      The stand-in is square brackets and NOT Liquid's own braces. A schema
+      default containing braces is evaluated before this section ever sees it,
+      so the placeholder arrived already replaced with nothing and the tab lost
+      her name — live, on 2026-09-18, until this was changed. The brace forms
+      are still accepted in case someone types one into the field.
+
+      The fallback is spelled out here as well as in the schema so the label
+      cannot come back empty if the field is ever cleared.
     endcomment
     assign pnav_first = pnav_art_name | split: ' ' | first
-    assign pnav_art_label = section.settings.artwork_tab_label | default: 'Artwork by {{ first_name }}'
-    assign pnav_art_label = pnav_art_label | replace: '{{ first_name }}', pnav_first | replace: '{{first_name}}', pnav_first | strip
+    assign pnav_art_label = section.settings.artwork_tab_label
+    if pnav_art_label == blank
+      assign pnav_art_label = 'Artwork by [first name]'
+    endif
+    assign pnav_art_label = pnav_art_label | replace: '[first name]', pnav_first | replace: '{{ first_name }}', pnav_first | replace: '{{first_name}}', pnav_first | strip
 
     if pnav_art_url != blank and pnav_art_label != blank
       assign show_art = true
@@ -220,9 +231,9 @@
     { "type": "checkbox", "id": "show_artwork_tab", "default": true,
       "label": "Link to the teacher's own artwork",
       "info": "On a class page whose teacher also sells work here, adds one more item pointing at her collection. Teachers who do not sell work never show it, and neither does any page without a class on it." },
-    { "type": "text", "id": "artwork_tab_label", "default": "Artwork by {{ first_name }}",
+    { "type": "text", "id": "artwork_tab_label", "default": "Artwork by [first name]",
       "label": "Artwork tab label",
-      "info": "{{ first_name }} is replaced with the teacher's first name, so one label serves every class." }
+      "info": "[first name] is replaced with the teacher's first name, so one label serves every class. Leave it out for a fixed label." }
   ],
   "blocks": [
     {
