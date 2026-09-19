@@ -513,6 +513,7 @@
   data-rba-url="{{ col.url }}"
   data-rba-card="{% if layout == 'rail' %}collection{% else %}artwork{% endif %}"
   data-rba-view-label="{{ section.settings.hover_label | escape }}"
+  data-rba-card-label="{{ section.settings.card_button | escape }}"
   data-rba-per-page="{{ per_page }}"
   data-rba-hide="{{ hidden_artists | escape }}"
 >
@@ -762,7 +763,8 @@
     { "type": "range", "id": "rail_width", "min": 120, "max": 320, "step": 10,
       "default": 150, "unit": "px", "label": "Rail minimum width",
       "info": "The rail tracks the comp's 10.6% of the content width and never falls below this." },
-    { "type": "text", "id": "card_button", "default": "Browse Collection", "label": "Card button label" },
+    { "type": "text", "id": "card_button", "default": "View Artwork", "label": "Card button label",
+      "info": "The button on each artwork card. It opens that artwork, not the collection — the visitor is already in the collection." },
     { "type": "header", "content": "Footer link" },
     { "type": "text", "id": "more_label", "default": "See More…", "label": "Button label" },
     { "type": "text", "id": "less_label", "default": "See Less", "label": "Button label (fully expanded)",

@@ -68,6 +68,10 @@
     var moreEl = root.querySelector('[data-rba-more]');
     var cardStyle = root.dataset.rbaCard || 'artwork';
     var viewLabel = root.dataset.rbaViewLabel || 'View Artwork';
+    /* The card button follows the section setting the same way the hover pill
+       does, so a re-rendered tile can never disagree with the server-rendered
+       one about its own wording. */
+    var cardLabel = root.dataset.rbaCardLabel || 'View Artwork';
     var perPage = parseInt(root.dataset.rbaPerPage, 10) || 12;
     var hiddenArtists = (root.dataset.rbaHide || '').split(',')
       .map(function (n) { return n.trim().toLowerCase(); })
@@ -239,7 +243,7 @@
           '<p class="rb-aw__price rb-aw__row-price">' + railPrice + '</p></div>' +
           '<span>' + esc(it.vendor) + '</span></div>' +
           '<div class="rb-aw__cta-row"><a href="' + esc(it.url) +
-          '" class="rb-btn rb-btn--serif rb-btn--outline">Browse Collection</a></div></article>';
+          '" class="rb-btn rb-btn--serif rb-btn--outline">' + esc(cardLabel) + '</a></div></article>';
       }
 
       return '<article class="rb-aw__card">' + head +
