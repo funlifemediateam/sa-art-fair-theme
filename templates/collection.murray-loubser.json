@@ -81,7 +81,7 @@
   },
   "order": [
     "hero",
-    "artworks",
-    "about"
+    "about",
+    "artworks"
   ]
 }
