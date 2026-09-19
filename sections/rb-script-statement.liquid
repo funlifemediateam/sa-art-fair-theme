@@ -15,6 +15,32 @@
   assign pb_vw = section.settings.padding_bottom | times: 100.0 | divided_by: 1920.0
 
   comment
+    The script line is written by hand per page ("More about <em>Lauren</em>."),
+    and every page that has one keeps it exactly as typed.
+
+    A page can reach here without one, though. templates/collection.artist.json
+    is the blueprint the booking app reads off the live theme and copies
+    verbatim for every new artist collection, so it cannot carry a name — any
+    name typed into the blueprint would be printed on every artist created from
+    it afterwards. Its heading is therefore left blank, and a new artist page
+    used to open its bio with no script line at all.
+
+    A blank heading is built from the collection title instead, in the same
+    markup the typed ones use: the first word only, because these lines are all
+    first names, wrapped in <em> so it takes the accent colour through the same
+    rule as every hand-typed one. A collection titled "Lauren Ratcliffe" gives
+    back character for character the line that page already carries by hand.
+
+    Guarded on collection.title so the section stays silent when it is rendered
+    anywhere that is not a collection, exactly as it does today.
+  endcomment
+  assign heading = section.settings.heading
+  if heading == blank and collection.title != blank
+    assign first_name = collection.title | split: ' ' | first | strip | escape
+    assign heading = '<p>More about <em>' | append: first_name | append: '</em>.</p>'
+  endif
+
+  comment
     On a teacher or artist page the paragraph under the script line is that
     person's bio, which the store already keeps as the collection description.
     Reading it here keeps forty person pages correct from one template and
@@ -95,8 +121,8 @@
 
 <div class="rb-section rb-ss">
   <div class="rb-container rb-ss__inner">
-    {%- if section.settings.heading != blank -%}
-      <div class="rb-script rb-ss__heading">{{ section.settings.heading }}</div>
+    {%- if heading != blank -%}
+      <div class="rb-script rb-ss__heading">{{ heading }}</div>
     {%- endif -%}
     {%- if body != blank -%}
       <div class="rb-body rb-ss__body">{{ body }}</div>
