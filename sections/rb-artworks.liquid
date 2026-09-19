@@ -66,6 +66,18 @@
     font-size: clamp(30px, 3.33vw, 64px);
     margin-bottom: {% if layout == 'rail' %}clamp(24px, 7.55vw, 145px){% else %}clamp(20px, 2.4vw, 46px){% endif %};
   }
+  /* Same recipe as the product page's way back (.rb-pd__back), left-aligned
+     to the content while the heading below it stays centred. */
+  #shopify-section-{{ sid }} .rb-aw__back {
+    display: inline-block;
+    margin-bottom: clamp(12px, 1.25vw, 24px);
+    font-family: var(--rb-sans);
+    font-size: var(--rb-fs-meta);
+    letter-spacing: 0.04em;
+    color: {{ section.settings.card_meta_color }};
+    text-decoration: none;
+  }
+  #shopify-section-{{ sid }} .rb-aw__back:hover { text-decoration: underline; }
 
   /* ---- toolbar layout (Store) ---------------------------------------- */
   #shopify-section-{{ sid }} .rb-aw__bar {
@@ -376,6 +388,12 @@
     font-size: clamp(14px, 1.3vw, 25px);
     color: {{ section.settings.card_meta_color }};
   }
+  /* The title's column. A block so the price drops onto its own line under it;
+     the row's baseline alignment still reads the title's first line, so the
+     artist on the right sits exactly where it always has. min-width lets a long
+     title shrink instead of pushing the card wider than its grid column. */
+  #shopify-section-{{ sid }} .rb-aw__row-main { min-width: 0; }
+  #shopify-section-{{ sid }} .rb-aw__row-price { font-size: var(--rb-fs-meta); }
   /* pushed to the foot of the card so the pills line up across a row even
      when one title wraps onto a second line, as the comp shows them */
   #shopify-section-{{ sid }} .rb-aw__cta-row {
@@ -450,7 +468,17 @@
 
           {%- if layout == 'rail' -%}
             <div class="rb-meta rb-aw__row">
-              <span>{{ item.title }}</span>
+              <div class="rb-aw__row-main">
+                {{- item.title -}}
+                <p class="rb-aw__price rb-aw__row-price">
+                  {%- if item.available -%}
+                    {%- if item.price_varies %}From {% endif -%}
+                    {{- item.price_min | money -}}
+                  {%- else -%}
+                    <span class="rb-aw__sold">Sold</span>
+                  {%- endif -%}
+                </p>
+              </div>
               <span>{{ item.vendor }}</span>
             </div>
             <div class="rb-aw__cta-row">
@@ -488,9 +516,21 @@
   data-rba-per-page="{{ per_page }}"
   data-rba-hide="{{ hidden_artists | escape }}"
 >
-  {%- if section.settings.heading != blank -%}
+  {%- if layout == 'rail' or section.settings.heading != blank -%}
     <div class="rb-container">
-      <h2 class="rb-section-title rb-aw__heading">{{ section.settings.heading | escape }}</h2>
+      {%- comment -%}
+        Artist pages are reached from a card and the header carries no
+        breadcrumb, so without this the only way back to the grid is the nav.
+        `layout == 'rail'` is the theme's own marker for an artist collection:
+        every artist template sets it and no other template does.
+      {%- endcomment -%}
+      {%- if layout == 'rail' -%}
+        {%- assign back_url = collections['gallery'].url | default: '/collections/gallery' -%}
+        <a href="{{ back_url }}" class="rb-aw__back">← Back to all artwork</a>
+      {%- endif -%}
+      {%- if section.settings.heading != blank -%}
+        <h2 class="rb-section-title rb-aw__heading">{{ section.settings.heading | escape }}</h2>
+      {%- endif -%}
     </div>
   {%- endif -%}
 

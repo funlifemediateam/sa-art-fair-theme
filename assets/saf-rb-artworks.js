@@ -14,11 +14,31 @@
 (function () {
   'use strict';
 
-  var MONEY = { thousands: ' ', decimal: '.' };
+  /* Matches the shop's money format, "R {{amount}}", which Liquid renders with
+     a comma: R 8,500.00. A space here made a re-rendered tile disagree with the
+     server-rendered one it replaced. */
+  var MONEY = { thousands: ',', decimal: '.' };
 
   function formatZar(cents) {
     var n = (cents / 100).toFixed(2).split('.');
     return 'R ' + n[0].replace(/\B(?=(\d{3})+(?!\d))/g, MONEY.thousands) + MONEY.decimal + n[1];
+  }
+
+  /* Liquid's `| money` shows a product's lowest variant price, and prefixes
+     "From" when the variants disagree. These read the same numbers off the
+     products.json payload so a re-rendered tile matches the server's. */
+  function variantCents(p) {
+    return ((p && p.variants) || []).map(function (x) {
+      return Math.round(parseFloat(x.price || 0) * 100);
+    }).filter(function (c) { return !isNaN(c); });
+  }
+  function priceMin(p) {
+    var c = variantCents(p);
+    return c.length ? Math.min.apply(null, c) : 0;
+  }
+  function priceVaries(p) {
+    var c = variantCents(p);
+    return c.length > 1 && Math.min.apply(null, c) !== Math.max.apply(null, c);
   }
 
   function esc(s) {
@@ -91,6 +111,10 @@
                 url: '/products/' + p.handle,
                 vendor: p.vendor || '',
                 price: Math.round(parseFloat(v.price || 0) * 100),
+                /* Display only. `price` above stays the first variant, because
+                   the price filter and the price sorts are built on it. */
+                priceMin: priceMin(p),
+                priceVaries: priceVaries(p),
                 available: !!(p.variants || []).some(function (x) { return x.available; }),
                 image: img,
                 landscape: img ? img.width >= img.height : true,
@@ -202,8 +226,17 @@
         esc(viewLabel) + '</span></span></a>';
 
       if (cardStyle === 'collection') {
+        /* Must match the Liquid twin in sections/rb-artworks.liquid: the price
+           on its own line under the title, the artist untouched on the right,
+           and the sold wording in place of a price on a piece that can't be
+           bought. */
+        var railPrice = it.available
+          ? esc((it.priceVaries ? 'From ' : '') + formatZar(it.priceMin))
+          : '<span class="rb-aw__sold">Sold</span>';
         return '<article class="rb-aw__card">' + head +
-          '<div class="rb-meta rb-aw__row"><span>' + esc(it.title) + '</span>' +
+          '<div class="rb-meta rb-aw__row">' +
+          '<div class="rb-aw__row-main">' + esc(it.title) +
+          '<p class="rb-aw__price rb-aw__row-price">' + railPrice + '</p></div>' +
           '<span>' + esc(it.vendor) + '</span></div>' +
           '<div class="rb-aw__cta-row"><a href="' + esc(it.url) +
           '" class="rb-btn rb-btn--serif rb-btn--outline">Browse Collection</a></div></article>';
